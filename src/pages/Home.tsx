@@ -8,7 +8,7 @@ import ProductModal from '../components/ProductModal';
 const heroSlides = [
   {
     id: 1,
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/hero-1.jpg',
     eyebrow: 'Exquisite Collection',
     title: 'Diamond',
     titleAccent: 'Rings',
@@ -18,7 +18,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/hero-2.jpg',
     eyebrow: 'Bridal Heritage',
     title: 'Bridal',
     titleAccent: 'Necklaces',
@@ -28,7 +28,7 @@ const heroSlides = [
   },
   {
     id: 3,
-    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/hero-3.jpg',
     eyebrow: 'Timeless Beauty',
     title: 'Gold',
     titleAccent: 'Earrings',
@@ -38,7 +38,7 @@ const heroSlides = [
   },
   {
     id: 4,
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/hero-4.jpg',
     eyebrow: 'Traditional Art',
     title: 'Gold',
     titleAccent: 'Bangles',
