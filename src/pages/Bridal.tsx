@@ -6,25 +6,25 @@ const bridalSets = [
     id: 1,
     name: 'Maharani Bridal Set',
     description: 'A grand bridal set featuring intricate kundan work with meenakari detailing, perfect for the royal bride.',
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=800'
+    image: '/bridal.png'
   },
   {
     id: 2,
     name: 'Temple Bridal Collection',
     description: 'Traditional temple jewellery with goddess motifs and Lakshmi coins, crafted in pure 22KT gold.',
-    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=800'
+    image: '/temple.png'
   },
   {
     id: 3,
     name: 'Diamond Bridal Ensemble',
     description: 'Contemporary diamond bridal set with brilliant cut diamonds in platinum finish.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=800'
+    image: '/band.png'
   },
   {
     id: 4,
     name: 'Antique Gold Bridal Set',
     description: 'Heirloom-quality antique gold bridal set with traditional nakshi work.',
-    image: '/bangle5.png'
+    image: '/antique.png'
   }
 ];
 

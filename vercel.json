@@ -5,7 +5,7 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/((?!api|_next|static|public|favicon|uploads|images).*)",
+      "source": "/((?!api|_next|static|public|favicon|uploads).*)",
       "destination": "/index.html"
     }
   ]

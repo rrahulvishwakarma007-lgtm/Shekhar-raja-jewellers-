@@ -50,18 +50,18 @@ const heroSlides = [
 
 // Categories data
 const categories = [
-  { name: 'Bridal', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Festive', image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Bridal', image: '/bridal.png' },
+  { name: 'Festive', image: '/festive.png' },
   { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Necklaces', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Earrings', image: '/earring1.jpg' },
-  { name: 'Bangles', image: '/bangle2.png' },
-  { name: 'Rings', image: '/uploads/rings/ring2.png' },
+  { name: 'Necklaces', image: '/bridal.png' },
+  { name: 'Earrings', image: '/antique.png' },
+  { name: 'Bangles', image: '/band.png' },
+  { name: 'Rings', image: '/band.png' },
   { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Diamond', image: '/uploads/rings/ring3.png' },
-  { name: 'Chains', image: '/bangle3.png' },
-  { name: 'Antique', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Temple', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' }
+  { name: 'Diamond', image: '/band.png' },
+  { name: 'Chains', image: '/band.png' },
+  { name: 'Antique', image: '/antique.png' },
+  { name: 'Temple', image: '/temple.png' }
 ];
 
 // Collections data
@@ -70,21 +70,21 @@ const collections = [
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: '/images/necklace1.jpg',
+    image: '/bridal.png',
     featured: true
   },
   {
     id: 2,
-    name: 'Diamond Solitaire Ring',
+    name: 'Diamond Eternity Band',
     category: 'Diamond',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: '/band.png',
     featured: false
   },
   {
     id: 3,
     name: 'Temple Gold Necklace',
     category: 'Temple',
-    image: '/images/necklace2.jpg',
+    image: '/temple.png',
     featured: false
   }
 ];
@@ -96,7 +96,7 @@ const products = [
     name: 'Kundan Bridal Choker',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
-    image: '/images/necklace1.jpg',
+    image: '/bridal.png',
     tag: 'Bestseller'
   },
   {
@@ -104,7 +104,7 @@ const products = [
     name: 'Diamond Eternity Band',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/band.png',
     tag: 'Premium'
   },
   {
@@ -112,7 +112,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: '/images/antique1.jpg',
+    image: '/antique.png',
     tag: 'Heritage'
   },
   {
@@ -120,7 +120,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/band.png',
     tag: 'Classic'
   },
   {
@@ -128,7 +128,7 @@ const products = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/band.png',
     tag: 'Exclusive'
   },
   {
@@ -136,7 +136,7 @@ const products = [
     name: 'Temple Gold Haar',
     category: 'Necklaces',
     description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: '/images/necklace3.jpg',
+    image: '/temple.png',
     tag: 'Traditional'
   },
   {
@@ -144,16 +144,16 @@ const products = [
     name: 'Antique Temple Set',
     category: 'Antique',
     description: 'Exquisite antique finish temple jewellery with traditional craftsmanship.',
-    image: '/images/antique2.jpg',
+    image: '/antique.png',
     tag: 'Limited'
   },
   {
     id: 8,
-    name: 'Heritage Gold Haar',
-    category: 'Necklaces',
-    description: 'Magnificent heritage haar with intricate traditional designs.',
-    image: '/images/antique3.jpg',
-    tag: 'Premium'
+    name: 'Festive Gold Set',
+    category: 'Festive',
+    description: 'Elegant gold set perfect for festive occasions and celebrations.',
+    image: '/festive.png',
+    tag: 'Trending'
   }
 ];
 
