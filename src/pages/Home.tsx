@@ -70,7 +70,7 @@ const collections = [
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: '/images/necklace1.jpg',
     featured: true
   },
   {
@@ -84,7 +84,7 @@ const collections = [
     id: 3,
     name: 'Temple Gold Necklace',
     category: 'Temple',
-    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: '/images/necklace2.jpg',
     featured: false
   }
 ];
@@ -96,7 +96,7 @@ const products = [
     name: 'Kundan Bridal Choker',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/images/necklace1.jpg',
     tag: 'Bestseller'
   },
   {
@@ -104,7 +104,7 @@ const products = [
     name: 'Diamond Eternity Band',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: '/uploads/rings/ring4.png',
+    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
     tag: 'Premium'
   },
   {
@@ -112,7 +112,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: '/earring3.jpg',
+    image: '/images/antique1.jpg',
     tag: 'Heritage'
   },
   {
@@ -120,7 +120,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: '/bangle4.png',
+    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=600',
     tag: 'Classic'
   },
   {
@@ -128,7 +128,7 @@ const products = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: '/uploads/rings/ring5.png',
+    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
     tag: 'Exclusive'
   },
   {
@@ -136,23 +136,23 @@ const products = [
     name: 'Temple Gold Haar',
     category: 'Necklaces',
     description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/images/necklace3.jpg',
     tag: 'Traditional'
   },
   {
     id: 7,
-    name: 'Ruby & Emerald Ring',
-    category: 'Rings',
-    description: 'Stunning cocktail ring with precious gemstones in kundan setting.',
-    image: '/uploads/rings/ring6.png',
+    name: 'Antique Temple Set',
+    category: 'Antique',
+    description: 'Exquisite antique finish temple jewellery with traditional craftsmanship.',
+    image: '/images/antique2.jpg',
     tag: 'Limited'
   },
   {
     id: 8,
-    name: 'Solitaire Diamond Ring',
-    category: 'Diamond',
-    description: 'Brilliant solitaire diamond in an elegant platinum setting.',
-    image: '/uploads/rings/ring7.png',
+    name: 'Heritage Gold Haar',
+    category: 'Necklaces',
+    description: 'Magnificent heritage haar with intricate traditional designs.',
+    image: '/images/antique3.jpg',
     tag: 'Premium'
   }
 ];
