@@ -8,7 +8,7 @@ import ProductModal from '../components/ProductModal';
 const heroSlides = [
   {
     id: 1,
-    image: '/uploads/rings/ring1.png',
+    image: '/hero1.jpg',
     eyebrow: 'Exquisite Collection',
     title: 'Diamond',
     titleAccent: 'Rings',
@@ -18,7 +18,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/hero2.jpg',
     eyebrow: 'Bridal Heritage',
     title: 'Bridal',
     titleAccent: 'Necklaces',
@@ -28,7 +28,7 @@ const heroSlides = [
   },
   {
     id: 3,
-    image: '/earring2.jpg',
+    image: '/hero3.jpg',
     eyebrow: 'Timeless Beauty',
     title: 'Gold',
     titleAccent: 'Earrings',
@@ -38,7 +38,7 @@ const heroSlides = [
   },
   {
     id: 4,
-    image: '/bangle1.png',
+    image: '/hero4.jpg',
     eyebrow: 'Traditional Art',
     title: 'Gold',
     titleAccent: 'Bangles',
@@ -210,10 +210,10 @@ export default function Home() {
             index === currentSlide && (
               <motion.div
                 key={slide.id}
-                initial={{ opacity: 0, scale: 1.1 }}
+                initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 1, ease: 'easeInOut' }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 1.2, ease: 'easeInOut' }}
                 className="absolute inset-0"
               >
                 <img
@@ -221,171 +221,10 @@ export default function Home() {
                   alt={slide.title}
                   className="w-full h-full object-cover"
                 />
-                {/* Multi-layer overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#1a0f05]/90 via-[#1a0f05]/60 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05]/50 via-transparent to-[#1a0f05]/30" />
-                {/* Gold shimmer overlay */}
-                <div className="absolute inset-0 bg-[#b8862a]/5 mix-blend-overlay" />
               </motion.div>
             )
           ))}
         </AnimatePresence>
-
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          {/* Top left corner decoration */}
-          <div className="absolute top-0 left-0 w-64 h-64">
-            <div className="absolute top-8 left-8 w-24 h-px bg-gradient-to-r from-[#d4a843] to-transparent" />
-            <div className="absolute top-8 left-8 w-px h-24 bg-gradient-to-b from-[#d4a843] to-transparent" />
-          </div>
-          {/* Bottom right corner decoration */}
-          <div className="absolute bottom-0 right-0 w-64 h-64">
-            <div className="absolute bottom-8 right-8 w-24 h-px bg-gradient-to-l from-[#d4a843] to-transparent" />
-            <div className="absolute bottom-8 right-8 w-px h-24 bg-gradient-to-t from-[#d4a843] to-transparent" />
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="absolute inset-0 z-20 flex items-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              {/* Left Content */}
-              <AnimatePresence mode="wait">
-                {heroSlides.map((slide, index) => (
-                  index === currentSlide && (
-                    <motion.div
-                      key={slide.id}
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 50 }}
-                      transition={{ duration: 0.6, ease: 'easeOut' }}
-                      className="max-w-xl"
-                    >
-                      {/* Eyebrow */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="flex items-center gap-3 mb-6"
-                      >
-                        <Sparkles size={16} className="text-[#d4a843]" />
-                        <span className="font-cinzel text-xs tracking-[0.4em] text-[#d4a843] uppercase">
-                          {slide.eyebrow}
-                        </span>
-                        <div className="h-px w-12 bg-gradient-to-r from-[#d4a843] to-transparent" />
-                      </motion.div>
-
-                      {/* Main Title */}
-                      <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.6 }}
-                        className="font-cormorant text-6xl sm:text-7xl lg:text-8xl font-bold text-white leading-[0.9]"
-                      >
-                        {slide.title}
-                        <span className="block text-[#d4a843] italic">{slide.titleAccent}</span>
-                      </motion.h1>
-
-                      {/* Decorative Line */}
-                      <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ delay: 0.5, duration: 0.6 }}
-                        className="h-px w-32 bg-gradient-to-r from-[#b8862a] to-transparent my-6 origin-left"
-                      />
-
-                      {/* Subtitle */}
-                      <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="font-raleway text-lg text-white/80 leading-relaxed mb-4"
-                      >
-                        {slide.subtitle}
-                      </motion.p>
-
-                      {/* Tagline */}
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="font-cormorant italic text-xl text-[#d4a843] mb-8"
-                      >
-                        "{slide.tagline}"
-                      </motion.p>
-
-                      {/* CTA Buttons */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 }}
-                        className="flex flex-wrap gap-4"
-                      >
-                        <Link
-                          to="/collections"
-                          className="group flex items-center gap-3 bg-gradient-to-r from-[#b8862a] to-[#8b6014] text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg hover:shadow-xl hover:shadow-[#b8862a]/30 transition-all duration-300 hover:-translate-y-1"
-                        >
-                          <span>Explore Collection</span>
-                          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                        <a
-                          href="https://wa.me/918377911745"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full font-raleway font-medium border border-white/20 hover:bg-white/20 transition-all duration-300"
-                        >
-                          <MessageCircle size={18} />
-                          <span>Enquire Now</span>
-                        </a>
-                      </motion.div>
-                    </motion.div>
-                  )
-                ))}
-              </AnimatePresence>
-
-              {/* Right Side - Featured Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="hidden lg:flex justify-end"
-              >
-                <div className="relative">
-                  {/* Floating Card */}
-                  <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl max-w-sm">
-                    <div className="flex items-center gap-3 mb-4">
-                      <img 
-                        src="/logo.png" 
-                        alt="Shekhar Raja Jewellers" 
-                        className="h-10 w-auto object-contain brightness-0 invert"
-                      />
-                      <div className="flex flex-col">
-                        <span className="font-cormorant text-lg font-semibold text-white">Shekhar Raja</span>
-                        <span className="font-cinzel text-[8px] tracking-[0.2em] text-[#d4a843]">JEWELLERS</span>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2 border-b border-white/10">
-                        <span className="font-raleway text-sm text-white/70">BIS Hallmark</span>
-                        <span className="font-cinzel text-sm text-[#d4a843]">✓ Certified</span>
-                      </div>
-                      <div className="flex items-center justify-between py-2 border-b border-white/10">
-                        <span className="font-raleway text-sm text-white/70">Purity</span>
-                        <span className="font-cinzel text-sm text-[#d4a843]">22KT Gold</span>
-                      </div>
-                      <div className="flex items-center justify-between py-2">
-                        <span className="font-raleway text-sm text-white/70">Special Offer</span>
-                        <span className="font-cinzel text-sm text-[#d4a843]">9% Off</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Decorative blur */}
-                  <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#d4a843]/20 rounded-full blur-3xl" />
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
 
         {/* Navigation Arrows */}
         <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30">
@@ -408,46 +247,18 @@ export default function Home() {
         {/* Bottom Navigation */}
         <div className="absolute bottom-8 left-0 right-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              {/* Slide Indicators */}
-              <div className="flex items-center gap-3">
-                {heroSlides.map((slide, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className="group flex items-center gap-2"
-                  >
-                    <div className={`h-12 w-1 rounded-full transition-all duration-300 ${
-                      index === currentSlide 
-                        ? 'bg-[#d4a843] h-12' 
-                        : 'bg-white/30 h-6 group-hover:bg-white/50'
-                    }`} />
-                    <span className={`font-cinzel text-xs tracking-wider transition-all duration-300 ${
-                      index === currentSlide 
-                        ? 'text-[#d4a843] opacity-100' 
-                        : 'text-white/50 opacity-0 group-hover:opacity-100'
-                    }`}>
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="hidden sm:flex items-center gap-4">
-                <span className="font-cinzel text-sm text-white/60">
-                  {String(currentSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
-                </span>
-                <div className="w-32 h-1 bg-white/20 rounded-full overflow-hidden">
-                  <motion.div
-                    key={currentSlide}
-                    initial={{ width: '0%' }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 4.5, ease: 'linear' }}
-                    className="h-full bg-gradient-to-r from-[#d4a843] to-[#b8862a]"
-                  />
-                </div>
-              </div>
+            <div className="flex items-center justify-center gap-3">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-[#d4a843] w-12' 
+                      : 'bg-white/40 w-8 hover:bg-white/60'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
