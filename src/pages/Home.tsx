@@ -38,7 +38,7 @@ const heroSlides = [
   },
   {
     id: 4,
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/bangle1.png',
     eyebrow: 'Traditional Art',
     title: 'Gold',
     titleAccent: 'Bangles',
@@ -55,11 +55,11 @@ const categories = [
   { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Necklaces', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Earrings', image: '/earring1.jpg' },
-  { name: 'Bangles', image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Bangles', image: '/bangle2.png' },
   { name: 'Rings', image: '/uploads/rings/ring2.png' },
   { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Diamond', image: '/uploads/rings/ring3.png' },
-  { name: 'Chains', image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Chains', image: '/bangle3.png' },
   { name: 'Antique', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Temple', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' }
 ];
@@ -120,7 +120,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/bangle4.png',
     tag: 'Classic'
   },
   {

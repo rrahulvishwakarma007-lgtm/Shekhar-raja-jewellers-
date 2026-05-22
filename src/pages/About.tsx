@@ -99,7 +99,7 @@ export default function About() {
                 </div>
                 <div className="h-48 overflow-hidden rounded-2xl">
                   <img
-                    src="https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src="/bangle1.png"
                     alt="Bangles"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />

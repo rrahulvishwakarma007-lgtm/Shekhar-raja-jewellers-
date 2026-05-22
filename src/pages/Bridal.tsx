@@ -24,7 +24,7 @@ const bridalSets = [
     id: 4,
     name: 'Antique Gold Bridal Set',
     description: 'Heirloom-quality antique gold bridal set with traditional nakshi work.',
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=800'
+    image: '/bangle5.png'
   }
 ];
 
