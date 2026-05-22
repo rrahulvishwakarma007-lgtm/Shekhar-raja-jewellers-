@@ -92,7 +92,7 @@ export default function About() {
               <div className="space-y-4 pt-8">
                 <div className="h-32 overflow-hidden rounded-xl">
                   <img
-                    src="https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400"
+                    src="/earring6.jpg"
                     alt="Earrings"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />

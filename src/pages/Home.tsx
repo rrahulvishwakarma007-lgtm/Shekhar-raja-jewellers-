@@ -28,7 +28,7 @@ const heroSlides = [
   },
   {
     id: 3,
-    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/earring2.jpg',
     eyebrow: 'Timeless Beauty',
     title: 'Gold',
     titleAccent: 'Earrings',
@@ -54,7 +54,7 @@ const categories = [
   { name: 'Festive', image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Necklaces', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Earrings', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Earrings', image: '/earring1.jpg' },
   { name: 'Bangles', image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Rings', image: '/uploads/rings/ring2.png' },
   { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
@@ -112,7 +112,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/earring3.jpg',
     tag: 'Heritage'
   },
   {
