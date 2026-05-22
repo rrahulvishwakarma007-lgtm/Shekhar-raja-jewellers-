@@ -21,9 +21,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <div className="mb-6">
-              <span className="font-cormorant text-3xl font-bold">Shekhar Raja</span>
-              <span className="font-cinzel text-sm tracking-[0.3em] text-[#d4a843] block">JEWELLERS</span>
+            <div className="mb-6 flex items-center gap-3">
+              <img 
+                src="/logo.png" 
+                alt="Shekhar Raja Jewellers" 
+                className="h-14 w-auto object-contain brightness-0 invert"
+              />
+              <div className="flex flex-col">
+                <span className="font-cormorant text-2xl font-bold text-white">Shekhar Raja</span>
+                <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#d4a843]">JEWELLERS</span>
+              </div>
             </div>
             <p className="font-cormorant italic text-[#9a8060] text-lg mb-4">
               "Crafting Elegance, Ensuring Excellence"

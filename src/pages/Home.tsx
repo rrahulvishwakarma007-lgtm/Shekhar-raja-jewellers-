@@ -354,12 +354,14 @@ export default function Home() {
                   {/* Floating Card */}
                   <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl max-w-sm">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4a843] to-[#b8862a] flex items-center justify-center">
-                        <span className="font-cinzel text-sm font-bold text-white">SR</span>
-                      </div>
-                      <div>
-                        <p className="font-cormorant text-white font-semibold">Shekhar Raja Jewellers</p>
-                        <p className="font-raleway text-xs text-white/60">Est. 1987 • Jabalpur</p>
+                      <img 
+                        src="/logo.png" 
+                        alt="Shekhar Raja Jewellers" 
+                        className="h-10 w-auto object-contain brightness-0 invert"
+                      />
+                      <div className="flex flex-col">
+                        <span className="font-cormorant text-lg font-semibold text-white">Shekhar Raja</span>
+                        <span className="font-cinzel text-[8px] tracking-[0.2em] text-[#d4a843]">JEWELLERS</span>
                       </div>
                     </div>
                     <div className="space-y-3">

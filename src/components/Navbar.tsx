@@ -118,39 +118,26 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-20 lg:h-24">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-3 group">
-                {/* Logo Icon */}
+                {/* Logo Image */}
                 <div className="relative">
-                  {/* Outer ring */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#d4a843] to-[#8b6014] blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
-                  
-                  {/* Main logo */}
-                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-[#d4a843] via-[#b8862a] to-[#8b6014] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_30px_rgba(184,134,42,0.5)] transition-all duration-500">
-                    {/* Inner circle */}
-                    <div className="absolute inset-1 rounded-full border border-white/20" />
-                    {/* SR Text */}
-                    <span className="font-cinzel text-lg sm:text-xl font-bold text-white relative z-10">SR</span>
-                  </div>
-                  
-                  {/* 22K Badge */}
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#1a0f05] to-[#2a1a0a] rounded-full flex items-center justify-center border-2 border-[#b8862a] shadow-lg">
-                    <span className="text-[7px] font-cinzel font-bold text-[#d4a843]">22K</span>
-                  </div>
-                  
-                  {/* Decorative dot */}
-                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#d4a843] rounded-full" />
+                  <img 
+                    src="/logo.png" 
+                    alt="Shekhar Raja Jewellers" 
+                    className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
                 
                 {/* Logo Text */}
                 <div className="flex flex-col">
-                  <span className="font-cormorant text-2xl sm:text-3xl lg:text-4xl font-bold text-[#3a2e1e] tracking-wide leading-none">
+                  <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">
                     Shekhar Raja
                   </span>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <div className="h-px w-4 sm:w-6 bg-gradient-to-r from-[#b8862a] to-transparent" />
-                    <span className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.35em] text-[#b8862a]">
+                    <div className="h-px w-3 sm:w-4 bg-gradient-to-r from-[#b8862a] to-transparent" />
+                    <span className="font-cinzel text-[8px] sm:text-[9px] tracking-[0.3em] text-[#b8862a]">
                       JEWELLERS
                     </span>
-                    <div className="h-px w-4 sm:w-6 bg-gradient-to-l from-[#b8862a] to-transparent" />
+                    <div className="h-px w-3 sm:w-4 bg-gradient-to-l from-[#b8862a] to-transparent" />
                   </div>
                 </div>
               </Link>
@@ -241,17 +228,14 @@ export default function Navbar() {
             <div className="flex flex-col h-full pt-24 pb-8 px-6 relative">
               {/* Logo in Mobile Menu */}
               <div className="flex items-center gap-3 mb-10">
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d4a843] via-[#b8862a] to-[#8b6014] flex items-center justify-center shadow-lg">
-                    <span className="font-cinzel text-xl font-bold text-white">SR</span>
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#1a0f05] rounded-full flex items-center justify-center border-2 border-[#b8862a]">
-                    <span className="text-[6px] font-cinzel text-[#d4a843]">22K</span>
-                  </div>
-                </div>
+                <img 
+                  src="/logo.png" 
+                  alt="Shekhar Raja Jewellers" 
+                  className="h-12 w-auto object-contain"
+                />
                 <div className="flex flex-col">
-                  <span className="font-cormorant text-2xl font-bold text-white">Shekhar Raja</span>
-                  <span className="font-cinzel text-[10px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+                  <span className="font-cormorant text-xl font-bold text-white">Shekhar Raja</span>
+                  <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
                 </div>
               </div>
               
