@@ -124,18 +124,7 @@ export default function GoldRates() {
     }
   };
 
-  // Chart calculations
-  const maxRate = history.length > 0 ? Math.max(...history.map(h => h.rate_24k)) : 7000;
-  const minRate = history.length > 0 ? Math.min(...history.map(h => h.rate_24k)) : 6500;
-  const chartHeight = 200;
-  const chartWidth = 700;
-
   // Format date for display
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { weekday: 'short' });
-  };
-
   const formatFullDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-IN', { 
@@ -194,13 +183,12 @@ export default function GoldRates() {
           )}
         </div>
 
-        {/* 24K Base Rate Card */}
+        {/* 24K Rate Card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-3xl p-8 mb-8 text-center text-white shadow-xl"
         >
-          <span className="font-cinzel text-xs tracking-[0.3em] text-white/80">BASE RATE</span>
           <h2 className="font-cormorant text-6xl sm:text-7xl font-bold mt-2">
             ₹{rate24K.toLocaleString()}
           </h2>
@@ -286,102 +274,6 @@ export default function GoldRates() {
                 <Save size={18} />
                 {saving ? 'Saving...' : 'Update Rate'}
               </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Weekly Chart */}
-        {history.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-[#faf7f2] rounded-2xl p-6 sm:p-8 mb-12"
-          >
-            <h2 className="font-cormorant text-2xl font-semibold text-[#3a2e1e] mb-6">
-              7-Day Rate Trend (24K)
-            </h2>
-            <div className="relative h-[200px]">
-              <svg className="w-full h-full" viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none">
-                {/* Grid lines */}
-                {[0, 1, 2, 3, 4].map(i => (
-                  <line
-                    key={i}
-                    x1="0"
-                    y1={i * 50}
-                    x2={chartWidth}
-                    y2={i * 50}
-                    stroke="rgba(184,134,42,0.1)"
-                    strokeWidth="1"
-                  />
-                ))}
-                
-                {/* Gradient fill under line */}
-                <defs>
-                  <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#b8862a" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#b8862a" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                
-                {/* Area fill */}
-                <motion.path
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 1 }}
-                  viewport={{ once: true }}
-                  d={`M 50,${chartHeight - ((history[0]?.rate_24k - minRate) / (maxRate - minRate)) * chartHeight} 
-                      ${history.map((h, i) => 
-                        `L ${i * ((chartWidth - 100) / (history.length - 1)) + 50},${chartHeight - ((h.rate_24k - minRate) / (maxRate - minRate)) * chartHeight}`
-                      ).join(' ')} 
-                      L ${chartWidth - 50},${chartHeight} L 50,${chartHeight} Z`}
-                  fill="url(#chartGradient)"
-                />
-                
-                {/* Line chart */}
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  whileInView={{ pathLength: 1 }}
-                  transition={{ duration: 1.5 }}
-                  viewport={{ once: true }}
-                  d={`M ${history.map((h, i) => 
-                    `${i * ((chartWidth - 100) / (history.length - 1)) + 50},${chartHeight - ((h.rate_24k - minRate) / (maxRate - minRate)) * chartHeight}`
-                  ).join(' L ')}`}
-                  fill="none"
-                  stroke="#b8862a"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                
-                {/* Data points */}
-                {history.map((h, i) => (
-                  <g key={i}>
-                    <circle
-                      cx={i * ((chartWidth - 100) / (history.length - 1)) + 50}
-                      cy={chartHeight - ((h.rate_24k - minRate) / (maxRate - minRate)) * chartHeight}
-                      r="8"
-                      fill="#faf7f2"
-                      stroke="#b8862a"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx={i * ((chartWidth - 100) / (history.length - 1)) + 50}
-                      cy={chartHeight - ((h.rate_24k - minRate) / (maxRate - minRate)) * chartHeight}
-                      r="4"
-                      fill="#b8862a"
-                    />
-                  </g>
-                ))}
-              </svg>
-            </div>
-            <div className="flex justify-between mt-4 px-8">
-              {history.map((h, i) => (
-                <div key={i} className="text-center">
-                  <span className="font-raleway text-xs text-[#9a8060]">{formatDate(h.date)}</span>
-                  <p className="font-cormorant text-sm text-[#3a2e1e] font-medium">₹{h.rate_24k}</p>
-                </div>
-              ))}
             </div>
           </motion.div>
         )}
