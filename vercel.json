@@ -1,6 +1,12 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/((?!api|_next|static|public|favicon|uploads).*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/((?!api|_next|static|public|favicon|uploads).*)",
+      "destination": "/index.html"
+    }
   ]
 }

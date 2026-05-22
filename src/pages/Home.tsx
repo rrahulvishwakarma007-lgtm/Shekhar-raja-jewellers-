@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Play } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
 // Hero slides data
@@ -452,32 +452,68 @@ export default function Home() {
       </section>
 
       {/* Category Circles */}
-      <section className="py-16 bg-[#faf7f2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] text-center mb-12">
-            Shop by Category
-          </h2>
+      <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6] relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-[#b8862a]/5 rounded-full blur-3xl animate-morph" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#d4a843]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '2s' }} />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
+              <Diamond size={16} className="text-[#b8862a]" />
+              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">EXPLORE</span>
+              <Diamond size={16} className="text-[#b8862a]" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
+            </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
+              Shop by Category
+            </h2>
+            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
+              Discover our curated collections, each piece a masterpiece of craftsmanship
+            </p>
+          </motion.div>
           
-          {/* Desktop Grid */}
-          <div className="hidden lg:flex justify-between gap-6">
+          {/* Desktop Grid - 3D Effect */}
+          <div className="hidden lg:grid grid-cols-6 gap-8">
             {categories.map((cat, index) => (
               <motion.div
                 key={cat.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
+                initial={{ opacity: 0, y: 40, rotateX: -15 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: index * 0.08, duration: 0.6, ease: 'easeOut' }}
                 viewport={{ once: true }}
-                whileHover={{ y: -4 }}
-                className="flex flex-col items-center cursor-pointer"
+                whileHover={{ y: -10, scale: 1.05 }}
+                className="flex flex-col items-center cursor-pointer group perspective-1000"
               >
-                <div className="w-24 h-24 rounded-full border-2 border-[#b8862a] overflow-hidden">
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  />
+                <div className="relative">
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+                  
+                  {/* Main circle */}
+                  <div className="relative w-28 h-28 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:shadow-[#b8862a]/20 transition-all duration-500">
+                    {/* Shine overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+                    />
+                  </div>
+                  
+                  {/* Floating diamond decoration */}
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100">
+                    <Diamond size={10} className="text-white" />
+                  </div>
                 </div>
-                <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-3">
+                
+                <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-4 group-hover:text-[#b8862a] transition-colors duration-300">
                   {cat.name.toUpperCase()}
                 </span>
               </motion.div>
@@ -486,20 +522,28 @@ export default function Home() {
 
           {/* Mobile Carousel */}
           <div className="lg:hidden overflow-x-auto hide-scrollbar -mx-4 px-4">
-            <div className="flex gap-6 pb-4">
-              {categories.map((cat) => (
-                <div key={cat.name} className="flex flex-col items-center flex-shrink-0">
-                  <div className="w-20 h-20 rounded-full border-2 border-[#b8862a] overflow-hidden">
+            <div className="flex gap-8 pb-4">
+              {categories.map((cat, index) => (
+                <motion.div
+                  key={cat.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                  className="flex flex-col items-center flex-shrink-0 group"
+                >
+                  <div className="relative w-24 h-24 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                     <img
                       src={cat.image}
                       alt={cat.name}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                     />
                   </div>
-                  <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-2">
+                  <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-3 group-hover:text-[#b8862a] transition-colors">
                     {cat.name.toUpperCase()}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -507,40 +551,78 @@ export default function Home() {
       </section>
 
       {/* Collections Grid */}
-      <section className="py-16 bg-[#e8e0d0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] text-center mb-12">
-            Featured Collections
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Big Card */}
+      <section className="py-24 bg-gradient-to-b from-[#e8e0d0] to-[#faf7f2] relative overflow-hidden">
+        {/* 3D Floating Decorations */}
+        <div className="absolute top-40 left-20 w-32 h-32 opacity-20">
+          <div className="w-full h-full bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full animate-float blur-sm" />
+        </div>
+        <div className="absolute bottom-40 right-20 w-40 h-40 opacity-15">
+          <div className="w-full h-full bg-gradient-to-br from-[#b8862a] to-[#8b6014] rounded-full animate-float-delayed blur-sm" />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-3 mb-4">
+              <Crown size={18} className="text-[#b8862a]" />
+              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">FEATURED</span>
+              <Crown size={18} className="text-[#b8862a]" />
+            </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
+              Featured Collections
+            </h2>
+            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
+              Handpicked masterpieces that define luxury and elegance
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Big Card - 3D Effect */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 50, rotateY: -5 }}
+              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(58,46,30,0.15)' }}
-              className="bg-[#faf7f2] rounded-2xl overflow-hidden md:row-span-2 cursor-pointer"
+              whileHover={{ y: -12, rotateY: 2, rotateX: 2 }}
+              className="bg-[#faf7f2] rounded-3xl overflow-hidden md:row-span-2 cursor-pointer group perspective-1000 shadow-xl hover:shadow-2xl transition-all duration-500"
             >
               <div className="flex flex-col h-full">
-                <div className="h-64 md:h-80 overflow-hidden">
+                <div className="h-72 md:h-96 overflow-hidden relative">
+                  {/* Shimmer overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
                   <img
                     src={collections[0].image}
                     alt={collections[0].name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/40 to-transparent" />
+                  
+                  {/* Featured badge */}
+                  <div className="absolute top-6 left-6">
+                    <span className="bg-[#b8862a] text-white font-cinzel text-xs tracking-wider px-4 py-2 rounded-full shadow-lg">
+                      ★ FEATURED
+                    </span>
+                  </div>
                 </div>
-                <div className="p-6 flex-1 flex flex-col justify-center">
+                <div className="p-8 flex-1 flex flex-col justify-center bg-gradient-to-b from-[#faf7f2] to-white">
                   <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
                     {collections[0].category.toUpperCase()}
                   </span>
-                  <h3 className="font-cormorant text-2xl sm:text-3xl font-semibold text-[#3a2e1e] mt-2 italic">
+                  <h3 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] mt-2 italic">
                     {collections[0].name}
                   </h3>
                   <Link
                     to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-4 hover:gap-4 transition-all"
+                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-6 group/link"
                   >
-                    Shop Now <ArrowRight size={16} />
+                    <span>Explore Collection</span>
+                    <ArrowRight size={16} className="group-hover/link:translate-x-2 transition-transform" />
                   </Link>
                 </div>
               </div>
@@ -550,32 +632,34 @@ export default function Home() {
             {collections.slice(1).map((item, index) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, x: 50, rotateY: 5 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                transition={{ delay: index * 0.15, duration: 0.6 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(58,46,30,0.15)' }}
-                className="bg-[#faf7f2] rounded-2xl overflow-hidden flex cursor-pointer"
+                whileHover={{ y: -8, rotateY: -2, scale: 1.02 }}
+                className="bg-[#faf7f2] rounded-3xl overflow-hidden flex cursor-pointer group perspective-1000 shadow-lg hover:shadow-xl transition-all duration-500"
               >
-                <div className="w-[52%] overflow-hidden">
+                <div className="w-[52%] overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
-                <div className="w-[48%] p-6 flex flex-col justify-center">
+                <div className="w-[48%] p-6 flex flex-col justify-center bg-gradient-to-r from-[#faf7f2] to-white">
                   <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
                     {item.category.toUpperCase()}
                   </span>
-                  <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mt-2 italic">
+                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-[#3a2e1e] mt-2 italic">
                     {item.name}
                   </h3>
                   <Link
                     to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-4 hover:gap-4 transition-all"
+                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-4 group/link"
                   >
-                    Shop Now <ArrowRight size={16} />
+                    <span>View Details</span>
+                    <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform" />
                   </Link>
                 </div>
               </motion.div>
@@ -841,23 +925,37 @@ export default function Home() {
       </section>
 
       {/* Trust Strip */}
-      <section className="py-12 bg-[#faf7f2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="py-20 bg-gradient-to-r from-[#faf7f2] via-white to-[#faf7f2] relative overflow-hidden">
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 animate-rotate-slow" style={{
+            backgroundImage: `repeating-linear-gradient(45deg, #b8862a 0, #b8862a 1px, transparent 0, transparent 50%)`,
+            backgroundSize: '20px 20px'
+          }} />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {trustItems.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30, rotateX: -10 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center"
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="text-center group perspective-1000"
               >
-                <span className="text-3xl text-[#b8862a]">{item.icon}</span>
-                <h3 className="font-cormorant text-lg font-semibold text-[#3a2e1e] mt-2">
+                <motion.div 
+                  className="w-20 h-20 mx-auto bg-gradient-to-br from-[#b8862a]/10 to-[#d4a843]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:from-[#b8862a]/20 group-hover:to-[#d4a843]/20 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:shadow-[#b8862a]/10"
+                  whileHover={{ rotateY: 10, rotateX: -5 }}
+                >
+                  <span className="text-3xl text-[#b8862a]">{item.icon}</span>
+                </motion.div>
+                <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] group-hover:text-[#b8862a] transition-colors">
                   {item.title}
                 </h3>
-                <p className="font-raleway text-sm text-[#9a8060] mt-1">
+                <p className="font-raleway text-sm text-[#9a8060] mt-2">
                   {item.desc}
                 </p>
               </motion.div>

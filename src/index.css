@@ -27,6 +27,7 @@ body {
   color: var(--text);
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .font-cormorant {
@@ -69,7 +70,9 @@ body {
   border-color: var(--border);
 }
 
-/* Marquee Animation */
+/* ============================================
+   MARQUEE ANIMATION
+   ============================================ */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -83,20 +86,30 @@ body {
   animation-play-state: paused;
 }
 
-/* Pulse Animation for WhatsApp */
+/* ============================================
+   PULSE GLOW ANIMATION (WhatsApp FAB)
+   ============================================ */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-  50% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7),
+                0 0 20px rgba(37, 211, 102, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0),
+                0 0 40px rgba(37, 211, 102, 0.4); 
+  }
 }
 
 .pulse-glow {
   animation: pulse-glow 2s infinite;
 }
 
-/* Ken Burns Effect */
+/* ============================================
+   KEN BURNS EFFECT (Hero Images)
+   ============================================ */
 @keyframes kenburns {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
 
@@ -104,13 +117,301 @@ body {
   animation: kenburns 8s ease-in-out infinite;
 }
 
-/* Full width section */
+/* ============================================
+   FLOAT ANIMATION
+   ============================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  50% { transform: translateY(-20px) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(-1deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* ============================================
+   SHIMMER ANIMATION (Gold Shimmer Effect)
+   ============================================ */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0%,
+    var(--light-gold) 25%,
+    var(--gold) 50%,
+    var(--light-gold) 75%,
+    var(--gold) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 168, 67, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ============================================
+   GLOW ANIMATION
+   ============================================ */
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(184, 134, 42, 0.3),
+                0 0 40px rgba(184, 134, 42, 0.1); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(184, 134, 42, 0.5),
+                0 0 80px rgba(184, 134, 42, 0.2); 
+  }
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* ============================================
+   SPARKLE ANIMATION
+   ============================================ */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* ============================================
+   ROTATE ANIMATION
+   ============================================ */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate 30s linear infinite;
+}
+
+/* ============================================
+   SCALE PULSE ANIMATION
+   ============================================ */
+@keyframes scale-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-scale-pulse {
+  animation: scale-pulse 3s ease-in-out infinite;
+}
+
+/* ============================================
+   GRADIENT FLOW ANIMATION
+   ============================================ */
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-flow 5s ease infinite;
+}
+
+/* ============================================
+   REVEAL ANIMATION (For scroll reveals)
+   ============================================ */
+@keyframes reveal-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(60px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes reveal-left {
+  from { 
+    opacity: 0; 
+    transform: translateX(-60px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes reveal-right {
+  from { 
+    opacity: 0; 
+    transform: translateX(60px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes reveal-scale {
+  from { 
+    opacity: 0; 
+    transform: scale(0.8); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* ============================================
+   3D CARD EFFECTS
+   ============================================ */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* 3D Card Hover Effect */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-3d:hover {
+  transform: rotateY(5deg) rotateX(5deg) translateZ(20px);
+}
+
+/* 3D Tilt Effect */
+.tilt-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease-out;
+}
+
+.tilt-3d:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.02);
+}
+
+/* 3D Float Effect */
+.float-3d {
+  transform-style: preserve-3d;
+  animation: float-3d 6s ease-in-out infinite;
+}
+
+@keyframes float-3d {
+  0%, 100% { 
+    transform: translateY(0) rotateX(0deg) rotateY(0deg); 
+  }
+  25% { 
+    transform: translateY(-15px) rotateX(2deg) rotateY(-2deg); 
+  }
+  50% { 
+    transform: translateY(-25px) rotateX(0deg) rotateY(0deg); 
+  }
+  75% { 
+    transform: translateY(-15px) rotateX(-2deg) rotateY(2deg); 
+  }
+}
+
+/* ============================================
+   PARALLAX LAYERS
+   ============================================ */
+.parallax-layer {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* ============================================
+   GLASS MORPHISM
+   ============================================ */
+.glass {
+  background: rgba(250, 247, 242, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 134, 42, 0.1);
+}
+
+.glass-dark {
+  background: rgba(26, 15, 5, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 134, 42, 0.2);
+}
+
+/* ============================================
+   GOLD TEXT GRADIENT
+   ============================================ */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #d4a843 0%, #b8862a 50%, #8b6014 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold-animate {
+  background: linear-gradient(90deg, #8b6014, #d4a843, #b8862a, #d4a843, #8b6014);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ============================================
+   FULL WIDTH SECTION
+   ============================================ */
 .full-width {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
 
-/* Custom scrollbar */
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -120,19 +421,154 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gold);
+  background: linear-gradient(180deg, var(--light-gold), var(--gold));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-gold);
+  background: linear-gradient(180deg, var(--gold), var(--dark-gold));
 }
 
-/* Hide scrollbar for category carousel */
+/* ============================================
+   HIDE SCROLLBAR FOR CAROUSELS
+   ============================================ */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ============================================
+   LUXURY CARD STYLES
+   ============================================ */
+.luxury-card {
+  position: relative;
+  background: linear-gradient(145deg, #faf7f2 0%, #f5efe6 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.luxury-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--light-gold), transparent);
+}
+
+.luxury-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+}
+
+.luxury-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 
+    0 25px 50px -12px rgba(58, 46, 30, 0.15),
+    0 0 0 1px rgba(184, 134, 42, 0.1);
+}
+
+/* ============================================
+   DIAMOND DECORATION
+   ============================================ */
+.diamond-decoration {
+  position: relative;
+}
+
+.diamond-decoration::before,
+.diamond-decoration::after {
+  content: '◆';
+  position: absolute;
+  color: var(--gold);
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.diamond-decoration::before {
+  left: -20px;
+}
+
+.diamond-decoration::after {
+  right: -20px;
+}
+
+/* ============================================
+   BORDER ANIMATION
+   ============================================ */
+@keyframes border-dance {
+  0%, 100% { 
+    clip-path: polygon(0 0, 100% 0, 100% 2px, 0 2px); 
+  }
+  25% { 
+    clip-path: polygon(100% 0, 100% 100%, 98% 100%, 98% 0); 
+  }
+  50% { 
+    clip-path: polygon(100% 100%, 0 100%, 0 98%, 100% 98%); 
+  }
+  75% { 
+    clip-path: polygon(0 100%, 0 0, 2px 0, 2px 100%); 
+  }
+}
+
+.animate-border {
+  position: relative;
+}
+
+.animate-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--gold);
+  animation: border-dance 4s linear infinite;
+}
+
+/* ============================================
+   TEXT REVEAL ANIMATION
+   ============================================ */
+@keyframes text-reveal {
+  from { 
+    clip-path: inset(0 100% 0 0); 
+  }
+  to { 
+    clip-path: inset(0 0 0 0); 
+  }
+}
+
+.animate-text-reveal {
+  animation: text-reveal 1s ease-out forwards;
+}
+
+/* ============================================
+   BOUNCE SUBTLE
+   ============================================ */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* ============================================
+   MORPHING BACKGROUND
+   ============================================ */
+@keyframes morph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+
+.animate-morph {
+  animation: morph 8s ease-in-out infinite;
 }
