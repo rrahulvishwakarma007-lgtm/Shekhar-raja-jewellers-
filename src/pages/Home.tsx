@@ -8,7 +8,7 @@ import ProductModal from '../components/ProductModal';
 const heroSlides = [
   {
     id: 1,
-    image: '/hero-1.jpg',
+    image: '/uploads/rings/ring1.png',
     eyebrow: 'Exquisite Collection',
     title: 'Diamond',
     titleAccent: 'Rings',
@@ -18,7 +18,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    image: '/hero-2.jpg',
+    image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=1920',
     eyebrow: 'Bridal Heritage',
     title: 'Bridal',
     titleAccent: 'Necklaces',
@@ -28,7 +28,7 @@ const heroSlides = [
   },
   {
     id: 3,
-    image: '/hero-3.jpg',
+    image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=1920',
     eyebrow: 'Timeless Beauty',
     title: 'Gold',
     titleAccent: 'Earrings',
@@ -38,7 +38,7 @@ const heroSlides = [
   },
   {
     id: 4,
-    image: '/hero-4.jpg',
+    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=1920',
     eyebrow: 'Traditional Art',
     title: 'Gold',
     titleAccent: 'Bangles',
@@ -56,9 +56,9 @@ const categories = [
   { name: 'Necklaces', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Earrings', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Bangles', image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Rings', image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Rings', image: '/uploads/rings/ring2.png' },
   { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Diamond', image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Diamond', image: '/uploads/rings/ring3.png' },
   { name: 'Chains', image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Antique', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Temple', image: 'https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=400' }
@@ -104,7 +104,7 @@ const products = [
     name: 'Diamond Eternity Band',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/uploads/rings/ring4.png',
     tag: 'Premium'
   },
   {
@@ -125,10 +125,10 @@ const products = [
   },
   {
     id: 5,
-    name: 'Polki Diamond Pendant',
-    category: 'Pendants',
+    name: 'Polki Diamond Ring',
+    category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/uploads/rings/ring5.png',
     tag: 'Exclusive'
   },
   {
@@ -144,16 +144,16 @@ const products = [
     name: 'Ruby & Emerald Ring',
     category: 'Rings',
     description: 'Stunning cocktail ring with precious gemstones in kundan setting.',
-    image: 'https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: '/uploads/rings/ring6.png',
     tag: 'Limited'
   },
   {
     id: 8,
-    name: 'Cocktail Gold Chain',
-    category: 'Chains',
-    description: 'Heavy gold chain with modern link design, perfect for men.',
-    image: 'https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=600',
-    tag: 'Trending'
+    name: 'Solitaire Diamond Ring',
+    category: 'Diamond',
+    description: 'Brilliant solitaire diamond in an elegant platinum setting.',
+    image: '/uploads/rings/ring7.png',
+    tag: 'Premium'
   }
 ];
 
