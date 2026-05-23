@@ -1,0 +1,168 @@
+/*
+Theme Name: Shekhar Raja Jewellers
+Theme URI: https://shekharrajajewellers.com
+Author: Shekhar Raja Jewellers
+Author URI: https://shekharrajajewellers.com
+Description: A luxury jewellery website theme for Shekhar Raja Jewellers - Est. 1987, Jabalpur, Madhya Pradesh. Premium design with gold accents and elegant typography.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: shekhar-raja-jewellers
+Tags: jewellery, luxury, e-commerce, custom-menu, featured-images
+*/
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Raleway:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables */
+:root {
+  --bg: #e8e0d0;
+  --card: #faf7f2;
+  --gold: #b8862a;
+  --dark-gold: #8b6014;
+  --light-gold: #d4a843;
+  --text: #3a2e1e;
+  --muted: #9a8060;
+  --border: rgba(184,134,42,0.2);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Typography */
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-raleway { font-family: 'Raleway', sans-serif; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--dark-gold);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Container */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+  color: white;
+  box-shadow: 0 4px 15px rgba(184, 134, 42, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(184, 134, 42, 0.4);
+  color: white;
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25D366, #20bd5a);
+  color: white;
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  color: white;
+}
+
+/* Gold Gradient Text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--light-gold), var(--gold), var(--dark-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  50% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s infinite; }
+.animate-marquee { animation: marquee 12s linear infinite; }
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-gold { color: var(--gold); }
+.text-muted { color: var(--muted); }
+.bg-card { background-color: var(--card); }
+.shadow-lg { box-shadow: 0 10px 40px rgba(58, 46, 30, 0.1); }
+.rounded-2xl { border-radius: 20px; }
+.rounded-full { border-radius: 9999px; }
+.overflow-hidden { overflow: hidden; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 2rem !important; }
+}
