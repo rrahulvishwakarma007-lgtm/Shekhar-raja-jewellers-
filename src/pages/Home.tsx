@@ -189,7 +189,7 @@ export default function Home() {
             <div key={i} className="flex items-center gap-12 px-6">
               <span className="font-cinzel text-sm tracking-[0.2em] text-white">BIS HALLMARK</span>
               <span className="text-[#d4a843]">◆</span>
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">TRUSTED SINCE 1987</span>
+              <span className="font-cinzel text-sm tracking-[0.2em] text-white">TRUSTED</span>
               <span className="text-[#d4a843]">◆</span>
               <span className="font-cinzel text-sm tracking-[0.2em] text-white">22K GOLD</span>
               <span className="text-[#d4a843]">◆</span>
