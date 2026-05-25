@@ -50,18 +50,18 @@ const heroSlides = [
 
 // Categories data
 const categories = [
-  { name: 'Bridal', image: '/bridal.png' },
+  { name: 'Bridal', image: '/antique2.png' },
   { name: 'Festive', image: '/festive.png' },
   { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Necklaces', image: '/bridal.png' },
-  { name: 'Earrings', image: '/antique.png' },
-  { name: 'Bangles', image: '/band.png' },
-  { name: 'Rings', image: '/band.png' },
+  { name: 'Necklaces', image: '/antique3.png' },
+  { name: 'Earrings', image: '/earring1.jpg' },
+  { name: 'Bangles', image: '/bangle1.png' },
+  { name: 'Rings', image: '/ring3.png' },
   { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Diamond', image: '/band.png' },
+  { name: 'Diamond', image: '/ring2.png' },
   { name: 'Chains', image: '/band.png' },
   { name: 'Antique', image: '/antique.png' },
-  { name: 'Temple', image: '/temple.png' }
+  { name: 'Temple', image: '/necklace1.jpg' }
 ];
 
 // Collections data
@@ -70,14 +70,14 @@ const collections = [
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: '/bridal.png',
+    image: '/necklace 2.jpg',
     featured: true
   },
   {
     id: 2,
     name: 'Diamond Eternity Band',
     category: 'Diamond',
-    image: '/band.png',
+    image: '/ring1.png',
     featured: false
   },
   {
