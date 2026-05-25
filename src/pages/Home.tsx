@@ -57,7 +57,7 @@ const categories = [
   { name: 'Earrings', image: '/earring1.jpg' },
   { name: 'Bangles', image: '/bangle1.png' },
   { name: 'Rings', image: '/ring1.png' },
-  { name: 'Pendants', image: 'https://pixabay.com/photos/pendant-decoration-suspension-3092615/' },
+  { name: 'Pendants', image: '/pendant.png' },
   { name: 'Diamond', image: '/ring3.png' },
   { name: 'Chains', image: '/band.png' },
   { name: 'Antique', image: '/antique.png' },
