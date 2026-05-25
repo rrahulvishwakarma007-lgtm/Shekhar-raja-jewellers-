@@ -165,7 +165,7 @@ export default function GoldRates() {
             Today's Gold Rates
           </h1>
           <p className="font-raleway text-[#9a8060] mt-4">
-            Rates per gram in INR • Auto-calculated from 24K base rate
+            Rates per gram in INR
           </p>
           
           {lastUpdated && (
@@ -286,7 +286,7 @@ export default function GoldRates() {
           className="bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-2xl p-8 mb-12 text-center"
         >
           <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-white">
-            Flat 9% Off Making Charges
+            Flat 9% Making Charges
           </h2>
           <p className="font-raleway text-lg text-white/80 mt-2">
             On all 22KT Gold Jewellery
