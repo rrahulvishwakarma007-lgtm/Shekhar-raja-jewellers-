@@ -4,10 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// ── Google Drive direct URL helper ───────────────────────────────────────────
-const gd = (id: string) => `https://drive.google.com/uc?export=view&id=${id}`;
-
-// ── Hero slides — DO NOT TOUCH ───────────────────────────────────────────────
+// Hero slides data
 const heroSlides = [
   {
     id: 1,
@@ -51,55 +48,55 @@ const heroSlides = [
   }
 ];
 
-// ── Categories — updated with Google Drive images ────────────────────────────
+// Categories data
 const categories = [
-  { name: 'Bridal',     image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW') },  // necklace 3
-  { name: 'Festive',    image: gd('1ZYL2io58ZBM3Zj5TUb29yZzIZCBpERVp') },  // necklace 4
-  { name: 'Dailywear',  image: gd('1uFouP3vJqRn3xg0_-XaYF5WstCjDmoOK') },  // chain 1
-  { name: 'Necklaces',  image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN') },  // necklace 1
-  { name: 'Earrings',   image: gd('1rz-e2uhRWYQsOyEJG_O0B3dekF0kpu43') },  // earring 1
-  { name: 'Bangles',    image: gd('1bOjrDufMVW8WSHXRVaWvwSgaFVrNPafB') },  // bangle 1
-  { name: 'Rings',      image: gd('1IB_iNGjIlPQl2h4rqNfypU-Uqtrl2egk') },  // ring 1
-  { name: 'Pendants',   image: gd('1MGHQ9y1ZwLSZFwyWzqPLMy4s2u0s4YCw') },  // necklace 5
-  { name: 'Diamond',    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W') },  // ring 4
-  { name: 'Chains',     image: gd('1Js6g0OUeKC8dNVhqHczaP0XhjcYn6cgP') },  // chain 2
-  { name: 'Antique',    image: gd('1VpZkJ5u7IVaj3ifTBMbHC2IJsvCCh-qh') },  // earring 4
-  { name: 'Temple',     image: gd('1etFrF2xVdxtcEYDZkAPD4NNZwNGkUmWN') },  // necklace 2
+  { name: 'Bridal', image: '/bridal.png' },
+  { name: 'Festive', image: '/necklace3.jpg' },
+  { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Necklaces', image: '/necklace1.jpg' },
+  { name: 'Earrings', image: '/earring1.jpg' },
+  { name: 'Bangles', image: '/bangle1.png' },
+  { name: 'Rings', image: '/ring3.png' },
+  { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  { name: 'Diamond', image: '/ring7.png' },
+  { name: 'Chains', image: '/festive.png' },
+  { name: 'Antique', image: '/antique.png' },
+  { name: 'Temple', image: '/necklace 3.jpg' }
 ];
 
-// ── Collections — updated with Google Drive images ───────────────────────────
+// Collections data
 const collections = [
   {
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW'),   // necklace 3 — bridal style
+    image: '/bridal.png',
     featured: true
   },
   {
     id: 2,
     name: 'Diamond Eternity Band',
     category: 'Diamond',
-    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W'),   // ring 4
+    image: '/band.png',
     featured: false
   },
   {
     id: 3,
     name: 'Temple Gold Necklace',
     category: 'Temple',
-    image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN'),   // necklace 1
+    image: '/temple.png',
     featured: false
   }
 ];
 
-// ── Products — updated with Google Drive images ───────────────────────────────
+// Products data
 const products = [
   {
     id: 1,
     name: 'Kundan Bridal Choker',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
-    image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW'),   // necklace 3 — bridal
+    image: '/bridal.png',
     tag: 'Bestseller'
   },
   {
@@ -107,7 +104,7 @@ const products = [
     name: 'Diamond Eternity Band',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W'),   // ring 4
+    image: '/band.png',
     tag: 'Premium'
   },
   {
@@ -115,7 +112,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: gd('1rz-e2uhRWYQsOyEJG_O0B3dekF0kpu43'),   // earring 1
+    image: '/antique.png',
     tag: 'Heritage'
   },
   {
@@ -123,7 +120,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: gd('1bOjrDufMVW8WSHXRVaWvwSgaFVrNPafB'),   // bangle 1
+    image: '/band.png',
     tag: 'Classic'
   },
   {
@@ -131,7 +128,7 @@ const products = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: gd('1IB_iNGjIlPQl2h4rqNfypU-Uqtrl2egk'),   // ring 1
+    image: '/band.png',
     tag: 'Exclusive'
   },
   {
@@ -139,7 +136,7 @@ const products = [
     name: 'Temple Gold Haar',
     category: 'Necklaces',
     description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN'),   // necklace 1
+    image: '/temple.png',
     tag: 'Traditional'
   },
   {
@@ -147,7 +144,7 @@ const products = [
     name: 'Antique Temple Set',
     category: 'Antique',
     description: 'Exquisite antique finish temple jewellery with traditional craftsmanship.',
-    image: gd('1VpZkJ5u7IVaj3ifTBMbHC2IJsvCCh-qh'),   // earring 4
+    image: '/antique.png',
     tag: 'Limited'
   },
   {
@@ -155,7 +152,7 @@ const products = [
     name: 'Festive Gold Set',
     category: 'Festive',
     description: 'Elegant gold set perfect for festive occasions and celebrations.',
-    image: gd('1ZYL2io58ZBM3Zj5TUb29yZzIZCBpERVp'),   // necklace 4
+    image: '/festive.png',
     tag: 'Trending'
   }
 ];
@@ -205,8 +202,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero Slider — UNCHANGED */}
+      {/* Hero Slider */}
       <section className="relative h-[85vh] sm:h-[90vh] overflow-hidden">
+        {/* Background Slides */}
         <AnimatePresence mode="wait">
           {heroSlides.map((slide, index) => (
             index === currentSlide && (
@@ -228,6 +226,7 @@ export default function Home() {
           ))}
         </AnimatePresence>
 
+        {/* Navigation Arrows */}
         <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30">
           <button
             onClick={prevSlide}
@@ -245,6 +244,7 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Bottom Navigation */}
         <div className="absolute bottom-8 left-0 right-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-center gap-3">
@@ -253,8 +253,8 @@ export default function Home() {
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentSlide
-                      ? 'bg-[#d4a843] w-12'
+                    index === currentSlide 
+                      ? 'bg-[#d4a843] w-12' 
                       : 'bg-white/40 w-8 hover:bg-white/60'
                   }`}
                 />
@@ -266,10 +266,12 @@ export default function Home() {
 
       {/* Category Circles */}
       <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6] relative overflow-hidden">
+        {/* Decorative Background Elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[#b8862a]/5 rounded-full blur-3xl animate-morph" />
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#d4a843]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '2s' }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -291,7 +293,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Desktop Grid */}
+          {/* Desktop Grid - 3D Effect */}
           <div className="hidden lg:grid grid-cols-6 gap-8">
             {categories.map((cat, index) => (
               <motion.div
@@ -304,8 +306,12 @@ export default function Home() {
                 className="flex flex-col items-center cursor-pointer group perspective-1000"
               >
                 <div className="relative">
+                  {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+
+                  {/* Main circle */}
                   <div className="relative w-28 h-28 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:shadow-[#b8862a]/20 transition-all duration-500">
+                    {/* Shine overlay */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                     <img
                       src={cat.image}
@@ -313,10 +319,13 @@ export default function Home() {
                       className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                     />
                   </div>
+
+                  {/* Floating diamond decoration */}
                   <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100">
                     <Diamond size={10} className="text-white" />
                   </div>
                 </div>
+
                 <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-4 group-hover:text-[#b8862a] transition-colors duration-300">
                   {cat.name.toUpperCase()}
                 </span>
@@ -356,6 +365,7 @@ export default function Home() {
 
       {/* Collections Grid */}
       <section className="py-24 bg-gradient-to-b from-[#e8e0d0] to-[#faf7f2] relative overflow-hidden">
+        {/* 3D Floating Decorations */}
         <div className="absolute top-40 left-20 w-32 h-32 opacity-20">
           <div className="w-full h-full bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full animate-float blur-sm" />
         </div>
@@ -364,6 +374,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -384,7 +395,7 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Big Card */}
+            {/* Big Card - 3D Effect */}
             <motion.div
               initial={{ opacity: 0, y: 50, rotateY: -5 }}
               whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
@@ -395,13 +406,17 @@ export default function Home() {
             >
               <div className="flex flex-col h-full">
                 <div className="h-72 md:h-96 overflow-hidden relative">
+                  {/* Shimmer overlay */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
                   <img
                     src={collections[0].image}
                     alt={collections[0].name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
+                  {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/40 to-transparent" />
+
+                  {/* Featured badge */}
                   <div className="absolute top-6 left-6">
                     <span className="bg-[#b8862a] text-white font-cinzel text-xs tracking-wider px-4 py-2 rounded-full shadow-lg">
                       ★ FEATURED
@@ -445,123 +460,4 @@ export default function Home() {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
-                <div className="w-[48%] p-6 flex flex-col justify-center">
-                  <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
-                    {item.category.toUpperCase()}
-                  </span>
-                  <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mt-1 italic">
-                    {item.name}
-                  </h3>
-                  <Link
-                    to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-xs mt-4 group/link"
-                  >
-                    <span>View</span>
-                    <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="py-24 bg-[#faf7f2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-3 mb-4">
-              <Sparkles size={16} className="text-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">OUR JEWELLERY</span>
-              <Sparkles size={16} className="text-[#b8862a]" />
-            </div>
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
-              Explore Our Collections
-            </h2>
-            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
-              Every piece tells a story of craftsmanship and heritage
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-400 cursor-pointer group"
-                onClick={() => setSelectedProduct(product)}
-              >
-                <div className="relative h-52 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-10" />
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-600"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-[#b8862a] text-white font-cinzel text-[10px] tracking-wider px-3 py-1 rounded-full">
-                      {product.tag}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <span className="font-cinzel text-[10px] tracking-[0.2em] text-[#b8862a]">
-                    {product.category.toUpperCase()}
-                  </span>
-                  <h3 className="font-cormorant text-lg font-semibold text-[#3a2e1e] mt-1 leading-tight">
-                    {product.name}
-                  </h3>
-                  <p className="font-raleway text-xs text-[#9a8060] mt-2 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <button className="mt-4 w-full bg-gradient-to-r from-[#b8862a] to-[#d4a843] text-white font-cinzel text-xs tracking-wider py-2.5 rounded-full hover:shadow-lg hover:shadow-[#b8862a]/30 transition-all duration-300">
-                    ENQUIRE NOW
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Section */}
-      <section className="py-16 bg-gradient-to-r from-[#3a2e1e] to-[#1a1008]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {trustItems.map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="text-3xl text-[#d4a843] mb-3">{item.icon}</div>
-                <h3 className="font-cinzel text-sm text-white tracking-wider mb-2">{item.title}</h3>
-                <p className="font-raleway text-xs text-[#9a8060]">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Product Modal */}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
-    </div>
-  );
-}
+                <div className="w-[48%] p-6 flex flex-col justify-center bg-g
