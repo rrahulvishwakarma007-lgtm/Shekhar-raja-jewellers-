@@ -53,7 +53,7 @@ const categories = [
   { name: 'Bridal', image: '/antique2.jpg' },
   { name: 'Festive', image: '/festive.png' },
   { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Necklaces', image: '/antique3.jpg' },
+  { name: 'Necklaces', image: '/necklace1.jpg' },
   { name: 'Earrings', image: '/earring1.jpg' },
   { name: 'Bangles', image: '/bangle1.png' },
   { name: 'Rings', image: '/ring1.png' },
@@ -61,7 +61,7 @@ const categories = [
   { name: 'Diamond', image: '/ring3.png' },
   { name: 'Chains', image: '/band.png' },
   { name: 'Antique', image: '/antique.png' },
-  { name: 'Temple', image: '/necklace1.jpg' }
+  { name: 'Chokers', image: '/antique3.jpg' }
 ];
 
 // Collections data
