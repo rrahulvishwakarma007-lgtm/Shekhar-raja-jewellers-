@@ -4,7 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// Hero slides data
+// ── Google Drive direct URL helper ───────────────────────────────────────────
+const gd = (id: string) => `https://drive.google.com/uc?export=view&id=${id}`;
+
+// ── Hero slides — DO NOT TOUCH ───────────────────────────────────────────────
 const heroSlides = [
   {
     id: 1,
@@ -48,55 +51,55 @@ const heroSlides = [
   }
 ];
 
-// Categories data
+// ── Categories — updated with Google Drive images ────────────────────────────
 const categories = [
-  { name: 'Bridal', image: '/bridal.png' },
-  { name: 'Festive', image: '/necklace3.jpg' },
-  { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Necklaces', image: '/necklace1.jpg' },
-  { name: 'Earrings', image: '/earring1.jpg' },
-  { name: 'Bangles', image: '/bangle1.png' },
-  { name: 'Rings', image: '/ring3.png' },
-  { name: 'Pendants', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Diamond', image: '/ring7.png' },
-  { name: 'Chains', image: '/festive.png' },
-  { name: 'Antique', image: '/antique.png' },
-  { name: 'Temple', image: '/necklace 3.jpg' }
+  { name: 'Bridal',     image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW') },  // necklace 3
+  { name: 'Festive',    image: gd('1ZYL2io58ZBM3Zj5TUb29yZzIZCBpERVp') },  // necklace 4
+  { name: 'Dailywear',  image: gd('1uFouP3vJqRn3xg0_-XaYF5WstCjDmoOK') },  // chain 1
+  { name: 'Necklaces',  image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN') },  // necklace 1
+  { name: 'Earrings',   image: gd('1rz-e2uhRWYQsOyEJG_O0B3dekF0kpu43') },  // earring 1
+  { name: 'Bangles',    image: gd('1bOjrDufMVW8WSHXRVaWvwSgaFVrNPafB') },  // bangle 1
+  { name: 'Rings',      image: gd('1IB_iNGjIlPQl2h4rqNfypU-Uqtrl2egk') },  // ring 1
+  { name: 'Pendants',   image: gd('1MGHQ9y1ZwLSZFwyWzqPLMy4s2u0s4YCw') },  // necklace 5
+  { name: 'Diamond',    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W') },  // ring 4
+  { name: 'Chains',     image: gd('1Js6g0OUeKC8dNVhqHczaP0XhjcYn6cgP') },  // chain 2
+  { name: 'Antique',    image: gd('1VpZkJ5u7IVaj3ifTBMbHC2IJsvCCh-qh') },  // earring 4
+  { name: 'Temple',     image: gd('1etFrF2xVdxtcEYDZkAPD4NNZwNGkUmWN') },  // necklace 2
 ];
 
-// Collections data
+// ── Collections — updated with Google Drive images ───────────────────────────
 const collections = [
   {
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: '/bridal.png',
+    image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW'),   // necklace 3 — bridal style
     featured: true
   },
   {
     id: 2,
     name: 'Diamond Eternity Band',
     category: 'Diamond',
-    image: '/band.png',
+    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W'),   // ring 4
     featured: false
   },
   {
     id: 3,
     name: 'Temple Gold Necklace',
     category: 'Temple',
-    image: '/temple.png',
+    image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN'),   // necklace 1
     featured: false
   }
 ];
 
-// Products data
+// ── Products — updated with Google Drive images ───────────────────────────────
 const products = [
   {
     id: 1,
     name: 'Kundan Bridal Choker',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
-    image: '/bridal.png',
+    image: gd('1gjyEU0uPpfHKiuvoTfR847mkr2J5LHqW'),   // necklace 3 — bridal
     tag: 'Bestseller'
   },
   {
@@ -104,7 +107,7 @@ const products = [
     name: 'Diamond Eternity Band',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: '/band.png',
+    image: gd('1quBTTS1bwijG-XAoT_7RLfQqBgk3kp_W'),   // ring 4
     tag: 'Premium'
   },
   {
@@ -112,7 +115,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: '/antique.png',
+    image: gd('1rz-e2uhRWYQsOyEJG_O0B3dekF0kpu43'),   // earring 1
     tag: 'Heritage'
   },
   {
@@ -120,7 +123,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: '/band.png',
+    image: gd('1bOjrDufMVW8WSHXRVaWvwSgaFVrNPafB'),   // bangle 1
     tag: 'Classic'
   },
   {
@@ -128,7 +131,7 @@ const products = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: '/band.png',
+    image: gd('1IB_iNGjIlPQl2h4rqNfypU-Uqtrl2egk'),   // ring 1
     tag: 'Exclusive'
   },
   {
@@ -136,7 +139,7 @@ const products = [
     name: 'Temple Gold Haar',
     category: 'Necklaces',
     description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: '/temple.png',
+    image: gd('178WZEQ5UhlSu0NJ2D7buXiBFyhRXd0TN'),   // necklace 1
     tag: 'Traditional'
   },
   {
@@ -144,7 +147,7 @@ const products = [
     name: 'Antique Temple Set',
     category: 'Antique',
     description: 'Exquisite antique finish temple jewellery with traditional craftsmanship.',
-    image: '/antique.png',
+    image: gd('1VpZkJ5u7IVaj3ifTBMbHC2IJsvCCh-qh'),   // earring 4
     tag: 'Limited'
   },
   {
@@ -152,7 +155,7 @@ const products = [
     name: 'Festive Gold Set',
     category: 'Festive',
     description: 'Elegant gold set perfect for festive occasions and celebrations.',
-    image: '/festive.png',
+    image: gd('1ZYL2io58ZBM3Zj5TUb29yZzIZCBpERVp'),   // necklace 4
     tag: 'Trending'
   }
 ];
@@ -202,9 +205,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero Slider */}
+      {/* Hero Slider — UNCHANGED */}
       <section className="relative h-[85vh] sm:h-[90vh] overflow-hidden">
-        {/* Background Slides */}
         <AnimatePresence mode="wait">
           {heroSlides.map((slide, index) => (
             index === currentSlide && (
@@ -226,7 +228,6 @@ export default function Home() {
           ))}
         </AnimatePresence>
 
-        {/* Navigation Arrows */}
         <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30">
           <button
             onClick={prevSlide}
@@ -244,7 +245,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Bottom Navigation */}
         <div className="absolute bottom-8 left-0 right-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-center gap-3">
@@ -253,8 +253,8 @@ export default function Home() {
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentSlide 
-                      ? 'bg-[#d4a843] w-12' 
+                    index === currentSlide
+                      ? 'bg-[#d4a843] w-12'
                       : 'bg-white/40 w-8 hover:bg-white/60'
                   }`}
                 />
@@ -266,12 +266,10 @@ export default function Home() {
 
       {/* Category Circles */}
       <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6] relative overflow-hidden">
-        {/* Decorative Background Elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[#b8862a]/5 rounded-full blur-3xl animate-morph" />
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#d4a843]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '2s' }} />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -292,8 +290,8 @@ export default function Home() {
               Discover our curated collections, each piece a masterpiece of craftsmanship
             </p>
           </motion.div>
-          
-          {/* Desktop Grid - 3D Effect */}
+
+          {/* Desktop Grid */}
           <div className="hidden lg:grid grid-cols-6 gap-8">
             {categories.map((cat, index) => (
               <motion.div
@@ -306,12 +304,8 @@ export default function Home() {
                 className="flex flex-col items-center cursor-pointer group perspective-1000"
               >
                 <div className="relative">
-                  {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-                  
-                  {/* Main circle */}
                   <div className="relative w-28 h-28 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:shadow-[#b8862a]/20 transition-all duration-500">
-                    {/* Shine overlay */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                     <img
                       src={cat.image}
@@ -319,13 +313,10 @@ export default function Home() {
                       className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                     />
                   </div>
-                  
-                  {/* Floating diamond decoration */}
                   <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100">
                     <Diamond size={10} className="text-white" />
                   </div>
                 </div>
-                
                 <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-4 group-hover:text-[#b8862a] transition-colors duration-300">
                   {cat.name.toUpperCase()}
                 </span>
@@ -365,16 +356,14 @@ export default function Home() {
 
       {/* Collections Grid */}
       <section className="py-24 bg-gradient-to-b from-[#e8e0d0] to-[#faf7f2] relative overflow-hidden">
-        {/* 3D Floating Decorations */}
         <div className="absolute top-40 left-20 w-32 h-32 opacity-20">
           <div className="w-full h-full bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full animate-float blur-sm" />
         </div>
         <div className="absolute bottom-40 right-20 w-40 h-40 opacity-15">
           <div className="w-full h-full bg-gradient-to-br from-[#b8862a] to-[#8b6014] rounded-full animate-float-delayed blur-sm" />
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -393,9 +382,9 @@ export default function Home() {
               Handpicked masterpieces that define luxury and elegance
             </p>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Big Card - 3D Effect */}
+            {/* Big Card */}
             <motion.div
               initial={{ opacity: 0, y: 50, rotateY: -5 }}
               whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
@@ -406,17 +395,13 @@ export default function Home() {
             >
               <div className="flex flex-col h-full">
                 <div className="h-72 md:h-96 overflow-hidden relative">
-                  {/* Shimmer overlay */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
                   <img
                     src={collections[0].image}
                     alt={collections[0].name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/40 to-transparent" />
-                  
-                  {/* Featured badge */}
                   <div className="absolute top-6 left-6">
                     <span className="bg-[#b8862a] text-white font-cinzel text-xs tracking-wider px-4 py-2 rounded-full shadow-lg">
                       ★ FEATURED
@@ -460,19 +445,19 @@ export default function Home() {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
-                <div className="w-[48%] p-6 flex flex-col justify-center bg-gradient-to-r from-[#faf7f2] to-white">
+                <div className="w-[48%] p-6 flex flex-col justify-center">
                   <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
                     {item.category.toUpperCase()}
                   </span>
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-[#3a2e1e] mt-2 italic">
+                  <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mt-1 italic">
                     {item.name}
                   </h3>
                   <Link
                     to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-4 group/link"
+                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-xs mt-4 group/link"
                   >
-                    <span>View Details</span>
-                    <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform" />
+                    <span>View</span>
+                    <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </motion.div>
@@ -481,296 +466,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gift Voucher Banner */}
-      <section className="py-16 bg-[#d4c4a8]">
+      {/* Products Grid */}
+      <section className="py-24 bg-[#faf7f2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            {/* Image Collage */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2 h-48 overflow-hidden rounded-2xl">
-                <img
-                  src="https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="h-32 overflow-hidden rounded-xl">
-                <img
-                  src="https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="h-32 overflow-hidden rounded-xl">
-                <img
-                  src="https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-3 mb-4">
+              <Sparkles size={16} className="text-[#b8862a]" />
+              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">OUR JEWELLERY</span>
+              <Sparkles size={16} className="text-[#b8862a]" />
             </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
+              Explore Our Collections
+            </h2>
+            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
+              Every piece tells a story of craftsmanship and heritage
+            </p>
+          </motion.div>
 
-            {/* Offer Content */}
-            <div className="text-center lg:text-left">
-              <span className="font-cinzel text-sm tracking-[0.3em] text-[#8b6014]">GIFT VOUCHER</span>
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e] mt-4">
-                Flat 9% Off
-              </h2>
-              <p className="font-raleway text-xl text-[#3a2e1e] mt-2">
-                Making Charges Off on 22KT Gold
-              </p>
-              <a
-                href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! I want to claim the 9% off making charges offer.')}'"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium mt-8 hover:bg-[#8b6014] transition-colors"
-              >
-                CLAIM NOW
-                <ArrowRight size={18} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Product Catalogue */}
-      <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-3 mb-4"
-            >
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">EXQUISITE CRAFTSMANSHIP</span>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              viewport={{ once: true }}
-              className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]"
-            >
-              Our Collection
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              viewport={{ once: true }}
-              className="font-raleway text-[#9a8060] mt-4 max-w-2xl mx-auto"
-            >
-              Each piece tells a story of heritage, crafted with passion and precision by master artisans
-            </motion.p>
-          </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.5 }}
+                transition={{ delay: index * 0.08 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -8 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-400 cursor-pointer group"
                 onClick={() => setSelectedProduct(product)}
-                className="group cursor-pointer"
               >
-                <div className="relative bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(58,46,30,0.08)] group-hover:shadow-[0_20px_50px_rgba(58,46,30,0.15)] transition-all duration-500">
-                  {/* Image Container */}
-                  <div className="relative aspect-square overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Tag Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block bg-[#1a0f05]/90 backdrop-blur-sm text-[#d4a843] font-cinzel text-[10px] tracking-[0.15em] px-3 py-1.5 rounded-full">
-                        {product.tag}
-                      </span>
-                    </div>
-                    
-                    {/* Quick View Button */}
-                    <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                      <div className="flex items-center justify-center gap-2 bg-white/95 backdrop-blur-sm text-[#3a2e1e] py-3 rounded-xl font-raleway text-sm font-medium shadow-lg">
-                        <span>View Details</span>
-                        <ArrowRight size={16} className="text-[#b8862a]" />
-                      </div>
-                    </div>
-                    
-                    {/* Gold Corner Accent */}
-                    <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#d4a843] to-[#b8862a] transform rotate-45 translate-x-12 -translate-y-12 opacity-20" />
-                    </div>
+                <div className="relative h-52 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-10" />
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-600"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="bg-[#b8862a] text-white font-cinzel text-[10px] tracking-wider px-3 py-1 rounded-full">
+                      {product.tag}
+                    </span>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#b8862a]" />
-                      <span className="font-cinzel text-[10px] tracking-[0.2em] text-[#b8862a]">
-                        {product.category.toUpperCase()}
-                      </span>
-                    </div>
-                    <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] group-hover:text-[#b8862a] transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="font-raleway text-sm text-[#9a8060] mt-2 line-clamp-2 leading-relaxed">
-                      {product.description}
-                    </p>
-                    
-                    {/* Bottom Accent Line */}
-                    <div className="mt-4 h-px bg-gradient-to-r from-[#b8862a]/50 via-[#b8862a]/20 to-transparent" />
-                  </div>
+                </div>
+                <div className="p-4">
+                  <span className="font-cinzel text-[10px] tracking-[0.2em] text-[#b8862a]">
+                    {product.category.toUpperCase()}
+                  </span>
+                  <h3 className="font-cormorant text-lg font-semibold text-[#3a2e1e] mt-1 leading-tight">
+                    {product.name}
+                  </h3>
+                  <p className="font-raleway text-xs text-[#9a8060] mt-2 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <button className="mt-4 w-full bg-gradient-to-r from-[#b8862a] to-[#d4a843] text-white font-cinzel text-xs tracking-wider py-2.5 rounded-full hover:shadow-lg hover:shadow-[#b8862a]/30 transition-all duration-300">
+                    ENQUIRE NOW
+                  </button>
                 </div>
               </motion.div>
             ))}
           </div>
-          
-          {/* View All Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link
-              to="/collections"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-[#b8862a] to-[#8b6014] text-white px-10 py-4 rounded-full font-raleway font-medium shadow-lg hover:shadow-xl hover:shadow-[#b8862a]/20 transition-all duration-300 hover:-translate-y-1"
-            >
-              <span>View All Collection</span>
-              <ArrowRight size={18} />
-            </Link>
-          </motion.div>
         </div>
       </section>
 
-      {/* App Promo */}
-      <section className="py-20 bg-[#1a0f05] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#b8862a]/10 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-[#b8862a]/20 px-4 py-2 rounded-full mb-6">
-                <Smartphone size={18} className="text-[#d4a843]" />
-                <span className="font-raleway text-sm text-[#d4a843]">Now on Android</span>
-              </div>
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">
-                Download Our App
-              </h2>
-              <p className="font-raleway text-lg text-white/70 mt-4">
-                Browse our entire collection, check gold rates, and get exclusive offers right on your phone.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start">
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Tag size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">Catalogue</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Bell size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">Gold Rate</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Headphones size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">WA Support</span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                <Link
-                  to="/app"
-                  className="flex items-center gap-2 bg-[#b8862a] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
-                >
-                  <Download size={18} />
-                  Download APK
-                </Link>
-                <a
-                  href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}'"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
-                >
-                  <MessageCircle size={18} />
-                  Get Link on WA
-                </a>
-              </div>
-            </div>
-
-            {/* Phone Mockup */}
-            <div className="flex justify-center">
-              <div className="relative">
-                <div className="w-64 h-[500px] bg-gradient-to-b from-[#2a1a0a] to-[#1a0f05] rounded-[3rem] border-4 border-[#3a2e1e] p-3 shadow-2xl">
-                  <div className="w-full h-full bg-[#faf7f2] rounded-[2.5rem] overflow-hidden">
-                    <div className="bg-[#b8862a] py-4 px-6 text-center">
-                      <span className="font-cinzel text-xs tracking-[0.2em] text-white">SHEKHAR RAJA</span>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-20 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-24 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-16 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3a2e1e] rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Strip */}
-      <section className="py-20 bg-gradient-to-r from-[#faf7f2] via-white to-[#faf7f2] relative overflow-hidden">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 animate-rotate-slow" style={{
-            backgroundImage: `repeating-linear-gradient(45deg, #b8862a 0, #b8862a 1px, transparent 0, transparent 50%)`,
-            backgroundSize: '20px 20px'
-          }} />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* Trust Section */}
+      <section className="py-16 bg-gradient-to-r from-[#3a2e1e] to-[#1a1008]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {trustItems.map((item, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30, rotateX: -10 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="text-center group perspective-1000"
+                className="text-center"
               >
-                <motion.div 
-                  className="w-20 h-20 mx-auto bg-gradient-to-br from-[#b8862a]/10 to-[#d4a843]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:from-[#b8862a]/20 group-hover:to-[#d4a843]/20 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:shadow-[#b8862a]/10"
-                  whileHover={{ rotateY: 10, rotateX: -5 }}
-                >
-                  <span className="text-3xl text-[#b8862a]">{item.icon}</span>
-                </motion.div>
-                <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] group-hover:text-[#b8862a] transition-colors">
-                  {item.title}
-                </h3>
-                <p className="font-raleway text-sm text-[#9a8060] mt-2">
-                  {item.desc}
-                </p>
+                <div className="text-3xl text-[#d4a843] mb-3">{item.icon}</div>
+                <h3 className="font-cinzel text-sm text-white tracking-wider mb-2">{item.title}</h3>
+                <p className="font-raleway text-xs text-[#9a8060]">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -778,7 +556,12 @@ export default function Home() {
       </section>
 
       {/* Product Modal */}
-      <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </div>
   );
 }
