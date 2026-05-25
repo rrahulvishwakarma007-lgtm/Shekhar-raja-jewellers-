@@ -66,15 +66,15 @@ const categories = [
 const collections = [
   {
     id: 1,
-    name: 'Maharani Bridal Set',
+    name: 'Chain',
     category: 'Bridal',
     image: '/bridal.png',
     featured: true
   },
   {
     id: 2,
-    name: 'Diamond Eternity Band',
-    category: 'Diamond',
+    name: 'Elegant wear',
+    category: 'Gold',
     image: '/band.png',
     featured: false
   },
@@ -99,8 +99,8 @@ const products = [
   },
   {
     id: 2,
-    name: 'Diamond Eternity Band',
-    category: 'Diamond',
+    name: 'Eternity',
+    category: 'Gold',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
     image: '/band.png',
     tag: 'Premium'
