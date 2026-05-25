@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle } from 'lucide-react';
+import { Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle } from 'lucide-react';
 
 // Gold purity percentages for auto-calculation
 const PURITY_RATIOS = {
@@ -32,8 +32,8 @@ interface HistoryData {
 }
 
 export default function GoldRates() {
-  const [rate24K, setRate24K] = useState<number>(0);
-  const [previousRate, setPreviousRate] = useState<number>(0);
+  const [baseRate, setBaseRate] = useState<number>(0);          // actual DB rate
+  const [displayRate, setDisplayRate] = useState<number>(0);    // rate shown (with micro-flicker)
   const [history, setHistory] = useState<HistoryData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -43,34 +43,51 @@ export default function GoldRates() {
   const [saving, setSaving] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [error, setError] = useState('');
+  const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Calculate derived rates from 24K
+  // Calculate derived rates from current displayed rate
   const calculatedRates = {
-    '22K': Math.round(rate24K * PURITY_RATIOS['22K']),
-    '20K': Math.round(rate24K * PURITY_RATIOS['20K']),
-    '18K': Math.round(rate24K * PURITY_RATIOS['18K']),
-    '14K': Math.round(rate24K * PURITY_RATIOS['14K'])
+    '22K': Math.round(displayRate * PURITY_RATIOS['22K']),
+    '20K': Math.round(displayRate * PURITY_RATIOS['20K']),
+    '18K': Math.round(displayRate * PURITY_RATIOS['18K']),
+    '14K': Math.round(displayRate * PURITY_RATIOS['14K'])
   };
 
-  const dailyChange = previousRate > 0 ? rate24K - previousRate : 0;
+  // ─── Live micro-fluctuation effect ───────────────────────────
+  // Fluctuates ±1 or ±2 every 2–4 seconds so it feels like a live feed
+  const startFlicker = (base: number) => {
+    if (flickerRef.current) clearInterval(flickerRef.current);
+
+    flickerRef.current = setInterval(() => {
+      const delta = (Math.random() < 0.5 ? 1 : -1) * (Math.random() < 0.6 ? 1 : 2);
+      setDisplayRate(base + delta);
+    }, 2000 + Math.random() * 2000); // 2–4 s, re-randomised each tick
+  };
+
+  // When baseRate changes (fetch or admin update), re-anchor flicker
+  useEffect(() => {
+    if (baseRate > 0) {
+      setDisplayRate(baseRate);
+      startFlicker(baseRate);
+    }
+    return () => {
+      if (flickerRef.current) clearInterval(flickerRef.current);
+    };
+  }, [baseRate]);
 
   // Fetch rates from API
   const fetchRates = async () => {
     try {
       const res = await fetch('/api/gold-rates');
       const data = await res.json();
-      
+
       if (data.current) {
-        setRate24K(data.current.rate_24k);
+        setBaseRate(data.current.rate_24k);
         setLastUpdated(data.current.updated_at);
       }
-      
+
       if (data.history && data.history.length > 0) {
         setHistory(data.history);
-        // Get previous day's rate for change calculation
-        if (data.history.length >= 2) {
-          setPreviousRate(data.history[data.history.length - 2].rate_24k);
-        }
       }
     } catch (err) {
       console.error('Failed to fetch rates:', err);
@@ -90,7 +107,6 @@ export default function GoldRates() {
       alert('Please enter a valid rate');
       return;
     }
-
     setSaving(true);
     try {
       const res = await fetch('/api/gold-rates', {
@@ -98,7 +114,6 @@ export default function GoldRates() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rate_24k: parseInt(newRate) })
       });
-
       if (res.ok) {
         await fetchRates();
         setNewRate('');
@@ -124,14 +139,13 @@ export default function GoldRates() {
     }
   };
 
-  // Format date for display
   const formatFullDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-IN', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -149,6 +163,7 @@ export default function GoldRates() {
   return (
     <div className="pt-28 pb-16 bg-[#e8e0d0] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
         <div className="text-center mb-12">
           <motion.div
@@ -160,21 +175,21 @@ export default function GoldRates() {
             <span className="font-cinzel text-xs tracking-[0.25em] text-[#b8862a]">LIVE RATES</span>
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
           </motion.div>
-          
+
           <h1 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
             Today's Gold Rates
           </h1>
           <p className="font-raleway text-[#9a8060] mt-4">
-            Rates per gram in INR
+            Rates per gram in INR &bull; Auto-calculated from 24K base rate
           </p>
-          
+
           {lastUpdated && (
             <div className="flex items-center justify-center gap-2 mt-4 text-sm text-[#9a8060]">
               <RefreshCw size={14} />
               <span>Updated: {formatFullDate(lastUpdated)}</span>
             </div>
           )}
-          
+
           {error && (
             <div className="flex items-center justify-center gap-2 mt-4 text-red-600">
               <AlertCircle size={16} />
@@ -183,31 +198,23 @@ export default function GoldRates() {
           )}
         </div>
 
-        {/* 24K Rate Card */}
+        {/* 24K Rate Card — live flickering number, no "from yesterday" */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-3xl p-8 mb-8 text-center text-white shadow-xl"
         >
-          <h2 className="font-cormorant text-6xl sm:text-7xl font-bold mt-2">
-            ₹{rate24K.toLocaleString()}
-          </h2>
+          {/* Animated number — key forces re-mount on each change for a subtle pop */}
+          <motion.h2
+            key={displayRate}
+            initial={{ opacity: 0.6, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25 }}
+            className="font-cormorant text-6xl sm:text-7xl font-bold mt-2"
+          >
+            ₹{displayRate.toLocaleString('en-IN')}
+          </motion.h2>
           <p className="font-raleway text-lg text-white/80 mt-2">24K Gold / Per Gram</p>
-          
-          {dailyChange !== 0 && (
-            <div className={`inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full ${
-              dailyChange >= 0 ? 'bg-green-500/20' : 'bg-red-500/20'
-            }`}>
-              {dailyChange >= 0 ? (
-                <TrendingUp size={18} />
-              ) : (
-                <TrendingDown size={18} />
-              )}
-              <span className="font-raleway font-medium">
-                {dailyChange >= 0 ? '+' : ''}{dailyChange} from yesterday
-              </span>
-            </div>
-          )}
         </motion.div>
 
         {/* Calculated Rates Grid */}
@@ -224,9 +231,15 @@ export default function GoldRates() {
                 <span className="font-cinzel text-lg font-bold text-[#b8862a]">{purity}</span>
               </div>
               <p className="font-raleway text-xs text-[#9a8060]">Per Gram</p>
-              <p className="font-cormorant text-3xl font-bold text-[#3a2e1e] mt-1">
-                ₹{rate.toLocaleString()}
-              </p>
+              <motion.p
+                key={rate}
+                initial={{ opacity: 0.6 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25 }}
+                className="font-cormorant text-3xl font-bold text-[#3a2e1e] mt-1"
+              >
+                ₹{rate.toLocaleString('en-IN')}
+              </motion.p>
               <p className="font-raleway text-xs text-[#9a8060] mt-2">
                 {Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}% purity
               </p>
@@ -234,7 +247,7 @@ export default function GoldRates() {
           ))}
         </div>
 
-        {/* Admin Section */}
+        {/* Admin toggle */}
         <div className="text-center mb-12">
           <button
             onClick={() => isAdmin ? setIsAdmin(false) : setShowPasswordModal(true)}
