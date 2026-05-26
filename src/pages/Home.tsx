@@ -70,12 +70,12 @@ const collections = [
     id: 1,
     name: 'Maharani Bridal Set',
     category: 'Bridal',
-    image: '/necklace 2.jpg',
+    image: '/necklace88.png',
     featured: true
   },
   {
     id: 2,
-    name: 'Diamond Eternity Band',
+    name: 'Diamond Ring',
     category: 'Diamond',
     image: '/ring1.png',
     featured: false
