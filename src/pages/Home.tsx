@@ -286,7 +286,7 @@ export default function Home() {
               <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
             </div>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
-              Shop by Category
+              Explore by Category
             </h2>
             <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
               Discover our curated collections, each piece a masterpiece of craftsmanship
@@ -514,10 +514,10 @@ export default function Home() {
             <div className="text-center lg:text-left">
               <span className="font-cinzel text-sm tracking-[0.3em] text-[#8b6014]">GIFT VOUCHER</span>
               <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e] mt-4">
-                Flat 9% Off
+                Flat 9%
               </h2>
               <p className="font-raleway text-xl text-[#3a2e1e] mt-2">
-                Making Charges Off on 22KT Gold
+                Making Charges on 22KT Gold
               </p>
               <a
                 href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! I want to claim the 9% off making charges offer.')}'"
