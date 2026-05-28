@@ -15,7 +15,7 @@ const tabs = [
 ];
 
 const allProducts = [
-  { id: 1, name: 'Kundan Bridal necklace', category: 'Bridal', description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.', image: '/antique1.jpg, tag: 'Bestseller', featured: true },
+  { id: 1, name: 'Kundan Bridal necklace', category: 'Bridal', description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.', image: '/antique1.jpg', tag: 'Bestseller', featured: true },
   { id: 2, name: 'Diamond Eternity Ring', category: 'Diamond', description: 'A stunning circle of brilliant diamonds symbolizing eternal love.', image: '/ring2.png', tag: 'Premium' },
   { id: 3, name: 'Antique Gold Jhumkas', category: 'Earrings', description: 'Traditional temple-style jhumkas with intricate peacock motifs.', image: '/earrings13.png', tag: 'Heritage' },
   { id: 4, name: '22KT Gold Bangles Set', category: 'Bangles', description: 'Set of 4 intricately designed bangles with traditional patterns.', image: '/bangle3.png', tag: 'Classic' },
