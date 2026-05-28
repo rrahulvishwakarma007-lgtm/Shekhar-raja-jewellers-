@@ -39,11 +39,11 @@ export default function GoldRates() {
   const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── Auto-calculated rates from 24K base ──────────────────────────────────
-  const calculatedRates = {
-  '22K': Math.round(displayRate * PURITY_RATIOS['22K'] * 10),
-  '20K': Math.round(displayRate * PURITY_RATIOS['20K'] * 10),
-  '18K': Math.round(displayRate * PURITY_RATIOS['18K'] * 10),
-  '14K': Math.round(displayRate * PURITY_RATIOS['14K'] * 10),
+const calculatedRates = {
+  '22K': Math.round(displayRate * PURITY_RATIOS['22K']),
+  '20K': Math.round(displayRate * PURITY_RATIOS['20K']),
+  '18K': Math.round(displayRate * PURITY_RATIOS['18K']),
+  '14K': Math.round(displayRate * PURITY_RATIOS['14K']),
 };
 
   // ── Micro-flicker (±1 or ±2) to feel live ────────────────────────────────
