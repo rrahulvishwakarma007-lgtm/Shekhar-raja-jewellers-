@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 
 // ── YOUR GOLDAPI.IO KEY — get free key at goldapi.io ─────────────────────────
-const GOLD_API_KEY = '20a40b1c747cdf6073f9a6a1f02781b9';
+const GOLD_API_KEY = 'YOUR_GOLDAPI_IO_KEY_HERE';
 
 // ── Purity multipliers — all auto-calculated from 24K ────────────────────────
 const PURITY_RATIOS = {
@@ -230,7 +230,7 @@ export default function GoldRates() {
             Today's Gold Rates
           </h1>
           <p className="font-raleway text-[#9a8060] mt-4">
-            Rates per 10g in INR · Auto-calculated from live 24K base rate
+            Rates per gram in INR · Auto-calculated from live 24K base rate
           </p>
 
           {/* Source + timestamp */}
@@ -270,7 +270,7 @@ export default function GoldRates() {
           )}
 
           <p className="font-cinzel text-xs tracking-[0.3em] text-white/70 mb-1">24K FINE GOLD · 999.9 FINENESS</p>
-          <p className="font-raleway text-sm text-white/60 mb-2">Per 10g · Indian Rupees</p>
+          <p className="font-raleway text-sm text-white/60 mb-2">Per Gram · Indian Rupees</p>
 
           <motion.h2
             key={displayRate}
@@ -279,10 +279,11 @@ export default function GoldRates() {
             transition={{ duration: 0.25 }}
             className="font-cormorant text-6xl sm:text-7xl font-bold mt-2"
           >
-            ₹{(displayRate * 10).toLocaleString('en-IN')}
+            ₹{displayRate.toLocaleString('en-IN')}
           </motion.h2>
 
           <p className="font-raleway text-sm text-white/60 mt-3">
+            Source: GoldAPI.io · USD→INR via Frankfurter
           </p>
 
           {/* Refresh button */}
@@ -309,7 +310,7 @@ export default function GoldRates() {
               <div className="w-14 h-14 mx-auto bg-[#b8862a]/10 rounded-full flex items-center justify-center mb-3">
                 <span className="font-cinzel text-lg font-bold text-[#b8862a]">{purity}</span>
               </div>
-              <p className="font-raleway text-xs text-[#9a8060]">Per 10g</p>
+              <p className="font-raleway text-xs text-[#9a8060]">Per Gram</p>
               <motion.p
                 key={rate}
                 initial={{ opacity: 0.6 }}
@@ -323,6 +324,7 @@ export default function GoldRates() {
                 {Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}% purity
               </p>
               <p className="font-raleway text-[10px] text-[#b8862a] mt-1 font-semibold">
+                Auto-calculated ✓
               </p>
             </motion.div>
           ))}
