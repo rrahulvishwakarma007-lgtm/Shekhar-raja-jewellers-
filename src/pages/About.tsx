@@ -75,16 +75,16 @@ export default function About() {
             >
               <div className="space-y-4">
                 <div className="h-48 overflow-hidden rounded-2xl">
-                  <img
-                    src="https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=600"
-                    alt="Craftsmanship"
+                 <img
+                    src="/ring2.png"
+                    alt="Rings"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="h-32 overflow-hidden rounded-xl">
-                  <img
-                    src="https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400"
-                    alt="Gold"
+                 <img
+                    src="/necklace88.png"
+                    alt="Necklace"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
