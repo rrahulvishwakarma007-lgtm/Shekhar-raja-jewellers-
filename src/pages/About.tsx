@@ -32,7 +32,7 @@ export default function About() {
       <section className="relative h-[50vh] overflow-hidden mb-16">
         <div className="absolute inset-0 bg-gradient-to-r from-[#3a2e1e]/80 to-transparent z-10" />
         <img
-          src="https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=1920"
+          src="https://nxtgenailabs.work/dixitpura.webp"
           alt="Heritage"
           className="w-full h-full object-cover"
         />
