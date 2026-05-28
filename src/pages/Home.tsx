@@ -93,7 +93,7 @@ const collections = [
 const products = [
   {
     id: 1,
-    name: 'Kundan Bridal Choker',
+    name: ' BridalChain ',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
     image: '/bridal.png',
