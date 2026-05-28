@@ -270,7 +270,7 @@ export default function GoldRates() {
           )}
 
           <p className="font-cinzel text-xs tracking-[0.3em] text-white/70 mb-1">24K FINE GOLD · 999.9 FINENESS</p>
-          <p className="font-raleway text-sm text-white/60 mb-2">Per Gram · Indian Rupees</p>
+          <p className="font-raleway text-sm text-white/60 mb-2">Per 10 Gram · Indian Rupees</p>
 
           <motion.h2
             key={displayRate}
@@ -337,7 +337,7 @@ export default function GoldRates() {
             className="inline-flex items-center gap-2 text-[#9a8060] font-raleway text-sm hover:text-[#b8862a] transition-colors"
           >
             {isAdmin ? <Unlock size={16} /> : <Lock size={16} />}
-            {isAdmin ? 'Exit Admin Mode' : 'Admin: Manual Override'}
+            {isAdmin ? 'Exit Admin Mode' : 'Admin: Panel'}
           </button>
         </div>
 
@@ -349,7 +349,7 @@ export default function GoldRates() {
             className="bg-[#faf7f2] rounded-2xl p-6 mb-12 border-2 border-[#b8862a]"
           >
             <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mb-2">
-              Manual Rate Override
+              Live fetching 
             </h3>
             <p className="font-raleway text-sm text-[#9a8060] mb-4">
               Override the live API rate. All 22K, 20K, 18K, 14K rates auto-calculate from this.
