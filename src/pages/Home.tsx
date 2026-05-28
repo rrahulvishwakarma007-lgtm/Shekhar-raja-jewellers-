@@ -101,10 +101,10 @@ const products = [
   },
   {
     id: 2,
-    name: 'Diamond Eternity Band',
+    name: 'Diamond Eternity Ring',
     category: 'Diamond',
     description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: '/band.png',
+    image: '/ring6.png',
     tag: 'Premium'
   },
   {
@@ -112,7 +112,7 @@ const products = [
     name: 'Antique Gold Jhumkas',
     category: 'Earrings',
     description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: '/antique.png',
+    image: '/earrings13.png',
     tag: 'Heritage'
   },
   {
@@ -120,7 +120,7 @@ const products = [
     name: '22KT Gold Bangles Set',
     category: 'Bangles',
     description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: '/band.png',
+    image: '/bangle5.png',
     tag: 'Classic'
   },
   {
@@ -128,7 +128,7 @@ const products = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: '/band.png',
+    image: '/ring7.png',
     tag: 'Exclusive'
   },
   {
@@ -136,15 +136,15 @@ const products = [
     name: 'Temple Gold Haar',
     category: 'Necklaces',
     description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: '/temple.png',
+    image: '/necklace88.png',
     tag: 'Traditional'
   },
   {
     id: 7,
-    name: 'Antique Temple Set',
+    name: 'Antique Earrings Set',
     category: 'Antique',
-    description: 'Exquisite antique finish temple jewellery with traditional craftsmanship.',
-    image: '/antique.png',
+    description: 'Exquisite antique finish  jewellery with traditional craftsmanship.',
+    image: '/earring5.jpg',
     tag: 'Limited'
   },
   {
@@ -152,7 +152,7 @@ const products = [
     name: 'Festive Gold Set',
     category: 'Festive',
     description: 'Elegant gold set perfect for festive occasions and celebrations.',
-    image: '/festive.png',
+    image: '/chain4.png',
     tag: 'Trending'
   }
 ];
