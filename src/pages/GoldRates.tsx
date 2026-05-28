@@ -40,11 +40,11 @@ export default function GoldRates() {
 
   // ── Auto-calculated rates from 24K base ──────────────────────────────────
   const calculatedRates = {
-    '22K': Math.round(displayRate * PURITY_RATIOS['22K']),
-    '20K': Math.round(displayRate * PURITY_RATIOS['20K']),
-    '18K': Math.round(displayRate * PURITY_RATIOS['18K']),
-    '14K': Math.round(displayRate * PURITY_RATIOS['14K']),
-  };
+  '22K': Math.round(displayRate * PURITY_RATIOS['22K'] * 10),
+  '20K': Math.round(displayRate * PURITY_RATIOS['20K'] * 10),
+  '18K': Math.round(displayRate * PURITY_RATIOS['18K'] * 10),
+  '14K': Math.round(displayRate * PURITY_RATIOS['14K'] * 10),
+};
 
   // ── Micro-flicker (±1 or ±2) to feel live ────────────────────────────────
   const startFlicker = (base: number) => {
@@ -310,7 +310,7 @@ export default function GoldRates() {
               <div className="w-14 h-14 mx-auto bg-[#b8862a]/10 rounded-full flex items-center justify-center mb-3">
                 <span className="font-cinzel text-lg font-bold text-[#b8862a]">{purity}</span>
               </div>
-              <p className="font-raleway text-xs text-[#9a8060]">Per Gram</p>
+              <p className="font-raleway text-xs text-[#9a8060]">Per 10 Gram</p>
               <motion.p
                 key={rate}
                 initial={{ opacity: 0.6 }}
