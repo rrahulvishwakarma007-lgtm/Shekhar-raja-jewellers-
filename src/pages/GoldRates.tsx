@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 
 // ── YOUR GOLDAPI.IO KEY — get free key at goldapi.io ─────────────────────────
-const GOLD_API_KEY = 'goldapi-3ojcqdsmno9l0pu-io';
+const GOLD_API_KEY = 'f5a885264acffd727aa3a3095d02d53c';
 
 // ── Purity multipliers — all auto-calculated from 24K ────────────────────────
 const PURITY_RATIOS = {
