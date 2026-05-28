@@ -195,7 +195,7 @@ export default function GoldRates() {
     );
     if (liveSource === 'manual') return (
       <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">
-        <WifiOff size={11} /> Live Rates
+        <WifiOn size={11} /> Live Rates
       </span>
     );
     return null;
