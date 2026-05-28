@@ -230,7 +230,7 @@ export default function GoldRates() {
             Today's Gold Rates
           </h1>
           <p className="font-raleway text-[#9a8060] mt-4">
-            Rates per gram in INR · Auto-calculated from live 24K base rate
+            Rates per 10 gram in INR
           </p>
 
           {/* Source + timestamp */}
@@ -283,7 +283,7 @@ export default function GoldRates() {
           </motion.h2>
 
           <p className="font-raleway text-sm text-white/60 mt-3">
-            Source: GoldAPI.io · USD→INR via Frankfurter
+          
           </p>
 
           {/* Refresh button */}
@@ -324,7 +324,7 @@ export default function GoldRates() {
                 {Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}% purity
               </p>
               <p className="font-raleway text-[10px] text-[#b8862a] mt-1 font-semibold">
-                Auto-calculated ✓
+                Fetching live Rates ✓
               </p>
             </motion.div>
           ))}
