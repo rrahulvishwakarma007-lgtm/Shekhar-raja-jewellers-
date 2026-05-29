@@ -19,6 +19,7 @@ export default function Footer() {
     <footer className="bg-[#1a0f05] text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
           {/* Brand */}
           <div>
             <div className="mb-6 flex items-center gap-3">
@@ -33,10 +34,10 @@ export default function Footer() {
               </div>
             </div>
             <p className="font-cormorant italic text-[#9a8060] text-lg mb-4">
-              "Crafting Elegance, Ensuring Excellence"
+              &ldquo;Crafting Elegance, Ensuring Excellence&rdquo;
             </p>
             <p className="font-raleway text-sm text-[#9a8060]">
-              Est. 1987 • Jabalpur, Madhya Pradesh
+              Est. 1987 &bull; Jabalpur, Madhya Pradesh
             </p>
             <div className="flex gap-4 mt-6">
               <a href="#" className="text-[#d4a843] hover:text-[#b8862a] transition-colors">
@@ -92,14 +93,17 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="text-[#d4a843] flex-shrink-0 mt-1" />
                 <p className="font-raleway text-sm text-[#9a8060]">
-                  Dixitpura Rd, Sarafa, Uprainganj,
+                  {'Dixitpura Rd, Sarafa, Uprainganj,'}
                   <br />
-                  Jabalpur, Madhya Pradesh 482002
+                  {'Jabalpur, Madhya Pradesh 482002'}
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-[#d4a843]" />
-                <a href="tel:+918377911745" className="font-raleway text-sm text-[#9a8060] hover:text-[#d4a843]">
+                
+                  href="tel:+918377911745"
+                  className="font-raleway text-sm text-[#9a8060] hover:text-[#d4a843]"
+                >
                   +91 83779 11745
                 </a>
               </div>
@@ -122,12 +126,13 @@ export default function Footer() {
               </div>
             </div>
           </div>
+
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-[#3a2e1e] mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="font-raleway text-xs text-[#9a8060]">
-            © 2024 Shekhar Raja Jewellers. All rights reserved.
+            &copy; 2024 Shekhar Raja Jewellers. All rights reserved.
           </p>
           <p className="font-raleway text-xs text-[#9a8060]">
             BIS Hallmark Certified Jeweller
