@@ -23,7 +23,7 @@ export default function Footer() {
           <div>
             <div className="mb-6 flex items-center gap-3">
               <img 
-                src="/logo.png" 
+                src="/ring1.png" 
                 alt="Shekhar Raja Jewellers" 
                 className="h-14 w-auto object-contain brightness-0 invert"
               />
