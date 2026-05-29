@@ -11,7 +11,7 @@ const features = [
 
 const installSteps = [
   { step: 1, title: 'Download APK', desc: 'Click the download button to get the APK file' },
-  { step: 2, title: 'Enable Unknown Sources', desc: 'Go to Settings > Security > Enable "Unknown Sources"' },
+  { step: 2, title: 'Enable Unknown Sources', desc: 'Go to Settings, then Security, then enable Unknown Sources' },
   { step: 3, title: 'Install the App', desc: 'Open the downloaded APK and tap Install' },
   { step: 4, title: 'Start Shopping', desc: 'Open the app and explore our collection!' }
 ];
@@ -21,10 +21,12 @@ const APK_URL = 'https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/d
 export default function AppDownload() {
   return (
     <div className="pt-28 pb-16 bg-[#e8e0d0] min-h-screen">
+
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-[#1a0f05] to-[#3a2e1e] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
             {/* Content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -42,7 +44,7 @@ export default function AppDownload() {
                 Your favourite jewellery store now in your pocket. Browse collections, check gold rates, and shop from anywhere.
               </p>
               <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                
+                <a
                   href={APK_URL}
                   download
                   className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
@@ -50,7 +52,7 @@ export default function AppDownload() {
                   <Download size={20} />
                   Download APK
                 </a>
-                
+                <a
                   href={`https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -114,6 +116,7 @@ export default function AppDownload() {
                 <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3a2e1e] rounded-full" />
               </div>
             </motion.div>
+
           </div>
         </div>
       </section>
@@ -193,7 +196,7 @@ export default function AppDownload() {
             Get the app and start exploring our beautiful collection
           </p>
           <div className="flex flex-wrap gap-4 mt-8 justify-center">
-            
+            <a
               href={APK_URL}
               download
               className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
@@ -201,7 +204,7 @@ export default function AppDownload() {
               <Download size={20} />
               Download APK
             </a>
-            
+            <a
               href="https://wa.me/918377911745"
               target="_blank"
               rel="noopener noreferrer"
@@ -219,6 +222,7 @@ export default function AppDownload() {
           </Link>
         </div>
       </section>
+
     </div>
   );
 }
