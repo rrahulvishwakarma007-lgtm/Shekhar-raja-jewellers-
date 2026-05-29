@@ -16,6 +16,8 @@ const installSteps = [
   { step: 4, title: 'Start Shopping', desc: 'Open the app and explore our collection!' }
 ];
 
+const APK_URL = 'https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk';
+
 export default function AppDownload() {
   return (
     <div className="pt-28 pb-16 bg-[#e8e0d0] min-h-screen">
@@ -40,15 +42,16 @@ export default function AppDownload() {
                 Your favourite jewellery store now in your pocket. Browse collections, check gold rates, and shop from anywhere.
               </p>
               <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                <a
-                  href="#"
+                
+                  href={APK_URL}
+                  download
                   className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
                 >
                   <Download size={20} />
                   Download APK
                 </a>
-                <a
-                  href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}'"
+                
+                  href={`https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
@@ -190,14 +193,15 @@ export default function AppDownload() {
             Get the app and start exploring our beautiful collection
           </p>
           <div className="flex flex-wrap gap-4 mt-8 justify-center">
-            <a
-              href="#"
+            
+              href={APK_URL}
+              download
               className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
             >
               <Download size={20} />
               Download APK
             </a>
-            <a
+            
               href="https://wa.me/918377911745"
               target="_blank"
               rel="noopener noreferrer"
