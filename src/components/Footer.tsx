@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, MessageCircle, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
+import { MapPin, Phone, MessageCircle, Clock, Instagram, Facebook } from 'lucide-react';
 
 const quickLinks = [
   { name: 'Home', path: '/' },
@@ -34,20 +34,27 @@ export default function Footer() {
               </div>
             </div>
             <p className="font-cormorant italic text-[#9a8060] text-lg mb-4">
-              &ldquo;Crafting Elegance, Ensuring Excellence&rdquo;
+              Crafting Elegance, Ensuring Excellence
             </p>
             <p className="font-raleway text-sm text-[#9a8060]">
-              Est. 1987 &bull; Jabalpur, Madhya Pradesh
+              Est. 1987 — Jabalpur, Madhya Pradesh
             </p>
             <div className="flex gap-4 mt-6">
-              <a href="#" className="text-[#d4a843] hover:text-[#b8862a] transition-colors">
+              <a
+                href="https://www.instagram.com/shekharrajajewellers/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#d4a843] hover:text-[#b8862a] transition-colors"
+              >
                 <Instagram size={22} />
               </a>
-              <a href="#" className="text-[#d4a843] hover:text-[#b8862a] transition-colors">
+              <a
+                href="https://www.facebook.com/Srjewellers/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#d4a843] hover:text-[#b8862a] transition-colors"
+              >
                 <Facebook size={22} />
-              </a>
-              <a href="#" className="text-[#d4a843] hover:text-[#b8862a] transition-colors">
-                <Youtube size={22} />
               </a>
             </div>
           </div>
@@ -93,14 +100,14 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="text-[#d4a843] flex-shrink-0 mt-1" />
                 <p className="font-raleway text-sm text-[#9a8060]">
-                  {'Dixitpura Rd, Sarafa, Uprainganj,'}
+                  Dixitpura Rd, Sarafa, Uprainganj,
                   <br />
-                  {'Jabalpur, Madhya Pradesh 482002'}
+                  Jabalpur, Madhya Pradesh 482002
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-[#d4a843]" />
-                
+                <a
                   href="tel:+918377911745"
                   className="font-raleway text-sm text-[#9a8060] hover:text-[#d4a843]"
                 >
@@ -109,7 +116,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <MessageCircle size={18} className="text-[#d4a843]" />
-                
+                <a
                   href="https://wa.me/918377911745"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -132,7 +139,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-[#3a2e1e] mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="font-raleway text-xs text-[#9a8060]">
-            &copy; 2024 Shekhar Raja Jewellers. All rights reserved.
+            2024 Shekhar Raja Jewellers. All rights reserved.
           </p>
           <p className="font-raleway text-xs text-[#9a8060]">
             BIS Hallmark Certified Jeweller
