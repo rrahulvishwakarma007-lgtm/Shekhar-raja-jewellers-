@@ -695,7 +695,7 @@ export default function Home() {
                   Download APK
                 </Link>
                 <a
-                  href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}'"
+                  href="https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk')}'"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
