@@ -22,16 +22,16 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="mb-6 flex items-center gap-3">
-              <img 
-                src="/ring1.png" 
-                alt="Shekhar Raja Jewellers" 
-                className="h-14 w-auto object-contain brightness-0 invert"
-              />
-              <div className="flex flex-col">
-                <span className="font-cormorant text-2xl font-bold text-white">Shekhar Raja</span>
-                <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#d4a843]">JEWELLERS</span>
-              </div>
-            </div>
+  <img 
+    src="/logo.png"          {/* ← changed from /ring1.png */}
+    alt="Shekhar Raja Jewellers" 
+    className="h-14 w-auto object-contain brightness-0 invert"
+  />
+  <div className="flex flex-col">
+    <span className="font-cormorant text-2xl font-bold text-white">Shekhar Raja</span>
+    <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#d4a843]">JEWELLERS</span>
+  </div>
+</div>
             <p className="font-cormorant italic text-[#9a8060] text-lg mb-4">
               "Crafting Elegance, Ensuring Excellence"
             </p>
