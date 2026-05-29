@@ -92,7 +92,9 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="text-[#d4a843] flex-shrink-0 mt-1" />
                 <p className="font-raleway text-sm text-[#9a8060]">
-                  Dixitpura Rd, Sarafa, Uprainganj,<br />Jabalpur, Madhya Pradesh 482002
+                  Dixitpura Rd, Sarafa, Uprainganj,
+                  <br />
+                  Jabalpur, Madhya Pradesh 482002
                 </p>
               </div>
               <div className="flex items-center gap-3">
