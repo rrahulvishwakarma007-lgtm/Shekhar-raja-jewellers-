@@ -338,7 +338,7 @@ const calculatedRates = {
             style={{ cursor: 'default' }}
           >
             <Shield size={13} className="text-[#b8862a]" />
-            {isAdmin ? 'EXIT ADMIN MODE' : 'LIVE GOLD RATES · BIS CERTIFIED'}
+            {isAdmin ? 'EXIT ADMIN MODE' : 'LIVE GOLD RATES'}
           </button>
         </div>
 
