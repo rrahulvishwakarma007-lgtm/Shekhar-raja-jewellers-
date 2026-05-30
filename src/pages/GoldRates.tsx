@@ -341,7 +341,7 @@ const calculatedRates = {
           </button>
         </div>
 
-        {/* ── ADMIN PANEL ── */}
+        {/* ── Live Gold Rates ── */}
         {isAdmin && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
