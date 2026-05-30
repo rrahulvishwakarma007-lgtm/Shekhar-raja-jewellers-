@@ -330,14 +330,15 @@ const calculatedRates = {
           ))}
         </div>
 
-        {/* ── ADMIN TOGGLE ── */}
+        {/* ── HIDDEN ADMIN TOGGLE — looks like a content label ── */}
         <div className="text-center mb-8">
           <button
             onClick={() => isAdmin ? setIsAdmin(false) : setShowModal(true)}
-            className="inline-flex items-center gap-2 text-[#9a8060] font-raleway text-sm hover:text-[#b8862a] transition-colors"
+            className="inline-flex items-center gap-2 text-[#9a8060] font-raleway text-xs tracking-[0.2em] hover:text-[#b8862a] transition-colors select-none"
+            style={{ cursor: 'default' }}
           >
-            {isAdmin ? <Unlock size={16} /> : <Lock size={16} />}
-            {isAdmin ? 'Exit Admin Mode' : 'Admin: Panel'}
+            <Shield size={13} className="text-[#b8862a]" />
+            {isAdmin ? 'EXIT ADMIN MODE' : 'LIVE GOLD RATES · BIS CERTIFIED'}
           </button>
         </div>
 
