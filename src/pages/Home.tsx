@@ -50,18 +50,15 @@ const heroSlides = [
 
 // Categories data
 const categories = [
-  { name: 'Bridal', image: '/antique2.jpg' },
-  { name: 'Festive', image: '/festive.png' },
-  { name: 'Dailywear', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  { name: 'Necklaces', image: '/necklace1.jpg' },
+  { name: 'Antique', image: '/antique2.jpg' },
+   { name: 'Necklaces', image: '/necklace1.jpg' },
   { name: 'Earrings', image: '/earring1.jpg' },
   { name: 'Bangles', image: '/bangle1.png' },
-  { name: 'Rings', image: '/ring1.png' },
+  { name: 'Men's Ring', image: '/ring7.png' },
   { name: 'Pendants', image: '/pendant.png' },
-  { name: 'Diamond', image: '/ring3.png' },
-  { name: 'Chains', image: '/band.png' },
-  { name: 'Antique', image: '/antique.png' },
-  { name: 'Chokers', image: '/antique3.jpg' }
+  { name: 'Womens's Ring', image: '/ring2.png' },
+  { name: 'Chains', image: '/chain2.png' },
+ { name: 'Chokers', image: '/antique3.jpg' }
 ];
 
 // Collections data
