@@ -54,9 +54,9 @@ const categories = [
    { name: 'Necklaces', image: '/necklace1.jpg' },
   { name: 'Earrings', image: '/earring1.jpg' },
   { name: 'Bangles', image: '/bangle1.png' },
-  { name: 'Men's Ring', image: '/ring7.png' },
+  { name: "Men's Ring", image: '/ring7.png' },
   { name: 'Pendants', image: '/pendant.png' },
-  { name: 'Womens's Ring', image: '/ring2.png' },
+  { name: "Women's Ring", image: '/ring2.png' },
   { name: 'Chains', image: '/chain2.png' },
  { name: 'Chokers', image: '/antique3.jpg' }
 ];
@@ -90,7 +90,7 @@ const collections = [
 const products = [
   {
     id: 1,
-    name: ' BridalChain ',
+    name: 'Bridal Chain',
     category: 'Bridal',
     description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
     image: '/bridal.png',
@@ -517,7 +517,7 @@ export default function Home() {
                 Making Charges on 22KT Gold
               </p>
               <a
-                href="https://wa.me/918377911745?text=${encodeURIComponent('Hello! I want to claim the 9% off making charges offer.')}'"
+                href={`https://wa.me/918377911745?text=${encodeURIComponent('Hello! I want to claim the 9% off making charges offer.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium mt-8 hover:bg-[#8b6014] transition-colors"
@@ -692,7 +692,7 @@ export default function Home() {
                   Download APK
                 </Link>
                 <a
-                  href="https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk')}'"
+                  href="https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
