@@ -171,6 +171,8 @@ const VIDEOS = [
 function VideoCarousel() {
   const [active, setActive]   = useState(0);
   const videoRefs             = useRef<(HTMLVideoElement | null)[]>([]);
+  const itemRefs              = useRef<(HTMLDivElement | null)[]>([]);
+  const trackRef              = useRef<HTMLDivElement | null>(null);
   const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null);
   const total                 = VIDEOS.length;
 
@@ -205,6 +207,20 @@ function VideoCarousel() {
     });
   }, [active]);
 
+  // Auto-scroll active video to center of track
+  useEffect(() => {
+    const track = trackRef.current;
+    const item  = itemRefs.current[active];
+    if (!track || !item) return;
+    const trackRect = track.getBoundingClientRect();
+    const itemRect  = item.getBoundingClientRect();
+    const scrollLeft = track.scrollLeft
+      + (itemRect.left - trackRect.left)
+      - trackRect.width / 2
+      + itemRect.width / 2;
+    track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  }, [active]);
+
   // When active video ends → advance
   const handleEnded = () => {
     startTimer();
@@ -214,13 +230,15 @@ function VideoCarousel() {
   return (
     <div className="relative">
       {/* Track */}
-      <div className="flex items-center gap-3 sm:gap-5 overflow-x-auto hide-scrollbar pb-4 px-2"
+      <div ref={trackRef}
+           className="flex items-center gap-3 sm:gap-5 overflow-x-auto hide-scrollbar pb-4 px-2"
            style={{ scrollbarWidth: 'none' }}>
         {VIDEOS.map((src, i) => {
           const isActive = i === active;
           return (
             <motion.div
               key={i}
+              ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
               onClick={() => { goTo(i); startTimer(); }}
               animate={{
                 scale:   isActive ? 1.08 : 0.88,
