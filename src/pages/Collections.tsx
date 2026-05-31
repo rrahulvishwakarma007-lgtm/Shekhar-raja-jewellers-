@@ -36,6 +36,24 @@ const allProducts = [
   { id: 17, name: 'Gold Band Ring', category: "Women's Ring", description: 'Classic gold band with elegant minimal design.', image: '/ring5.png', tag: 'Classic' },
   { id: 18, name: 'Diamond Cluster Ring', category: 'Antique', description: 'Beautiful cluster of diamonds in an elegant setting.', image: '/ring3.png', tag: 'Luxury' },
   { id: 19, name: 'Vintage Diamond Ring', category: "Women's Ring", description: 'Vintage-inspired design with intricate detailing.', image: '/ring1.png', tag: 'Vintage' },
+
+  // ── NEW BANGLES (bangleA–I) ───────────────────────────────────────────────
+  { id: 20, name: 'Gold Bangle Set A',    category: 'Bangles', description: 'Elegant 22KT gold bangles with traditional carvings and fine finish.',             image: '/bangleA.jpg', tag: 'New Arrival' },
+  { id: 21, name: 'Designer Bangle B',    category: 'Bangles', description: 'Intricate designer bangles in 22KT gold, perfect for festive occasions.',          image: '/bangleB.jpg', tag: 'Trending'   },
+  { id: 22, name: 'Antique Bangle C',     category: 'Bangles', description: 'Antique-finish 22KT gold bangles with classic Indian motifs.',                     image: '/bangleC.jpg', tag: 'Heritage'   },
+  { id: 23, name: 'Bridal Bangle Set D',  category: 'Bangles', description: 'Heavy bridal bangles in 22KT gold with ornate detailing.',                         image: '/bangleD.jpg', tag: 'Bridal Pick' },
+  { id: 24, name: 'Festive Bangle E',     category: 'Bangles', description: 'Beautifully crafted gold bangles ideal for festivals and celebrations.',            image: '/bangleE.jpg', tag: 'Festive'    },
+  { id: 25, name: 'Kundan Bangle F',      category: 'Bangles', description: 'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                    image: '/bangleF.jpg', tag: 'Exclusive'  },
+  { id: 26, name: 'Classic Bangle G',     category: 'Bangles', description: 'Timeless classic gold bangles with smooth finish and fine engraving.',             image: '/bangleG.jpg', tag: 'Classic'    },
+  { id: 27, name: 'Temple Bangle H',      category: 'Bangles', description: 'Temple-art inspired bangles in 22KT gold with goddess motifs.',                   image: '/bangleH.jpg', tag: 'Traditional'},
+  { id: 28, name: 'Royal Bangle Set I',   category: 'Bangles', description: 'Royal-style heavy gold bangles, a showstopper for every occasion.',               image: '/bangleI.jpg', tag: 'Premium'    },
+
+  // ── NEW NECKLACES (necklaceA–E) ────────────────────────────────────────────
+  { id: 29, name: 'Bridal Necklace A',    category: 'Necklaces', description: 'Stunning 22KT bridal necklace with kundan and polki work, perfect for weddings.', image: '/necklaceA.jpg', tag: 'Bridal Pick', featured: true },
+  { id: 30, name: 'Heritage Necklace B',  category: 'Necklaces', description: 'Traditional heritage necklace in 22KT gold with antique finish.',                 image: '/necklaceB.jpg', tag: 'Heritage'    },
+  { id: 31, name: 'Temple Necklace C',    category: 'Necklaces', description: 'Handcrafted temple necklace with goddess motifs and ruby accents.',               image: '/necklaceC.jpg', tag: 'Traditional' },
+  { id: 32, name: 'Kundan Necklace D',    category: 'Necklaces', description: 'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',               image: '/necklaceD.jpg', tag: 'Exclusive'   },
+  { id: 33, name: 'Gold Haar E',          category: 'Necklaces', description: 'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',             image: '/necklaceE.jpg', tag: 'New Arrival' },
 ];
 
 export default function Collections() {
