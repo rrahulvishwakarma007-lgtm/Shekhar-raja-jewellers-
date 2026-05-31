@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
@@ -161,6 +161,147 @@ const trustItems = [
   { icon: '⬡', title: 'Two Showrooms', desc: 'Conveniently located in Jabalpur' },
   { icon: '◈', title: 'WA Support', desc: 'Instant WhatsApp assistance' }
 ];
+
+// ── Video Carousel Component ─────────────────────────────────────────────────
+const VIDEOS = [
+  '/video1.mp4', '/video2.mp4', '/video3.mp4', '/video4.mp4',
+  '/video5.mp4', '/video6.mp4', '/video7.mp4',
+];
+
+function VideoCarousel() {
+  const [active, setActive]   = useState(0);
+  const videoRefs             = useRef<(HTMLVideoElement | null)[]>([]);
+  const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null);
+  const total                 = VIDEOS.length;
+
+  const goTo = useCallback((idx: number) => {
+    setActive(idx);
+  }, []);
+
+  // Auto-advance when the active video ends, or after 6s as fallback
+  const startTimer = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActive(prev => (prev + 1) % total);
+    }, 6000);
+  }, [total]);
+
+  useEffect(() => {
+    startTimer();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [startTimer]);
+
+  // Play active, pause/reset others
+  useEffect(() => {
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return;
+      if (i === active) {
+        v.currentTime = 0;
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+        v.currentTime = 0;
+      }
+    });
+  }, [active]);
+
+  // When active video ends → advance
+  const handleEnded = () => {
+    startTimer();
+    setActive(prev => (prev + 1) % total);
+  };
+
+  return (
+    <div className="relative">
+      {/* Track */}
+      <div className="flex items-center gap-3 sm:gap-5 overflow-x-auto hide-scrollbar pb-4 px-2"
+           style={{ scrollbarWidth: 'none' }}>
+        {VIDEOS.map((src, i) => {
+          const isActive = i === active;
+          return (
+            <motion.div
+              key={i}
+              onClick={() => { goTo(i); startTimer(); }}
+              animate={{
+                scale:   isActive ? 1.08 : 0.88,
+                opacity: isActive ? 1    : 0.55,
+              }}
+              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden
+                ${isActive
+                  ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#d4a843] shadow-[0_0_40px_rgba(212,168,67,0.35)]'
+                  : 'w-36 sm:w-44 h-60 sm:h-72'
+                }`}
+              style={{ transition: 'width 0.4s ease, height 0.4s ease' }}
+            >
+              <video
+                ref={el => { videoRefs.current[i] = el; }}
+                src={src}
+                muted
+                playsInline
+                loop={false}
+                onEnded={isActive ? handleEnded : undefined}
+                className="w-full h-full object-cover"
+              />
+
+              {/* Dark overlay for inactive */}
+              {!isActive && (
+                <div className="absolute inset-0 bg-[#0d0800]/50" />
+              )}
+
+              {/* Gold border shimmer on active */}
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05]/70 via-transparent to-transparent pointer-events-none" />
+              )}
+
+              {/* Play icon on inactive */}
+              {!isActive && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                    <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[12px] border-l-white ml-1" />
+                  </div>
+                </div>
+              )}
+
+              {/* Video number badge */}
+              <div className="absolute bottom-3 left-3">
+                <span className="font-cinzel text-[10px] tracking-[0.15em] text-white/80 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Dot indicators */}
+      <div className="flex items-center justify-center gap-2 mt-8">
+        {VIDEOS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => { goTo(i); startTimer(); }}
+            className={`rounded-full transition-all duration-300 ${
+              i === active
+                ? 'w-8 h-2 bg-[#d4a843]'
+                : 'w-2 h-2 bg-white/25 hover:bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-4 mx-auto max-w-xs h-px bg-white/10 rounded-full overflow-hidden">
+        <motion.div
+          key={active}
+          className="h-full bg-gradient-to-r from-[#b8862a] to-[#d4a843]"
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 6, ease: 'linear' }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -527,6 +668,40 @@ export default function Home() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+
+      {/* ── VIDEO SHOWCASE ─────────────────────────────────────────── */}
+      <section className="py-20 bg-[#0d0800] overflow-hidden relative">
+        {/* Background glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05]/60 via-transparent to-[#1a0f05]/60 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-14"
+          >
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
+              <Crown size={16} className="text-[#b8862a]" />
+              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">IN MOTION</span>
+              <Crown size={16} className="text-[#b8862a]" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
+            </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">
+              Feel the <span className="text-[#d4a843] italic">Elegance</span>
+            </h2>
+            <p className="font-raleway text-white/60 mt-4 max-w-xl mx-auto">
+              Watch our masterpieces come alive — each piece crafted for moments that last forever
+            </p>
+          </motion.div>
+
+          {/* Video Carousel */}
+          <VideoCarousel />
         </div>
       </section>
 
