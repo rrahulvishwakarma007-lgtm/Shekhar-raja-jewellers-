@@ -118,26 +118,27 @@ export default function Collections() {
       {/* ══════════════════════════════════════
           HERO — warm cream + dark brown
       ══════════════════════════════════════ */}
-      <section ref={heroRef} className="relative h-[65vh] min-h-[500px] overflow-hidden flex items-end"
-               style={{ background: C.bgDark }}>
+      <section ref={heroRef} className="relative overflow-hidden flex items-end"
+               style={{ minHeight:'60vh', background:`linear-gradient(170deg, #3A2208 0%, #2C1A0E 45%, #4A2E10 100%)` }}>
 
+        {/* Warm layered glow — no harsh pattern */}
         <motion.div style={{ y: heroY }} className="absolute inset-0 pointer-events-none">
-          {/* Warm radial glows */}
-          <div className="absolute top-1/3 left-1/4 w-[480px] h-[480px] rounded-full"
-               style={{ background:`radial-gradient(circle, rgba(184,134,42,0.14) 0%, transparent 65%)`, filter:'blur(50px)' }} />
-          <div className="absolute bottom-0 right-1/4 w-[360px] h-[360px] rounded-full"
-               style={{ background:`radial-gradient(circle, rgba(212,168,67,0.10) 0%, transparent 60%)`, filter:'blur(60px)' }} />
-          {/* Subtle pattern */}
-          <div className="absolute inset-0 opacity-[0.04]"
-               style={{ backgroundImage:`repeating-linear-gradient(45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 18px), repeating-linear-gradient(-45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 18px)` }} />
+          <div className="absolute top-0 left-0 w-full h-full"
+               style={{ background:'radial-gradient(ellipse 80% 60% at 20% 30%, rgba(184,134,42,0.18) 0%, transparent 65%)' }} />
+          <div className="absolute bottom-0 right-0 w-full h-full"
+               style={{ background:'radial-gradient(ellipse 60% 50% at 80% 80%, rgba(120,70,10,0.25) 0%, transparent 60%)' }} />
+          {/* Very subtle dot texture — far less distracting than diamonds */}
+          <div className="absolute inset-0"
+               style={{ backgroundImage:'radial-gradient(circle, rgba(201,168,76,0.07) 1px, transparent 1px)',
+                        backgroundSize:'28px 28px', opacity:1 }} />
         </motion.div>
 
-        {/* Floating ghost text */}
+        {/* Ghost watermark text — toned down */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-          {['GOLD','HERITAGE','CRAFTED','SINCE 1987'].map((w,i)=>(
-            <span key={w} className="absolute font-serif font-black tracking-tighter whitespace-nowrap"
-                  style={{ fontSize:'clamp(60px,12vw,110px)', opacity:0.025, color:'#C9A84C',
-                           top:`${8+i*22}%`, left:`${-8+(i%2)*35}%`, transform:`rotate(${-2+i*1.2}deg)` }}>
+          {['HERITAGE','1987'].map((w,i)=>(
+            <span key={w} className="absolute font-serif font-black whitespace-nowrap"
+                  style={{ fontSize:'clamp(80px,18vw,160px)', opacity:0.018, color:'#C9A84C',
+                           top:`${20+i*40}%`, left:`${i*25}%`, transform:`rotate(${-3+i*2}deg)`, letterSpacing:'-0.04em' }}>
               {w}
             </span>
           ))}
@@ -145,44 +146,46 @@ export default function Collections() {
 
         {/* Hero content */}
         <motion.div style={{ opacity: heroOpacity }}
-                    className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pb-14">
+                    className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-36 pb-20">
 
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }}
-                      className="flex items-center gap-3 mb-5">
+                      className="flex items-center gap-3 mb-6">
             <div className="h-px w-8" style={{ background:C.gold }} />
             <span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color:C.gold }}>SHEKHAR RAJA JEWELLERS</span>
+            <div className="h-px w-8" style={{ background:C.gold }} />
           </motion.div>
 
-          <motion.h1 initial={{ opacity:0, y:44 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2, duration:0.8 }}
-                     className="font-cormorant font-bold leading-[0.88] tracking-tight mb-5 text-white"
-                     style={{ fontSize:'clamp(3.2rem,9vw,7.5rem)' }}>
+          <motion.h1 initial={{ opacity:0, y:44 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2, duration:0.75 }}
+                     className="font-cormorant font-bold leading-[0.9] tracking-tight mb-6"
+                     style={{ fontSize:'clamp(3rem,9vw,7rem)', color:'#F5ECD7' }}>
             The&nbsp;
-            <span style={{ background:`linear-gradient(135deg,${C.gold},${C.goldPale},#A07830)`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
+            <span style={{ background:`linear-gradient(135deg,#D4A843,#F0D080,#B8862A)`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
               Eternal
             </span>
             <br/>Collection
           </motion.h1>
 
           <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.35 }}
-                    className="font-raleway text-base max-w-md leading-relaxed mb-10"
-                    style={{ color:'rgba(245,236,215,0.55)' }}>
-            {allProducts.length} masterworks in 22KT gold. Each piece a story of heritage and elegance.
+                    className="font-raleway text-[15px] max-w-sm leading-relaxed mb-10"
+                    style={{ color:'rgba(245,236,215,0.5)' }}>
+            {allProducts.length} masterworks in 22KT gold — each piece a story of heritage and elegance.
           </motion.p>
 
           <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.5 }}
-                      className="flex items-center gap-8">
-            {[['500+','Designs'],['22KT','Pure Gold'],['BIS','Hallmark'],['1987','Est.']].map(([v,l])=>(
+                      className="flex items-center gap-6 sm:gap-10">
+            {[['500+','Designs'],['22KT','Pure Gold'],['BIS','Hallmark'],['1987','Est.']].map(([v,l],i)=>(
               <div key={l} className="text-center">
+                {i>0 && <div className="hidden" />}
                 <p className="font-cormorant text-2xl font-bold" style={{ color:C.gold }}>{v}</p>
-                <p className="font-raleway text-[10px] tracking-[0.2em] mt-0.5" style={{ color:'rgba(245,236,215,0.38)' }}>{l}</p>
+                <p className="font-raleway text-[10px] tracking-[0.18em] mt-0.5" style={{ color:'rgba(245,236,215,0.32)' }}>{l}</p>
               </div>
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Cream fade at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-24"
-             style={{ background:`linear-gradient(to top, ${C.bg}, transparent)` }} />
+        {/* Long smooth cream fade — blends naturally into page */}
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height:'160px',
+             background:`linear-gradient(to top, ${C.bg} 0%, ${C.bg}CC 25%, ${C.bg}66 55%, transparent 100%)` }} />
       </section>
 
 
