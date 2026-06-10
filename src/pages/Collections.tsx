@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles, X, Search, Crown } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
@@ -98,12 +98,6 @@ export default function Collections() {
   const [selectedProduct, setSelectedProduct] = useState<typeof allProducts[0] | null>(null);
   const [searchQuery, setSearchQuery]       = useState('');
   const [hoveredId, setHoveredId]           = useState<number | null>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY       = useTransform(scrollYProgress, [0, 1], ['0%', '28%']);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-
   const filteredProducts = allProducts.filter(p => {
     const matchCat   = activeTab === 'All' || p.category === activeTab;
     const matchQuery = p.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -116,129 +110,60 @@ export default function Collections() {
     <div className="min-h-screen" style={{ background: C.bg }}>
 
       {/* ══════════════════════════════════════
-          HERO — warm cream + dark brown
+          HERO — pure cream
       ══════════════════════════════════════ */}
-      <section ref={heroRef} className="relative overflow-hidden flex items-end"
-               style={{ minHeight:'60vh', background:`linear-gradient(170deg, #3A2208 0%, #2C1A0E 45%, #4A2E10 100%)` }}>
+      <section className="relative overflow-hidden pt-28 pb-16"
+               style={{ background: C.bg }}>
 
-        {/* Warm layered glow — no harsh pattern */}
-        <motion.div style={{ y: heroY }} className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full"
-               style={{ background:'radial-gradient(ellipse 80% 60% at 20% 30%, rgba(184,134,42,0.18) 0%, transparent 65%)' }} />
-          <div className="absolute bottom-0 right-0 w-full h-full"
-               style={{ background:'radial-gradient(ellipse 60% 50% at 80% 80%, rgba(120,70,10,0.25) 0%, transparent 60%)' }} />
-          {/* Very subtle dot texture — far less distracting than diamonds */}
-          <div className="absolute inset-0"
-               style={{ backgroundImage:'radial-gradient(circle, rgba(201,168,76,0.07) 1px, transparent 1px)',
-                        backgroundSize:'28px 28px', opacity:1 }} />
-        </motion.div>
+        {/* Decorative gold orbs — subtle */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
+             style={{ background:'radial-gradient(circle, rgba(184,134,42,0.07) 0%, transparent 65%)', filter:'blur(60px)', transform:'translate(30%,-30%)' }} />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
+             style={{ background:'radial-gradient(circle, rgba(184,134,42,0.05) 0%, transparent 65%)', filter:'blur(60px)', transform:'translate(-30%,30%)' }} />
 
-        {/* Ghost watermark text — toned down */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-          {['HERITAGE','1987'].map((w,i)=>(
-            <span key={w} className="absolute font-serif font-black whitespace-nowrap"
-                  style={{ fontSize:'clamp(80px,18vw,160px)', opacity:0.018, color:'#C9A84C',
-                           top:`${20+i*40}%`, left:`${i*25}%`, transform:`rotate(${-3+i*2}deg)`, letterSpacing:'-0.04em' }}>
-              {w}
-            </span>
-          ))}
-        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 text-center">
 
-        {/* Hero content */}
-        <motion.div style={{ opacity: heroOpacity }}
-                    className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-36 pb-20">
-
-          <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }}
-                      className="flex items-center gap-3 mb-6">
-            <div className="h-px w-8" style={{ background:C.gold }} />
+          {/* Eyebrow */}
+          <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }}
+                      className="inline-flex items-center gap-3 mb-6">
+            <div className="h-px w-10" style={{ background:`linear-gradient(to right, transparent, ${C.gold})` }} />
             <span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color:C.gold }}>SHEKHAR RAJA JEWELLERS</span>
-            <div className="h-px w-8" style={{ background:C.gold }} />
+            <div className="h-px w-10" style={{ background:`linear-gradient(to left, transparent, ${C.gold})` }} />
           </motion.div>
 
-          <motion.h1 initial={{ opacity:0, y:44 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2, duration:0.75 }}
-                     className="font-cormorant font-bold leading-[0.9] tracking-tight mb-6"
-                     style={{ fontSize:'clamp(3rem,9vw,7rem)', color:'#F5ECD7' }}>
-            The&nbsp;
-            <span style={{ background:`linear-gradient(135deg,#D4A843,#F0D080,#B8862A)`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
+          {/* Title */}
+          <motion.h1 initial={{ opacity:0, y:32 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.18, duration:0.7 }}
+                     className="font-cormorant font-bold tracking-tight leading-[0.92] mb-6"
+                     style={{ fontSize:'clamp(3rem,10vw,6.5rem)', color:C.text }}>
+            The{' '}
+            <span style={{ background:`linear-gradient(135deg,${C.gold},${C.goldLight})`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
               Eternal
             </span>
-            <br/>Collection
+            <br />Collection
           </motion.h1>
 
-          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.35 }}
-                    className="font-raleway text-[15px] max-w-sm leading-relaxed mb-10"
-                    style={{ color:'rgba(245,236,215,0.5)' }}>
+          {/* Subtitle */}
+          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.3 }}
+                    className="font-raleway text-base max-w-md mx-auto leading-relaxed mb-10"
+                    style={{ color:C.textLight }}>
             {allProducts.length} masterworks in 22KT gold — each piece a story of heritage and elegance.
           </motion.p>
 
-          <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.5 }}
-                      className="flex items-center gap-6 sm:gap-10">
+          {/* Divider */}
+          <motion.div initial={{ scaleX:0 }} animate={{ scaleX:1 }} transition={{ delay:0.4, duration:0.6 }}
+                      className="mx-auto mb-10 origin-center"
+                      style={{ width:120, height:1, background:`linear-gradient(to right, transparent, ${C.gold}, transparent)` }} />
+
+          {/* Stats */}
+          <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.45 }}
+                      className="flex items-center justify-center gap-6 sm:gap-12">
             {[['500+','Designs'],['22KT','Pure Gold'],['BIS','Hallmark'],['1987','Est.']].map(([v,l],i)=>(
               <div key={l} className="text-center">
-                {i>0 && <div className="hidden" />}
-                <p className="font-cormorant text-2xl font-bold" style={{ color:C.gold }}>{v}</p>
-                <p className="font-raleway text-[10px] tracking-[0.18em] mt-0.5" style={{ color:'rgba(245,236,215,0.32)' }}>{l}</p>
+                <p className="font-cormorant text-2xl sm:text-3xl font-bold" style={{ color:C.gold }}>{v}</p>
+                <p className="font-raleway text-[10px] tracking-[0.2em] mt-0.5" style={{ color:C.textLight }}>{l}</p>
               </div>
             ))}
           </motion.div>
-        </motion.div>
-
-        {/* Long smooth cream fade — blends naturally into page */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height:'160px',
-             background:`linear-gradient(to top, ${C.bg} 0%, ${C.bg}CC 25%, ${C.bg}66 55%, transparent 100%)` }} />
-      </section>
-
-
-      {/* ══════════════════════════════════════
-          EDITOR'S PICKS — cream bg, warm cards
-      ══════════════════════════════════════ */}
-      <section className="py-20" style={{ background:C.bg }}>
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
-
-          {/* Section header */}
-          <motion.div initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
-                      className="flex items-center gap-5 mb-12">
-            <Crown size={16} style={{ color:C.gold }} />
-            <span className="font-cinzel text-[11px] tracking-[0.3em]" style={{ color:C.gold }}>EDITOR'S PICKS</span>
-            <div className="flex-1 h-px" style={{ background:`linear-gradient(to right, ${C.goldBorder}, transparent)` }} />
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {featured.map((p,i)=>(
-              <motion.div key={p.id}
-                initial={{ opacity:0, y:40 }} whileInView={{ opacity:1, y:0 }}
-                transition={{ delay:i*0.1 }} viewport={{ once:true }}
-                onClick={()=>setSelectedProduct(p)}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl"
-                style={{ aspectRatio:'3/4',
-                         boxShadow:`0 8px 40px ${C.shadowMd}`,
-                         border:`1px solid ${C.border}` }}
-              >
-                <img src={p.image} alt={p.name}
-                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                {/* Warm gradient overlay */}
-                <div className="absolute inset-0"
-                     style={{ background:`linear-gradient(to top, rgba(44,26,14,0.88) 0%, rgba(44,26,14,0.15) 55%, transparent 100%)` }} />
-                {/* Gold top shimmer on hover */}
-                <div className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                     style={{ background:`linear-gradient(to right, transparent, ${C.gold}, transparent)` }} />
-                {/* Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="font-cinzel text-[10px] tracking-[0.25em] mb-2" style={{ color:C.goldLight }}>{p.category.toUpperCase()}</p>
-                  <h3 className="font-cormorant text-2xl font-bold text-white leading-tight mb-3">{p.name}</h3>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
-                    <span className="font-raleway text-sm" style={{ color:'rgba(255,255,255,0.75)' }}>Enquire Now</span>
-                    <ArrowRight size={14} style={{ color:C.goldLight }} />
-                  </div>
-                </div>
-                {/* Featured pill */}
-                <div className="absolute top-4 right-4">
-                  <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full text-white"
-                        style={{ background:`linear-gradient(135deg,${C.gold},${C.goldLight})` }}>★ FEATURED</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -352,6 +277,59 @@ export default function Collections() {
         </div>
       </section>
 
+
+      {/* ══════════════════════════════════════
+          EDITOR'S PICKS — cream bg, warm cards
+      ══════════════════════════════════════ */}
+      <section className="py-20" style={{ background:C.bg }}>
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
+
+          {/* Section header */}
+          <motion.div initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
+                      className="flex items-center gap-5 mb-12">
+            <Crown size={16} style={{ color:C.gold }} />
+            <span className="font-cinzel text-[11px] tracking-[0.3em]" style={{ color:C.gold }}>EDITOR'S PICKS</span>
+            <div className="flex-1 h-px" style={{ background:`linear-gradient(to right, ${C.goldBorder}, transparent)` }} />
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {featured.map((p,i)=>(
+              <motion.div key={p.id}
+                initial={{ opacity:0, y:40 }} whileInView={{ opacity:1, y:0 }}
+                transition={{ delay:i*0.1 }} viewport={{ once:true }}
+                onClick={()=>setSelectedProduct(p)}
+                className="group relative cursor-pointer overflow-hidden rounded-3xl"
+                style={{ aspectRatio:'3/4',
+                         boxShadow:`0 8px 40px ${C.shadowMd}`,
+                         border:`1px solid ${C.border}` }}
+              >
+                <img src={p.image} alt={p.name}
+                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                {/* Warm gradient overlay */}
+                <div className="absolute inset-0"
+                     style={{ background:`linear-gradient(to top, rgba(44,26,14,0.88) 0%, rgba(44,26,14,0.15) 55%, transparent 100%)` }} />
+                {/* Gold top shimmer on hover */}
+                <div className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                     style={{ background:`linear-gradient(to right, transparent, ${C.gold}, transparent)` }} />
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <p className="font-cinzel text-[10px] tracking-[0.25em] mb-2" style={{ color:C.goldLight }}>{p.category.toUpperCase()}</p>
+                  <h3 className="font-cormorant text-2xl font-bold text-white leading-tight mb-3">{p.name}</h3>
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+                    <span className="font-raleway text-sm" style={{ color:'rgba(255,255,255,0.75)' }}>Enquire Now</span>
+                    <ArrowRight size={14} style={{ color:C.goldLight }} />
+                  </div>
+                </div>
+                {/* Featured pill */}
+                <div className="absolute top-4 right-4">
+                  <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full text-white"
+                        style={{ background:`linear-gradient(135deg,${C.gold},${C.goldLight})` }}>★ FEATURED</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ══════════════════════════════════════
           PRODUCTS GRID — warm white cards
