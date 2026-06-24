@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles, X, Search, Crown, ShieldCheck } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
@@ -192,28 +192,6 @@ const allProducts = [
   { id:111, name:"Ladies Gold Ring 16",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
 ];
 
-// ── Animated count-up number ───────────────────────────────────────────────────
-function CountUp({ to, suffix = '', duration = 1.6 }: { to: number; suffix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const [val, setVal] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    let start: number | null = null;
-    const step = (ts: number) => {
-      if (start === null) start = ts;
-      const progress = Math.min((ts - start) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setVal(Math.floor(eased * to));
-      if (progress < 1) requestAnimationFrame(step);
-      else setVal(to);
-    };
-    requestAnimationFrame(step);
-  }, [inView, to, duration]);
-
-  return <span ref={ref}>{val}{suffix}</span>;
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Collections() {
@@ -281,37 +259,17 @@ export default function Collections() {
               <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
                         className="font-raleway text-[15px] font-light max-w-md mb-10 leading-relaxed"
                         style={{ color: 'rgba(255,255,255,0.55)' }}>
-                A curated BIS Hallmark certified gold — each piece hand-finished by
+                A curated vault of 22K BIS Hallmark certified gold — each piece hand-finished by
                 third-generation artisans of Shekhar Raja Jewellers.
               </motion.p>
 
-              {/* Stat row — signature element */}
+              {/* Trust badge — no numeric counts */}
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
-                          className="flex flex-wrap items-center gap-x-6 gap-y-5 sm:gap-x-12">
-                <div>
-                  <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
-                    <CountUp to={allProducts.length} suffix="+" />
-                  </p>
-                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1 whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    HANDCRAFTED PIECES
-                  </p>
-                </div>
-                <div className="hidden sm:block h-10 w-px" style={{ background: C.goldBorder }} />
-                <div>
-                  <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
-                    <CountUp to={39} />
-                  </p>
-                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1 whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    YEARS OF LEGACY
-                  </p>
-                </div>
-                <div className="hidden sm:block h-10 w-px" style={{ background: C.goldBorder }} />
-                <div className="flex items-center gap-2">
-                  <ShieldCheck size={22} className="flex-shrink-0" style={{ color: C.gold }} />
-                  <p className="font-raleway text-[11px] leading-tight whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                     BIS<br />Hallmark
-                  </p>
-                </div>
+                          className="flex items-center gap-3">
+                <ShieldCheck size={24} className="flex-shrink-0" style={{ color: C.gold }} />
+                <p className="font-raleway text-[12px] leading-tight" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  22K BIS Hallmark Certified Gold
+                </p>
               </motion.div>
             </div>
 
