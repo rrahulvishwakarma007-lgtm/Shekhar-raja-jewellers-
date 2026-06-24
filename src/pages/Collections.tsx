@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Sparkles, X, Search, Crown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { ArrowRight, Sparkles, X, Search, Crown, ShieldCheck } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
 // ── Palette (matches live site) ───────────────────────────────────────────────
@@ -192,12 +192,48 @@ const allProducts = [
   { id:111, name:"Ladies Gold Ring 16",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
 ];
 
+// ── Animated count-up number ───────────────────────────────────────────────────
+function CountUp({ to, suffix = '', duration = 1.6 }: { to: number; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let start: number | null = null;
+    const step = (ts: number) => {
+      if (start === null) start = ts;
+      const progress = Math.min((ts - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setVal(Math.floor(eased * to));
+      if (progress < 1) requestAnimationFrame(step);
+      else setVal(to);
+    };
+    requestAnimationFrame(step);
+  }, [inView, to, duration]);
+
+  return <span ref={ref}>{val}{suffix}</span>;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Collections() {
   const [activeTab, setActiveTab]             = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<typeof allProducts[0] | null>(null);
   const [searchQuery, setSearchQuery]         = useState('');
   const [hoveredId, setHoveredId]             = useState<number | null>(null);
+  const [heroIndex, setHeroIndex]             = useState(0);
+
+  const featuredPool = allProducts.filter(p => p.featured);
+
+  // Rotate hero spotlight every 4.2s
+  useEffect(() => {
+    const t = setInterval(() => {
+      setHeroIndex(i => (i + 1) % featuredPool.length);
+    }, 4200);
+    return () => clearInterval(t);
+  }, [featuredPool.length]);
+
+  const heroProduct = featuredPool[heroIndex] || allProducts[0];
 
   const filteredProducts = allProducts.filter(p => {
     const matchCat = activeTab === 'All' || p.category === activeTab;
@@ -209,51 +245,168 @@ export default function Collections() {
   return (
     <div style={{ background: C.bg, minHeight: '100vh' }}>
 
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: C.bgDark, paddingTop: '7rem', paddingBottom: '5rem' }}>
-        <div className="absolute inset-0 opacity-20"
-             style={{ backgroundImage: `radial-gradient(ellipse 80% 60% at 50% 0%, ${C.gold} 0%, transparent 70%)` }} />
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full"
-               style={{ background: 'rgba(184,134,42,0.15)', border: `1px solid ${C.goldBorder}` }}>
-            <Crown size={11} style={{ color: C.gold }} />
-            <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.gold }}>
-              OUR COLLECTIONS
-            </span>
+      {/* ══════════════════════════════════════════════
+          HERO — cinematic split: copy + rotating spotlight
+      ══════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden" style={{ background: C.bgDark }}>
+        {/* Ambient gold wash */}
+        <div className="absolute inset-0 opacity-25 pointer-events-none"
+             style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 10%, ${C.gold} 0%, transparent 65%)` }} />
+        <div className="absolute inset-0 opacity-15 pointer-events-none"
+             style={{ backgroundImage: `radial-gradient(ellipse 50% 60% at 100% 100%, ${C.goldLight} 0%, transparent 60%)` }} />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10"
+             style={{ paddingTop: '6.5rem', paddingBottom: '4rem' }}>
+
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+
+            {/* ── Left: copy + stats ── */}
+            <div>
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                          className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full"
+                          style={{ background: 'rgba(184,134,42,0.15)', border: `1px solid ${C.goldBorder}` }}>
+                <Crown size={11} style={{ color: C.gold }} />
+                <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.gold }}>
+                  EST. 1987 · JABALPUR
+                </span>
+              </motion.div>
+
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+                         className="font-cormorant font-light text-white leading-[0.95] mb-5"
+                         style={{ fontSize: 'clamp(2.8rem, 6vw, 5.2rem)' }}>
+                Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>,<br />
+                Crafted for <em className="italic" style={{ color: C.gold }}>Eternity</em>.
+              </motion.h1>
+
+              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
+                        className="font-raleway text-[15px] font-light max-w-md mb-10 leading-relaxed"
+                        style={{ color: 'rgba(255,255,255,0.55)' }}>
+                A curated vault of 22K BIS Hallmark certified gold — each piece hand-finished by
+                third-generation artisans of Shekhar Raja Jewellers.
+              </motion.p>
+
+              {/* Stat row — signature element */}
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
+                          className="flex items-center gap-8 sm:gap-12">
+                <div>
+                  <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
+                    <CountUp to={allProducts.length} suffix="+" />
+                  </p>
+                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    HANDCRAFTED PIECES
+                  </p>
+                </div>
+                <div className="h-10 w-px" style={{ background: C.goldBorder }} />
+                <div>
+                  <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
+                    <CountUp to={39} />
+                  </p>
+                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    YEARS OF LEGACY
+                  </p>
+                </div>
+                <div className="h-10 w-px" style={{ background: C.goldBorder }} />
+                <div className="flex items-center gap-2">
+                  <ShieldCheck size={22} style={{ color: C.gold }} />
+                  <p className="font-raleway text-[11px] leading-tight" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                    22K BIS<br />Hallmark
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* ── Right: rotating spotlight card ── */}
+            <div className="relative hidden sm:block" style={{ aspectRatio: '4/5' }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={heroProduct.id}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  onClick={() => setSelectedProduct(heroProduct)}
+                  className="absolute inset-0 rounded-2xl overflow-hidden cursor-pointer group"
+                  style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}
+                >
+                  <img src={heroProduct.image} alt={heroProduct.name}
+                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(20,12,6,0.9) 100%)' }} />
+
+                  <div className="absolute top-5 left-5">
+                    <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
+                          style={{ background: 'rgba(245,236,215,0.92)', color: C.bgDark }}>
+                      ★ FEATURED
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="font-cinzel text-[10px] tracking-[0.2em] mb-1.5" style={{ color: C.goldPale }}>
+                      {heroProduct.category.toUpperCase()}
+                    </p>
+                    <h3 className="font-cormorant text-2xl font-semibold text-white mb-3">{heroProduct.name}</h3>
+                    <div className="flex items-center gap-1.5 font-raleway text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      View piece <ArrowRight size={12} />
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Carousel dots */}
+              <div className="absolute -bottom-8 left-0 right-0 flex items-center justify-center gap-2">
+                {featuredPool.map((_, i) => (
+                  <button key={i} onClick={() => setHeroIndex(i)}
+                          className="h-1 rounded-full transition-all duration-300"
+                          style={{
+                            width: i === heroIndex ? 24 : 8,
+                            background: i === heroIndex ? C.gold : 'rgba(245,236,215,0.25)',
+                          }} />
+                ))}
+              </div>
+            </div>
           </div>
-          <h1 className="font-cormorant text-5xl md:text-7xl font-light text-white mb-4 leading-none">
-            Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>
-          </h1>
-          <p className="font-raleway text-sm font-light max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            {allProducts.length} handcrafted pieces — 22K BIS Hallmark Certified · Est. 1987
-          </p>
         </div>
       </section>
 
-      {/* ── FILTER TABS ── */}
-      <section className="sticky top-0 z-40" style={{ background: C.bgDeep, borderBottom: `1px solid ${C.border}` }}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center gap-2 overflow-x-auto py-3" style={{ scrollbarWidth: 'none' }}>
+      {/* ══════════════════════════════════════════════
+          CATEGORY RAIL — circular portraits, horizontal scroll
+      ══════════════════════════════════════════════ */}
+      <section className="relative" style={{ background: C.bgDeep, borderBottom: `1px solid ${C.border}` }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
+          <div className="flex items-center gap-5 sm:gap-7 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
             {categories.map(cat => {
               const isActive = activeTab === cat.name;
+              const count = cat.name === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat.name).length;
               return (
                 <button key={cat.name} onClick={() => setActiveTab(cat.name)}
-                        className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200"
-                        style={{
-                          background: isActive ? C.gold : 'transparent',
-                          border: `1px solid ${isActive ? C.gold : C.goldBorder}`,
-                          color: isActive ? '#fff' : C.textLight,
-                        }}>
-                  {cat.image && (
-                    <img src={cat.image} alt={cat.name}
-                         className="w-5 h-5 rounded-full object-cover"
-                         style={{ border: `1px solid ${isActive ? 'rgba(255,255,255,0.4)' : C.goldBorder}` }} />
-                  )}
-                  <span className="font-cinzel text-[9px] tracking-[0.15em] whitespace-nowrap">
+                        className="flex-shrink-0 flex flex-col items-center gap-2 group">
+                  <div className="relative rounded-full p-[2px] transition-all duration-300"
+                       style={{
+                         background: isActive
+                           ? `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`
+                           : 'transparent',
+                       }}>
+                    <div className="rounded-full overflow-hidden transition-all duration-300"
+                         style={{
+                           width: 64, height: 64,
+                           border: `2px solid ${isActive ? C.bgCard : C.goldBorder}`,
+                           opacity: isActive ? 1 : 0.75,
+                           transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                         }}>
+                      {cat.image ? (
+                        <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center" style={{ background: C.bgDark }}>
+                          <Sparkles size={18} style={{ color: C.gold }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <span className="font-cinzel text-[8.5px] tracking-[0.12em] whitespace-nowrap transition-colors"
+                        style={{ color: isActive ? C.gold : C.textLight, fontWeight: isActive ? 700 : 400 }}>
                     {cat.name.toUpperCase()}
                   </span>
-                  <span className="font-raleway text-[9px] opacity-60">
-                    {cat.name === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat.name).length}
+                  <span className="font-raleway text-[8px] -mt-1.5" style={{ color: C.textLight, opacity: 0.6 }}>
+                    {count}
                   </span>
                 </button>
               );
@@ -278,11 +431,19 @@ export default function Collections() {
                 color: C.text,
               }}
             />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')}
+                      className="absolute right-4 top-1/2 -translate-y-1/2">
+                <X size={13} style={{ color: C.textLight }} />
+              </button>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── GRID ── */}
+      {/* ══════════════════════════════════════════════
+          GRID — magnetic-tilt cards
+      ══════════════════════════════════════════════ */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <AnimatePresence mode="wait">
@@ -303,7 +464,7 @@ export default function Collections() {
                     <motion.div key={product.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.04, duration: 0.4 }}
+                                transition={{ delay: Math.min(i * 0.03, 0.4), duration: 0.4 }}
                                 onHoverStart={() => setHoveredId(product.id)}
                                 onHoverEnd={() => setHoveredId(null)}
                                 onClick={() => setSelectedProduct(product)}
@@ -311,16 +472,16 @@ export default function Collections() {
                                 style={{
                                   background: C.bgCard,
                                   border: `1px solid ${isHov ? C.gold : C.border}`,
-                                  boxShadow: isHov ? `0 16px 40px ${C.shadowMd}` : `0 4px 16px ${C.shadow}`,
-                                  transform: isHov ? 'translateY(-5px)' : 'translateY(0)',
-                                  transition: 'all 0.3s ease',
+                                  boxShadow: isHov ? `0 20px 45px ${C.shadowMd}` : `0 4px 16px ${C.shadow}`,
+                                  transform: isHov ? 'translateY(-6px)' : 'translateY(0)',
+                                  transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
                                 }}>
 
                       {/* Image */}
                       <div className="relative overflow-hidden" style={{ aspectRatio: '1/1' }}>
                         <img src={product.image} alt={product.name}
                              className="w-full h-full object-cover transition-transform duration-500"
-                             style={{ transform: isHov ? 'scale(1.07)' : 'scale(1)' }} />
+                             style={{ transform: isHov ? 'scale(1.08)' : 'scale(1)' }} />
 
                         {/* Overlay */}
                         <div className="absolute inset-0 transition-opacity duration-400"
