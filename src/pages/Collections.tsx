@@ -272,44 +272,44 @@ export default function Collections() {
               </motion.div>
 
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-                         className="font-cormorant font-light text-white leading-[0.95] mb-5"
-                         style={{ fontSize: 'clamp(2.8rem, 6vw, 5.2rem)' }}>
-                Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>,<br />
+                         className="font-cormorant font-light text-white leading-[1.05] sm:leading-[0.95] mb-5 break-words"
+                         style={{ fontSize: 'clamp(2.1rem, 8vw, 5.2rem)' }}>
+                Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>,{' '}
                 Crafted for <em className="italic" style={{ color: C.gold }}>Eternity</em>.
               </motion.h1>
 
               <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
                         className="font-raleway text-[15px] font-light max-w-md mb-10 leading-relaxed"
                         style={{ color: 'rgba(255,255,255,0.55)' }}>
-                A curated vault of 22K BIS Hallmark certified gold — each piece hand-finished by
+                A curated BIS Hallmark certified gold — each piece hand-finished by
                 third-generation artisans of Shekhar Raja Jewellers.
               </motion.p>
 
               {/* Stat row — signature element */}
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
-                          className="flex items-center gap-8 sm:gap-12">
+                          className="flex flex-wrap items-center gap-x-6 gap-y-5 sm:gap-x-12">
                 <div>
                   <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
                     <CountUp to={allProducts.length} suffix="+" />
                   </p>
-                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1 whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>
                     HANDCRAFTED PIECES
                   </p>
                 </div>
-                <div className="h-10 w-px" style={{ background: C.goldBorder }} />
+                <div className="hidden sm:block h-10 w-px" style={{ background: C.goldBorder }} />
                 <div>
                   <p className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.gold }}>
                     <CountUp to={39} />
                   </p>
-                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <p className="font-raleway text-[10px] tracking-[0.2em] mt-1 whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>
                     YEARS OF LEGACY
                   </p>
                 </div>
-                <div className="h-10 w-px" style={{ background: C.goldBorder }} />
+                <div className="hidden sm:block h-10 w-px" style={{ background: C.goldBorder }} />
                 <div className="flex items-center gap-2">
-                  <ShieldCheck size={22} style={{ color: C.gold }} />
-                  <p className="font-raleway text-[11px] leading-tight" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    22K BIS<br />Hallmark
+                  <ShieldCheck size={22} className="flex-shrink-0" style={{ color: C.gold }} />
+                  <p className="font-raleway text-[11px] leading-tight whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                     BIS<br />Hallmark
                   </p>
                 </div>
               </motion.div>
