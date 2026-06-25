@@ -10,6 +10,8 @@ const C = {
   bgCard:     '#FFFDF8',
   bgDark:     '#2C1A0E',
   bgDarkMid:  '#3D2510',
+  bgHeroPink: '#F3D9E4',   // royal light pink — hero background
+  bgHeroPinkDeep: '#EBC3D6', // deeper pink for glows/accents
   gold:       '#B8862A',
   goldLight:  '#D4A843',
   goldPale:   '#F0D080',
@@ -226,12 +228,12 @@ export default function Collections() {
       {/* ══════════════════════════════════════════════
           HERO — cinematic split: copy + rotating spotlight
       ══════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: C.bgDark }}>
+      <section className="relative overflow-hidden" style={{ background: C.bgHeroPink }}>
         {/* Ambient gold wash */}
-        <div className="absolute inset-0 opacity-25 pointer-events-none"
+        <div className="absolute inset-0 opacity-30 pointer-events-none"
              style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 10%, ${C.gold} 0%, transparent 65%)` }} />
-        <div className="absolute inset-0 opacity-15 pointer-events-none"
-             style={{ backgroundImage: `radial-gradient(ellipse 50% 60% at 100% 100%, ${C.goldLight} 0%, transparent 60%)` }} />
+        <div className="absolute inset-0 opacity-20 pointer-events-none"
+             style={{ backgroundImage: `radial-gradient(ellipse 50% 60% at 100% 100%, ${C.bgHeroPinkDeep} 0%, transparent 60%)` }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10"
              style={{ paddingTop: '6.5rem', paddingBottom: '4rem' }}>
@@ -250,15 +252,15 @@ export default function Collections() {
               </motion.div>
 
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-                         className="font-cormorant font-light text-white leading-[1.05] sm:leading-[0.95] mb-5 break-words"
-                         style={{ fontSize: 'clamp(2.1rem, 8vw, 5.2rem)' }}>
+                         className="font-cormorant font-light leading-[1.05] sm:leading-[0.95] mb-5 break-words"
+                         style={{ fontSize: 'clamp(2.1rem, 8vw, 5.2rem)', color: C.text }}>
                 Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>,{' '}
                 Crafted for <em className="italic" style={{ color: C.gold }}>Eternity</em>.
               </motion.h1>
 
               <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
                         className="font-raleway text-[15px] font-light max-w-md mb-10 leading-relaxed"
-                        style={{ color: 'rgba(255,255,255,0.55)' }}>
+                        style={{ color: C.textMid }}>
                 A curated vault of 22K BIS Hallmark certified gold — each piece hand-finished by
                 third-generation artisans of Shekhar Raja Jewellers.
               </motion.p>
@@ -267,7 +269,7 @@ export default function Collections() {
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
                           className="flex items-center gap-3">
                 <ShieldCheck size={24} className="flex-shrink-0" style={{ color: C.gold }} />
-                <p className="font-raleway text-[12px] leading-tight" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <p className="font-raleway text-[12px] leading-tight" style={{ color: C.textMid }}>
                   22K BIS Hallmark Certified Gold
                 </p>
               </motion.div>
@@ -316,7 +318,7 @@ export default function Collections() {
                           className="h-1 rounded-full transition-all duration-300"
                           style={{
                             width: i === heroIndex ? 24 : 8,
-                            background: i === heroIndex ? C.gold : 'rgba(245,236,215,0.25)',
+                            background: i === heroIndex ? C.gold : 'rgba(44,26,14,0.18)',
                           }} />
                 ))}
               </div>
