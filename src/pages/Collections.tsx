@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles, X, Search, Crown, ShieldCheck } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
@@ -193,6 +193,65 @@ const allProducts = [
   { id:110, name:"Ladies Gold Ring 15",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive',   featured:false },
   { id:111, name:"Ladies Gold Ring 16",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
 ];
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ── 3D Tilt Card — cursor-driven perspective rotation + glare sweep ────────────
+function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50 });
+  const [active, setActive] = useState(false);
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;   // 0 → 1
+    const py = (e.clientY - rect.top) / rect.height;    // 0 → 1
+    const ry = (px - 0.5) * 16;   // rotateY range
+    const rx = (0.5 - py) * 16;   // rotateX range
+    setTilt({ rx, ry, gx: px * 100, gy: py * 100 });
+  };
+
+  const handleLeave = () => {
+    setActive(false);
+    setTilt({ rx: 0, ry: 0, gx: 50, gy: 50 });
+  };
+
+  return (
+    <div
+      style={{ perspective: '900px' }}
+      onClick={onClick}
+      className="cursor-pointer"
+    >
+      <div
+        ref={ref}
+        onMouseEnter={() => setActive(true)}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+        style={{
+          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${active ? 1.035 : 1})`,
+          transformStyle: 'preserve-3d',
+          transition: active ? 'transform 0.08s linear' : 'transform 0.5s cubic-bezier(0.22,1,0.36,1)',
+          willChange: 'transform',
+        }}
+        className="relative"
+      >
+        {children}
+
+        {/* Moving glare sheen — gives the surface a glassy, lit-from-cursor feel */}
+        <div
+          className="absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: active ? 0.55 : 0,
+            background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.35) 0%, transparent 55%)`,
+            mixBlendMode: 'screen',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -428,21 +487,20 @@ export default function Collections() {
                     <motion.div key={product.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: Math.min(i * 0.03, 0.4), duration: 0.4 }}
-                                onHoverStart={() => setHoveredId(product.id)}
-                                onHoverEnd={() => setHoveredId(null)}
-                                onClick={() => setSelectedProduct(product)}
-                                className="cursor-pointer rounded-xl overflow-hidden"
-                                style={{
-                                  background: C.bgCard,
-                                  border: `1px solid ${isHov ? C.gold : C.border}`,
-                                  boxShadow: isHov ? `0 20px 45px ${C.shadowMd}` : `0 4px 16px ${C.shadow}`,
-                                  transform: isHov ? 'translateY(-6px)' : 'translateY(0)',
-                                  transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
-                                }}>
+                                transition={{ delay: Math.min(i * 0.03, 0.4), duration: 0.4 }}>
+                    <TiltCard onClick={() => setSelectedProduct(product)}>
+                      <div onMouseEnter={() => setHoveredId(product.id)}
+                           onMouseLeave={() => setHoveredId(null)}
+                           className="rounded-xl overflow-hidden"
+                           style={{
+                             background: C.bgCard,
+                             border: `1px solid ${isHov ? C.gold : C.border}`,
+                             boxShadow: isHov ? `0 24px 50px ${C.shadowMd}` : `0 4px 16px ${C.shadow}`,
+                             transition: 'border-color 0.35s, box-shadow 0.35s',
+                           }}>
 
-                      {/* Image */}
-                      <div className="relative overflow-hidden" style={{ aspectRatio: '1/1' }}>
+                      {/* Image — lifted onto its own 3D layer so it pops forward on tilt */}
+                      <div className="relative overflow-hidden" style={{ aspectRatio: '1/1', transform: 'translateZ(24px)', transformStyle: 'preserve-3d' }}>
                         <img src={product.image} alt={product.name}
                              className="w-full h-full object-cover transition-transform duration-500"
                              style={{ transform: isHov ? 'scale(1.08)' : 'scale(1)' }} />
@@ -456,7 +514,7 @@ export default function Collections() {
                                       opacity: isHov ? 1 : 0 }} />
 
                         {/* Tag */}
-                        <div className="absolute top-3 left-3">
+                        <div className="absolute top-3 left-3" style={{ transform: 'translateZ(12px)' }}>
                           <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
                                 style={{ background: tagStyle.bg, color: tagStyle.text }}>
                             {product.tag}
@@ -466,14 +524,14 @@ export default function Collections() {
                         {/* Featured star */}
                         {product.featured && (
                           <div className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center"
-                               style={{ background: `linear-gradient(135deg,${C.gold},${C.goldPale})` }}>
+                               style={{ background: `linear-gradient(135deg,${C.gold},${C.goldPale})`, transform: 'translateZ(16px)' }}>
                             <span className="text-[10px] font-bold" style={{ color: C.bgDark }}>★</span>
                           </div>
                         )}
 
                         {/* View CTA */}
                         <div className="absolute bottom-4 left-4 right-4 transition-all duration-400"
-                             style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0)' : 'translateY(8px)' }}>
+                             style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0) translateZ(20px)' : 'translateY(8px) translateZ(20px)' }}>
                           <div className="flex items-center justify-between backdrop-blur-md rounded-xl px-4 py-2.5"
                                style={{ background: 'rgba(245,236,215,0.18)', border: '1px solid rgba(245,236,215,0.25)' }}>
                             <span className="font-raleway text-xs text-white">View Details</span>
@@ -507,6 +565,8 @@ export default function Collections() {
                           </div>
                         </div>
                       </div>
+                      </div>
+                    </TiltCard>
                     </motion.div>
                   );
                 })}
