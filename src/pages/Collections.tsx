@@ -255,6 +255,63 @@ function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: (
 
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ── Hero Tilt Card — bolder cursor-driven tilt for the spotlight ──────────────
+function HeroTiltWrapper({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50 });
+  const [active, setActive] = useState(false);
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const ry = (px - 0.5) * 26;   // noticeably wider swing than grid cards
+    const rx = (0.5 - py) * 22;
+    setTilt({ rx, ry, gx: px * 100, gy: py * 100 });
+  };
+
+  const handleLeave = () => {
+    setActive(false);
+    setTilt({ rx: 0, ry: 0, gx: 50, gy: 50 });
+  };
+
+  return (
+    <div style={{ perspective: '1100px' }} className="absolute inset-0">
+      <div
+        ref={ref}
+        onClick={onClick}
+        onMouseEnter={() => setActive(true)}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+        style={{
+          width: '100%', height: '100%',
+          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${active ? 1.02 : 1})`,
+          transformStyle: 'preserve-3d',
+          transition: active ? 'transform 0.09s linear' : 'transform 0.6s cubic-bezier(0.22,1,0.36,1)',
+          willChange: 'transform',
+        }}
+        className="relative cursor-pointer"
+      >
+        {children}
+
+        {/* Moving glare sheen */}
+        <div
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: active ? 0.45 : 0,
+            background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.4) 0%, transparent 55%)`,
+            mixBlendMode: 'screen',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
 export default function Collections() {
   const [activeTab, setActiveTab]             = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<typeof allProducts[0] | null>(null);
@@ -347,30 +404,35 @@ export default function Collections() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  onClick={() => setSelectedProduct(heroProduct)}
-                  className="absolute inset-0 rounded-2xl overflow-hidden cursor-pointer group"
-                  style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}
+                  className="absolute inset-0"
                 >
-                  <img src={heroProduct.image} alt={heroProduct.name}
-                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(20,12,6,0.9) 100%)' }} />
+                  <HeroTiltWrapper onClick={() => setSelectedProduct(heroProduct)}>
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden"
+                         style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}>
+                      <div style={{ transform: 'translateZ(0px)' }} className="absolute inset-0">
+                        <img src={heroProduct.image} alt={heroProduct.name}
+                             className="w-full h-full object-cover" />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(20,12,6,0.9) 100%)' }} />
+                      </div>
 
-                  <div className="absolute top-5 left-5">
-                    <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
-                          style={{ background: 'rgba(245,236,215,0.92)', color: C.bgDark }}>
-                      ★ FEATURED
-                    </span>
-                  </div>
+                      <div className="absolute top-5 left-5" style={{ transform: 'translateZ(34px)' }}>
+                        <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
+                              style={{ background: 'rgba(245,236,215,0.92)', color: C.bgDark }}>
+                          ★ FEATURED
+                        </span>
+                      </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="font-cinzel text-[10px] tracking-[0.2em] mb-1.5" style={{ color: C.goldPale }}>
-                      {heroProduct.category.toUpperCase()}
-                    </p>
-                    <h3 className="font-cormorant text-2xl font-semibold text-white mb-3">{heroProduct.name}</h3>
-                    <div className="flex items-center gap-1.5 font-raleway text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      View piece <ArrowRight size={12} />
+                      <div className="absolute bottom-0 left-0 right-0 p-6" style={{ transform: 'translateZ(40px)' }}>
+                        <p className="font-cinzel text-[10px] tracking-[0.2em] mb-1.5" style={{ color: C.goldPale }}>
+                          {heroProduct.category.toUpperCase()}
+                        </p>
+                        <h3 className="font-cormorant text-2xl font-semibold text-white mb-3">{heroProduct.name}</h3>
+                        <div className="flex items-center gap-1.5 font-raleway text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                          View piece <ArrowRight size={12} />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </HeroTiltWrapper>
                 </motion.div>
               </AnimatePresence>
 
