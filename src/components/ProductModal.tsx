@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MessageCircle, Shield, Gem, Sparkles, ZoomIn } from 'lucide-react';
+import { X, MessageCircle, Shield, Gem, Sparkles, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -30,9 +30,13 @@ const C = {
   border:     'rgba(184,134,42,0.18)',
 };
 
+// Zoom levels to step through on click — 1 is fully zoomed out (fit), then progressively closer
+const ZOOM_LEVELS = [1, 1.9, 2.8];
+
 export default function ProductModal({ product, onClose }: Props) {
-  const [zoomed, setZoomed]   = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [hovering, setHovering]   = useState(false);
+  const [zoomStep, setZoomStep]   = useState(0); // index into ZOOM_LEVELS — click-controlled
+  const [mousePos, setMousePos]   = useState({ x: 50, y: 50 });
   const imgWrapRef = useRef<HTMLDivElement>(null);
 
   if (!product) return null;
@@ -41,7 +45,10 @@ export default function ProductModal({ product, onClose }: Props) {
     `Hello! I'm interested in ${product.name} (${product.category}). Please share more details.`
   );
 
-  // Track cursor position over the image for the magnified-glass zoom effect
+  const zoomLevel  = ZOOM_LEVELS[zoomStep];
+  const isZoomedIn = zoomStep > 0;
+  const effectiveScale = isZoomedIn ? zoomLevel : (hovering ? 1.9 : 1);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = imgWrapRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -49,6 +56,14 @@ export default function ProductModal({ product, onClose }: Props) {
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setMousePos({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
   };
+
+  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setZoomStep(s => (s + 1) % ZOOM_LEVELS.length);
+  };
+
+  const zoomIn = () => setZoomStep(s => Math.min(s + 1, ZOOM_LEVELS.length - 1));
+  const zoomOut = () => setZoomStep(s => Math.max(s - 1, 0));
 
   return (
     <AnimatePresence>
@@ -61,7 +76,6 @@ export default function ProductModal({ product, onClose }: Props) {
         style={{ background: 'rgba(20,12,6,0.82)', backdropFilter: 'blur(20px)' }}
         onClick={onClose}
       >
-        {/* Ambient gold glow behind the modal */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -86,11 +100,9 @@ export default function ProductModal({ product, onClose }: Props) {
             boxShadow: '0 30px 90px rgba(20,12,6,0.5), 0 0 0 1px rgba(184,134,42,0.15)',
           }}
         >
-          {/* Hairline gold top edge */}
           <div className="absolute top-0 left-0 right-0 h-[2px] z-20"
                style={{ background: `linear-gradient(90deg, transparent, ${C.gold}, ${C.goldPale}, ${C.gold}, transparent)` }} />
 
-          {/* Close button — top right, floating above everything */}
           <motion.button
             onClick={onClose}
             whileHover={{ scale: 1.08, rotate: 90 }}
@@ -105,21 +117,20 @@ export default function ProductModal({ product, onClose }: Props) {
           <div className="flex flex-col md:flex-row max-h-[92vh] md:max-h-[640px]">
 
             {/* ══════════════════════════════════
-                IMAGE — cinematic cursor-zoom
+                IMAGE — cinematic cursor-zoom + click zoom in/out
             ══════════════════════════════════ */}
             <div
               ref={imgWrapRef}
-              onMouseEnter={() => setZoomed(true)}
-              onMouseLeave={() => setZoomed(false)}
+              onMouseEnter={() => setHovering(true)}
+              onMouseLeave={() => setHovering(false)}
               onMouseMove={handleMouseMove}
-              className="relative md:w-[52%] overflow-hidden cursor-zoom-in select-none"
-              style={{ height: '320px', minHeight: '320px' }}
+              onClick={handleImageClick}
+              className="relative md:w-[52%] overflow-hidden select-none"
+              style={{ height: '320px', minHeight: '320px', cursor: isZoomedIn ? 'zoom-out' : 'zoom-in' }}
             >
               <motion.div
-                animate={{
-                  scale: zoomed ? 1.9 : 1,
-                }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                animate={{ scale: effectiveScale }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   width: '100%', height: '100%',
                   transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
@@ -136,22 +147,49 @@ export default function ProductModal({ product, onClose }: Props) {
                 />
               </motion.div>
 
-              {/* Base gradient for legibility of overlaid badges */}
               <div className="absolute inset-0 pointer-events-none"
                    style={{ background: 'linear-gradient(to top, rgba(44,26,14,0.45) 0%, transparent 45%)' }} />
 
-              {/* Zoom hint badge — fades out once hovered */}
-              <motion.div
-                animate={{ opacity: zoomed ? 0 : 1 }}
-                transition={{ duration: 0.25 }}
-                className="absolute bottom-5 right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-none"
-                style={{ background: 'rgba(255,253,248,0.85)', backdropFilter: 'blur(8px)' }}
-              >
-                <ZoomIn size={12} style={{ color: C.text }} />
-                <span className="font-raleway text-[10px]" style={{ color: C.text }}>Hover to zoom</span>
-              </motion.div>
+              {/* Zoom controls — explicit zoom in / zoom out buttons */}
+              <div className="absolute bottom-5 right-5 flex items-center gap-2 z-10">
+                <AnimatePresence>
+                  {isZoomedIn && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.94 }}
+                      onClick={(e) => { e.stopPropagation(); zoomOut(); }}
+                      className="w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(255,253,248,0.92)', boxShadow: '0 4px 12px rgba(20,12,6,0.25)' }}
+                      title="Zoom out"
+                    >
+                      <ZoomOut size={14} style={{ color: C.text }} />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
 
-              {/* Tag */}
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={(e) => { e.stopPropagation(); zoomIn(); }}
+                  disabled={zoomStep === ZOOM_LEVELS.length - 1}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                  style={{
+                    background: 'rgba(255,253,248,0.92)',
+                    boxShadow: '0 4px 12px rgba(20,12,6,0.25)',
+                    opacity: zoomStep === ZOOM_LEVELS.length - 1 ? 0.5 : 1,
+                  }}
+                  title="Zoom in"
+                >
+                  <ZoomIn size={13} style={{ color: C.text }} />
+                  <span className="font-raleway text-[10px]" style={{ color: C.text }}>
+                    {isZoomedIn ? `${zoomLevel.toFixed(1)}x` : 'Hover or click to zoom'}
+                  </span>
+                </motion.button>
+              </div>
+
               {product.tag && (
                 <motion.div
                   initial={{ opacity: 0, x: -16 }}
@@ -175,7 +213,6 @@ export default function ProductModal({ product, onClose }: Props) {
                  style={{ background: C.bgCard }}>
               <div className="p-7 sm:p-9 flex flex-col flex-1">
 
-                {/* Category */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.35 }}
@@ -187,7 +224,6 @@ export default function ProductModal({ product, onClose }: Props) {
                   </span>
                 </motion.div>
 
-                {/* Title */}
                 <motion.h3
                   initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.16, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -197,7 +233,6 @@ export default function ProductModal({ product, onClose }: Props) {
                   {product.name}
                 </motion.h3>
 
-                {/* Divider */}
                 <motion.div
                   initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                   transition={{ delay: 0.28, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -205,7 +240,6 @@ export default function ProductModal({ product, onClose }: Props) {
                   style={{ background: `linear-gradient(to right, ${C.gold}, transparent)` }}
                 />
 
-                {/* Description */}
                 <motion.p
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   transition={{ delay: 0.32, duration: 0.4 }}
@@ -215,7 +249,6 @@ export default function ProductModal({ product, onClose }: Props) {
                   {product.description}
                 </motion.p>
 
-                {/* Trust badges */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.38, duration: 0.4 }}
@@ -256,7 +289,6 @@ export default function ProductModal({ product, onClose }: Props) {
 
                 <div className="flex-1" />
 
-                {/* WhatsApp CTA */}
                 <motion.a
                   href={`https://wa.me/918377911745?text=${whatsappMessage}`}
                   target="_blank"
