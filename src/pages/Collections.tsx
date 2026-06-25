@@ -10,8 +10,8 @@ const C = {
   bgCard:     '#FFFDF8',
   bgDark:     '#2C1A0E',
   bgDarkMid:  '#3D2510',
-  bgHeroPink: '#F3D9E4',   // royal light pink — hero background
-  bgHeroPinkDeep: '#EBC3D6', // deeper pink for glows/accents
+  bgHeroPink: '#F7E3E0',   // soft champagne-rose — hero background
+  bgHeroPinkDeep: '#E8C4C0', // dustier rose for ambient glow accents
   gold:       '#B8862A',
   goldLight:  '#D4A843',
   goldPale:   '#F0D080',
@@ -228,12 +228,16 @@ export default function Collections() {
       {/* ══════════════════════════════════════════════
           HERO — cinematic split: copy + rotating spotlight
       ══════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: C.bgHeroPink }}>
+      <section className="relative overflow-hidden"
+               style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #F9EAE5 50%, ${C.bgDeep} 100%)` }}>
         {/* Ambient gold wash */}
-        <div className="absolute inset-0 opacity-30 pointer-events-none"
-             style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 10%, ${C.gold} 0%, transparent 65%)` }} />
-        <div className="absolute inset-0 opacity-20 pointer-events-none"
-             style={{ backgroundImage: `radial-gradient(ellipse 50% 60% at 100% 100%, ${C.bgHeroPinkDeep} 0%, transparent 60%)` }} />
+        <div className="absolute inset-0 opacity-[0.18] pointer-events-none"
+             style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 8%, ${C.gold} 0%, transparent 65%)` }} />
+        <div className="absolute inset-0 opacity-[0.14] pointer-events-none"
+             style={{ backgroundImage: `radial-gradient(ellipse 55% 55% at 95% 90%, ${C.bgHeroPinkDeep} 0%, transparent 60%)` }} />
+        {/* Soft bottom fade to blend seamlessly into the category band */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+             style={{ background: `linear-gradient(to top, ${C.bgDeep} 0%, transparent 100%)` }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10"
              style={{ paddingTop: '6.5rem', paddingBottom: '4rem' }}>
@@ -244,9 +248,9 @@ export default function Collections() {
             <div>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                           className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full"
-                          style={{ background: 'rgba(184,134,42,0.15)', border: `1px solid ${C.goldBorder}` }}>
+                          style={{ background: 'rgba(255,253,250,0.55)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
                 <Crown size={11} style={{ color: C.gold }} />
-                <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.gold }}>
+                <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.textMid }}>
                   EST. 1987 · JABALPUR
                 </span>
               </motion.div>
