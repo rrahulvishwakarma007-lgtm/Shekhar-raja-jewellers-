@@ -1,172 +1,81 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown, Search, MapPin } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// Hero slides data
+// ── Palette ───────────────────────────────────────────────────────────────────
+const C = {
+  bg:        '#FAF6EE',   // light warm cream
+  bgCard:    '#FFFFFF',
+  bgDeep:    '#F5ECD7',
+  gold:      '#B8862A',
+  goldDk:    '#8B6014',
+  goldLt:    '#D4A843',
+  goldPale:  '#F0D080',
+  text:      '#2C1A0E',
+  textMid:   '#6B4E2A',
+  textLight: '#9A7B50',
+  border:    'rgba(184,134,42,0.18)',
+  borderMd:  'rgba(184,134,42,0.35)',
+};
+
+// ── Hero Slides ───────────────────────────────────────────────────────────────
 const heroSlides = [
-  {
-    id: 1,
-    image: '/hero1.jpg',
-    eyebrow: 'Exquisite Collection',
-    title: 'Diamond',
-    titleAccent: 'Rings',
-    subtitle: 'Celebrate your eternal bond with our handcrafted diamond masterpieces',
-    category: 'Rings',
-    tagline: 'Where brilliance meets eternity'
-  },
-  {
-    id: 2,
-    image: '/hero2.jpg',
-    eyebrow: 'Bridal Heritage',
-    title: 'Bridal',
-    titleAccent: 'Necklaces',
-    subtitle: 'Make your special day unforgettable with our exquisite bridal collections',
-    category: 'Bridal',
-    tagline: 'For your most precious moments'
-  },
-  {
-    id: 3,
-    image: '/hero3.jpg',
-    eyebrow: 'Timeless Beauty',
-    title: 'Gold',
-    titleAccent: 'Earrings',
-    subtitle: 'Elegant designs that complement every occasion with timeless grace',
-    category: 'Earrings',
-    tagline: 'Elegance in every detail'
-  },
-  {
-    id: 4,
-    image: '/hero4.jpg',
-    eyebrow: 'Traditional Art',
-    title: 'Gold',
-    titleAccent: 'Bangles',
-    subtitle: 'Traditional craftsmanship meets contemporary design excellence',
-    category: 'Bangles',
-    tagline: 'Heritage reimagined'
-  }
+  { id:1, image:'/hero1.jpg',  eyebrow:'New Collection',   title:'Diamond',  accent:'Rings',     subtitle:'Celebrate your eternal bond with handcrafted masterpieces',    category:'Rings'    },
+  { id:2, image:'/hero2.jpg',  eyebrow:'Bridal Heritage',  title:'Bridal',   accent:'Necklaces', subtitle:'Make your special day unforgettable with our bridal treasures', category:'Bridal'   },
+  { id:3, image:'/hero3.jpg',  eyebrow:'Timeless Beauty',  title:'Gold',     accent:'Earrings',  subtitle:'Elegant designs that complement every occasion with grace',      category:'Earrings' },
+  { id:4, image:'/hero4.jpg',  eyebrow:'Traditional Art',  title:'Gold',     accent:'Bangles',   subtitle:'Traditional craftsmanship meets contemporary design excellence', category:'Bangles'  },
 ];
 
-// Categories data
+// ── Categories ────────────────────────────────────────────────────────────────
 const categories = [
-  { name: 'Antique', image: '/antique2.jpg' },
-   { name: 'Necklaces', image: '/necklace1.jpg' },
-  { name: 'Earrings', image: '/earring1.jpg' },
-  { name: 'Bangles', image: '/bangle1.png' },
-  { name: "Men's Ring", image: '/ring7.png' },
-  { name: 'Pendants', image: '/pendant.png' },
-  { name: "Women's Ring", image: '/ring2.png' },
-  { name: 'Chains', image: '/chain2.png' },
- { name: 'Chokers', image: '/antique3.jpg' }
+  { name:'Antique',      image:'/antique2.jpg'  },
+  { name:'Necklaces',    image:'/necklace1.jpg' },
+  { name:'Earrings',     image:'/earring1.jpg'  },
+  { name:'Bangles',      image:'/bangle1.png'   },
+  { name:"Men's Ring",   image:'/ring7.png'     },
+  { name:'Pendants',     image:'/pendant.png'   },
+  { name:"Women's Ring", image:'/ring2.png'     },
+  { name:'Chains',       image:'/chain2.png'    },
+  { name:'Chokers',      image:'/antique3.jpg'  },
 ];
 
-// Collections data
+// ── Collections ───────────────────────────────────────────────────────────────
 const collections = [
-  {
-    id: 1,
-    name: 'Maharani Bridal Set',
-    category: 'Bridal',
-    image: '/necklace88.png',
-    featured: true
-  },
-  {
-    id: 2,
-    name: 'Diamond Ring',
-    category: 'Diamond',
-    image: '/ring1.png',
-    featured: false
-  },
-  {
-    id: 3,
-    name: 'Temple Gold Necklace',
-    category: 'Temple',
-    image: '/temple.png',
-    featured: false
-  }
+  { id:1, name:'Maharani Bridal Set', category:'Bridal',  image:'/necklace88.png', featured:true  },
+  { id:2, name:'Diamond Ring',        category:'Diamond', image:'/ring1.png',      featured:false },
+  { id:3, name:'Temple Gold Necklace',category:'Temple',  image:'/temple.png',     featured:false },
 ];
 
-// Products data
+// ── Products ──────────────────────────────────────────────────────────────────
 const products = [
-  {
-    id: 1,
-    name: 'Bridal Chain',
-    category: 'Bridal',
-    description: 'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',
-    image: '/bridal.png',
-    tag: 'Bestseller'
-  },
-  {
-    id: 2,
-    name: 'Diamond Eternity Ring',
-    category: 'Diamond',
-    description: 'A stunning circle of brilliant diamonds symbolizing eternal love.',
-    image: '/ring6.png',
-    tag: 'Premium'
-  },
-  {
-    id: 3,
-    name: 'Antique Gold Jhumkas',
-    category: 'Earrings',
-    description: 'Traditional temple-style jhumkas with intricate peacock motifs.',
-    image: '/earrings13.png',
-    tag: 'Heritage'
-  },
-  {
-    id: 4,
-    name: '22KT Gold Bangles Set',
-    category: 'Bangles',
-    description: 'Set of 4 intricately designed bangles with traditional patterns.',
-    image: '/bangle5.png',
-    tag: 'Classic'
-  },
-  {
-    id: 5,
-    name: 'Polki Diamond Ring',
-    category: 'Rings',
-    description: 'Uncut polki diamonds set in 22KT gold with a classic design.',
-    image: '/ring7.png',
-    tag: 'Exclusive'
-  },
-  {
-    id: 6,
-    name: 'Temple Gold Haar',
-    category: 'Necklaces',
-    description: 'Traditional temple necklace with goddess motifs and Lakshmi coins.',
-    image: '/necklace88.png',
-    tag: 'Traditional'
-  },
-  {
-    id: 7,
-    name: 'Antique Earrings Set',
-    category: 'Antique',
-    description: 'Exquisite antique finish  jewellery with traditional craftsmanship.',
-    image: '/earring5.jpg',
-    tag: 'Limited'
-  },
-  {
-    id: 8,
-    name: 'Festive Gold Set',
-    category: 'Festive',
-    description: 'Elegant gold set perfect for festive occasions and celebrations.',
-    image: '/chain4.png',
-    tag: 'Trending'
-  }
+  { id:1, name:'Bridal Chain',           category:'Bridal',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/bridal.png',     tag:'Bestseller' },
+  { id:2, name:'Diamond Eternity Ring',  category:'Diamond',  description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring6.png',      tag:'Premium'    },
+  { id:3, name:'Antique Gold Jhumkas',   category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png', tag:'Heritage'   },
+  { id:4, name:'22KT Gold Bangles Set',  category:'Bangles',  description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle5.png',    tag:'Classic'    },
+  { id:5, name:'Polki Diamond Ring',     category:'Rings',    description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring7.png',      tag:'Exclusive'  },
+  { id:6, name:'Temple Gold Haar',       category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png', tag:'Traditional'},
+  { id:7, name:'Antique Earrings Set',   category:'Antique',  description:'Exquisite antique finish jewellery with traditional craftsmanship.',               image:'/earring5.jpg',   tag:'Limited'    },
+  { id:8, name:'Festive Gold Set',       category:'Festive',  description:'Elegant gold set perfect for festive occasions and celebrations.',                  image:'/chain4.png',     tag:'Trending'   },
 ];
 
-// Trust items
+// ── Trust items ───────────────────────────────────────────────────────────────
 const trustItems = [
-  { icon: '✓', title: 'Hallmark Certified', desc: 'BIS Hallmark on all gold jewellery' },
-  { icon: '♦', title: 'Bridal Specialist', desc: '35+ years of bridal expertise' },
-  { icon: '⬡', title: 'Two Showrooms', desc: 'Conveniently located in Jabalpur' },
-  { icon: '◈', title: 'WA Support', desc: 'Instant WhatsApp assistance' }
+  { icon:'✓', title:'Hallmark Certified', desc:'BIS Hallmark on all gold jewellery'   },
+  { icon:'♦', title:'Bridal Specialist',  desc:'35+ years of bridal expertise'         },
+  { icon:'⬡', title:'Two Showrooms',      desc:'Conveniently located in Jabalpur'      },
+  { icon:'◈', title:'WA Support',         desc:'Instant WhatsApp assistance'           },
 ];
 
-// ── Video Carousel Component ─────────────────────────────────────────────────
-const VIDEOS = [
-  '/video1.mp4', '/video2.mp4', '/video3.mp4', '/video4.mp4',
-  '/video5.mp4', '/video6.mp4', '/video7.mp4',
+// ── Promo banners ──────────────────────────────────────────────────────────────
+const promoBanners = [
+  { label:'0% Deduction on Old Gold Exchange', img:'/hero2.jpg',  cta:'Exchange Now' },
+  { label:'Flat 9% Off Making Charges',        img:'/hero1.jpg',  cta:'Shop Now'     },
 ];
+
+// ── Video Carousel ─────────────────────────────────────────────────────────────
+const VIDEOS = ['/video1.mp4','/video2.mp4','/video3.mp4','/video4.mp4','/video5.mp4','/video6.mp4','/video7.mp4'];
 
 function VideoCarousel() {
   const [active, setActive]   = useState(0);
@@ -176,103 +85,48 @@ function VideoCarousel() {
   const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null);
   const total                 = VIDEOS.length;
 
-  const goTo = useCallback((idx: number) => {
-    setActive(idx);
-  }, []);
+  const goTo = useCallback((idx: number) => setActive(idx), []);
 
-  // Auto-advance when the active video ends, or after 6s as fallback
   const startTimer = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setActive(prev => (prev + 1) % total);
-    }, 6000);
+    intervalRef.current = setInterval(() => setActive(prev => (prev + 1) % total), 6000);
   }, [total]);
 
-  useEffect(() => {
-    startTimer();
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [startTimer]);
+  useEffect(() => { startTimer(); return () => { if (intervalRef.current) clearInterval(intervalRef.current); }; }, [startTimer]);
 
-  // Play active, pause/reset others
   useEffect(() => {
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
-      if (i === active) {
-        v.currentTime = 0;
-        v.play().catch(() => {});
-      } else {
-        v.pause();
-        v.currentTime = 0;
-      }
+      if (i === active) { v.currentTime = 0; v.play().catch(() => {}); }
+      else { v.pause(); v.currentTime = 0; }
     });
   }, [active]);
 
-  // Auto-scroll active video to center of track
   useEffect(() => {
-    const track = trackRef.current;
-    const item  = itemRefs.current[active];
+    const track = trackRef.current; const item = itemRefs.current[active];
     if (!track || !item) return;
-    const trackRect = track.getBoundingClientRect();
-    const itemRect  = item.getBoundingClientRect();
-    const scrollLeft = track.scrollLeft
-      + (itemRect.left - trackRect.left)
-      - trackRect.width / 2
-      + itemRect.width / 2;
-    track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    const trackRect = track.getBoundingClientRect(); const itemRect = item.getBoundingClientRect();
+    track.scrollTo({ left: track.scrollLeft + (itemRect.left - trackRect.left) - trackRect.width / 2 + itemRect.width / 2, behavior:'smooth' });
   }, [active]);
 
-  // When active video ends → advance
-  const handleEnded = () => {
-    startTimer();
-    setActive(prev => (prev + 1) % total);
-  };
+  const handleEnded = () => { startTimer(); setActive(prev => (prev + 1) % total); };
 
   return (
     <div className="relative">
-      {/* Track */}
-      <div ref={trackRef}
-           className="flex items-center gap-3 sm:gap-5 overflow-x-auto hide-scrollbar pb-4 px-2"
-           style={{ scrollbarWidth: 'none' }}>
+      <div ref={trackRef} className="flex items-center gap-3 sm:gap-5 overflow-x-auto pb-4 px-2" style={{ scrollbarWidth:'none' }}>
         {VIDEOS.map((src, i) => {
           const isActive = i === active;
           return (
-            <motion.div
-              key={i}
-              ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
+            <motion.div key={i} ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
               onClick={() => { goTo(i); startTimer(); }}
-              animate={{
-                scale:   isActive ? 1.08 : 0.88,
-                opacity: isActive ? 1    : 0.55,
-              }}
-              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden
-                ${isActive
-                  ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#d4a843] shadow-[0_0_40px_rgba(212,168,67,0.35)]'
-                  : 'w-36 sm:w-44 h-60 sm:h-72'
-                }`}
-              style={{ transition: 'width 0.4s ease, height 0.4s ease' }}
-            >
-              <video
-                ref={el => { videoRefs.current[i] = el; }}
-                src={src}
-                muted
-                playsInline
-                loop={false}
-                onEnded={isActive ? handleEnded : undefined}
-                className="w-full h-full object-cover"
-              />
-
-              {/* Dark overlay for inactive */}
-              {!isActive && (
-                <div className="absolute inset-0 bg-[#0d0800]/50" />
-              )}
-
-              {/* Gold border shimmer on active */}
-              {isActive && (
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05]/70 via-transparent to-transparent pointer-events-none" />
-              )}
-
-              {/* Play icon on inactive */}
+              animate={{ scale: isActive ? 1.08 : 0.88, opacity: isActive ? 1 : 0.55 }}
+              transition={{ type:'spring', stiffness:300, damping:28 }}
+              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#d4a843] shadow-[0_0_40px_rgba(212,168,67,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
+              style={{ transition:'width 0.4s ease, height 0.4s ease' }}>
+              <video ref={el => { videoRefs.current[i] = el; }} src={src} muted playsInline loop={false}
+                     onEnded={isActive ? handleEnded : undefined} className="w-full h-full object-cover" />
+              {!isActive && <div className="absolute inset-0 bg-[#0d0800]/50" />}
+              {isActive && <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05]/70 via-transparent to-transparent pointer-events-none" />}
               {!isActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
@@ -280,8 +134,6 @@ function VideoCarousel() {
                   </div>
                 </div>
               )}
-
-              {/* Video number badge */}
               <div className="absolute bottom-3 left-3">
                 <span className="font-cinzel text-[10px] tracking-[0.15em] text-white/80 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded-full">
                   {String(i + 1).padStart(2, '0')}
@@ -291,368 +143,262 @@ function VideoCarousel() {
           );
         })}
       </div>
-
-      {/* Dot indicators */}
       <div className="flex items-center justify-center gap-2 mt-8">
         {VIDEOS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => { goTo(i); startTimer(); }}
-            className={`rounded-full transition-all duration-300 ${
-              i === active
-                ? 'w-8 h-2 bg-[#d4a843]'
-                : 'w-2 h-2 bg-white/25 hover:bg-white/50'
-            }`}
-          />
+          <button key={i} onClick={() => { goTo(i); startTimer(); }}
+                  className={`rounded-full transition-all duration-300 ${i === active ? 'w-8 h-2 bg-[#d4a843]' : 'w-2 h-2 bg-white/25 hover:bg-white/50'}`} />
         ))}
       </div>
-
-      {/* Progress bar */}
       <div className="mt-4 mx-auto max-w-xs h-px bg-white/10 rounded-full overflow-hidden">
-        <motion.div
-          key={active}
-          className="h-full bg-gradient-to-r from-[#b8862a] to-[#d4a843]"
-          initial={{ width: '0%' }}
-          animate={{ width: '100%' }}
-          transition={{ duration: 6, ease: 'linear' }}
-        />
+        <motion.div key={active} className="h-full bg-gradient-to-r from-[#b8862a] to-[#d4a843]"
+                    initial={{ width:'0%' }} animate={{ width:'100%' }} transition={{ duration:6, ease:'linear' }} />
       </div>
     </div>
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide]     = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [promoBanner, setPromoBanner]        = useState(0);
+  const [searchQuery, setSearchQuery]        = useState('');
 
-  // Auto-slide
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5500);
+    const timer = setInterval(() => setCurrentSlide(p => (p + 1) % heroSlides.length), 4500);
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  useEffect(() => {
+    const timer = setInterval(() => setPromoBanner(p => (p + 1) % promoBanners.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const slide = heroSlides[currentSlide];
+  const nextSlide = () => setCurrentSlide(p => (p + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide(p => (p - 1 + heroSlides.length) % heroSlides.length);
 
   return (
-    <div>
-      {/* ── ANNOUNCEMENT TICKER ─────────────────────────────────── */}
-      <div className="overflow-hidden mt-20" style={{ background: '#1a0f05' }}>
+    <div style={{ background: C.bg }}>
+
+      {/* ══ GOLD TICKER ══ */}
+      <div className="overflow-hidden mt-20" style={{ background: C.gold, padding:'10px 0' }}>
         <div className="animate-marquee whitespace-nowrap flex">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-10 px-6 py-2.5">
-              {[
-                'BIS HALLMARK CERTIFIED',
-                'TRUSTED SINCE 1987',
-                '22KT PURE GOLD',
-                'BRIDAL SPECIALIST',
-                'WHATSAPP ENQUIRY',
-                'TWO SHOWROOMS · JABALPUR',
-              ].map((t) => (
-                <span key={t} className="flex items-center gap-4">
-                  <span className="font-cinzel text-[10px] tracking-[0.3em]" style={{ color: 'rgba(212,168,67,0.7)' }}>
-                    {t}
-                  </span>
-                  <span style={{ color: 'rgba(184,134,42,0.5)' }}>◆</span>
-                </span>
-              ))}
+            <div key={i} className="flex items-center gap-10 px-6">
+              <span className="font-cinzel text-xs tracking-[0.2em] text-white">BIS HALLMARK</span>
+              <span style={{ color: C.goldPale }}>◆</span>
+              <span className="font-cinzel text-xs tracking-[0.2em] text-white">TRUSTED SINCE 1987</span>
+              <span style={{ color: C.goldPale }}>◆</span>
+              <span className="font-cinzel text-xs tracking-[0.2em] text-white">22K GOLD</span>
+              <span style={{ color: C.goldPale }}>◆</span>
+              <span className="font-cinzel text-xs tracking-[0.2em] text-white">DIAMOND JEWELLERY</span>
+              <span style={{ color: C.goldPale }}>◆</span>
+              <span className="font-cinzel text-xs tracking-[0.2em] text-white">WHATSAPP ENQUIRY</span>
+              <span style={{ color: C.goldPale }}>◆</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── HERO — clean full-bleed ──────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ height: '92vh', minHeight: 580 }}>
+      {/* ══════════════════════════════════════════════════════════════
+          HERO — CaratLane style: light bg, search, category row, promo
+      ══════════════════════════════════════════════════════════════ */}
+      <section style={{ background: C.bg, paddingBottom: 0 }}>
 
-        {/* Slide images */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.id}
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0"
-          >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-full object-cover"
+        {/* ── TOP NAV INFO BAR ── */}
+        <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3"
+             style={{ borderBottom:`1px solid ${C.border}` }}>
+          <div className="flex items-center gap-2">
+            <MapPin size={14} style={{ color: C.gold }} />
+            <span className="font-raleway text-sm" style={{ color: C.textMid }}>
+              Delivering to <span style={{ color: C.gold }} className="font-semibold">Jabalpur · 482002</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>EST. 1987</span>
+            <span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>BIS HALLMARK</span>
+            <span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>22K GOLD</span>
+          </div>
+        </div>
+
+        {/* ── SEARCH BAR ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="relative max-w-2xl mx-auto">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: C.textLight }} />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search Price, Jewellery, Category..."
+              className="w-full pl-11 pr-5 py-3.5 rounded-full font-raleway text-sm outline-none transition-all"
+              style={{
+                background: '#fff',
+                border: `1.5px solid ${C.borderMd}`,
+                color: C.text,
+                boxShadow: '0 2px 12px rgba(184,134,42,0.08)',
+              }}
+              onFocus={e => e.target.style.boxShadow = `0 0 0 2px rgba(184,134,42,0.25)`}
+              onBlur={e => e.target.style.boxShadow = '0 2px 12px rgba(184,134,42,0.08)'}
             />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Subtle top vignette — just enough to float the nav arrows */}
-        <div className="absolute inset-0 pointer-events-none"
-             style={{ background: 'linear-gradient(to bottom, rgba(26,15,5,0.18) 0%, transparent 22%)' }} />
-
-        {/* Bottom cream bleed — page flows naturally into the section below */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none"
-             style={{ height: 80, background: 'linear-gradient(to top, #faf7f2 0%, transparent 100%)' }} />
-
-        {/* Arrow buttons — minimal frosted glass */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
-          style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.2)' }}
-        >
-          <ChevronLeft size={18} className="text-white" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
-          style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.2)' }}
-        >
-          <ChevronRight size={18} className="text-white" />
-        </button>
-
-        {/* Bottom controls — progress bar + dot indicators */}
-        <div className="absolute bottom-10 left-0 right-0 z-20">
-          <div className="flex flex-col items-center gap-3">
-            {/* Animated progress line */}
-            <div className="w-32 h-px" style={{ background: 'rgba(255,255,255,0.18)' }}>
-              <motion.div
-                key={currentSlide}
-                className="h-full"
-                initial={{ width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 5.5, ease: 'linear' }}
-                style={{ background: 'linear-gradient(to right, #b8862a, #d4a843)' }}
-              />
-            </div>
-            {/* Dots */}
-            <div className="flex items-center gap-2">
-              {heroSlides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentSlide(i)}
-                  className="rounded-full transition-all duration-400"
-                  style={{
-                    width: i === currentSlide ? 24 : 7,
-                    height: 7,
-                    background: i === currentSlide ? '#d4a843' : 'rgba(255,255,255,0.4)',
-                  }}
-                />
-              ))}
-            </div>
           </div>
         </div>
-      </section>
 
-      {/* Category Circles */}
-      <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6] relative overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-[#b8862a]/5 rounded-full blur-3xl animate-morph" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#d4a843]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '2s' }} />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-              <Diamond size={16} className="text-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">EXPLORE</span>
-              <Diamond size={16} className="text-[#b8862a]" />
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
-            </div>
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
-              Explore by Category
-            </h2>
-            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
-              Discover our curated collections, each piece a masterpiece of craftsmanship
-            </p>
-          </motion.div>
-          
-          {/* Desktop Grid - 3D Effect */}
-          <div className="hidden lg:grid grid-cols-6 gap-8">
-            {categories.map((cat, index) => (
-              <motion.div
-                key={cat.name}
-                initial={{ opacity: 0, y: 40, rotateX: -15 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10, scale: 1.05 }}
-                className="flex flex-col items-center cursor-pointer group perspective-1000"
-              >
-                <div className="relative">
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-                  
-                  {/* Main circle */}
-                  <div className="relative w-28 h-28 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:shadow-[#b8862a]/20 transition-all duration-500">
-                    {/* Shine overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-                    />
-                  </div>
-                  
-                  {/* Floating diamond decoration */}
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100">
-                    <Diamond size={10} className="text-white" />
-                  </div>
-                </div>
-                
-                <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-4 group-hover:text-[#b8862a] transition-colors duration-300">
-                  {cat.name.toUpperCase()}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Mobile Carousel */}
-          <div className="lg:hidden overflow-x-auto hide-scrollbar -mx-4 px-4">
-            <div className="flex gap-8 pb-4">
-              {categories.map((cat, index) => (
+        {/* ── CATEGORY ROW (CaratLane squares) ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
+          <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2" style={{ scrollbarWidth:'none' }}>
+            {categories.map((cat, i) => (
+              <Link key={cat.name} to="/collections"
+                    className="flex-shrink-0 flex flex-col items-center gap-2 group">
                 <motion.div
-                  key={cat.name}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  viewport={{ once: true }}
-                  className="flex flex-col items-center flex-shrink-0 group"
-                >
-                  <div className="relative w-24 h-24 rounded-full border-2 border-[#b8862a] overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-                    />
-                  </div>
-                  <span className="font-cinzel text-xs tracking-[0.15em] text-[#3a2e1e] mt-3 group-hover:text-[#b8862a] transition-colors">
-                    {cat.name.toUpperCase()}
-                  </span>
+                  initial={{ opacity:0, y:16 }}
+                  animate={{ opacity:1, y:0 }}
+                  transition={{ delay: i * 0.06 }}
+                  className="relative overflow-hidden rounded-2xl"
+                  style={{
+                    width: 90, height: 90,
+                    border: `1.5px solid ${C.border}`,
+                    boxShadow: '0 2px 10px rgba(184,134,42,0.08)',
+                  }}
+                  whileHover={{ scale:1.05, boxShadow:`0 6px 20px rgba(184,134,42,0.2)` }}>
+                  <img src={cat.image} alt={cat.name}
+                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  {/* subtle gold overlay on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                       style={{ background:'linear-gradient(to bottom, transparent 40%, rgba(184,134,42,0.25) 100%)' }} />
                 </motion.div>
+                <span className="font-raleway text-xs font-medium text-center whitespace-nowrap transition-colors"
+                      style={{ color: C.textMid }}
+                      onMouseEnter={e => (e.currentTarget.style.color = C.gold)}
+                      onMouseLeave={e => (e.currentTarget.style.color = C.textMid)}>
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── PROMO HERO BANNER (auto-rotating) ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+          <div className="relative rounded-3xl overflow-hidden" style={{ height: 340 }}>
+            <AnimatePresence mode="wait">
+              {promoBanners.map((banner, i) =>
+                i === promoBanner && (
+                  <motion.div key={i} className="absolute inset-0"
+                    initial={{ opacity:0, x:40 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-40 }}
+                    transition={{ duration:0.6, ease:'easeInOut' }}>
+                    {/* Background image */}
+                    <img src={banner.img} alt={banner.label} className="w-full h-full object-cover" />
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0"
+                         style={{ background:'linear-gradient(to right, rgba(250,246,238,0.96) 0%, rgba(250,246,238,0.85) 40%, rgba(250,246,238,0.3) 70%, transparent 100%)' }} />
+                    {/* Text */}
+                    <div className="absolute inset-0 flex flex-col justify-center px-10 sm:px-16">
+                      <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2 }}>
+                        <span className="font-cinzel text-[10px] tracking-[0.5em] block mb-3"
+                              style={{ color: C.gold }}>SHEKHAR RAJA JEWELLERS</span>
+                        <h2 className="font-cormorant font-light leading-tight mb-5"
+                            style={{ fontSize:'clamp(1.8rem, 4vw, 3rem)', color: C.text }}>
+                          {banner.label.includes('%') ? (
+                            <>
+                              {banner.label.split('%')[0]}
+                              <em className="italic not-italic font-semibold" style={{ color: C.gold }}>
+                                %
+                              </em>
+                              {banner.label.split('%')[1]}
+                            </>
+                          ) : banner.label}
+                        </h2>
+                        <Link to="/collections"
+                              className="inline-flex items-center gap-2 font-cinzel text-xs tracking-[0.2em] text-white px-7 py-3 rounded-full transition-all hover:-translate-y-0.5"
+                              style={{ background:`linear-gradient(135deg, ${C.gold}, ${C.goldDk})`, boxShadow:`0 4px 18px rgba(184,134,42,0.35)` }}>
+                          {banner.cta}
+                          <ArrowRight size={13} />
+                        </Link>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )
+              )}
+            </AnimatePresence>
+
+            {/* Dot indicators */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {promoBanners.map((_, i) => (
+                <button key={i} onClick={() => setPromoBanner(i)}
+                        className="rounded-full transition-all duration-300"
+                        style={{ width: i === promoBanner ? 28 : 8, height:8,
+                                 background: i === promoBanner ? C.gold : 'rgba(184,134,42,0.3)' }} />
               ))}
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Collections Grid */}
-      <section className="py-24 bg-gradient-to-b from-[#e8e0d0] to-[#faf7f2] relative overflow-hidden">
-        {/* 3D Floating Decorations */}
-        <div className="absolute top-40 left-20 w-32 h-32 opacity-20">
-          <div className="w-full h-full bg-gradient-to-br from-[#d4a843] to-[#b8862a] rounded-full animate-float blur-sm" />
-        </div>
-        <div className="absolute bottom-40 right-20 w-40 h-40 opacity-15">
-          <div className="w-full h-full bg-gradient-to-br from-[#b8862a] to-[#8b6014] rounded-full animate-float-delayed blur-sm" />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-3 mb-4">
-              <Crown size={18} className="text-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">FEATURED</span>
-              <Crown size={18} className="text-[#b8862a]" />
+        {/* ── BOTTOM NAV TABS (CaratLane style) ── */}
+        <div style={{ background:'#fff', borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="flex overflow-x-auto" style={{ scrollbarWidth:'none' }}>
+              {['Category','New Arrivals','Bestsellers','Bridal','Diamond','Festive'].map((tab, i) => (
+                <Link key={tab} to="/collections"
+                      className="flex-shrink-0 flex items-center gap-1.5 px-6 py-3.5 font-cinzel text-[10px] tracking-[0.2em] uppercase whitespace-nowrap transition-colors border-b-2"
+                      style={{ color: i === 0 ? C.gold : C.textLight,
+                               borderBottomColor: i === 0 ? C.gold : 'transparent' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = i === 0 ? C.gold : C.textLight; }}>
+                  {i === 1 && <Sparkles size={11} style={{ color: C.goldLt }} />}
+                  {i === 2 && <Crown size={11} style={{ color: C.goldLt }} />}
+                  {i === 3 && <Diamond size={11} style={{ color: C.goldLt }} />}
+                  {tab}
+                </Link>
+              ))}
             </div>
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
-              Featured Collections
-            </h2>
-            <p className="font-raleway text-[#9a8060] mt-4 max-w-xl mx-auto">
-              Handpicked masterpieces that define luxury and elegance
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Big Card - 3D Effect */}
-            <motion.div
-              initial={{ opacity: 0, y: 50, rotateY: -5 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -12, rotateY: 2, rotateX: 2 }}
-              className="bg-[#faf7f2] rounded-3xl overflow-hidden md:row-span-2 cursor-pointer group perspective-1000 shadow-xl hover:shadow-2xl transition-all duration-500"
-            >
-              <div className="flex flex-col h-full">
-                <div className="h-72 md:h-96 overflow-hidden relative">
-                  {/* Shimmer overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
-                  <img
-                    src={collections[0].image}
-                    alt={collections[0].name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/40 to-transparent" />
-                  
-                  {/* Featured badge */}
-                  <div className="absolute top-6 left-6">
-                    <span className="bg-[#b8862a] text-white font-cinzel text-xs tracking-wider px-4 py-2 rounded-full shadow-lg">
-                      ★ FEATURED
-                    </span>
-                  </div>
-                </div>
-                <div className="p-8 flex-1 flex flex-col justify-center bg-gradient-to-b from-[#faf7f2] to-white">
-                  <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
-                    {collections[0].category.toUpperCase()}
-                  </span>
-                  <h3 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] mt-2 italic">
-                    {collections[0].name}
-                  </h3>
-                  <Link
-                    to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-6 group/link"
-                  >
-                    <span>Explore Collection</span>
-                    <ArrowRight size={16} className="group-hover/link:translate-x-2 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
+          </div>
+        </div>
 
-            {/* Small Cards */}
-            {collections.slice(1).map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, x: 50, rotateY: 5 }}
-                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                transition={{ delay: index * 0.15, duration: 0.6 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8, rotateY: -2, scale: 1.02 }}
-                className="bg-[#faf7f2] rounded-3xl overflow-hidden flex cursor-pointer group perspective-1000 shadow-lg hover:shadow-xl transition-all duration-500"
-              >
-                <div className="w-[52%] overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
+      </section>
+      {/* ══ END HERO ══ */}
+
+
+      {/* ══ FEATURED COLLECTIONS ══ */}
+      <section className="py-20 relative overflow-hidden" style={{ background: C.bgDeep }}>
+        <div className="absolute inset-0 opacity-[0.03]"
+             style={{ backgroundImage:`repeating-linear-gradient(45deg, ${C.gold} 0, ${C.gold} 1px, transparent 0, transparent 50%)`, backgroundSize:'24px 24px' }} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-12" style={{ background:`linear-gradient(to right, transparent, ${C.gold})` }} />
+              <Crown size={14} style={{ color: C.gold }} />
+              <span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color: C.gold }}>FEATURED</span>
+              <Crown size={14} style={{ color: C.gold }} />
+              <div className="h-px w-12" style={{ background:`linear-gradient(to left, transparent, ${C.gold})` }} />
+            </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-light" style={{ color: C.text }}>
+              Our <em className="italic" style={{ color: C.gold }}>Signature</em> Pieces
+            </h2>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {collections.map((col, i) => (
+              <motion.div key={col.id} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
+                          transition={{ delay: i*0.1 }} viewport={{ once:true }}
+                          className="group rounded-2xl overflow-hidden cursor-pointer"
+                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:'0 4px 20px rgba(44,26,14,0.08)' }}
+                          whileHover={{ y:-6, boxShadow:'0 16px 40px rgba(44,26,14,0.15)' }}>
+                <div className="relative overflow-hidden" style={{ height: col.featured ? 320 : 240 }}>
+                  <img src={col.image} alt={col.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                       style={{ background:'linear-gradient(to top, rgba(44,26,14,0.5) 0%, transparent 60%)' }} />
+                  {col.featured && (
+                    <div className="absolute top-4 left-4 font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
+                         style={{ background: C.gold, color:'#fff' }}>FEATURED</div>
+                  )}
                 </div>
-                <div className="w-[48%] p-6 flex flex-col justify-center bg-gradient-to-r from-[#faf7f2] to-white">
-                  <span className="font-cinzel text-xs tracking-[0.2em] text-[#b8862a]">
-                    {item.category.toUpperCase()}
-                  </span>
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-[#3a2e1e] mt-2 italic">
-                    {item.name}
-                  </h3>
-                  <Link
-                    to="/collections"
-                    className="flex items-center gap-2 text-[#b8862a] font-raleway text-sm mt-4 group/link"
-                  >
-                    <span>View Details</span>
-                    <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform" />
-                  </Link>
+                <div className="p-5 flex items-center justify-between">
+                  <div>
+                    <p className="font-cinzel text-[9px] tracking-[0.2em] mb-1" style={{ color: C.gold }}>{col.category.toUpperCase()}</p>
+                    <h3 className="font-cormorant text-xl font-semibold" style={{ color: C.text }}>{col.name}</h3>
+                  </div>
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                       style={{ background:`rgba(184,134,42,0.1)`, border:`1px solid ${C.border}` }}>
+                    <ArrowRight size={14} style={{ color: C.gold }} />
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -660,207 +406,100 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gift Voucher Banner */}
-      <section className="py-16 bg-[#d4c4a8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            {/* Image Collage */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2 h-48 overflow-hidden rounded-2xl">
-                <img
-                  src="https://images.pexels.com/photos/1413420/pexels-photo-1413420.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="h-32 overflow-hidden rounded-xl">
-                <img
-                  src="https://images.pexels.com/photos/2697598/pexels-photo-2697598.jpeg?auto=compress&cs=tinysrgb&w=400"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="h-32 overflow-hidden rounded-xl">
-                <img
-                  src="https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400"
-                  alt="Gift"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </div>
-
-            {/* Offer Content */}
-            <div className="text-center lg:text-left">
-              <span className="font-cinzel text-sm tracking-[0.3em] text-[#8b6014]">GIFT VOUCHER</span>
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e] mt-4">
-                Flat 9%
-              </h2>
-              <p className="font-raleway text-xl text-[#3a2e1e] mt-2">
-                Making Charges on 22KT Gold
-              </p>
-              <a
-                href={`https://wa.me/918377911745?text=${encodeURIComponent('Hello! I want to claim the 9% off making charges offer.')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium mt-8 hover:bg-[#8b6014] transition-colors"
-              >
-                CLAIM NOW
-                <ArrowRight size={18} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ── VIDEO SHOWCASE ─────────────────────────────────────────── */}
-      <section className="py-20 bg-[#0d0800] overflow-hidden relative">
-        {/* Background glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05]/60 via-transparent to-[#1a0f05]/60 pointer-events-none" />
-
+      {/* ══ VIDEO CAROUSEL ══ */}
+      <section className="py-20 relative overflow-hidden" style={{ background:'#1a0f05' }}>
+        <div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,134,42,0.15) 0%, transparent 70%)` }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-14"
-          >
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-              <Crown size={16} className="text-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">IN MOTION</span>
-              <Crown size={16} className="text-[#b8862a]" />
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
-            </div>
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">
-              Feel the <span className="text-[#d4a843] italic">Elegance</span>
+          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
+            <span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.gold }}>EXPLORE</span>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-light text-white">
+              Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> Reels
             </h2>
-            <p className="font-raleway text-white/60 mt-4 max-w-xl mx-auto">
-              Watch our masterpieces come alive — each piece crafted for moments that last forever
-            </p>
           </motion.div>
-
-          {/* Video Carousel */}
           <VideoCarousel />
         </div>
       </section>
 
-      {/* Product Catalogue */}
-      <section className="py-20 bg-gradient-to-b from-[#faf7f2] to-[#f5efe6]">
+      {/* ══ PRODUCTS GRID ══ */}
+      <section className="py-20" style={{ background: C.bg }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-3 mb-4"
-            >
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-              <span className="font-cinzel text-xs tracking-[0.3em] text-[#b8862a]">EXQUISITE CRAFTSMANSHIP</span>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              viewport={{ once: true }}
-              className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]"
-            >
-              Our Collection
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              viewport={{ once: true }}
-              className="font-raleway text-[#9a8060] mt-4 max-w-2xl mx-auto"
-            >
-              Each piece tells a story of heritage, crafted with passion and precision by master artisans
-            </motion.p>
-          </div>
+          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-12" style={{ background:`linear-gradient(to right, transparent, ${C.gold})` }} />
+              <Diamond size={14} style={{ color: C.gold }} />
+              <span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color: C.gold }}>COLLECTION</span>
+              <Diamond size={14} style={{ color: C.gold }} />
+              <div className="h-px w-12" style={{ background:`linear-gradient(to left, transparent, ${C.gold})` }} />
+            </div>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-light" style={{ color: C.text }}>
+              Crafted in <em className="italic" style={{ color: C.gold }}>Gold</em>
+            </h2>
+            <p className="font-raleway text-sm mt-4 max-w-xl mx-auto" style={{ color: C.textLight }}>
+              Discover our curated pieces, each a masterpiece of 22KT craftsmanship
+            </p>
+          </motion.div>
 
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8 }}
-                onClick={() => setSelectedProduct(product)}
-                className="group cursor-pointer"
-              >
-                <div className="relative bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(58,46,30,0.08)] group-hover:shadow-[0_20px_50px_rgba(58,46,30,0.15)] transition-all duration-500">
-                  {/* Image Container */}
-                  <div className="relative aspect-square overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3a2e1e]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Tag Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block bg-[#1a0f05]/90 backdrop-blur-sm text-[#d4a843] font-cinzel text-[10px] tracking-[0.15em] px-3 py-1.5 rounded-full">
-                        {product.tag}
-                      </span>
-                    </div>
-                    
-                    {/* Quick View Button */}
-                    <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                      <div className="flex items-center justify-center gap-2 bg-white/95 backdrop-blur-sm text-[#3a2e1e] py-3 rounded-xl font-raleway text-sm font-medium shadow-lg">
-                        <span>View Details</span>
-                        <ArrowRight size={16} className="text-[#b8862a]" />
-                      </div>
-                    </div>
-                    
-                    {/* Gold Corner Accent */}
-                    <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#d4a843] to-[#b8862a] transform rotate-45 translate-x-12 -translate-y-12 opacity-20" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {products.map((product, i) => (
+              <motion.div key={product.id} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
+                          transition={{ delay: i*0.08 }} viewport={{ once:true }}
+                          onClick={() => setSelectedProduct(product)}
+                          className="group rounded-2xl overflow-hidden cursor-pointer"
+                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:'0 4px 16px rgba(44,26,14,0.07)' }}
+                          whileHover={{ y:-5, boxShadow:'0 14px 36px rgba(44,26,14,0.14)' }}>
+                <div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
+                  <img src={product.image} alt={product.name}
+                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                       style={{ background:'linear-gradient(to top, rgba(44,26,14,0.55) 0%, rgba(44,26,14,0.1) 50%, transparent 100%)' }} />
+                  <div className="absolute top-3 left-3">
+                    <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
+                          style={{ background:'rgba(44,26,14,0.85)', color: C.goldPale }}>{product.tag}</span>
+                  </div>
+                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-400"
+                       style={{ transform:'translateY(4px)' }}>
+                    <div className="flex items-center justify-between backdrop-blur-md rounded-xl px-3 py-2"
+                         style={{ background:'rgba(250,246,238,0.18)', border:'1px solid rgba(250,246,238,0.25)' }}>
+                      <span className="font-raleway text-xs text-white">View Details</span>
+                      <ArrowRight size={12} style={{ color: C.goldPale }} />
                     </div>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#b8862a]" />
-                      <span className="font-cinzel text-[10px] tracking-[0.2em] text-[#b8862a]">
-                        {product.category.toUpperCase()}
-                      </span>
+                  <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden opacity-15">
+                    <div className="absolute top-0 right-0 w-20 h-20 rotate-45 translate-x-10 -translate-y-10"
+                         style={{ background:`linear-gradient(to br, ${C.goldLt}, ${C.gold})` }} />
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.gold }} />
+                    <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color: C.gold }}>
+                      {product.category.toUpperCase()}
+                    </span>
+                  </div>
+                  <h3 className="font-cormorant text-lg font-semibold leading-tight transition-colors"
+                      style={{ color: C.text }}>
+                    {product.name}
+                  </h3>
+                  <p className="font-raleway text-xs leading-relaxed mt-1 line-clamp-2" style={{ color: C.textLight }}>
+                    {product.description}
+                  </p>
+                  <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop:`1px solid ${C.border}` }}>
+                    <span className="font-cinzel text-[9px] tracking-[0.12em]" style={{ color: C.textLight }}>ENQUIRE ON WHATSAPP</span>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center"
+                         style={{ background:`rgba(184,134,42,0.1)`, border:`1px solid ${C.border}` }}>
+                      <ArrowRight size={10} style={{ color: C.gold }} />
                     </div>
-                    <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] group-hover:text-[#b8862a] transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="font-raleway text-sm text-[#9a8060] mt-2 line-clamp-2 leading-relaxed">
-                      {product.description}
-                    </p>
-                    
-                    {/* Bottom Accent Line */}
-                    <div className="mt-4 h-px bg-gradient-to-r from-[#b8862a]/50 via-[#b8862a]/20 to-transparent" />
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
-          
-          {/* View All Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link
-              to="/collections"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-[#b8862a] to-[#8b6014] text-white px-10 py-4 rounded-full font-raleway font-medium shadow-lg hover:shadow-xl hover:shadow-[#b8862a]/20 transition-all duration-300 hover:-translate-y-1"
-            >
+
+          <motion.div initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} transition={{ delay:0.4 }} viewport={{ once:true }}
+                      className="text-center mt-12">
+            <Link to="/collections"
+                  className="inline-flex items-center gap-3 text-white px-10 py-4 rounded-full font-raleway font-medium shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldDk})`, boxShadow:`0 6px 24px rgba(184,134,42,0.3)` }}>
               <span>View All Collection</span>
               <ArrowRight size={18} />
             </Link>
@@ -868,122 +507,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* App Promo */}
-      <section className="py-20 bg-[#1a0f05] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#b8862a]/10 to-transparent" />
+      {/* ══ APP PROMO ══ */}
+      <section className="py-20 relative overflow-hidden" style={{ background:'#1a0f05' }}>
+        <div className="absolute inset-0" style={{ background:`linear-gradient(to right, rgba(184,134,42,0.1), transparent)` }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-[#b8862a]/20 px-4 py-2 rounded-full mb-6">
-                <Smartphone size={18} className="text-[#d4a843]" />
-                <span className="font-raleway text-sm text-[#d4a843]">Now on Android</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                   style={{ background:'rgba(184,134,42,0.2)' }}>
+                <Smartphone size={18} style={{ color: C.goldLt }} />
+                <span className="font-raleway text-sm" style={{ color: C.goldLt }}>Now on Android</span>
               </div>
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">
-                Download Our App
-              </h2>
-              <p className="font-raleway text-lg text-white/70 mt-4">
+              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">Download Our App</h2>
+              <p className="font-raleway text-lg mt-4" style={{ color:'rgba(255,255,255,0.7)' }}>
                 Browse our entire collection, check gold rates, and get exclusive offers right on your phone.
               </p>
               <div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start">
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Tag size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">Catalogue</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Bell size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">Gold Rate</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <Headphones size={16} className="text-[#d4a843]" />
-                  <span className="font-raleway text-sm text-white">WA Support</span>
-                </div>
+                {[{icon:<Tag size={16}/>, label:'Catalogue'},{icon:<Bell size={16}/>, label:'Gold Rate'},{icon:<Headphones size={16}/>, label:'WA Support'}].map((f,i) => (
+                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background:'rgba(255,255,255,0.1)' }}>
+                    <span style={{ color: C.goldLt }}>{f.icon}</span>
+                    <span className="font-raleway text-sm text-white">{f.label}</span>
+                  </div>
+                ))}
               </div>
               <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                <Link
-                  to="/app"
-                  className="flex items-center gap-2 bg-[#b8862a] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
-                >
-                  <Download size={18} />
-                  Download APK
+                <Link to="/app" className="flex items-center gap-2 text-white px-6 py-3 rounded-full font-raleway font-medium transition-colors"
+                      style={{ background: C.gold }}>
+                  <Download size={18} /> Download APK
                 </Link>
-                <a
-                  href="https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
-                >
-                  <MessageCircle size={18} />
-                  Get Link on WA
+                <a href="https://wa.me/918377911745?text=Please%20send%20me%20the%20SRJ%20app%20download%20link"
+                   target="_blank" rel="noopener noreferrer"
+                   className="flex items-center gap-2 text-white px-6 py-3 rounded-full font-raleway font-medium transition-colors"
+                   style={{ background:'#25D366' }}>
+                  <MessageCircle size={18} /> Get Link on WA
                 </a>
               </div>
             </div>
-
-            {/* Phone Mockup */}
             <div className="flex justify-center">
               <div className="relative">
-                <div className="w-64 h-[500px] bg-gradient-to-b from-[#2a1a0a] to-[#1a0f05] rounded-[3rem] border-4 border-[#3a2e1e] p-3 shadow-2xl">
-                  <div className="w-full h-full bg-[#faf7f2] rounded-[2.5rem] overflow-hidden">
-                    <div className="bg-[#b8862a] py-4 px-6 text-center">
+                <div className="w-64 h-[500px] rounded-[3rem] border-4 p-3 shadow-2xl"
+                     style={{ background:'linear-gradient(to bottom, #2a1a0a, #1a0f05)', borderColor:'#3a2e1e' }}>
+                  <div className="w-full h-full rounded-[2.5rem] overflow-hidden" style={{ background: C.bg }}>
+                    <div className="py-4 px-6 text-center" style={{ background: C.gold }}>
                       <span className="font-cinzel text-xs tracking-[0.2em] text-white">SHEKHAR RAJA</span>
                     </div>
                     <div className="p-4 space-y-3">
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-20 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-24 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="h-3 w-16 bg-[#b8862a] rounded mb-2" />
-                        <div className="h-2 w-full bg-gray-200 rounded" />
-                      </div>
+                      {[20, 24, 16].map((w, i) => (
+                        <div key={i} className="bg-white rounded-lg p-3 shadow-sm">
+                          <div className="h-3 rounded mb-2" style={{ width:`${w * 4}px`, background: C.gold }} />
+                          <div className="h-2 w-full bg-gray-200 rounded" />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3a2e1e] rounded-full" />
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full" style={{ background:'#3a2e1e' }} />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Strip */}
-      <section className="py-20 bg-gradient-to-r from-[#faf7f2] via-white to-[#faf7f2] relative overflow-hidden">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 animate-rotate-slow" style={{
-            backgroundImage: `repeating-linear-gradient(45deg, #b8862a 0, #b8862a 1px, transparent 0, transparent 50%)`,
-            backgroundSize: '20px 20px'
-          }} />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* ══ TRUST STRIP ══ */}
+      <section className="py-20 relative overflow-hidden" style={{ background:'linear-gradient(to right, #faf7f2, #fff, #faf7f2)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {trustItems.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30, rotateX: -10 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="text-center group perspective-1000"
-              >
-                <motion.div 
-                  className="w-20 h-20 mx-auto bg-gradient-to-br from-[#b8862a]/10 to-[#d4a843]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:from-[#b8862a]/20 group-hover:to-[#d4a843]/20 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:shadow-[#b8862a]/10"
-                  whileHover={{ rotateY: 10, rotateX: -5 }}
-                >
-                  <span className="text-3xl text-[#b8862a]">{item.icon}</span>
-                </motion.div>
-                <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] group-hover:text-[#b8862a] transition-colors">
+            {trustItems.map((item, i) => (
+              <motion.div key={i} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
+                          transition={{ delay: i*0.1 }} viewport={{ once:true }}
+                          whileHover={{ y:-5 }} className="text-center group">
+                <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4 transition-all duration-300"
+                     style={{ background:`linear-gradient(to br, rgba(184,134,42,0.1), rgba(212,168,67,0.1))`,
+                              boxShadow:'0 4px 16px rgba(184,134,42,0.1)' }}>
+                  <span className="text-3xl" style={{ color: C.gold }}>{item.icon}</span>
+                </div>
+                <h3 className="font-cormorant text-xl font-semibold group-hover:text-[#b8862a] transition-colors" style={{ color: C.text }}>
                   {item.title}
                 </h3>
-                <p className="font-raleway text-sm text-[#9a8060] mt-2">
-                  {item.desc}
-                </p>
+                <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>{item.desc}</p>
               </motion.div>
             ))}
           </div>
