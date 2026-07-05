@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
@@ -324,100 +324,257 @@ function VideoCarousel() {
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const textY      = useTransform(scrollYProgress, [0, 1], ['0%', '22%']);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
 
   // Auto-slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 4500);
+    }, 5500);
     return () => clearInterval(timer);
   }, []);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
+  const slide = heroSlides[currentSlide];
+
   return (
     <div>
-      {/* Gold Ticker */}
-      <div className="bg-[#b8862a] py-3 overflow-hidden mt-20">
+      {/* ── ANNOUNCEMENT TICKER ─────────────────────────────────── */}
+      <div className="overflow-hidden mt-20" style={{ background: '#1a0f05' }}>
         <div className="animate-marquee whitespace-nowrap flex">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-12 px-6">
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">BIS HALLMARK</span>
-              <span className="text-[#d4a843]">◆</span>
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">TRUSTED SINCE 1987</span>
-              <span className="text-[#d4a843]">◆</span>
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">22K GOLD</span>
-              <span className="text-[#d4a843]">◆</span>
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">DIAMOND JEWELLERY</span>
-              <span className="text-[#d4a843]">◆</span>
-              <span className="font-cinzel text-sm tracking-[0.2em] text-white">WHATSAPP ENQUIRY</span>
-              <span className="text-[#d4a843]">◆</span>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex items-center gap-10 px-6 py-3">
+              {[
+                'BIS HALLMARK CERTIFIED',
+                'TRUSTED SINCE 1987',
+                '22KT PURE GOLD',
+                'BRIDAL SPECIALIST',
+                'WHATSAPP ENQUIRY',
+                'TWO SHOWROOMS · JABALPUR',
+              ].map((t) => (
+                <span key={t} className="flex items-center gap-4">
+                  <span className="font-cinzel text-[11px] tracking-[0.3em]" style={{ color: 'rgba(212,168,67,0.8)' }}>
+                    {t}
+                  </span>
+                  <span style={{ color: '#b8862a' }}>◆</span>
+                </span>
+              ))}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Hero Slider */}
-      <section className="relative h-[85vh] sm:h-[90vh] overflow-hidden">
-        {/* Background Slides */}
+      {/* ── HERO ────────────────────────────────────────────────── */}
+      <section ref={heroRef} className="relative overflow-hidden" style={{ height: '92vh', minHeight: 580 }}>
+
+        {/* ── Slide backgrounds ── */}
         <AnimatePresence mode="wait">
-          {heroSlides.map((slide, index) => (
-            index === currentSlide && (
-              <motion.div
-                key={slide.id}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 1.2, ease: 'easeInOut' }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            )
-          ))}
+          <motion.div
+            key={slide.id}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+          </motion.div>
         </AnimatePresence>
 
-        {/* Navigation Arrows */}
-        <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30">
-          <button
-            onClick={prevSlide}
-            className="group w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300"
-          >
-            <ChevronLeft size={24} className="text-white group-hover:-translate-x-0.5 transition-transform" />
-          </button>
-        </div>
-        <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30">
-          <button
-            onClick={nextSlide}
-            className="group w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300"
-          >
-            <ChevronRight size={24} className="text-white group-hover:translate-x-0.5 transition-transform" />
-          </button>
+        {/* ── Gradient layers for text legibility ── */}
+        {/* Bottom vignette — primary readability layer */}
+        <div className="absolute inset-0"
+             style={{ background: 'linear-gradient(to top, rgba(26,15,5,0.92) 0%, rgba(26,15,5,0.55) 35%, rgba(26,15,5,0.1) 65%, transparent 100%)' }} />
+        {/* Left-side warm radial glow */}
+        <div className="absolute inset-0"
+             style={{ background: 'radial-gradient(ellipse 55% 70% at 0% 100%, rgba(184,134,42,0.22) 0%, transparent 65%)' }} />
+        {/* Subtle top darkening to anchor the nav */}
+        <div className="absolute inset-0"
+             style={{ background: 'linear-gradient(to bottom, rgba(26,15,5,0.25) 0%, transparent 18%)' }} />
+
+        {/* ── Text content — parallax on scroll ── */}
+        <motion.div
+          style={{ y: textY, opacity: textOpacity }}
+          className="absolute inset-0 flex flex-col justify-end z-20"
+        >
+          <div className="max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-16 pb-24 sm:pb-28">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={slide.id}
+                initial={{ opacity: 0, y: 36 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {/* Eyebrow line */}
+                <motion.div
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1, duration: 0.5 }}
+                  className="flex items-center gap-3 mb-5"
+                >
+                  <div className="h-px w-10" style={{ background: '#b8862a' }} />
+                  <span className="font-cinzel text-[10px] tracking-[0.45em]" style={{ color: '#b8862a' }}>
+                    {slide.eyebrow.toUpperCase()}
+                  </span>
+                </motion.div>
+
+                {/* Main headline */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.18, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  className="font-cormorant font-bold text-white leading-[0.88] mb-6 tracking-tight"
+                  style={{ fontSize: 'clamp(3.2rem, 10vw, 7.8rem)' }}
+                >
+                  {slide.title}{' '}
+                  <span style={{
+                    background: 'linear-gradient(135deg, #d4a843 0%, #f0d080 50%, #a07830 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}>
+                    {slide.titleAccent}
+                  </span>
+                </motion.h1>
+
+                {/* Italic tagline */}
+                <motion.p
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.55 }}
+                  className="font-cormorant italic text-xl sm:text-2xl mb-3"
+                  style={{ color: 'rgba(212,168,67,0.75)' }}
+                >
+                  — {slide.tagline}
+                </motion.p>
+
+                {/* Subtitle */}
+                <motion.p
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.38, duration: 0.5 }}
+                  className="font-raleway text-[15px] max-w-md leading-relaxed mb-10"
+                  style={{ color: 'rgba(245,236,215,0.6)' }}
+                >
+                  {slide.subtitle}
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.48, duration: 0.5 }}
+                  className="flex flex-wrap items-center gap-4"
+                >
+                  {/* Primary */}
+                  <Link to="/collections">
+                    <motion.div
+                      whileHover={{ scale: 1.04, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-raleway font-medium text-sm"
+                      style={{
+                        background: 'linear-gradient(135deg, #b8862a, #d4a843)',
+                        color: '#1a0f05',
+                        boxShadow: '0 12px 32px rgba(184,134,42,0.45)',
+                      }}
+                    >
+                      <span>Explore Collection</span>
+                      <ArrowRight size={15} />
+                    </motion.div>
+                  </Link>
+                  {/* Secondary */}
+                  <a href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer">
+                    <motion.div
+                      whileHover={{ scale: 1.04, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-raleway font-medium text-sm"
+                      style={{
+                        background: 'rgba(255,255,255,0.08)',
+                        color: 'white',
+                        border: '1px solid rgba(255,255,255,0.22)',
+                        backdropFilter: 'blur(10px)',
+                      }}
+                    >
+                      <MessageCircle size={15} />
+                      <span>WhatsApp Enquiry</span>
+                    </motion.div>
+                  </a>
+                </motion.div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        {/* ── Slide number indicator — top right ── */}
+        <div className="absolute top-8 right-8 z-30 hidden sm:flex items-center gap-2">
+          <span className="font-cormorant text-5xl font-light" style={{ color: 'rgba(212,168,67,0.4)', lineHeight: 1 }}>
+            {String(currentSlide + 1).padStart(2, '0')}
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="w-px h-6" style={{ background: 'rgba(212,168,67,0.25)' }} />
+            <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color: 'rgba(212,168,67,0.4)' }}>
+              {String(heroSlides.length).padStart(2, '0')}
+            </span>
+          </div>
         </div>
 
-        {/* Bottom Navigation */}
+        {/* ── Arrow navigation ── */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full flex items-center justify-center transition-all duration-300 group"
+          style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}
+        >
+          <ChevronLeft size={20} className="text-white group-hover:-translate-x-0.5 transition-transform" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full flex items-center justify-center transition-all duration-300 group"
+          style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}
+        >
+          <ChevronRight size={20} className="text-white group-hover:translate-x-0.5 transition-transform" />
+        </button>
+
+        {/* ── Bottom: progress bar + dots ── */}
         <div className="absolute bottom-8 left-0 right-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-3">
-              {heroSlides.map((_, index) => (
+          <div className="max-w-7xl mx-auto px-6 sm:px-10 flex items-center gap-6">
+            {/* Progress line */}
+            <div className="flex-1 h-px max-w-xs" style={{ background: 'rgba(255,255,255,0.12)' }}>
+              <motion.div
+                key={currentSlide}
+                className="h-full"
+                initial={{ width: '0%' }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 5.5, ease: 'linear' }}
+                style={{ background: 'linear-gradient(to right, #b8862a, #d4a843)' }}
+              />
+            </div>
+            {/* Dot indicators */}
+            <div className="flex items-center gap-2">
+              {heroSlides.map((_, i) => (
                 <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentSlide 
-                      ? 'bg-[#d4a843] w-12' 
-                      : 'bg-white/40 w-8 hover:bg-white/60'
-                  }`}
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className="rounded-full transition-all duration-400"
+                  style={{
+                    width: i === currentSlide ? 28 : 8,
+                    height: 8,
+                    background: i === currentSlide ? '#d4a843' : 'rgba(255,255,255,0.3)',
+                  }}
                 />
               ))}
             </div>
           </div>
         </div>
+
+        {/* ── Bottom cream bleed into page ── */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+             style={{ background: 'linear-gradient(to top, #faf7f2, transparent)' }} />
       </section>
 
       {/* Category Circles */}
