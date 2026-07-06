@@ -285,36 +285,7 @@ export default function Home() {
                   <motion.div key={i} className="absolute inset-0"
                     initial={{ opacity:0, x:40 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-40 }}
                     transition={{ duration:0.6, ease:'easeInOut' }}>
-                    {/* Background image */}
                     <img src={banner.img} alt={banner.label} className="w-full h-full object-cover" />
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0"
-                         style={{ background:'linear-gradient(to right, rgba(250,246,238,0.96) 0%, rgba(250,246,238,0.85) 40%, rgba(250,246,238,0.3) 70%, transparent 100%)' }} />
-                    {/* Text */}
-                    <div className="absolute inset-0 flex flex-col justify-center px-10 sm:px-16">
-                      <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2 }}>
-                        <span className="font-cinzel text-[10px] tracking-[0.5em] block mb-3"
-                              style={{ color: C.gold }}>SHEKHAR RAJA JEWELLERS</span>
-                        <h2 className="font-cormorant font-light leading-tight mb-5"
-                            style={{ fontSize:'clamp(1.8rem, 4vw, 3rem)', color: C.text }}>
-                          {banner.label.includes('%') ? (
-                            <>
-                              {banner.label.split('%')[0]}
-                              <em className="italic not-italic font-semibold" style={{ color: C.gold }}>
-                                %
-                              </em>
-                              {banner.label.split('%')[1]}
-                            </>
-                          ) : banner.label}
-                        </h2>
-                        <Link to="/collections"
-                              className="inline-flex items-center gap-2 font-cinzel text-xs tracking-[0.2em] text-white px-7 py-3 rounded-full transition-all hover:-translate-y-0.5"
-                              style={{ background:`linear-gradient(135deg, ${C.gold}, ${C.goldDk})`, boxShadow:`0 4px 18px rgba(184,134,42,0.35)` }}>
-                          {banner.cta}
-                          <ArrowRight size={13} />
-                        </Link>
-                      </motion.div>
-                    </div>
                   </motion.div>
                 )
               )}
