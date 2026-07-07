@@ -6,18 +6,18 @@ import ProductModal from '../components/ProductModal';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
-  bg:        '#FAF6EE',   // light warm cream
+  bg:        '#FFF5F7',   // soft blush white
   bgCard:    '#FFFFFF',
-  bgDeep:    '#F5ECD7',
-  gold:      '#B8862A',
-  goldDk:    '#8B6014',
-  goldLt:    '#D4A843',
-  goldPale:  '#F0D080',
-  text:      '#2C1A0E',
-  textMid:   '#6B4E2A',
-  textLight: '#9A7B50',
-  border:    'rgba(184,134,42,0.18)',
-  borderMd:  'rgba(184,134,42,0.35)',
+  bgDeep:    '#FFE4EC',   // light rose
+  gold:      '#C2185B',   // royal pink (deep rose)
+  goldDk:    '#880E4F',   // dark magenta
+  goldLt:    '#E91E8C',   // bright pink
+  goldPale:  '#F8BBD9',   // pale pink
+  text:      '#1A0010',   // near black with pink tint
+  textMid:   '#6D1B4E',   // deep rose text
+  textLight: '#AD6888',   // muted rose
+  border:    'rgba(194,24,91,0.15)',
+  borderMd:  'rgba(194,24,91,0.30)',
 };
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
@@ -121,12 +121,12 @@ function VideoCarousel() {
               onClick={() => { goTo(i); startTimer(); }}
               animate={{ scale: isActive ? 1.08 : 0.88, opacity: isActive ? 1 : 0.55 }}
               transition={{ type:'spring', stiffness:300, damping:28 }}
-              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#d4a843] shadow-[0_0_40px_rgba(212,168,67,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
+              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#E91E8C] shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
               style={{ transition:'width 0.4s ease, height 0.4s ease' }}>
               <video ref={el => { videoRefs.current[i] = el; }} src={src} muted playsInline loop={false}
                      onEnded={isActive ? handleEnded : undefined} className="w-full h-full object-cover" />
-              {!isActive && <div className="absolute inset-0 bg-[#0d0800]/50" />}
-              {isActive && <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05]/70 via-transparent to-transparent pointer-events-none" />}
+              {!isActive && <div className="absolute inset-0 bg-[#1a0010]/50" />}
+              {isActive && <div className="absolute inset-0 bg-gradient-to-t from-[#880E4F]/60 via-transparent to-transparent pointer-events-none" />}
               {!isActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
@@ -146,11 +146,11 @@ function VideoCarousel() {
       <div className="flex items-center justify-center gap-2 mt-8">
         {VIDEOS.map((_, i) => (
           <button key={i} onClick={() => { goTo(i); startTimer(); }}
-                  className={`rounded-full transition-all duration-300 ${i === active ? 'w-8 h-2 bg-[#d4a843]' : 'w-2 h-2 bg-white/25 hover:bg-white/50'}`} />
+                  className={`rounded-full transition-all duration-300 ${i === active ? 'w-8 h-2 bg-[#C2185B]' : 'w-2 h-2 bg-white/25 hover:bg-white/50'}`} />
         ))}
       </div>
       <div className="mt-4 mx-auto max-w-xs h-px bg-white/10 rounded-full overflow-hidden">
-        <motion.div key={active} className="h-full bg-gradient-to-r from-[#b8862a] to-[#d4a843]"
+        <motion.div key={active} className="h-full bg-gradient-to-r from-[#C2185B] to-[#E91E8C]"
                     initial={{ width:'0%' }} animate={{ width:'100%' }} transition={{ duration:6, ease:'linear' }} />
       </div>
     </div>
@@ -178,27 +178,8 @@ export default function Home() {
   const prevSlide = () => setCurrentSlide(p => (p - 1 + heroSlides.length) % heroSlides.length);
 
   return (
-    <div style={{ background: C.bg }}>
+    <div style={{ background: C.bg }} className="pt-20">
 
-      {/* ══ GOLD TICKER ══ */}
-      <div className="overflow-hidden mt-20" style={{ background: C.gold, padding:'10px 0' }}>
-        <div className="animate-marquee whitespace-nowrap flex">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-10 px-6">
-              <span className="font-cinzel text-xs tracking-[0.2em] text-white">BIS HALLMARK</span>
-              <span style={{ color: C.goldPale }}>◆</span>
-              <span className="font-cinzel text-xs tracking-[0.2em] text-white">TRUSTED SINCE 1987</span>
-              <span style={{ color: C.goldPale }}>◆</span>
-              <span className="font-cinzel text-xs tracking-[0.2em] text-white">22K GOLD</span>
-              <span style={{ color: C.goldPale }}>◆</span>
-              <span className="font-cinzel text-xs tracking-[0.2em] text-white">DIAMOND JEWELLERY</span>
-              <span style={{ color: C.goldPale }}>◆</span>
-              <span className="font-cinzel text-xs tracking-[0.2em] text-white">WHATSAPP ENQUIRY</span>
-              <span style={{ color: C.goldPale }}>◆</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* ══════════════════════════════════════════════════════════════
           HERO — CaratLane style: light bg, search, category row, promo
@@ -378,7 +359,7 @@ export default function Home() {
       </section>
 
       {/* ══ VIDEO CAROUSEL ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'#1a0f05' }}>
+      <section className="py-20 relative overflow-hidden" style={{ background:'#880E4F' }}>
         <div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,134,42,0.15) 0%, transparent 70%)` }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
@@ -479,13 +460,13 @@ export default function Home() {
       </section>
 
       {/* ══ APP PROMO ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'#1a0f05' }}>
-        <div className="absolute inset-0" style={{ background:`linear-gradient(to right, rgba(184,134,42,0.1), transparent)` }} />
+      <section className="py-20 relative overflow-hidden" style={{ background:'#880E4F' }}>
+        <div className="absolute inset-0" style={{ background:`linear-gradient(to right, rgba(194,24,91,0.12), transparent)` }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                   style={{ background:'rgba(184,134,42,0.2)' }}>
+                   style={{ background:'rgba(255,255,255,0.15)' }}>
                 <Smartphone size={18} style={{ color: C.goldLt }} />
                 <span className="font-raleway text-sm" style={{ color: C.goldLt }}>Now on Android</span>
               </div>
@@ -496,7 +477,7 @@ export default function Home() {
               <div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start">
                 {[{icon:<Tag size={16}/>, label:'Catalogue'},{icon:<Bell size={16}/>, label:'Gold Rate'},{icon:<Headphones size={16}/>, label:'WA Support'}].map((f,i) => (
                   <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background:'rgba(255,255,255,0.1)' }}>
-                    <span style={{ color: C.goldLt }}>{f.icon}</span>
+                    <span style={{ color:'#F8BBD9' }}>{f.icon}</span>
                     <span className="font-raleway text-sm text-white">{f.label}</span>
                   </div>
                 ))}
@@ -517,7 +498,7 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="relative">
                 <div className="w-64 h-[500px] rounded-[3rem] border-4 p-3 shadow-2xl"
-                     style={{ background:'linear-gradient(to bottom, #2a1a0a, #1a0f05)', borderColor:'#3a2e1e' }}>
+                     style={{ background:'linear-gradient(to bottom, #880E4F, #560027)', borderColor:'#C2185B' }}>
                   <div className="w-full h-full rounded-[2.5rem] overflow-hidden" style={{ background: C.bg }}>
                     <div className="py-4 px-6 text-center" style={{ background: C.gold }}>
                       <span className="font-cinzel text-xs tracking-[0.2em] text-white">SHEKHAR RAJA</span>
@@ -532,7 +513,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full" style={{ background:'#3a2e1e' }} />
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full" style={{ background:'#C2185B' }} />
               </div>
             </div>
           </div>
@@ -540,7 +521,7 @@ export default function Home() {
       </section>
 
       {/* ══ TRUST STRIP ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'linear-gradient(to right, #faf7f2, #fff, #faf7f2)' }}>
+      <section className="py-20 relative overflow-hidden" style={{ background:'linear-gradient(to right, #fff5f7, #ffffff, #fff5f7)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {trustItems.map((item, i) => (
@@ -552,7 +533,7 @@ export default function Home() {
                               boxShadow:'0 4px 16px rgba(184,134,42,0.1)' }}>
                   <span className="text-3xl" style={{ color: C.gold }}>{item.icon}</span>
                 </div>
-                <h3 className="font-cormorant text-xl font-semibold group-hover:text-[#b8862a] transition-colors" style={{ color: C.text }}>
+                <h3 className="font-cormorant text-xl font-semibold group-hover:text-[#C2185B] transition-colors" style={{ color: C.text }}>
                   {item.title}
                 </h3>
                 <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>{item.desc}</p>
