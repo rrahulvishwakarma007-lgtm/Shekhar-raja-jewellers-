@@ -45,7 +45,33 @@ const heroSlides = [
     subtitle: 'Make your special day unforgettable with our bridal treasures',
     category: 'Bridal',
   },
-  
+  {
+    id:       3,
+    image:    '/slide3.jpg',
+    eyebrow:  'Timeless Beauty',
+    title:    'Gold',
+    accent:   'Earrings',
+    subtitle: 'Elegant designs that complement every occasion with grace',
+    category: 'Earrings',
+  },
+  {
+    id:       4,
+    image:    '/slide4.jpg',
+    eyebrow:  'Traditional Art',
+    title:    'Gold',
+    accent:   'Bangles',
+    subtitle: 'Traditional craftsmanship meets contemporary design excellence',
+    category: 'Bangles',
+  },
+  {
+    id:       5,
+    image:    '/slide5.jpg',
+    eyebrow:  'Heritage Collection',
+    title:    'Royal',
+    accent:   'Necklaces',
+    subtitle: 'Handcrafted pieces that tell the story of Indian craftsmanship',
+    category: 'Necklaces',
+  },
 ];
 
 
