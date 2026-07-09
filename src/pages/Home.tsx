@@ -21,12 +21,50 @@ const C = {
 };
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
+// ── Hero Slides — UPDATED ─────────────────────────────────────────────────────
+// Replace your existing heroSlides array with this one.
+// Images are now named hero-1.jpg, hero-2.jpg, hero-3.jpg, hero-4.jpg
+// matching the filenames visible in your public folder.
+
 const heroSlides = [
-  { id:1, image:'/hero-1.jpg',  eyebrow:'New Collection',   title:'Diamond',  accent:'Rings',     subtitle:'Celebrate your eternal bond with handcrafted masterpieces',    category:'Rings'    },
-  { id:2, image:'/hero-2.jpg',  eyebrow:'Bridal Heritage',  title:'Bridal',   accent:'Necklaces', subtitle:'Make your special day unforgettable with our bridal treasures', category:'Bridal'   },
-  { id:3, image:'/hero-3.jpg',  eyebrow:'Timeless Beauty',  title:'Gold',     accent:'Earrings',  subtitle:'Elegant designs that complement every occasion with grace',      category:'Earrings' },
-  { id:4, image:'/hero-4.jpg',  eyebrow:'Traditional Art',  title:'Gold',     accent:'Bangles',   subtitle:'Traditional craftsmanship meets contemporary design excellence', category:'Bangles'  },
+  {
+    id:       1,
+    image:    '/hero-1.jpg',
+    eyebrow:  'New Collection',
+    title:    'Diamond',
+    accent:   'Rings',
+    subtitle: 'Celebrate your eternal bond with handcrafted masterpieces',
+    category: 'Rings',
+  },
+  {
+    id:       2,
+    image:    '/hero-2.jpg',
+    eyebrow:  'Bridal Heritage',
+    title:    'Bridal',
+    accent:   'Necklaces',
+    subtitle: 'Make your special day unforgettable with our bridal treasures',
+    category: 'Bridal',
+  },
+  {
+    id:       3,
+    image:    '/hero-3.jpg',       // ← newly added
+    eyebrow:  'Timeless Beauty',
+    title:    'Gold',
+    accent:   'Earrings',
+    subtitle: 'Elegant designs that complement every occasion with grace',
+    category: 'Earrings',
+  },
+  {
+    id:       4,
+    image:    '/hero-4.jpg',       // ← newly added
+    eyebrow:  'Traditional Art',
+    title:    'Gold',
+    accent:   'Bangles',
+    subtitle: 'Traditional craftsmanship meets contemporary design excellence',
+    category: 'Bangles',
+  },
 ];
+
 
 // ── Categories ────────────────────────────────────────────────────────────────
 const categories = [
