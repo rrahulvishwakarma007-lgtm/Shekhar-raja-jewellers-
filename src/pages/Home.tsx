@@ -45,24 +45,7 @@ const heroSlides = [
     subtitle: 'Make your special day unforgettable with our bridal treasures',
     category: 'Bridal',
   },
-  {
-    id:       3,
-    image:    '/hero-3.jpg',       // ← newly added
-    eyebrow:  'Timeless Beauty',
-    title:    'Gold',
-    accent:   'Earrings',
-    subtitle: 'Elegant designs that complement every occasion with grace',
-    category: 'Earrings',
-  },
-  {
-    id:       4,
-    image:    '/hero-4.jpg',       // ← newly added
-    eyebrow:  'Traditional Art',
-    title:    'Gold',
-    accent:   'Bangles',
-    subtitle: 'Traditional craftsmanship meets contemporary design excellence',
-    category: 'Bangles',
-  },
+  
 ];
 
 
