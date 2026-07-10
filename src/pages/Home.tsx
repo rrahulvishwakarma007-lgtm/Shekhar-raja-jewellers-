@@ -45,33 +45,7 @@ const heroSlides = [
     subtitle: 'Make your special day unforgettable with our bridal treasures',
     category: 'Bridal',
   },
-  {
-    id:       3,
-    image:    '/slide3.jpg',
-    eyebrow:  'Timeless Beauty',
-    title:    'Gold',
-    accent:   'Earrings',
-    subtitle: 'Elegant designs that complement every occasion with grace',
-    category: 'Earrings',
-  },
-  {
-    id:       4,
-    image:    '/slide4.jpg',
-    eyebrow:  'Traditional Art',
-    title:    'Gold',
-    accent:   'Bangles',
-    subtitle: 'Traditional craftsmanship meets contemporary design excellence',
-    category: 'Bangles',
-  },
-  {
-    id:       5,
-    image:    '/slide5.jpg',
-    eyebrow:  'Heritage Collection',
-    title:    'Royal',
-    accent:   'Necklaces',
-    subtitle: 'Handcrafted pieces that tell the story of Indian craftsmanship',
-    category: 'Necklaces',
-  },
+  
 ];
 
 
@@ -119,6 +93,9 @@ const trustItems = [
 const promoBanners = [
   { label:'0% Deduction on Old Gold Exchange', img:'/hero2.jpg',  cta:'Exchange Now' },
   { label:'Flat 9% Off Making Charges',        img:'/hero1.jpg',  cta:'Shop Now'     },
+  { label:'Gold Earrings Collection',          img:'/slide3.jpg', cta:'Shop Now'     },
+  { label:'Gold Bangles Collection',           img:'/slide4.jpg', cta:'Explore Now'  },
+  { label:'Royal Necklace Collection',         img:'/slide5.jpg', cta:'View Now'     },
 ];
 
 // ── Video Carousel ─────────────────────────────────────────────────────────────
