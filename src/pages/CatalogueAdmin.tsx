@@ -135,7 +135,7 @@ export default function CatalogueAdmin() {
               <button onClick={handleLogin}
                       className="w-full py-3 rounded-xl text-white font-raleway font-medium transition-all hover:-translate-y-0.5"
                       style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}>
-                Enter Admin Panel
+                Enter Catalogue 
               </button>
             </div>
           </div>
