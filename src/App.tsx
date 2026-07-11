@@ -7,6 +7,8 @@ import GoldRates from './pages/GoldRates';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import AppDownload from './pages/AppDownload';
+import PrivateCatalogue from './pages/PrivateCatalogue';   // ← ADD
+import CatalogueAdmin   from './pages/CatalogueAdmin';     // ← ADD
 
 function App() {
   return (
@@ -21,6 +23,10 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="app" element={<AppDownload />} />
         </Route>
+
+        {/* Private catalogue — outside Layout (no navbar/footer) */}
+        <Route path="catalogue"           element={<PrivateCatalogue />} />  {/* ← ADD */}
+        <Route path="srj-admin-catalogue" element={<CatalogueAdmin />}  />  {/* ← ADD */}
       </Routes>
     </BrowserRouter>
   );
