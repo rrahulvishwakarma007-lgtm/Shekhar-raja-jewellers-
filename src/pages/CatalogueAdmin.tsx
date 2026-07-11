@@ -106,8 +106,8 @@ export default function CatalogueAdmin() {
                    style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`1.5px solid ${C.border}` }}>
                 <Lock size={28} style={{ color: C.gold }} />
               </div>
-              <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}>Admin Panel</h1>
-              <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>Catalogue Link Generator</p>
+              <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}>Skhekhar Raja Jewellers</h1>
+              <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>Catalogue </p>
             </div>
 
             <div className="space-y-4">
