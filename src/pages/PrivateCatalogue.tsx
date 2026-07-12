@@ -5,8 +5,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, Lock, ArrowRight, MessageCircle, Diamond, AlertCircle } from 'lucide-react';
+import { Clock, Lock, ArrowRight, MessageCircle, Diamond, AlertCircle, Package, ShoppingBag } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
+import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
@@ -157,6 +158,21 @@ export default function PrivateCatalogue() {
   const [timeLeft, setTimeLeft]             = useState(0);
   const [expired, setExpired]               = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [stockMap, setStockMap]             = useState<Record<string,StockStatus>>(() => loadStockMap());
+  const [orderedToast, setOrderedToast]     = useState<string|null>(null);
+
+  const handleEnquire = (product: any) => {
+    // If ready stock → auto-move to ordered
+    const status = stockMap[product.id] ?? 'ready';
+    if (status === 'ready') {
+      moveToOrdered(product.id);
+      setStockMap(prev => ({ ...prev, [product.id]: 'ordered' }));
+      setOrderedToast(product.name);
+      setTimeout(() => setOrderedToast(null), 3500);
+    }
+    const msg = `Hi! I'm interested in *${product.name}* (${product.category}) from the private catalogue. Please share details.`;
+    window.open(`https://wa.me/918377911745?text=${encodeURIComponent(msg)}`, '_blank');
+  };
 
   const token    = searchParams.get('token');
   const decoded  = token ? decodeToken(token) : null;
@@ -186,6 +202,24 @@ export default function PrivateCatalogue() {
 
   return (
     <div className="min-h-screen pt-20" style={{ background: C.bg }}>
+
+      {/* ── Ordered toast ── */}
+      <AnimatePresence>
+        {orderedToast && (
+          <motion.div
+            initial={{ opacity:0, y:40, scale:0.9 }}
+            animate={{ opacity:1, y:0, scale:1 }}
+            exit={{ opacity:0, y:20, scale:0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl"
+            style={{ background:'#2E7D32', color:'#fff', maxWidth:'90vw' }}
+          >
+            <ShoppingBag size={16} />
+            <span className="font-raleway text-sm font-medium">
+              <strong>{orderedToast}</strong> moved to Ordered Stock
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Header ── */}
       <div className="sticky top-0 z-40 backdrop-blur-md shadow-sm" style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}>
@@ -241,7 +275,10 @@ export default function PrivateCatalogue() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {products.map((product, index) => (
+            {products.map((product, index) => {
+              const status  = stockMap[product.id] ?? 'ready';
+              const isReady = status === 'ready';
+              return (
               <motion.div
                 key={product.id}
                 initial={{ opacity:0, y:30 }}
@@ -259,6 +296,7 @@ export default function PrivateCatalogue() {
                     whileHover={{ scale:1.1 }}
                     transition={{ duration:0.4 }}
                     onError={(e:any) => { e.target.src = '/bridal.png'; }}
+                    style={{ filter: isReady ? 'none' : 'grayscale(20%)' }}
                   />
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
                        style={{ background:'rgba(194,24,91,0.15)' }}>
@@ -273,10 +311,16 @@ export default function PrivateCatalogue() {
                       {product.tag}
                     </span>
                   </div>
-                  {/* Lock badge */}
-                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center"
-                       style={{ background:'rgba(255,255,255,0.9)' }}>
-                    <Lock size={10} style={{ color: C.textLight }} />
+                  {/* Stock status badge */}
+                  <div className="absolute top-3 right-3">
+                    <span className="font-cinzel text-[9px] tracking-[0.1em] px-2 py-1 rounded-full flex items-center gap-1"
+                          style={{
+                            background: isReady ? 'rgba(46,125,50,0.9)' : 'rgba(194,24,91,0.85)',
+                            color: '#fff',
+                            backdropFilter: 'blur(4px)',
+                          }}>
+                      {isReady ? <><Package size={9}/> READY</> : <><ShoppingBag size={9}/> ORDERED</>}
+                    </span>
                   </div>
                 </div>
                 <div className="p-4">
@@ -293,15 +337,22 @@ export default function PrivateCatalogue() {
                     {product.description}
                   </p>
                   <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop:`1px solid ${C.border}` }}>
-                    <span className="font-cinzel text-[9px] tracking-[0.1em]" style={{ color: C.textLight }}>ENQUIRE</span>
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center"
-                         style={{ background:`rgba(194,24,91,0.08)`, border:`1px solid ${C.border}` }}>
-                      <ArrowRight size={10} style={{ color: C.gold }} />
-                    </div>
+                    <span className="font-cinzel text-[9px] tracking-[0.1em]" style={{ color: isReady ? '#2E7D32' : C.gold }}>
+                      {isReady ? '● READY STOCK' : '◆ ORDERED'}
+                    </span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-raleway text-xs transition-all hover:opacity-80"
+                      style={{ background: isReady ? '#25D366' : 'rgba(194,24,91,0.08)', color: isReady ? '#fff' : C.gold, border: isReady ? 'none' : `1px solid ${C.border}` }}
+                    >
+                      <MessageCircle size={11}/>
+                      {isReady ? 'Order Now' : 'Enquire'}
+                    </button>
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         )}
 
