@@ -6,8 +6,9 @@ import QRCode from 'react-qr-code';
 import {
   Copy, Check, Lock, Link as LinkIcon,
   Clock, Diamond, Eye, EyeOff, Download,
-  QrCode, Share2, Printer
+  QrCode, Share2, Printer, Package, ShoppingBag, RotateCcw, CheckCircle2
 } from 'lucide-react';
+import { loadStockMap, saveStockMap, type StockStatus } from '../lib/stockStore';
 
 const ADMIN_PASSWORD = 'srj@2025';
 
@@ -75,11 +76,38 @@ function downloadQRFromDiv(divEl: HTMLDivElement | null, filename: string) {
   img.src = url;
 }
 
+// ── Flat product list for stock manager (mirrors PrivateCatalogue's ALL_PRODUCTS) ──
+const ALL_PRODUCTS_FLAT = [
+  { id:'b1', name:'Classic Gold Bangles',    category:'Bangles'   },
+  { id:'b2', name:'Designer Bangles',         category:'Bangles'   },
+  { id:'b3', name:'Antique Finish Bangles',   category:'Bangles'   },
+  { id:'b4', name:'Bridal Bangles Set',       category:'Bangles'   },
+  { id:'b5', name:'Peacock Bangles',          category:'Bangles'   },
+  { id:'r1', name:'Solitaire Ring',           category:'Rings'     },
+  { id:'r2', name:'Polki Diamond Ring',       category:'Rings'     },
+  { id:'r3', name:'Classic Gold Ring',        category:'Rings'     },
+  { id:'r4', name:'Floral Ring',              category:'Rings'     },
+  { id:'r5', name:'Gents Statement Ring',     category:'Rings'     },
+  { id:'n1', name:'Maharani Bridal Necklace', category:'Necklaces' },
+  { id:'n2', name:'Temple Gold Haar',         category:'Necklaces' },
+  { id:'n3', name:'Kundan Choker',            category:'Necklaces' },
+  { id:'e1', name:'Antique Gold Jhumkas',     category:'Earrings'  },
+  { id:'e2', name:'Chandbali Earrings',       category:'Earrings'  },
+  { id:'e3', name:'Antique Earrings Set',     category:'Earrings'  },
+  { id:'br1',name:'Bridal Set – Maharani',    category:'Bridal'    },
+  { id:'br2',name:'Kundan Bridal Choker',     category:'Bridal'    },
+  { id:'c1', name:'Figaro Gold Chain',        category:'Chains'    },
+  { id:'c2', name:'Rope Gold Chain',          category:'Chains'    },
+  { id:'a1', name:'Antique Temple Set',       category:'Antique'   },
+  { id:'a2', name:'Antique Choker Necklace',  category:'Antique'   },
+];
+
 export default function CatalogueAdmin() {
   const [password,      setPassword]      = useState('');
   const [showPass,      setShowPass]      = useState(false);
   const [authed,        setAuthed]        = useState(false);
   const [wrongPass,     setWrongPass]     = useState(false);
+  const [activeTab,     setActiveTab]     = useState<'links'|'stock'>('links');
   const [category,      setCategory]      = useState('bangles');
   const [duration,      setDuration]      = useState(DURATIONS[2].value);
   const [generatedLink, setGeneratedLink] = useState('');
@@ -88,9 +116,25 @@ export default function CatalogueAdmin() {
   const [history,       setHistory]       = useState<
     { link: string; cat: string; exp: string; label: string }[]
   >([]);
+  const [stockMap,      setStockMap]      = useState<Record<string,StockStatus>>(() => loadStockMap());
+  const [stockFilter,   setStockFilter]   = useState<'all'|'ready'|'ordered'>('all');
 
   // ref on the div wrapper — works with react-qr-code
   const qrWrapRef = useRef<HTMLDivElement>(null);
+
+  // Persist stock changes
+  const updateStock = (id: string, status: StockStatus) => {
+    const next = { ...stockMap, [id]: status };
+    setStockMap(next);
+    saveStockMap(next);
+  };
+
+  const resetAllToReady = () => {
+    const next: Record<string,StockStatus> = {};
+    ALL_PRODUCTS_FLAT.forEach(p => { next[p.id] = 'ready'; });
+    setStockMap(next);
+    saveStockMap(next);
+  };
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) { setAuthed(true); setWrongPass(false); }
@@ -218,6 +262,146 @@ export default function CatalogueAdmin() {
             Generate private links + QR codes for customers
           </p>
         </div>
+
+        {/* ── Tab switcher ── */}
+        <div className="flex gap-2 p-1 rounded-2xl mb-5 bg-white shadow-sm" style={{ border:`1px solid ${C.border}` }}>
+          {[
+            { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
+            { key:'stock', label:'Stock Manager',  icon:<Package size={15}/> },
+          ].map(tab => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock')}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-all"
+                    style={{
+                      background: activeTab === tab.key ? C.gold : 'transparent',
+                      color:      activeTab === tab.key ? '#fff' : C.textLight,
+                      fontWeight: activeTab === tab.key ? 600 : 400,
+                    }}>
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ════════════════════════════════════
+            STOCK MANAGER TAB
+        ════════════════════════════════════ */}
+        {activeTab === 'stock' && (
+          <div>
+            {/* Summary pills */}
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              {[
+                { label:'Total',   count: ALL_PRODUCTS_FLAT.length,                                               color: C.textMid  },
+                { label:'Ready',   count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ready').length,  color: '#2E7D32'  },
+                { label:'Ordered', count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ordered').length,color: C.gold     },
+              ].map(s => (
+                <div key={s.label} className="bg-white rounded-2xl py-3 px-4 text-center shadow-sm" style={{ border:`1px solid ${C.border}` }}>
+                  <p className="font-cormorant text-3xl font-bold" style={{ color: s.color }}>{s.count}</p>
+                  <p className="font-cinzel text-[10px] tracking-[0.2em] mt-0.5" style={{ color: C.textLight }}>{s.label.toUpperCase()}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Filter + reset */}
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              {(['all','ready','ordered'] as const).map(f => (
+                <button key={f} onClick={() => setStockFilter(f)}
+                        className="px-4 py-1.5 rounded-full font-raleway text-xs transition-all"
+                        style={{
+                          background: stockFilter === f ? C.gold : 'rgba(194,24,91,0.06)',
+                          color:      stockFilter === f ? '#fff' : C.textLight,
+                          border:     `1px solid ${stockFilter === f ? C.gold : C.border}`,
+                        }}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+              <button onClick={resetAllToReady}
+                      className="ml-auto flex items-center gap-1.5 px-4 py-1.5 rounded-full font-raleway text-xs transition-all hover:opacity-80"
+                      style={{ background:'rgba(194,24,91,0.06)', color: C.textMid, border:`1px solid ${C.border}` }}>
+                <RotateCcw size={11}/> Reset All to Ready
+              </button>
+            </div>
+
+            {/* Product rows grouped by category */}
+            {CATEGORIES.map(cat => {
+              const catProducts = ALL_PRODUCTS_FLAT.filter(p => {
+                if (p.category.toLowerCase() !== cat.key && p.category.toLowerCase() !== cat.label.toLowerCase()) return false;
+                const status = stockMap[p.id] ?? 'ready';
+                if (stockFilter === 'ready')   return status === 'ready';
+                if (stockFilter === 'ordered') return status === 'ordered';
+                return true;
+              });
+              if (catProducts.length === 0) return null;
+              return (
+                <div key={cat.key} className="mb-4">
+                  <div className="flex items-center gap-2 mb-2 px-1">
+                    <span>{cat.icon}</span>
+                    <span className="font-cinzel text-xs tracking-[0.2em]" style={{ color: C.textLight }}>{cat.label.toUpperCase()}</span>
+                  </div>
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm" style={{ border:`1px solid ${C.border}` }}>
+                    {catProducts.map((product, idx) => {
+                      const status = stockMap[product.id] ?? 'ready';
+                      const isReady = status === 'ready';
+                      return (
+                        <div key={product.id}
+                             className="flex items-center justify-between px-4 py-3"
+                             style={{ borderBottom: idx < catProducts.length-1 ? `1px solid ${C.border}` : 'none' }}>
+                          <div className="flex items-center gap-3 min-w-0">
+                            {/* Status dot */}
+                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                 style={{ background: isReady ? '#4CAF50' : C.gold }} />
+                            <div className="min-w-0">
+                              <p className="font-raleway text-sm font-medium truncate" style={{ color: C.text }}>{product.name}</p>
+                              <p className="font-cinzel text-[9px] tracking-[0.15em]" style={{ color: C.textLight }}>{product.category.toUpperCase()}</p>
+                            </div>
+                          </div>
+
+                          {/* Status badge + toggle button */}
+                          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                            <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
+                                  style={{
+                                    background: isReady ? 'rgba(76,175,80,0.1)' : 'rgba(194,24,91,0.1)',
+                                    color:      isReady ? '#2E7D32' : C.gold,
+                                  }}>
+                              {isReady ? '● READY' : '◆ ORDERED'}
+                            </span>
+                            <button
+                              onClick={() => updateStock(product.id, isReady ? 'ordered' : 'ready')}
+                              className="flex items-center gap-1 px-3 py-1.5 rounded-full font-raleway text-xs transition-all hover:opacity-80"
+                              style={{
+                                background: isReady ? 'rgba(194,24,91,0.08)' : 'rgba(76,175,80,0.1)',
+                                color:      isReady ? C.gold : '#2E7D32',
+                                border:     `1px solid ${isReady ? C.border : 'rgba(76,175,80,0.3)'}`,
+                              }}
+                            >
+                              {isReady
+                                ? <><ShoppingBag size={11}/> Mark Ordered</>
+                                : <><CheckCircle2 size={11}/> Mark Ready</>}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="p-4 rounded-2xl mt-4" style={{ background:'rgba(194,24,91,0.04)', border:`1px solid ${C.border}` }}>
+              <h3 className="font-cinzel text-xs tracking-[0.15em] mb-2" style={{ color: C.gold }}>HOW STOCK WORKS</h3>
+              <ol className="font-raleway text-sm space-y-1.5" style={{ color: C.textLight }}>
+                <li>1. All products start as <strong style={{color:'#2E7D32'}}>Ready Stock</strong></li>
+                <li>2. When a customer orders, tap <strong style={{color:C.gold}}>Mark Ordered</strong> — it moves automatically</li>
+                <li>3. Customers see live stock status on the private catalogue</li>
+                <li>4. Tap <strong style={{color:'#2E7D32'}}>Mark Ready</strong> when the piece is back in stock</li>
+              </ol>
+            </div>
+          </div>
+        )}
+
+        {/* ════════════════════════════════════
+            LINK GENERATOR TAB
+        ════════════════════════════════════ */}
+        {activeTab === 'links' && (<>
+        <div>
 
         {/* Generator card */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border:`1px solid ${C.border}` }}>
@@ -425,6 +609,8 @@ export default function CatalogueAdmin() {
             <li>5. After expiry → link &amp; QR both stop working automatically</li>
           </ol>
         </div>
+        </div>
+        </>)}
       </div>
     </div>
   );
