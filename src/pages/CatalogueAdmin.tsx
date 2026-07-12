@@ -214,7 +214,7 @@ export default function CatalogueAdmin() {
                    style={{ background:`linear-gradient(135deg,${C.goldPale},#fff)`, border:`1.5px solid ${C.border}` }}>
                 <Lock size={28} style={{ color: C.gold }} />
               </div>
-              <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}>Admin Panel</h1>
+              <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}> SRJ Catalogue Panel</h1>
               <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>Catalogue Link & QR Generator</p>
             </div>
             <div className="space-y-4">
@@ -237,7 +237,7 @@ export default function CatalogueAdmin() {
               <button onClick={handleLogin}
                       className="w-full py-3 rounded-xl text-white font-raleway font-medium transition-all hover:-translate-y-0.5"
                       style={{ background:`linear-gradient(to right,${C.gold},${C.goldDk})` }}>
-                Enter Admin Panel
+                Enter Shekhar Raja Jewellers Catalouge
               </button>
             </div>
           </div>
