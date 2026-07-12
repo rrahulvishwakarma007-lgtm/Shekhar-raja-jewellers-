@@ -257,7 +257,7 @@ export default function CatalogueAdmin() {
             <span className="font-cinzel text-xs tracking-[0.25em]" style={{ color: C.gold }}>ADMIN PANEL</span>
             <Diamond size={13} style={{ color: C.gold }} />
           </div>
-          <h1 className="font-cormorant text-4xl font-bold" style={{ color: C.text }}>Catalogue Generator</h1>
+          <h1 className="font-cormorant text-4xl font-bold" style={{ color: C.text }}> Shekhar Raja Jewellers Special Collections</h1>
           <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
             Generate private links + QR codes for customers
           </p>
