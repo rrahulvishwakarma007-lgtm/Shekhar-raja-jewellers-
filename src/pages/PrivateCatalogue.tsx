@@ -97,9 +97,9 @@ function ExpiredPage() {
              style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`2px solid ${C.border}` }}>
           <AlertCircle size={40} style={{ color: C.gold }} />
         </div>
-        <h1 className="font-cormorant text-4xl font-bold mb-3" style={{ color: C.text }}>Link Expired</h1>
+        <h1 className="font-cormorant text-4xl font-bold mb-3" style={{ color: C.text }}>Oh! No, Link Expired</h1>
         <p className="font-raleway text-base mb-8" style={{ color: C.textLight }}>
-          This private catalogue link has expired. Please contact us for a new link.
+          This private catalogue link has expired. Please contact Shekhar Raja Jewellers for a new link.
         </p>
         <a href="https://wa.me/918377911745?text=Hi!%20The%20catalogue%20link%20expired.%20Please%20send%20a%20new%20one."
            target="_blank" rel="noopener noreferrer"
