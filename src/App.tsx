@@ -26,7 +26,7 @@ function App() {
 
         {/* Private catalogue — outside Layout (no navbar/footer) */}
         <Route path="catalogue"           element={<PrivateCatalogue />} />  {/* ← ADD */}
-        <Route path="srj-admin-catalogue" element={<CatalogueAdmin />}  />  {/* ← ADD */}
+        <Route path="srj" element={<CatalogueAdmin />}  />  {/* ← ADD */}
       </Routes>
     </BrowserRouter>
   );
