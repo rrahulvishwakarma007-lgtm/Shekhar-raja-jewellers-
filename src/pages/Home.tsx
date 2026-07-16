@@ -283,13 +283,16 @@ export default function Home() {
 
         {/* ── PROMO HERO BANNER (auto-rotating) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          <div className="relative rounded-3xl overflow-hidden h-[240px] sm:h-[340px] md:h-[460px] lg:h-[520px]">
+          <div className="relative rounded-3xl overflow-hidden h-[240px] sm:h-[340px] md:h-[460px] lg:h-[520px]" style={{ perspective: 1500 }}>
             <AnimatePresence mode="wait">
               {promoBanners.map((banner, i) =>
                 i === promoBanner && (
                   <motion.div key={i} className="absolute inset-0"
-                    initial={{ opacity:0, x:40 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-40 }}
-                    transition={{ duration:0.6, ease:'easeInOut' }}>
+                    initial={{ rotateY: 90, opacity: 0 }}
+                    animate={{ rotateY: 0, opacity: 1 }}
+                    exit={{ rotateY: -90, opacity: 0 }}
+                    style={{ transformOrigin: "left center", backfaceVisibility: "hidden" }}
+                    transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}>
                     <img src={banner.img} alt={banner.label} className="w-full h-full object-cover object-center" />
                   </motion.div>
                 )
