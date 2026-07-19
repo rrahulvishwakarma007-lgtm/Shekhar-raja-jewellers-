@@ -3,7 +3,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, LayoutGroup, Variants } from 'framer-motion';
 import {
   Clock, Lock, ArrowRight, MessageCircle, Diamond,
   AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
@@ -401,7 +401,7 @@ export default function PrivateCatalogue() {
   };
 
   // Stagger grid animation variants
-  const gridVariants = {
+  const gridVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -409,7 +409,7 @@ export default function PrivateCatalogue() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
     show: { 
       opacity: 1, y: 0, scale: 1, 
