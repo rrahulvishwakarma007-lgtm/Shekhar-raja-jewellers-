@@ -1,7 +1,7 @@
 // src/pages/CatalogueAdmin.tsx
 // Dependency: npm install react-qr-code
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import QRCode from 'react-qr-code';
 import {
   Copy, Check, Lock, Link as LinkIcon,
@@ -85,6 +85,53 @@ const ALL_PRODUCTS_FLAT = Object.values(ALL_PRODUCTS).flat().map((p: any) => ({
   name: p.name,
   category: p.category
 }));
+
+// ── Ambient Effects matching the PrivateCatalogue ──
+function Particles() {
+  const items = Array.from({ length: 12 }, (_, i) => i);
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {items.map(i => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{ left: (8 + (i * 7.5) % 90) + '%', top: (10 + (i * 13) % 80) + '%' }}
+          animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], rotate: [0, 180, 360] }}
+          transition={{ duration: 5 + (i % 4), repeat: Infinity, delay: i * 0.4, ease:'easeInOut' }}
+        >
+          <Diamond size={i % 3 === 0 ? 12 : 8} style={{ color: C.goldPale }} />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+function AmbientBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <motion.div
+        animate={{ 
+          x: ['0%', '3%', '-2%', '0%'], 
+          y: ['0%', '-4%', '3%', '0%'],
+          scale: [1, 1.05, 0.95, 1]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full opacity-40 mix-blend-multiply filter blur-[100px]"
+        style={{ background: 'radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 70%)' }}
+      />
+      <motion.div
+        animate={{ 
+          x: ['0%', '-3%', '2%', '0%'], 
+          y: ['0%', '4%', '-3%', '0%'],
+          scale: [1, 0.95, 1.05, 1]
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full opacity-30 mix-blend-multiply filter blur-[120px]"
+        style={{ background: 'radial-gradient(circle, rgba(194,24,91,0.2) 0%, transparent 70%)' }}
+      />
+    </div>
+  );
+}
 
 export default function CatalogueAdmin() {
   const [password,      setPassword]      = useState('');
@@ -170,14 +217,25 @@ export default function CatalogueAdmin() {
 
   if (!authed) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: C.bg }}>
-        <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} className="w-full max-w-sm">
-          <div className="bg-white rounded-3xl p-8 shadow-xl" style={{ border: '1px solid ' + C.border }}>
+      <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: C.bg }}>
+        <AmbientBackground />
+        <Particles />
+        <motion.div 
+          initial={{ opacity:0, y:40, scale: 0.95 }} 
+          animate={{ opacity:1, y:0, scale: 1 }} 
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="w-full max-w-sm relative z-10"
+        >
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl" style={{ border: '1px solid ' + C.border }}>
             <div className="text-center mb-8">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                   style={{ background: 'linear-gradient(135deg, ' + C.goldPale + ', #fff)', border: '1.5px solid ' + C.border }}>
+              <motion.div 
+                animate={{ rotateY: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: 'linear-gradient(135deg, ' + C.goldPale + ', #fff)', border: '1.5px solid ' + C.border, transformStyle: "preserve-3d" }}
+              >
                 <Lock size={28} style={{ color: C.gold }} />
-              </div>
+              </motion.div>
               <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}> SRJ Catalogue Panel</h1>
               <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>Catalogue Link & QR Generator</p>
             </div>
@@ -189,7 +247,7 @@ export default function CatalogueAdmin() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                  className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none pr-12"
+                  className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none pr-12 transition-all"
                   style={{ border: '1.5px solid ' + (wrongPass ? '#EF4444' : C.border), background:'#FFF5F7', color: C.text }}
                 />
                 <button onClick={() => setShowPass(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -197,14 +255,22 @@ export default function CatalogueAdmin() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {wrongPass ? (
-                <p className="font-raleway text-xs text-red-500 text-center">Incorrect password.</p>
-              ) : null}
-              <button onClick={handleLogin}
-                      className="w-full py-3 rounded-xl text-white font-raleway font-medium transition-all hover:-translate-y-0.5"
-                      style={{ background: 'linear-gradient(to right, ' + C.gold + ', ' + C.goldDk + ')' }}>
+              <AnimatePresence>
+                {wrongPass ? (
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="font-raleway text-xs text-red-500 text-center">
+                    Incorrect password.
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+              <motion.button 
+                whileHover={{ scale: 1.02, boxShadow: '0 8px 20px rgba(194,24,91,0.25)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogin}
+                className="w-full py-3 rounded-xl text-white font-raleway font-medium transition-all"
+                style={{ background: 'linear-gradient(to right, ' + C.gold + ', ' + C.goldDk + ')' }}
+              >
                 Enter Shekhar Raja Jewellers Catalouge
-              </button>
+              </motion.button>
             </div>
           </div>
         </motion.div>
@@ -213,57 +279,64 @@ export default function CatalogueAdmin() {
   }
 
   return (
-    <div className="min-h-screen pt-8 pb-16 px-4" style={{ background: C.bg }}>
-      <div className="max-w-2xl mx-auto">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="min-h-screen pt-8 pb-16 px-4 relative overflow-hidden" style={{ background: C.bg }}>
+      <AmbientBackground />
+      
+      <div className="max-w-2xl mx-auto relative z-10">
 
-        <div className="text-center mb-8">
+        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }} className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-2">
-            <Diamond size={13} style={{ color: C.gold }} />
+            <motion.div animate={{ rotate:360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={13} style={{ color: C.gold }} />
+            </motion.div>
             <span className="font-cinzel text-xs tracking-[0.25em]" style={{ color: C.gold }}>ADMIN PANEL</span>
-            <Diamond size={13} style={{ color: C.gold }} />
+            <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={13} style={{ color: C.gold }} />
+            </motion.div>
           </div>
           <h1 className="font-cormorant text-4xl font-bold" style={{ color: C.text }}> Shekhar Raja Jewellers Special Collections</h1>
           <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
             Generate private links + QR codes for customers
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex gap-2 p-1 rounded-2xl mb-5 bg-white shadow-sm" style={{ border: '1px solid ' + C.border }}>
-          {[
-            { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
-            { key:'stock', label:'Stock Manager',  icon:<Package size={15}/> },
-          ].map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock')}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-all"
-                    style={{
-                      background: activeTab === tab.key ? C.gold : 'transparent',
-                      color:      activeTab === tab.key ? '#fff' : C.textLight,
-                      fontWeight: activeTab === tab.key ? 600 : 400,
-                    }}>
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </div>
+        <LayoutGroup>
+          <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }} className="flex gap-2 p-1 rounded-2xl mb-5 bg-white/80 backdrop-blur-md shadow-sm relative z-0" style={{ border: '1px solid ' + C.border }}>
+            {[
+              { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
+              { key:'stock', label:'Stock Manager',  icon:<Package size={15}/> },
+            ].map(tab => (
+              <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock')}
+                      className="relative flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-colors outline-none"
+                      style={{ color: activeTab === tab.key ? '#fff' : C.textLight, fontWeight: activeTab === tab.key ? 600 : 400 }}>
+                {activeTab === tab.key ? (
+                  <motion.div layoutId="mainAdminTab" className="absolute inset-0 rounded-xl -z-10 shadow-md" style={{ background: C.gold }} transition={{ type: "spring", stiffness: 300, damping: 25 }} />
+                ) : null}
+                <span className="relative z-10 flex items-center gap-2">{tab.icon} {tab.label}</span>
+              </button>
+            ))}
+          </motion.div>
+        </LayoutGroup>
 
         {activeTab === 'stock' ? (
-          <div className="w-full">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }} className="w-full">
             <div className="grid grid-cols-3 gap-3 mb-5">
               {[
                 { label:'Total',   count: ALL_PRODUCTS_FLAT.length,                                               color: C.textMid  },
                 { label:'Ready',   count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ready').length,  color: '#2E7D32'  },
                 { label:'Ordered', count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ordered').length,color: C.gold     },
-              ].map(s => (
-                <div key={s.label} className="bg-white rounded-2xl py-3 px-4 text-center shadow-sm" style={{ border: '1px solid ' + C.border }}>
+              ].map((s, idx) => (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (idx * 0.1) }} key={s.label} className="bg-white rounded-2xl py-3 px-4 text-center shadow-sm" style={{ border: '1px solid ' + C.border }}>
                   <p className="font-cormorant text-3xl font-bold" style={{ color: s.color }}>{s.count}</p>
                   <p className="font-cinzel text-[10px] tracking-[0.2em] mt-0.5" style={{ color: C.textLight }}>{s.label.toUpperCase()}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
 
             <div className="flex items-center gap-2 mb-4 flex-wrap">
               {(['all','ready','ordered'] as const).map(f => (
                 <button key={f} onClick={() => setStockFilter(f)}
-                        className="px-4 py-1.5 rounded-full font-raleway text-xs transition-all"
+                        className="px-4 py-1.5 rounded-full font-raleway text-xs transition-all active:scale-95"
                         style={{
                           background: stockFilter === f ? C.gold : 'rgba(194,24,91,0.06)',
                           color:      stockFilter === f ? '#fff' : C.textLight,
@@ -272,11 +345,11 @@ export default function CatalogueAdmin() {
                   {f.charAt(0).toUpperCase() + f.slice(1)}
                 </button>
               ))}
-              <button onClick={resetAllToReady}
-                      className="ml-auto flex items-center gap-1.5 px-4 py-1.5 rounded-full font-raleway text-xs transition-all hover:opacity-80"
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={resetAllToReady}
+                      className="ml-auto flex items-center gap-1.5 px-4 py-1.5 rounded-full font-raleway text-xs transition-all hover:shadow-md"
                       style={{ background:'rgba(194,24,91,0.06)', color: C.textMid, border: '1px solid ' + C.border }}>
                 <RotateCcw size={11}/> Reset All to Ready
-              </button>
+              </motion.button>
             </div>
 
             {CATEGORIES.map(cat => {
@@ -295,49 +368,53 @@ export default function CatalogueAdmin() {
                     <span className="font-cinzel text-xs tracking-[0.2em]" style={{ color: C.textLight }}>{cat.label.toUpperCase()}</span>
                   </div>
                   <div className="bg-white rounded-2xl overflow-hidden shadow-sm" style={{ border: '1px solid ' + C.border }}>
-                    {catProducts.map((product, idx) => {
-                      const status = stockMap[product.id] ?? 'ready';
-                      const isReady = status === 'ready';
-                      return (
-                        <div key={product.id}
-                             className="flex items-center justify-between px-4 py-3"
-                             style={{ borderBottom: idx < catProducts.length-1 ? ('1px solid ' + C.border) : 'none' }}>
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                 style={{ background: isReady ? '#4CAF50' : C.gold }} />
-                            <div className="min-w-0">
-                              <p className="font-raleway text-sm font-medium truncate" style={{ color: C.text }}>{product.name}</p>
-                              <p className="font-cinzel text-[9px] tracking-[0.15em]" style={{ color: C.textLight }}>{product.category.toUpperCase()}</p>
+                    <AnimatePresence>
+                      {catProducts.map((product, idx) => {
+                        const status = stockMap[product.id] ?? 'ready';
+                        const isReady = status === 'ready';
+                        return (
+                          <motion.div key={product.id}
+                               initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(idx * 0.05, 0.5) }}
+                               className="flex items-center justify-between px-4 py-3 hover:bg-rose-50/50 transition-colors"
+                               style={{ borderBottom: idx < catProducts.length-1 ? ('1px solid ' + C.border) : 'none' }}>
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-colors duration-500"
+                                   style={{ background: isReady ? '#4CAF50' : C.gold }} />
+                              <div className="min-w-0">
+                                <p className="font-raleway text-sm font-medium truncate" style={{ color: C.text }}>{product.name}</p>
+                                <p className="font-cinzel text-[9px] tracking-[0.15em]" style={{ color: C.textLight }}>{product.category.toUpperCase()}</p>
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                            <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
-                                  style={{
-                                    background: isReady ? 'rgba(76,175,80,0.1)' : 'rgba(194,24,91,0.1)',
-                                    color:      isReady ? '#2E7D32' : C.gold,
-                                  }}>
-                              {isReady ? '● READY' : '◆ ORDERED'}
-                            </span>
-                            <button
-                              onClick={() => updateStock(product.id, isReady ? 'ordered' : 'ready')}
-                              className="flex items-center gap-1 px-3 py-1.5 rounded-full font-raleway text-xs transition-all hover:opacity-80"
-                              style={{
-                                background: isReady ? 'rgba(194,24,91,0.08)' : 'rgba(76,175,80,0.1)',
-                                color:      isReady ? C.gold : '#2E7D32',
-                                border:     '1px solid ' + (isReady ? C.border : 'rgba(76,175,80,0.3)'),
-                              }}
-                            >
-                              {isReady ? (
-                                <span className="flex items-center gap-1"><ShoppingBag size={11}/> Mark Ordered</span>
-                              ) : (
-                                <span className="flex items-center gap-1"><CheckCircle2 size={11}/> Mark Ready</span>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+                            <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                              <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full transition-colors duration-500"
+                                    style={{
+                                      background: isReady ? 'rgba(76,175,80,0.1)' : 'rgba(194,24,91,0.1)',
+                                      color:      isReady ? '#2E7D32' : C.gold,
+                                    }}>
+                                {isReady ? '● READY' : '◆ ORDERED'}
+                              </span>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                onClick={() => updateStock(product.id, isReady ? 'ordered' : 'ready')}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-full font-raleway text-xs transition-colors duration-500 shadow-sm"
+                                style={{
+                                  background: isReady ? 'rgba(194,24,91,0.08)' : 'rgba(76,175,80,0.1)',
+                                  color:      isReady ? C.gold : '#2E7D32',
+                                  border:     '1px solid ' + (isReady ? C.border : 'rgba(76,175,80,0.3)'),
+                                }}
+                              >
+                                {isReady ? (
+                                  <span className="flex items-center gap-1"><ShoppingBag size={11}/> Mark Ordered</span>
+                                ) : (
+                                  <span className="flex items-center gap-1"><CheckCircle2 size={11}/> Mark Ready</span>
+                                )}
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
                   </div>
                 </div>
               );
@@ -352,29 +429,29 @@ export default function CatalogueAdmin() {
                 <li>4. Tap <strong style={{color:'#2E7D32'}}>Mark Ready</strong> when the piece is back in stock</li>
               </ol>
             </div>
-          </div>
+          </motion.div>
         ) : null}
 
         {activeTab === 'links' ? (
-          <div className="w-full">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border: '1px solid ' + C.border }}>
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }} className="w-full">
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border: '1px solid ' + C.border }}>
               <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
                 SELECT CATEGORY
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
                 {CATEGORIES.map(cat => (
-                  <button key={cat.key} onClick={() => setCategory(cat.key)}
-                          className="flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all"
+                  <motion.button key={cat.key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setCategory(cat.key)}
+                          className="flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-colors"
                           style={{
                             border: '1.5px solid ' + (category === cat.key ? C.gold : C.border),
                             background: category === cat.key ? 'rgba(194,24,91,0.07)' : '#FFF5F7',
                           }}>
-                    <span className="text-lg">{cat.icon}</span>
+                    <motion.span animate={category === cat.key ? { scale: [1, 1.2, 1] } : {}} className="text-lg">{cat.icon}</motion.span>
                     <span className="font-cinzel text-[9px] tracking-wide leading-tight text-center"
                           style={{ color: category === cat.key ? C.gold : C.textLight }}>
                       {cat.label}
                     </span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
@@ -383,31 +460,34 @@ export default function CatalogueAdmin() {
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">
                 {DURATIONS.map(d => (
-                  <button key={d.value} onClick={() => setDuration(d.value)}
-                          className="py-2 px-3 rounded-xl text-sm font-raleway transition-all"
+                  <motion.button key={d.value} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDuration(d.value)}
+                          className="py-2 px-3 rounded-xl text-sm font-raleway transition-colors"
                           style={{
                             border: '1.5px solid ' + (duration === d.value ? C.gold : C.border),
                             background: duration === d.value ? C.gold : '#FFF5F7',
                             color: duration === d.value ? '#fff' : C.textMid,
                           }}>
                     {d.label}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
-              <button onClick={handleGenerate}
-                      className="w-full py-4 rounded-2xl text-white font-cormorant text-xl font-semibold flex items-center justify-center gap-3 shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+              <motion.button 
+                      whileHover={{ scale: 1.02, boxShadow: '0 8px 20px rgba(194,24,91,0.3)' }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={handleGenerate}
+                      className="w-full py-4 rounded-2xl text-white font-cormorant text-xl font-semibold flex items-center justify-center gap-3 shadow-lg transition-all"
                       style={{ background: 'linear-gradient(135deg, ' + C.gold + ', ' + C.goldDk + ')' }}>
                 <LinkIcon size={20} />
                 Generate Link &amp; QR Code
-              </button>
+              </motion.button>
             </div>
 
             <AnimatePresence>
               {generatedLink ? (
-                <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0 }}
-                            className="bg-white rounded-3xl overflow-hidden shadow-lg mb-6"
-                            style={{ border: '1.5px solid ' + C.gold }}>
+                <motion.div initial={{ opacity:0, y:30, scale: 0.95 }} animate={{ opacity:1, y:0, scale: 1 }} exit={{ opacity:0, scale: 0.9 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                            className="bg-white/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl mb-6"
+                            style={{ border: '2px solid ' + C.gold }}>
 
                   <div className="px-6 py-3 flex items-center gap-2"
                        style={{ background:'rgba(194,24,91,0.06)', borderBottom: '1px solid ' + C.border }}>
@@ -418,45 +498,45 @@ export default function CatalogueAdmin() {
                   </div>
 
                   <div className="p-6">
-                    <div className="flex gap-2 mb-5 p-1 rounded-2xl" style={{ background:'#FFF5F7' }}>
-                      {[
-                        { label:'Link', icon:<LinkIcon size={15}/>, qr:false },
-                        { label:'QR Code', icon:<QrCode size={15}/>, qr:true  },
-                      ].map(tab => (
-                        <button key={tab.label} onClick={() => setShowQR(tab.qr)}
-                                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-all"
-                                style={{
-                                  background: showQR === tab.qr ? '#fff' : 'transparent',
-                                  color: showQR === tab.qr ? C.gold : C.textLight,
-                                  boxShadow: showQR === tab.qr ? '0 1px 8px rgba(194,24,91,0.12)' : 'none',
-                                  fontWeight: showQR === tab.qr ? 600 : 400,
-                                }}>
-                          {tab.icon} {tab.label}
-                        </button>
-                      ))}
-                    </div>
+                    <LayoutGroup>
+                      <div className="flex gap-2 mb-5 p-1 rounded-2xl relative z-0" style={{ background:'#FFF5F7' }}>
+                        {[
+                          { label:'Link', icon:<LinkIcon size={15}/>, qr:false },
+                          { label:'QR Code', icon:<QrCode size={15}/>, qr:true  },
+                        ].map(tab => (
+                          <button key={tab.label} onClick={() => setShowQR(tab.qr)}
+                                  className="relative flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-colors outline-none"
+                                  style={{ color: showQR === tab.qr ? C.gold : C.textLight, fontWeight: showQR === tab.qr ? 600 : 400 }}>
+                            {showQR === tab.qr ? (
+                              <motion.div layoutId="generatorResultTab" className="absolute inset-0 rounded-xl -z-10 shadow-sm" style={{ background: '#fff' }} transition={{ type: "spring", stiffness: 300, damping: 25 }} />
+                            ) : null}
+                            <span className="relative z-10 flex items-center gap-2">{tab.icon} {tab.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </LayoutGroup>
 
                     {!showQR ? (
-                      <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }}>
+                      <motion.div initial={{ opacity:0, x: -10 }} animate={{ opacity:1, x: 0 }}>
                         <div className="rounded-xl p-3 mb-4 font-mono text-xs break-all"
                              style={{ background:'#FFF5F7', border: '1px solid ' + C.border, color: C.textMid }}>
                           {generatedLink}
                         </div>
                         <div className="flex gap-3">
-                          <button onClick={handleCopyLink}
-                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm transition-all"
+                          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} onClick={handleCopyLink}
+                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm transition-colors"
                                   style={{ border: '1.5px solid ' + C.border, color: C.gold, background: copiedLink ? 'rgba(194,24,91,0.06)' : '#FFF5F7' }}>
                             {copiedLink ? (
                               <span className="flex items-center gap-2"><Check size={15}/>Copied!</span>
                             ) : (
                               <span className="flex items-center gap-2"><Copy size={15}/>Copy Link</span>
                             )}
-                          </button>
-                          <button onClick={handleWhatsApp}
-                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm text-white"
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.03, boxShadow: '0 8px 15px rgba(37,211,102,0.3)' }} whileTap={{ scale: 0.95 }} onClick={handleWhatsApp}
+                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm text-white shadow-md"
                                   style={{ background:'#25D366' }}>
                             <Share2 size={15}/> Send on WhatsApp
-                          </button>
+                          </motion.button>
                         </div>
                       </motion.div>
                     ) : null}
@@ -496,21 +576,21 @@ export default function CatalogueAdmin() {
                         </div>
 
                         <div className="w-full grid grid-cols-3 gap-3">
-                          <button onClick={handleDownloadQR}
-                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-all hover:-translate-y-0.5"
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleDownloadQR}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-colors"
                                   style={{ border: '1.5px solid ' + C.border, color: C.gold, background:'#FFF5F7' }}>
                             <Download size={18}/> Download
-                          </button>
-                          <button onClick={handleWhatsApp}
-                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs text-white transition-all hover:-translate-y-0.5"
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.05, boxShadow: '0 8px 15px rgba(37,211,102,0.3)' }} whileTap={{ scale: 0.95 }} onClick={handleWhatsApp}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs text-white shadow-md"
                                   style={{ background:'#25D366' }}>
                             <Share2 size={18}/> WhatsApp
-                          </button>
-                          <button onClick={handlePrint}
-                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-all hover:-translate-y-0.5"
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handlePrint}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-colors"
                                   style={{ border: '1.5px solid ' + C.border, color: C.textMid, background:'#FFF5F7' }}>
                             <Printer size={18}/> Print
-                          </button>
+                          </motion.button>
                         </div>
                       </motion.div>
                     ) : null}
@@ -520,13 +600,13 @@ export default function CatalogueAdmin() {
             </AnimatePresence>
 
             {history.length > 0 ? (
-              <div className="bg-white rounded-3xl p-6 shadow-sm mb-6" style={{ border: '1px solid ' + C.border }}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-sm mb-6" style={{ border: '1px solid ' + C.border }}>
                 <h3 className="font-cinzel text-xs tracking-[0.2em] mb-4" style={{ color: C.textLight }}>
                   RECENT LINKS (THIS SESSION)
                 </h3>
                 <div className="space-y-2">
                   {history.map((h, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl"
+                    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={i} className="flex items-center justify-between p-3 rounded-xl"
                          style={{ background:'#FFF5F7', border: '1px solid ' + C.border }}>
                       <div className="min-w-0 flex-1">
                         <span className="font-cinzel text-xs font-bold" style={{ color: C.text }}>{h.cat}</span>
@@ -534,14 +614,14 @@ export default function CatalogueAdmin() {
                           · {h.label} · exp {h.exp}
                         </span>
                       </div>
-                      <button onClick={() => navigator.clipboard.writeText(h.link)}
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => navigator.clipboard.writeText(h.link)}
                               className="ml-2 p-1.5 rounded-lg hover:bg-pink-50 flex-shrink-0">
                         <Copy size={13} style={{ color: C.textLight }} />
-                      </button>
-                    </div>
+                      </motion.button>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ) : null}
 
             <div className="p-6 rounded-2xl" style={{ background:'rgba(194,24,91,0.04)', border: '1px solid ' + C.border }}>
@@ -554,9 +634,9 @@ export default function CatalogueAdmin() {
                 <li>5. After expiry → link &amp; QR both stop working automatically</li>
               </ol>
             </div>
-          </div>
+          </motion.div>
         ) : null}
       </div>
-    </div>
+    </motion.div>
   );
 }
