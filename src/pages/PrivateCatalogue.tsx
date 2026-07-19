@@ -1,7 +1,9 @@
+// ════════════════════════════════════════════════════════════════════════════
 // src/pages/PrivateCatalogue.tsx
+// ════════════════════════════════════════════════════════════════════════════
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, LayoutGroup } from 'framer-motion';
 import {
   Clock, Lock, ArrowRight, MessageCircle, Diamond,
   AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
@@ -224,18 +226,46 @@ function formatTime(ms: number) {
 function Particles() {
   const items = Array.from({ length: 12 }, (_, i) => i);
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {items.map(i => (
         <motion.div
           key={i}
           className="absolute"
           style={{ left:`${8 + (i * 7.5) % 90}%`, top:`${10 + (i * 13) % 80}%` }}
-          animate={{ y: [0, -18, 0], opacity: [0.15, 0.4, 0.15], rotate: [0, 180, 360] }}
-          transition={{ duration: 4 + (i % 3), repeat: Infinity, delay: i * 0.35, ease:'easeInOut' }}
+          animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], rotate: [0, 180, 360] }}
+          transition={{ duration: 5 + (i % 4), repeat: Infinity, delay: i * 0.4, ease:'easeInOut' }}
         >
-          <Diamond size={i % 3 === 0 ? 10 : 6} style={{ color: C.goldPale }} />
+          <Diamond size={i % 3 === 0 ? 12 : 8} style={{ color: C.goldPale }} />
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+// ── Ambient Background Effect ──────────────────────────────────────────────────
+function AmbientBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <motion.div
+        animate={{ 
+          x: ['0%', '3%', '-2%', '0%'], 
+          y: ['0%', '-4%', '3%', '0%'],
+          scale: [1, 1.05, 0.95, 1]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full opacity-40 mix-blend-multiply filter blur-[100px]"
+        style={{ background: 'radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 70%)' }}
+      />
+      <motion.div
+        animate={{ 
+          x: ['0%', '-3%', '2%', '0%'], 
+          y: ['0%', '4%', '-3%', '0%'],
+          scale: [1, 0.95, 1.05, 1]
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full opacity-30 mix-blend-multiply filter blur-[120px]"
+        style={{ background: 'radial-gradient(circle, rgba(194,24,91,0.2) 0%, transparent 70%)' }}
+      />
     </div>
   );
 }
@@ -247,7 +277,7 @@ function ExpiredPage() {
       <motion.div initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} className="text-center max-w-md">
         <motion.div
           animate={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 2, repeat: Infinity }}
-          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
           style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`2px solid ${C.border}` }}
         >
           <AlertCircle size={40} style={{ color: C.gold }} />
@@ -257,16 +287,16 @@ function ExpiredPage() {
           This private catalogue link has expired. Please contact Shekhar Raja Jewellers for a new link.
         </p>
         <motion.a
-          whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
+          whileHover={{ scale:1.04, boxShadow: '0 10px 25px rgba(37,211,102,0.4)' }} whileTap={{ scale:0.97 }}
           href="https://wa.me/918377911745?text=Hi!%20The%20catalogue%20link%20expired.%20Please%20send%20a%20new%20one."
           target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg"
+          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg transition-shadow"
           style={{ background:'#25D366' }}
         >
           <MessageCircle size={18} /> Request New Link on WhatsApp
         </motion.a>
         <div className="mt-6">
-          <Link to="/" className="font-raleway text-sm" style={{ color: C.textLight }}>← Back to Home</Link>
+          <Link to="/" className="font-raleway text-sm hover:underline transition-all" style={{ color: C.textLight }}>← Back to Home</Link>
         </div>
       </motion.div>
     </div>
@@ -276,11 +306,12 @@ function ExpiredPage() {
 // ── Invalid page ──────────────────────────────────────────────────────────────
 function InvalidPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: C.bg }}>
-      <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} className="text-center max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: C.bg }}>
+      <AmbientBackground />
+      <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} className="text-center max-w-md relative z-10">
         <motion.div
-          animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2.5, repeat: Infinity }}
-          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+          animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
           style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`2px solid ${C.border}` }}
         >
           <Lock size={40} style={{ color: C.gold }} />
@@ -290,10 +321,10 @@ function InvalidPage() {
           You need a valid link from Shekhar Raja Jewellers to view this catalogue.
         </p>
         <motion.a
-          whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
+          whileHover={{ scale:1.04, boxShadow: '0 10px 25px rgba(37,211,102,0.4)' }} whileTap={{ scale:0.97 }}
           href="https://wa.me/918377911745?text=Hi!%20I%20would%20like%20to%20view%20your%20jewellery%20catalogue."
           target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg"
+          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg transition-shadow"
           style={{ background:'#25D366' }}
         >
           <MessageCircle size={18} /> Request Catalogue on WhatsApp
@@ -369,29 +400,54 @@ export default function PrivateCatalogue() {
     window.open(`https://wa.me/918377911745?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
+  // Stagger grid animation variants
+  const gridVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    show: { 
+      opacity: 1, y: 0, scale: 1, 
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    },
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
+  };
+
   if (!token || !decoded) return <InvalidPage />;
   if (expired)            return <ExpiredPage />;
 
   const urgentColor = timeLeft < 5 * 60 * 1000 ? '#EF4444' : C.gold;
 
   return (
-    <div className="min-h-screen" style={{ background: C.bg }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="min-h-screen relative" style={{ background: C.bg }}>
+      
+      {/* Background Ambient Effect */}
+      <AmbientBackground />
 
       {/* ── SUCCESS TOAST ── */}
       <AnimatePresence>
         {orderedToast && (
           <motion.div
             initial={{ opacity:0, y:60, scale:0.85 }}
-            animate={{ opacity:1, y:0,  scale:1    }}
-            exit={{   opacity:0, y:30,  scale:0.9  }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl"
-            style={{ background:'#2E7D32', color:'#fff', maxWidth:'90vw',
-                     boxShadow:'0 8px 40px rgba(46,125,50,0.4)' }}
+            animate={{ opacity:1, y:0,  scale:1, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+            exit={{   opacity:0, y:40,  scale:0.9, transition: { duration: 0.2 } }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl overflow-hidden"
+            style={{ background:'#2E7D32', color:'#fff', maxWidth:'90vw', boxShadow:'0 12px 40px rgba(46,125,50,0.4)' }}
           >
-            <motion.div animate={{ rotate:[0,360] }} transition={{ duration:0.6 }}>
+            {/* Success sheen */}
+            <motion.div 
+              className="absolute inset-0 bg-white/20"
+              initial={{ x: '-100%' }} animate={{ x: '100%' }} transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+            <motion.div animate={{ rotate:[0, 15, -15, 0] }} transition={{ duration: 0.6, delay: 0.1 }}>
               <ShoppingBag size={18} />
             </motion.div>
-            <span className="font-raleway text-sm font-medium">
+            <span className="font-raleway text-sm font-medium relative z-10">
               <strong>{orderedToast}</strong> moved to Ordered Stock ✓
             </span>
           </motion.div>
@@ -401,24 +457,27 @@ export default function PrivateCatalogue() {
       {/* ══════════════════════════════════════════════════════════
           LUXURY HERO HEADER
       ══════════════════════════════════════════════════════════ */}
-      <div ref={heroRef} className="relative overflow-hidden" style={{ minHeight: 320 }}>
-        {/* Gradient background */}
-        <div className="absolute inset-0"
-             style={{ background:`linear-gradient(135deg, #2D0A18 0%, #6D1B4E 45%, #880E4F 75%, #C2185B 100%)` }} />
+      <div ref={heroRef} className="relative overflow-hidden shadow-2xl" style={{ minHeight: 320 }}>
+        {/* Gradient background with slow pulse */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ scale: [1, 1.05, 1], filter: ['brightness(1)', 'brightness(1.1)', 'brightness(1)'] }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          style={{ background:`linear-gradient(135deg, #2D0A18 0%, #6D1B4E 45%, #880E4F 75%, #C2185B 100%)` }} 
+        />
 
         {/* Animated grid lines */}
         <div className="absolute inset-0 opacity-10"
              style={{ backgroundImage:'linear-gradient(rgba(248,187,217,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(248,187,217,0.3) 1px, transparent 1px)',
                       backgroundSize:'60px 60px' }} />
 
-        {/* Floating particles */}
         <Particles />
 
         {/* Radial glow */}
         <motion.div
           animate={{ scale:[1,1.15,1], opacity:[0.3,0.5,0.3] }}
           transition={{ duration:4, repeat:Infinity, ease:'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none z-0"
           style={{ background:`radial-gradient(ellipse, rgba(194,24,91,0.35) 0%, transparent 70%)`, filter:'blur(40px)' }}
         />
 
@@ -429,33 +488,23 @@ export default function PrivateCatalogue() {
         >
           {/* Brand eyebrow */}
           <motion.div
-            initial={{ opacity:0, y:-20 }}
-            animate={{ opacity:1, y:0 }}
-            transition={{ delay:0.1, duration:0.7 }}
+            initial={{ opacity:0, y:-20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2, duration:0.8, ease: "easeOut" }}
             className="flex items-center gap-3 mb-4"
           >
-            <motion.div
-              animate={{ rotate:360 }}
-              transition={{ duration:8, repeat:Infinity, ease:'linear' }}
-            >
+            <motion.div animate={{ rotate:360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
               <Crown size={16} style={{ color: C.goldPale }} />
             </motion.div>
             <span className="font-cinzel text-[10px] tracking-[0.5em] text-white/60">
               PRIVATE · EXCLUSIVE · CURATED
             </span>
-            <motion.div
-              animate={{ rotate:-360 }}
-              transition={{ duration:8, repeat:Infinity, ease:'linear' }}
-            >
+            <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
               <Crown size={16} style={{ color: C.goldPale }} />
             </motion.div>
           </motion.div>
 
           {/* Main title */}
           <motion.h1
-            initial={{ opacity:0, y:24 }}
-            animate={{ opacity:1, y:0 }}
-            transition={{ delay:0.2, duration:0.8, ease:[0.22,1,0.36,1] }}
+            initial={{ opacity:0, y:24, filter: 'blur(10px)' }} animate={{ opacity:1, y:0, filter: 'blur(0px)' }} transition={{ delay:0.3, duration:0.9, ease:[0.22,1,0.36,1] }}
             className="font-cormorant font-light text-white leading-tight"
             style={{ fontSize:'clamp(2.2rem, 6vw, 4rem)' }}
           >
@@ -463,8 +512,8 @@ export default function PrivateCatalogue() {
             <motion.em
               className="italic not-italic font-semibold"
               style={{ color: C.goldPale }}
-              animate={{ opacity:[0.8,1,0.8] }}
-              transition={{ duration:2.5, repeat:Infinity }}
+              animate={{ opacity:[0.85, 1, 0.85], textShadow: ['0px 0px 0px rgba(248,187,217,0)', '0px 0px 15px rgba(248,187,217,0.5)', '0px 0px 0px rgba(248,187,217,0)'] }}
+              transition={{ duration:3, repeat:Infinity, ease: "easeInOut" }}
             >
               Jewellers
             </motion.em>
@@ -472,68 +521,56 @@ export default function PrivateCatalogue() {
 
           {/* Collection name */}
           <motion.div
-            initial={{ opacity:0, scale:0.9 }}
-            animate={{ opacity:1, scale:1 }}
-            transition={{ delay:0.35, duration:0.7 }}
+            initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} transition={{ delay:0.45, duration:0.7 }}
             className="mt-3 flex items-center gap-3"
           >
-            <div className="h-px w-10" style={{ background:`rgba(248,187,217,0.4)` }} />
+            <motion.div initial={{ width: 0 }} animate={{ width: 40 }} transition={{ delay: 0.7, duration: 0.8 }} className="h-px" style={{ background:`rgba(248,187,217,0.4)` }} />
             <span className="font-cinzel text-xs tracking-[0.4em]" style={{ color: C.goldPale }}>
               {catLabel.toUpperCase()} COLLECTION
             </span>
-            <div className="h-px w-10" style={{ background:`rgba(248,187,217,0.4)` }} />
+            <motion.div initial={{ width: 0 }} animate={{ width: 40 }} transition={{ delay: 0.7, duration: 0.8 }} className="h-px" style={{ background:`rgba(248,187,217,0.4)` }} />
           </motion.div>
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity:0, y:16 }}
-            animate={{ opacity:1, y:0 }}
-            transition={{ delay:0.45, duration:0.7 }}
+            initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.55, duration:0.7 }}
             className="font-raleway text-sm mt-4 max-w-md"
-            style={{ color:'rgba(255,255,255,0.55)' }}
+            style={{ color:'rgba(255,255,255,0.6)' }}
           >
             Handpicked exclusively for you. Each piece crafted with love &amp; heritage.
           </motion.p>
 
           {/* Countdown pill */}
           <motion.div
-            initial={{ opacity:0, y:16 }}
-            animate={{ opacity:1, y:0 }}
-            transition={{ delay:0.55, duration:0.6 }}
-            className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-full"
-            style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
-                     backdropFilter:'blur(8px)' }}
+            initial={{ opacity:0, y:16, scale: 0.9 }} animate={{ opacity:1, y:0, scale: 1 }} transition={{ delay:0.65, type: "spring", stiffness: 200, damping: 20 }}
+            className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-full relative overflow-hidden"
+            style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.2)', backdropFilter:'blur(10px)' }}
           >
-            <motion.div
-              animate={{ scale:[1,1.2,1] }}
-              transition={{ duration:1, repeat:Infinity }}
-            >
+            <motion.div animate={{ scale:[1,1.2,1] }} transition={{ duration:1, repeat:Infinity }}>
               <Clock size={14} style={{ color: urgentColor }} />
             </motion.div>
             <span className="font-cinzel text-sm font-bold tabular-nums" style={{ color: urgentColor }}>
               {formatTime(timeLeft)}
             </span>
-            <span className="font-raleway text-xs" style={{ color:'rgba(255,255,255,0.4)' }}>
+            <span className="font-raleway text-xs" style={{ color:'rgba(255,255,255,0.5)' }}>
               remaining
             </span>
           </motion.div>
 
           {/* Lock badge */}
           <motion.div
-            initial={{ opacity:0 }}
-            animate={{ opacity:1 }}
-            transition={{ delay:0.7 }}
+            initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.8, duration: 1 }}
             className="mt-4 flex items-center gap-1.5"
           >
-            <Lock size={11} style={{ color:'rgba(255,255,255,0.3)' }} />
-            <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:'rgba(255,255,255,0.3)' }}>
+            <Lock size={11} style={{ color:'rgba(255,255,255,0.35)' }} />
+            <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:'rgba(255,255,255,0.35)' }}>
               PRIVATE CATALOGUE · CONFIDENTIAL
             </span>
           </motion.div>
         </motion.div>
 
         {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-12 overflow-hidden z-10">
           <svg viewBox="0 0 1200 48" preserveAspectRatio="none" className="w-full h-full">
             <path d="M0,48 C300,0 900,0 1200,48 L1200,48 L0,48 Z" fill={C.bg} />
           </svg>
@@ -541,15 +578,18 @@ export default function PrivateCatalogue() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          STICKY NAV HEADER (appears on scroll)
+          STICKY NAV HEADER
       ══════════════════════════════════════════════════════════ */}
       <motion.div
         className="sticky top-0 z-40 backdrop-blur-md shadow-sm"
-        style={{ background:'rgba(255,245,247,0.97)', borderBottom:`1px solid ${C.border}` }}
+        style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
       >
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center"
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-md"
                  style={{ background:`linear-gradient(135deg, ${C.gold}, ${C.goldDk})` }}>
               <Diamond size={12} className="text-white" />
             </div>
@@ -577,51 +617,49 @@ export default function PrivateCatalogue() {
           className="h-0.5"
           style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldLt})`,
                    width:`${Math.max(0, Math.min(100, (timeLeft/3600000)*100))}%`,
-                   transition:'width 1s linear' }}
+                   transition:'width 1s linear', boxShadow: `0 0 8px ${C.goldLt}` }}
         />
       </motion.div>
 
       {/* ══════════════════════════════════════════════════════════
           BODY
       ══════════════════════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
 
         {/* ── STOCK SUMMARY CARDS ── */}
         <motion.div
-          initial={{ opacity:0, y:24 }}
-          animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.1, duration:0.6 }}
+          initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7, ease: "easeOut" }}
           className="grid grid-cols-2 gap-4 mb-8"
         >
           {/* Ready Stock */}
           <motion.button
-            whileHover={{ y:-4, boxShadow:'0 8px 28px rgba(46,125,50,0.22)' }}
+            whileHover={{ y:-4, scale: 1.01, boxShadow:'0 12px 30px rgba(46,125,50,0.25)' }}
             whileTap={{ scale:0.97 }}
             onClick={() => setActiveFilter(f => f === 'ready' ? 'all' : 'ready')}
-            className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300"
+            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
             style={{
               background: activeFilter === 'ready' ? C.green : C.greenBg,
               border:`2px solid ${activeFilter === 'ready' ? C.green : 'rgba(46,125,50,0.2)'}`,
-              boxShadow: activeFilter === 'ready' ? '0 6px 24px rgba(46,125,50,0.3)' : 'none',
             }}
           >
+            {/* Glass Sheen */}
+            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
+            
             <motion.div
-              animate={activeFilter === 'ready' ? { scale:[1,1.1,1] } : {}}
-              transition={{ duration:1.5, repeat:Infinity }}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+              animate={activeFilter === 'ready' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
               style={{ background: activeFilter === 'ready' ? 'rgba(255,255,255,0.2)' : 'rgba(46,125,50,0.12)' }}
             >
               <Package size={20} style={{ color: activeFilter === 'ready' ? '#fff' : C.green }} />
             </motion.div>
-            <div>
+            <div className="relative z-10">
               <p className="font-cinzel text-[9px] tracking-[0.25em]"
-                 style={{ color: activeFilter === 'ready' ? 'rgba(255,255,255,0.7)' : '#4a7c59' }}>
+                 style={{ color: activeFilter === 'ready' ? 'rgba(255,255,255,0.8)' : '#4a7c59' }}>
                 READY STOCK
               </p>
               <motion.p
-                key={readyCount}
-                initial={{ scale:1.2, opacity:0.6 }}
-                animate={{ scale:1, opacity:1 }}
+                key={readyCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
                 className="font-cormorant text-3xl font-bold leading-none mt-0.5"
                 style={{ color: activeFilter === 'ready' ? '#fff' : C.green }}
               >
@@ -636,33 +674,33 @@ export default function PrivateCatalogue() {
 
           {/* Ordered Stock */}
           <motion.button
-            whileHover={{ y:-4, boxShadow:`0 8px 28px rgba(194,24,91,0.22)` }}
+            whileHover={{ y:-4, scale: 1.01, boxShadow:`0 12px 30px rgba(194,24,91,0.25)` }}
             whileTap={{ scale:0.97 }}
             onClick={() => setActiveFilter(f => f === 'ordered' ? 'all' : 'ordered')}
-            className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300"
+            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
             style={{
               background: activeFilter === 'ordered' ? C.gold : `rgba(194,24,91,0.06)`,
               border:`2px solid ${activeFilter === 'ordered' ? C.gold : C.border}`,
-              boxShadow: activeFilter === 'ordered' ? `0 6px 24px rgba(194,24,91,0.3)` : 'none',
             }}
           >
+            {/* Glass Sheen */}
+            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
+
             <motion.div
-              animate={activeFilter === 'ordered' ? { scale:[1,1.1,1] } : {}}
-              transition={{ duration:1.5, repeat:Infinity }}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+              animate={activeFilter === 'ordered' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
               style={{ background: activeFilter === 'ordered' ? 'rgba(255,255,255,0.2)' : `rgba(194,24,91,0.10)` }}
             >
               <ShoppingBag size={20} style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }} />
             </motion.div>
-            <div>
+            <div className="relative z-10">
               <p className="font-cinzel text-[9px] tracking-[0.25em]"
-                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.7)' : C.textMid }}>
+                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.8)' : C.textMid }}>
                 ORDERED STOCK
               </p>
               <motion.p
-                key={orderedCount}
-                initial={{ scale:1.2, opacity:0.6 }}
-                animate={{ scale:1, opacity:1 }}
+                key={orderedCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
                 className="font-cormorant text-3xl font-bold leading-none mt-0.5"
                 style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }}
               >
@@ -678,64 +716,71 @@ export default function PrivateCatalogue() {
 
         {/* ── SEARCH + FILTER ROW ── */}
         <motion.div
-          initial={{ opacity:0, y:20 }}
-          animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.2, duration:0.6 }}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6"
+          initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true }} transition={{ delay:0.2, duration:0.6 }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 relative z-10"
         >
           {/* Search */}
-          <div className="relative flex-1">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: C.textLight }} />
+          <div className="relative flex-1 group">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300" style={{ color: searchQuery ? C.gold : C.textLight }} />
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search by name, category or tag…"
-              className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-shadow focus:shadow-md"
+              className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-all duration-300"
               style={{ background:'#fff', border:`1.5px solid ${C.border}`, color: C.text,
-                       boxShadow:'0 1px 6px rgba(194,24,91,0.06)' }}
+                       boxShadow:'0 2px 10px rgba(194,24,91,0.05)' }}
             />
             <AnimatePresence>
               {searchQuery && (
                 <motion.button
-                  initial={{ opacity:0, scale:0.8 }}
-                  animate={{ opacity:1, scale:1 }}
-                  exit={{ opacity:0, scale:0.8 }}
+                  initial={{ opacity:0, scale:0.8, rotate: -90 }}
+                  animate={{ opacity:1, scale:1, rotate: 0 }}
+                  exit={{ opacity:0, scale:0.8, rotate: 90 }}
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-rose-50 p-1 rounded-full"
                 >
-                  <X size={14} style={{ color: C.textLight }} />
+                  <X size={13} style={{ color: C.gold }} />
                 </motion.button>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Filter tabs */}
-          <div className="flex rounded-xl overflow-hidden"
-               style={{ border:`1.5px solid ${C.border}`, background:'#fff' }}>
-            {(['all','ready','ordered'] as const).map(f => (
-              <motion.button
-                key={f}
-                onClick={() => setActiveFilter(f)}
-                whileTap={{ scale:0.95 }}
-                className="flex-1 px-3 sm:px-4 py-2.5 font-cinzel text-[9px] tracking-[0.2em] transition-all duration-300 whitespace-nowrap"
-                style={{
-                  background: activeFilter === f
-                    ? f === 'ready' ? C.green : f === 'ordered' ? C.gold : C.goldDk
-                    : 'transparent',
-                  color: activeFilter === f ? '#fff' : C.textLight,
-                }}
-              >
-                {f === 'all' ? 'ALL' : f === 'ready' ? '● READY' : '◆ ORDERED'}
-              </motion.button>
-            ))}
-          </div>
+          {/* Filter tabs - Refactored for fluid LayoutGroup sliding */}
+          <LayoutGroup>
+            <div className="flex rounded-xl overflow-hidden p-1 relative z-0"
+                 style={{ border:`1.5px solid ${C.border}`, background:'#fff', boxShadow: '0 2px 10px rgba(194,24,91,0.05)' }}>
+              {(['all','ready','ordered'] as const).map(f => (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(f)}
+                  className="relative flex-1 px-3 sm:px-4 py-2 font-cinzel text-[9px] tracking-[0.2em] whitespace-nowrap transition-colors duration-300 outline-none"
+                  style={{ color: activeFilter === f ? '#fff' : C.textLight }}
+                >
+                  {/* Active Background Indicator */}
+                  {activeFilter === f && (
+                    <motion.div
+                      layoutId="activeFilterBg"
+                      className="absolute inset-0 rounded-lg -z-10 shadow-sm"
+                      style={{ background: f === 'ready' ? C.green : f === 'ordered' ? C.gold : C.goldDk }}
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center justify-center gap-1.5 font-semibold">
+                     {f === 'ready' && <span className="w-1.5 h-1.5 rounded-full bg-white opacity-80" />}
+                     {f === 'ordered' && <Diamond size={8} className="text-white opacity-80" />}
+                     {f.toUpperCase()}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </LayoutGroup>
 
           {/* WhatsApp */}
           <motion.a
-            whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
+            whileHover={{ scale:1.04, boxShadow: '0 8px 20px rgba(37,211,102,0.3)' }} whileTap={{ scale:0.97 }}
             href="https://wa.me/918377911745?text=Hi!%20I%20am%20viewing%20the%20private%20catalogue."
             target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-2.5 rounded-xl font-raleway flex-shrink-0 shadow-md"
+            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
             style={{ background:'#25D366' }}
           >
             <MessageCircle size={14} /> WhatsApp
@@ -744,7 +789,7 @@ export default function PrivateCatalogue() {
 
         {/* Count */}
         <motion.p
-          initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.3 }}
+          initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once: true }} transition={{ delay:0.4 }}
           className="font-raleway text-xs mb-5"
           style={{ color: C.textLight }}
         >
@@ -777,57 +822,57 @@ export default function PrivateCatalogue() {
             </motion.button>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <motion.div 
+            variants={gridVariants} initial="hidden" animate="show"
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10"
+          >
             <AnimatePresence mode="popLayout">
-              {visibleProducts.map((product, index) => {
+              {visibleProducts.map((product) => {
                 const isReady = (stockMap[product.id] ?? 'ready') === 'ready';
                 return (
                   <motion.div
                     key={product.id}
                     layout
-                    initial={{ opacity:0, y:30, scale:0.95 }}
-                    animate={{ opacity:1, y:0,  scale:1   }}
-                    exit={{   opacity:0, scale:0.88, transition:{ duration:0.2 } }}
-                    transition={{ delay: Math.min(index * 0.05, 0.4), duration:0.45, ease:[0.22,1,0.36,1] }}
-                    whileHover={{ y:-7, scale:1.025 }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer group"
-                    style={{ boxShadow:'0 2px 12px rgba(194,24,91,0.07)' }}
+                    variants={itemVariants}
+                    whileHover={{ y:-7, scale:1.02, boxShadow: '0 12px 30px rgba(194,24,91,0.15)' }}
+                    className="bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer group flex flex-col relative"
+                    style={{ boxShadow:'0 4px 15px rgba(194,24,91,0.05)', border: `1px solid ${C.bgDeep}` }}
                     onClick={() => setSelectedProduct(product)}
                   >
+                    {/* Glass Sheen on Card Hover */}
+                    <motion.div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                initial={{ x: '-150%', skewX: -20 }} whileHover={{ x: '150%' }} transition={{ duration: 0.8, ease: "easeInOut" }} />
+
                     {/* Image */}
-                    <div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
+                    <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio:'1/1' }}>
                       <motion.img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         onError={(e:any) => { e.target.src = '/bridal.png'; }}
-                        style={{ filter: isReady ? 'none' : 'grayscale(30%) brightness(0.88)' }}
+                        style={{ filter: isReady ? 'none' : 'grayscale(35%) brightness(0.9)' }}
                       />
 
-                      {/* Shimmer on hover */}
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                           style={{ background:'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.18) 60%, transparent 80%)' }} />
+                      {/* Elegant Overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                           style={{ background:'linear-gradient(to top, rgba(136,14,79,0.3) 0%, transparent 60%)' }} />
 
-                      {/* Hover CTA */}
+                      {/* Hover CTA Button */}
                       <motion.div
-                        initial={{ opacity:0 }}
-                        whileHover={{ opacity:1 }}
-                        className="absolute inset-0 flex items-center justify-center"
-                        style={{ background:'rgba(194,24,91,0.12)' }}
+                        initial={{ opacity:0, y: 10 }}
+                        whileHover={{ opacity:1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute inset-0 flex items-center justify-center z-10"
                       >
-                        <motion.div
-                          initial={{ scale:0.8, opacity:0 }}
-                          whileHover={{ scale:1, opacity:1 }}
-                          className="bg-white rounded-full px-5 py-2 flex items-center gap-2 shadow-lg"
-                        >
-                          <span className="font-cinzel text-xs" style={{ color: C.gold }}>VIEW</span>
+                        <div className="bg-white/95 backdrop-blur-sm rounded-full px-5 py-2.5 flex items-center gap-2 shadow-xl border border-white/50">
+                          <span className="font-cinzel text-xs font-bold" style={{ color: C.gold }}>VIEW PIECE</span>
                           <ArrowRight size={12} style={{ color: C.gold }} />
-                        </motion.div>
+                        </div>
                       </motion.div>
 
                       {/* Tag */}
                       <div className="absolute top-3 left-3 z-10">
-                        <span className={`text-xs font-cinzel tracking-wide px-2 py-1 rounded-full shadow-sm ${TAG_COLORS[product.tag] ?? 'bg-gray-100 text-gray-700'}`}>
+                        <span className={`text-[10px] font-cinzel font-bold tracking-wider px-2.5 py-1 rounded-md shadow-sm border border-black/5 ${TAG_COLORS[product.tag] ?? 'bg-gray-100 text-gray-700'}`}>
                           {product.tag}
                         </span>
                       </div>
@@ -835,76 +880,79 @@ export default function PrivateCatalogue() {
                       {/* Sparkle effect for ready items */}
                       {isReady && (
                         <motion.div
-                          className="absolute top-3 right-3"
-                          animate={{ scale:[1,1.2,1], opacity:[0.7,1,0.7] }}
-                          transition={{ duration:2, repeat:Infinity, delay:index*0.2 }}
+                          className="absolute top-3 right-3 z-10 bg-white/80 p-1.5 rounded-full shadow-sm backdrop-blur-sm"
+                          animate={{ scale:[1,1.15,1], opacity:[0.8,1,0.8] }}
+                          transition={{ duration:2.5, repeat:Infinity, ease: "easeInOut" }}
                         >
-                          <Sparkles size={14} style={{ color:'#2E7D32' }} />
+                          <Sparkles size={13} style={{ color:'#2E7D32' }} />
                         </motion.div>
                       )}
                     </div>
 
                     {/* Info */}
-                    <div className="p-4">
-                      <div className="flex items-center gap-1.5 mb-1">
+                    <div className="p-4 sm:p-5 flex-1 flex flex-col">
+                      <div className="flex items-center gap-1.5 mb-1.5">
                         <motion.div
-                          animate={{ scale:[1,1.3,1] }}
-                          transition={{ duration:2.5, repeat:Infinity, delay:index*0.15 }}
+                          animate={{ scale:[1,1.4,1], opacity: [0.7, 1, 0.7] }}
+                          transition={{ duration:3, repeat:Infinity, ease: "easeInOut" }}
                           className="w-1.5 h-1.5 rounded-full"
                           style={{ background: C.gold }}
                         />
-                        <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color: C.gold }}>
+                        <span className="font-cinzel text-[9px] font-bold tracking-[0.2em]" style={{ color: C.gold }}>
                           {product.category.toUpperCase()}
                         </span>
                       </div>
-                      <h3 className="font-cormorant text-lg font-semibold leading-tight" style={{ color: C.text }}>
+                      <h3 className="font-cormorant text-xl font-semibold leading-tight mb-2 group-hover:text-pink-800 transition-colors" style={{ color: C.text }}>
                         {product.name}
                       </h3>
-                      <p className="font-raleway text-xs leading-relaxed mt-1 line-clamp-2" style={{ color: C.textLight }}>
+                      <p className="font-raleway text-xs leading-relaxed mt-auto line-clamp-2" style={{ color: C.textLight }}>
                         {product.description}
                       </p>
 
+                      {/* Divider */}
+                      <div className="h-px w-full my-4" style={{ background: `linear-gradient(to right, transparent, ${C.border}, transparent)` }} />
+
                       {/* CTA */}
                       <motion.button
-                        whileHover={{ scale:1.03 }} whileTap={{ scale:0.97 }}
+                        whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
                         onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
-                        className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-xs font-medium transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-xs font-bold transition-all relative overflow-hidden"
                         style={{
-                          background: isReady ? '#25D366' : `rgba(194,24,91,0.07)`,
+                          background: isReady ? '#25D366' : `rgba(194,24,91,0.04)`,
                           color:      isReady ? '#fff'    : C.gold,
-                          border:     isReady ? 'none'    : `1px solid ${C.border}`,
-                          boxShadow:  isReady ? '0 3px 12px rgba(37,211,102,0.3)' : 'none',
+                          border:     isReady ? 'none'    : `1px solid ${C.goldPale}`,
+                          boxShadow:  isReady ? '0 4px 15px rgba(37,211,102,0.25)' : 'none',
                         }}
                       >
-                        <MessageCircle size={12} />
-                        {isReady ? 'Order on WhatsApp' : 'Enquire'}
+                        <MessageCircle size={14} />
+                        {isReady ? 'Order on WhatsApp' : 'Enquire Now'}
                       </motion.button>
                     </div>
                   </motion.div>
                 );
               })}
             </AnimatePresence>
-          </div>
+          </motion.div>
         )}
 
         {/* ── FOOTER WATERMARK ── */}
         <motion.div
-          initial={{ opacity:0 }} whileInView={{ opacity:1 }}
-          viewport={{ once:true }} transition={{ delay:0.2 }}
-          className="text-center mt-16 pb-8"
+          initial={{ opacity:0, y: 20 }} whileInView={{ opacity:1, y: 0 }}
+          viewport={{ once:true }} transition={{ delay:0.3, duration: 0.8 }}
+          className="text-center mt-20 pb-10"
         >
-          <div className="inline-flex items-center gap-3 mb-3">
-            <div className="h-px w-16" style={{ background: C.border }} />
-            <motion.div animate={{ rotate:360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={14} style={{ color: C.gold }} />
+          <div className="inline-flex items-center gap-4 mb-4">
+            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to right, transparent, ${C.goldLt})` }} />
+            <motion.div animate={{ rotate:360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={16} style={{ color: C.gold }} />
             </motion.div>
-            <span className="font-cinzel text-xs tracking-[0.3em]" style={{ color: C.textLight }}>
-              SHEKHAR RAJA JEWELLERS · PRIVATE
+            <span className="font-cinzel text-xs font-bold tracking-[0.35em]" style={{ color: C.textMid }}>
+              SHEKHAR RAJA JEWELLERS
             </span>
-            <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={14} style={{ color: C.gold }} />
+            <motion.div animate={{ rotate:-360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={16} style={{ color: C.gold }} />
             </motion.div>
-            <div className="h-px w-16" style={{ background: C.border }} />
+            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to left, transparent, ${C.goldLt})` }} />
           </div>
           <p className="font-raleway text-xs" style={{ color: C.textLight }}>
             This catalogue is confidential and intended for the recipient only.
@@ -913,6 +961,6 @@ export default function PrivateCatalogue() {
       </div>
 
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-    </div>
+    </motion.div>
   );
 }
