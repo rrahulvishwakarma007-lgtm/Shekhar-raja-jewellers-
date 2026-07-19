@@ -3,44 +3,44 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles, X, Search, Crown, ShieldCheck } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// ── Palette (matches live site) ───────────────────────────────────────────────
+// ── Palette (Matches Home & PrivateCatalogue) ─────────────────────────────────
 const C = {
-  bg:         '#F5ECD7',
-  bgDeep:     '#EDE0C8',
-  bgCard:     '#FFFDF8',
-  bgDark:     '#2C1A0E',
-  bgDarkMid:  '#3D2510',
-  bgHeroPink: '#F7E3E0',   // soft champagne-rose — hero background
-  bgHeroPinkDeep: '#E8C4C0', // dustier rose for ambient glow accents
-  gold:       '#B8862A',
-  goldLight:  '#D4A843',
-  goldPale:   '#F0D080',
-  goldBorder: 'rgba(184,134,42,0.25)',
-  goldBg:     'rgba(184,134,42,0.08)',
-  text:       '#2C1A0E',
-  textMid:    '#6B4E2A',
-  textLight:  '#9A7B50',
-  border:     'rgba(184,134,42,0.18)',
-  shadow:     'rgba(44,26,14,0.10)',
-  shadowMd:   'rgba(44,26,14,0.18)',
+  bg:         '#FFF5F7',
+  bgDeep:     '#FFE4EC',
+  bgCard:     '#FFFFFF',
+  bgDark:     '#880E4F',
+  bgDarkMid:  '#6D1B4E',
+  bgHeroPink: '#FFF5F7',
+  bgHeroPinkDeep: '#F8BBD9',
+  gold:       '#C2185B',
+  goldLight:  '#E91E8C',
+  goldPale:   '#F8BBD9',
+  goldBorder: 'rgba(194,24,91,0.25)',
+  goldBg:     'rgba(194,24,91,0.08)',
+  text:       '#1A0010',
+  textMid:    '#6D1B4E',
+  textLight:  '#AD6888',
+  border:     'rgba(194,24,91,0.18)',
+  shadow:     'rgba(194,24,91,0.08)',
+  shadowMd:   'rgba(194,24,91,0.15)',
 };
 
-// ── Tag styles ────────────────────────────────────────────────────────────────
+// ── Tag styles (Soft pastels matching PrivateCatalogue) ───────────────────────
 const TAG: Record<string, { bg: string; text: string }> = {
-  'Bestseller':  { bg: '#2C1A0E', text: '#F0D080' },
-  'Premium':     { bg: '#1A1040', text: '#C9A84C' },
-  'Heritage':    { bg: '#3D2510', text: '#F5D490' },
-  'Classic':     { bg: '#1C2B10', text: '#A8D060' },
-  'Exclusive':   { bg: '#2A1040', text: '#C8A8F0' },
-  'Traditional': { bg: '#4A2800', text: '#FFD08A' },
-  'Limited':     { bg: '#3E1010', text: '#F4A0A0' },
-  'Trending':    { bg: '#102040', text: '#90C0FF' },
-  'Bridal Pick': { bg: '#3D0830', text: '#F8A0C8' },
-  'Festive':     { bg: '#1E2800', text: '#C8F080' },
-  'Everyday':    { bg: '#2A2A2A', text: '#D0D0D0' },
-  'New Arrival': { bg: '#003830', text: '#80D8C8' },
-  'Luxury':      { bg: '#1A1400', text: '#FFE080' },
-  'Vintage':     { bg: '#281818', text: '#C8B0A8' },
+  'Bestseller':  { bg: '#dcfce7', text: '#166534' }, // green
+  'Premium':     { bg: '#f3e8ff', text: '#6b21a8' }, // purple
+  'Heritage':    { bg: '#f5f5f4', text: '#44403c' }, // stone
+  'Classic':     { bg: '#fef3c7', text: '#92400e' }, // amber
+  'Exclusive':   { bg: '#ffe4e6', text: '#9f1239' }, // rose
+  'Traditional': { bg: '#ffedd5', text: '#9a3412' }, // orange
+  'Limited':     { bg: '#fee2e2', text: '#991b1b' }, // red
+  'Trending':    { bg: '#dbeafe', text: '#1e40af' }, // blue
+  'Bridal Pick': { bg: '#fce7f3', text: '#9d174d' }, // pink
+  'Festive':     { bg: '#ecfccb', text: '#3f6212' }, // lime
+  'Everyday':    { bg: '#f3f4f6', text: '#1f2937' }, // gray
+  'New Arrival': { bg: '#ccfbf1', text: '#115e59' }, // teal
+  'Luxury':      { bg: '#fef08a', text: '#854d0e' }, // yellow
+  'Vintage':     { bg: '#e7e5e4', text: '#292524' }, // stone-200
 };
 
 // ── Categories ────────────────────────────────────────────────────────────────
@@ -345,7 +345,7 @@ export default function Collections() {
           HERO — cinematic split: copy + rotating spotlight
       ══════════════════════════════════════════════ */}
       <section className="relative overflow-hidden"
-               style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #F9EAE5 50%, ${C.bgDeep} 100%)` }}>
+               style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #FFF0F5 50%, ${C.bgDeep} 100%)` }}>
         {/* Ambient gold wash */}
         <div className="absolute inset-0 opacity-[0.18] pointer-events-none"
              style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 8%, ${C.gold} 0%, transparent 65%)` }} />
@@ -364,7 +364,7 @@ export default function Collections() {
             <div>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                           className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full"
-                          style={{ background: 'rgba(255,253,250,0.55)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
+                          style={{ background: 'rgba(255,255,255,0.65)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
                 <Crown size={11} style={{ color: C.gold }} />
                 <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.textMid }}>
                   EST. 1987 · JABALPUR
@@ -385,7 +385,7 @@ export default function Collections() {
                 third-generation artisans of Shekhar Raja Jewellers.
               </motion.p>
 
-              {/* Trust badge — no numeric counts */}
+              {/* Trust badge */}
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
                           className="flex items-center gap-3">
                 <ShieldCheck size={24} className="flex-shrink-0" style={{ color: C.gold }} />
@@ -408,16 +408,16 @@ export default function Collections() {
                 >
                   <HeroTiltWrapper onClick={() => setSelectedProduct(heroProduct)}>
                     <div className="absolute inset-0 rounded-2xl overflow-hidden"
-                         style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}>
+                         style={{ boxShadow: '0 30px 70px rgba(194,24,91,0.2)' }}>
                       <div style={{ transform: 'translateZ(0px)' }} className="absolute inset-0">
                         <img src={heroProduct.image} alt={heroProduct.name}
                              className="w-full h-full object-cover" />
-                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(20,12,6,0.9) 100%)' }} />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(26,0,16,0.9) 100%)' }} />
                       </div>
 
                       <div className="absolute top-5 left-5" style={{ transform: 'translateZ(34px)' }}>
                         <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
-                              style={{ background: 'rgba(245,236,215,0.92)', color: C.bgDark }}>
+                              style={{ background: 'rgba(255,255,255,0.92)', color: C.bgDark }}>
                           ★ FEATURED
                         </span>
                       </div>
@@ -443,7 +443,7 @@ export default function Collections() {
                           className="h-1 rounded-full transition-all duration-300"
                           style={{
                             width: i === heroIndex ? 24 : 8,
-                            background: i === heroIndex ? C.gold : 'rgba(44,26,14,0.18)',
+                            background: i === heroIndex ? C.gold : 'rgba(194,24,91,0.18)',
                           }} />
                 ))}
               </div>
@@ -481,7 +481,7 @@ export default function Collections() {
                         <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center" style={{ background: C.bgDark }}>
-                          <Sparkles size={18} style={{ color: C.gold }} />
+                          <Sparkles size={18} style={{ color: C.goldPale }} />
                         </div>
                       )}
                     </div>
@@ -569,7 +569,7 @@ export default function Collections() {
 
                         {/* Overlay */}
                         <div className="absolute inset-0 transition-opacity duration-400"
-                             style={{ background: 'linear-gradient(to top, rgba(44,26,14,0.75) 0%, rgba(44,26,14,0.1) 50%, transparent 100%)',
+                             style={{ background: 'linear-gradient(to top, rgba(136,14,79,0.85) 0%, rgba(136,14,79,0.1) 50%, transparent 100%)',
                                       opacity: isHov ? 1 : 0 }} />
                         <div className="absolute top-0 left-0 right-0 h-px transition-opacity duration-400"
                              style={{ background: `linear-gradient(to right, transparent, ${C.gold}, transparent)`,
@@ -587,7 +587,7 @@ export default function Collections() {
                         {product.featured && (
                           <div className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center"
                                style={{ background: `linear-gradient(135deg,${C.gold},${C.goldPale})`, transform: 'translateZ(16px)' }}>
-                            <span className="text-[10px] font-bold" style={{ color: C.bgDark }}>★</span>
+                            <span className="text-[10px] font-bold" style={{ color: C.text }}>★</span>
                           </div>
                         )}
 
@@ -595,7 +595,7 @@ export default function Collections() {
                         <div className="absolute bottom-4 left-4 right-4 transition-all duration-400"
                              style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0) translateZ(20px)' : 'translateY(8px) translateZ(20px)' }}>
                           <div className="flex items-center justify-between backdrop-blur-md rounded-xl px-4 py-2.5"
-                               style={{ background: 'rgba(245,236,215,0.18)', border: '1px solid rgba(245,236,215,0.25)' }}>
+                               style={{ background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.25)' }}>
                             <span className="font-raleway text-xs text-white">View Details</span>
                             <ArrowRight size={13} style={{ color: C.goldPale }} />
                           </div>
