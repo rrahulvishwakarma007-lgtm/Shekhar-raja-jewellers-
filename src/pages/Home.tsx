@@ -280,33 +280,44 @@ export default function Home() {
 
         {/* ── PROMO HERO BANNER (auto-rotating) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          {/* Added a skeleton shimmer background directly to the container so it never looks blank */}
-          <div className="relative rounded-3xl overflow-hidden h-[240px] sm:h-[340px] md:h-[460px] lg:h-[520px] bg-[#FFE4EC]" style={{ perspective: 1500 }}>
+          {/* Increased container height significantly for desktop (md, lg, xl breakpoints) to prevent heavy top/bottom cropping */}
+          <div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] bg-[#FFE4EC]" style={{ perspective: 1500 }}>
             
             {/* Shimmer effect stays active underneath images until they cover it */}
             <div className="absolute inset-0 animate-pulse bg-[#F8BBD9]/30" />
 
+            {/* Static fallback for the very first image to ensure instant loading (bypasses Framer Motion initial calculation) */}
+            <img 
+              src={promoBanners[0].img} 
+              alt={promoBanners[0].label} 
+              className="absolute inset-0 w-full h-full object-cover object-center z-0" 
+              style={{ opacity: promoBanner === 0 ? 1 : 0, transition: 'opacity 0.8s ease' }}
+              loading="eager"
+            />
+
             {/* Render all banners instantly to force immediate browser downloads */}
             {promoBanners.map((banner, i) => (
-              <motion.div 
-                key={i} 
-                className="absolute inset-0"
-                initial={false}
-                animate={{ 
-                  rotateY: i === promoBanner ? 0 : (i < promoBanner ? -90 : 90),
-                  opacity: i === promoBanner ? 1 : 0,
-                  zIndex: i === promoBanner ? 10 : 0
-                }}
-                style={{ transformOrigin: "left center", backfaceVisibility: "hidden", pointerEvents: i === promoBanner ? 'auto' : 'none' }}
-                transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-              >
-                <img 
-                  src={banner.img} 
-                  alt={banner.label} 
-                  className="w-full h-full object-cover object-center" 
-                  loading={i === 0 ? "eager" : "lazy"}
-                />
-              </motion.div>
+              i !== 0 && (
+                <motion.div 
+                  key={i} 
+                  className="absolute inset-0"
+                  initial={false}
+                  animate={{ 
+                    rotateY: i === promoBanner ? 0 : (i < promoBanner ? -90 : 90),
+                    opacity: i === promoBanner ? 1 : 0,
+                    zIndex: i === promoBanner ? 10 : 0
+                  }}
+                  style={{ transformOrigin: "left center", backfaceVisibility: "hidden", pointerEvents: i === promoBanner ? 'auto' : 'none' }}
+                  transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+                >
+                  <img 
+                    src={banner.img} 
+                    alt={banner.label} 
+                    className="w-full h-full object-cover object-center" 
+                    loading="lazy"
+                  />
+                </motion.div>
+              )
             ))}
 
             {/* Dot indicators */}
