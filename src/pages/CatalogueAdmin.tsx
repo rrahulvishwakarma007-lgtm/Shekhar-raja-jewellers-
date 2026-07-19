@@ -1,5 +1,5 @@
 // src/pages/CatalogueAdmin.tsx
-// Dependency: npm install react-qr-code  (supports React 19)
+// Dependency: npm install react-qr-code
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QRCode from 'react-qr-code';
@@ -26,7 +26,7 @@ const C = {
 
 const CATEGORIES = [
   { key:'bangles',     label:'Bangles',      icon:'📿' },
-  { key:'rings',       label:'Rings',        icon:'💍' }, // Retained for backwards compatibility on active links
+  { key:'rings',       label:'Rings',        icon:'💍' }, // Retained for backwards compatibility
   { key:'womens_ring', label:"Women's Ring", icon:'💍' },
   { key:'mens_ring',   label:"Men's Ring",   icon:'💍' },
   { key:'necklaces',   label:'Necklaces',    icon:'✨' },
@@ -56,7 +56,6 @@ function buildLink(token: string) {
   return `${window.location.origin}/catalogue?token=${token}`;
 }
 
-// ── Download QR from the div wrapper ─────────────────────────────────────────
 function downloadQRFromDiv(divEl: HTMLDivElement | null, filename: string) {
   if (!divEl) return;
   const svgEl = divEl.querySelector('svg');
@@ -105,10 +104,8 @@ export default function CatalogueAdmin() {
   const [stockMap,      setStockMap]      = useState<Record<string,StockStatus>>(() => loadStockMap());
   const [stockFilter,   setStockFilter]   = useState<'all'|'ready'|'ordered'>('all');
 
-  // ref on the div wrapper — works with react-qr-code
   const qrWrapRef = useRef<HTMLDivElement>(null);
 
-  // Persist stock changes
   const updateStock = (id: string, status: StockStatus) => {
     const next = { ...stockMap, [id]: status };
     setStockMap(next);
@@ -162,34 +159,35 @@ export default function CatalogueAdmin() {
     const svgEl    = qrWrapRef.current?.querySelector('svg');
     const svgData  = svgEl ? new XMLSerializer().serializeToString(svgEl) : '';
     const win      = window.open('', '_blank')!;
-    win.document.write(`
-      <html><head><title>SRJ Catalogue QR</title>
-      <style>
-        body{font-family:Georgia,serif;text-align:center;padding:40px;background:#fff;}
-        .logo{font-size:28px;font-weight:bold;color:#880E4F;letter-spacing:4px;}
-        .sub{font-size:12px;letter-spacing:8px;color:#AD6888;margin-top:4px;}
-        svg{width:280px;height:280px;margin:30px auto;display:block;}
-        .cat{font-size:22px;font-weight:bold;color:#1A0010;margin:16px 0 6px;}
-        .info{font-size:13px;color:#6D1B4E;}
-        .scan{font-size:14px;color:#AD6888;margin-top:20px;}
-        .box{border:2px solid #F8BBD9;border-radius:20px;padding:30px;max-width:360px;margin:0 auto;}
-      </style></head>
-      <body>
-        <div class="box">
-          <div class="logo">SHEKHAR RAJA</div>
-          <div class="sub">JEWELLERS</div>
-          ${svgData}
-          <div class="cat">${catLabel} Collection</div>
-          <div class="info">Private Catalogue · Expires in ${durLabel}</div>
-          <div class="scan">📱 Scan QR code to view the collection</div>
-        </div>
-        <script>window.onload=()=>window.print();</script>
-      </body></html>
-    `);
+    
+    // Extracted HTML structure to prevent compiler confusion
+    const htmlStart = `<html><head><title>SRJ Catalogue QR</title>`;
+    const htmlStyles = `<style>
+      body{font-family:Georgia,serif;text-align:center;padding:40px;background:#fff;}
+      .logo{font-size:28px;font-weight:bold;color:#880E4F;letter-spacing:4px;}
+      .sub{font-size:12px;letter-spacing:8px;color:#AD6888;margin-top:4px;}
+      svg{width:280px;height:280px;margin:30px auto;display:block;}
+      .cat{font-size:22px;font-weight:bold;color:#1A0010;margin:16px 0 6px;}
+      .info{font-size:13px;color:#6D1B4E;}
+      .scan{font-size:14px;color:#AD6888;margin-top:20px;}
+      .box{border:2px solid #F8BBD9;border-radius:20px;padding:30px;max-width:360px;margin:0 auto;}
+    </style></head>`;
+    const htmlBody = `<body>
+      <div class="box">
+        <div class="logo">SHEKHAR RAJA</div>
+        <div class="sub">JEWELLERS</div>
+        ${svgData}
+        <div class="cat">${catLabel} Collection</div>
+        <div class="info">Private Catalogue · Expires in ${durLabel}</div>
+        <div class="scan">📱 Scan QR code to view the collection</div>
+      </div>
+      <script>window.onload=()=>window.print();</script>
+    </body></html>`;
+
+    win.document.write(htmlStart + htmlStyles + htmlBody);
     win.document.close();
   };
 
-  // ── LOGIN ─────────────────────────────────────────────────────────────────
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: C.bg }}>
@@ -232,7 +230,6 @@ export default function CatalogueAdmin() {
     );
   }
 
-  // ── ADMIN PANEL ───────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen pt-8 pb-16 px-4" style={{ background: C.bg }}>
       <div className="max-w-2xl mx-auto">
@@ -249,7 +246,6 @@ export default function CatalogueAdmin() {
           </p>
         </div>
 
-        {/* ── Tab switcher ── */}
         <div className="flex gap-2 p-1 rounded-2xl mb-5 bg-white shadow-sm" style={{ border:`1px solid ${C.border}` }}>
           {[
             { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
@@ -267,12 +263,8 @@ export default function CatalogueAdmin() {
           ))}
         </div>
 
-        {/* ════════════════════════════════════
-            STOCK MANAGER TAB
-        ════════════════════════════════════ */}
         {activeTab === 'stock' && (
-          <div>
-            {/* Summary pills */}
+          <div className="w-full">
             <div className="grid grid-cols-3 gap-3 mb-5">
               {[
                 { label:'Total',   count: ALL_PRODUCTS_FLAT.length,                                               color: C.textMid  },
@@ -286,7 +278,6 @@ export default function CatalogueAdmin() {
               ))}
             </div>
 
-            {/* Filter + reset */}
             <div className="flex items-center gap-2 mb-4 flex-wrap">
               {(['all','ready','ordered'] as const).map(f => (
                 <button key={f} onClick={() => setStockFilter(f)}
@@ -306,7 +297,6 @@ export default function CatalogueAdmin() {
               </button>
             </div>
 
-            {/* Product rows grouped by category */}
             {CATEGORIES.map(cat => {
               const catProducts = ALL_PRODUCTS_FLAT.filter(p => {
                 if (p.category.toLowerCase() !== cat.key && p.category.toLowerCase() !== cat.label.toLowerCase()) return false;
@@ -331,7 +321,6 @@ export default function CatalogueAdmin() {
                              className="flex items-center justify-between px-4 py-3"
                              style={{ borderBottom: idx < catProducts.length-1 ? `1px solid ${C.border}` : 'none' }}>
                           <div className="flex items-center gap-3 min-w-0">
-                            {/* Status dot */}
                             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                                  style={{ background: isReady ? '#4CAF50' : C.gold }} />
                             <div className="min-w-0">
@@ -340,7 +329,6 @@ export default function CatalogueAdmin() {
                             </div>
                           </div>
 
-                          {/* Status badge + toggle button */}
                           <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                             <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
                                   style={{
@@ -358,9 +346,11 @@ export default function CatalogueAdmin() {
                                 border:     `1px solid ${isReady ? C.border : 'rgba(76,175,80,0.3)'}`,
                               }}
                             >
-                              {isReady
-                                ? <><ShoppingBag size={11}/> Mark Ordered</>
-                                : <><CheckCircle2 size={11}/> Mark Ready</>}
+                              {isReady ? (
+                                <span className="flex items-center gap-1"><ShoppingBag size={11}/> Mark Ordered</span>
+                              ) : (
+                                <span className="flex items-center gap-1"><CheckCircle2 size={11}/> Mark Ready</span>
+                              )}
                             </button>
                           </div>
                         </div>
@@ -383,17 +373,19 @@ export default function CatalogueAdmin() {
           </div>
         )}
 
-        {/* ════════════════════════════════════
-            LINK GENERATOR TAB
-        ════════════════════════════════════ */}
-        {activeTab === 'links' && (<>
-        <div>
-
-        {/* Generator card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border:`1px solid ${C.border}` }}>
-
-          <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
-            SELECT CATEGORY
-          </label>
-          <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
-            {CATEGOR
+        {activeTab === 'links' && (
+        <div className="w-full">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border:`1px solid ${C.border}` }}>
+            <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
+              SELECT CATEGORY
+            </label>
+            <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
+              {CATEGORIES.map(cat => (
+                <button key={cat.key} onClick={() => setCategory(cat.key)}
+                        className="flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all"
+                        style={{
+                          border:`1.5px solid ${category === cat.key ? C.gold : C.border}`,
+                          background: category === cat.key ? 'rgba(194,24,91,0.07)' : '#FFF5F7',
+                        }}>
+                  <span className="text-lg">{cat.icon}</span>
+                  <span className="font-cinzel text-[9px] tracking-wide leading-tight text-
