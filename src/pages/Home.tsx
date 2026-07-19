@@ -21,11 +21,6 @@ const C = {
 };
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
-// ── Hero Slides — UPDATED ─────────────────────────────────────────────────────
-// Replace your existing heroSlides array with this one.
-// Images are now named hero-1.jpg, hero-2.jpg, hero-3.jpg, hero-4.jpg
-// matching the filenames visible in your public folder.
-
 const heroSlides = [
   {
     id:       1,
@@ -45,9 +40,7 @@ const heroSlides = [
     subtitle: 'Make your special day unforgettable with our bridal treasures',
     category: 'Bridal',
   },
-  
 ];
-
 
 // ── Categories ────────────────────────────────────────────────────────────────
 const categories = [
@@ -71,12 +64,12 @@ const collections = [
 
 // ── Products ──────────────────────────────────────────────────────────────────
 const products = [
-  { id:1, name:'Bridal Chain',           category:'Bridal',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/bridal.png',     tag:'Bestseller' },
+  { id:1, name:'Bridal Chain',            category:'Bridal',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/bridal.png',     tag:'Bestseller' },
   { id:2, name:'Diamond Eternity Ring',  category:'Diamond',  description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring6.png',      tag:'Premium'    },
   { id:3, name:'Antique Gold Jhumkas',   category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png', tag:'Heritage'   },
   { id:4, name:'22KT Gold Bangles Set',  category:'Bangles',  description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle5.png',    tag:'Classic'    },
-  { id:5, name:'Polki Diamond Ring',     category:'Rings',    description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring7.png',      tag:'Exclusive'  },
-  { id:6, name:'Temple Gold Haar',       category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png', tag:'Traditional'},
+  { id:5, name:'Polki Diamond Ring',     category:'Rings',    description:'Uncut polki diamonds set in 22KT gold with a classic design.',                     image:'/ring7.png',      tag:'Exclusive'  },
+  { id:6, name:'Temple Gold Haar',       category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',               image:'/necklace88.png', tag:'Traditional'},
   { id:7, name:'Antique Earrings Set',   category:'Antique',  description:'Exquisite antique finish jewellery with traditional craftsmanship.',               image:'/earring5.jpg',   tag:'Limited'    },
   { id:8, name:'Festive Gold Set',       category:'Festive',  description:'Elegant gold set perfect for festive occasions and celebrations.',                  image:'/chain4.png',     tag:'Trending'   },
 ];
@@ -188,6 +181,14 @@ export default function Home() {
   const [promoBanner, setPromoBanner]        = useState(0);
   const [searchQuery, setSearchQuery]        = useState('');
 
+  // Preload all banner images immediately on mount
+  useEffect(() => {
+    promoBanners.forEach(banner => {
+      const img = new Image();
+      img.src = banner.img;
+    });
+  }, []);
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentSlide(p => (p + 1) % heroSlides.length), 4500);
     return () => clearInterval(timer);
@@ -198,12 +199,8 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => setCurrentSlide(p => (p + 1) % heroSlides.length);
-  const prevSlide = () => setCurrentSlide(p => (p - 1 + heroSlides.length) % heroSlides.length);
-
   return (
     <div style={{ background: C.bg }} className="pt-20">
-
 
       {/* ══════════════════════════════════════════════════════════════
           HERO — CaratLane style: light bg, search, category row, promo
@@ -257,7 +254,7 @@ export default function Home() {
                   initial={{ opacity:0, y:16 }}
                   animate={{ opacity:1, y:0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="relative overflow-hidden rounded-2xl"
+                  className="relative overflow-hidden rounded-2xl bg-white"
                   style={{
                     width: 90, height: 90,
                     border: `1.5px solid ${C.border}`,
@@ -283,29 +280,42 @@ export default function Home() {
 
         {/* ── PROMO HERO BANNER (auto-rotating) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          <div className="relative rounded-3xl overflow-hidden h-[240px] sm:h-[340px] md:h-[460px] lg:h-[520px]" style={{ perspective: 1500 }}>
-            <AnimatePresence mode="wait">
-              {promoBanners.map((banner, i) =>
-                i === promoBanner && (
-                  <motion.div key={i} className="absolute inset-0"
-                    initial={{ rotateY: 90, opacity: 0 }}
-                    animate={{ rotateY: 0, opacity: 1 }}
-                    exit={{ rotateY: -90, opacity: 0 }}
-                    style={{ transformOrigin: "left center", backfaceVisibility: "hidden" }}
-                    transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}>
-                    <img src={banner.img} alt={banner.label} className="w-full h-full object-cover object-center" />
-                  </motion.div>
-                )
-              )}
-            </AnimatePresence>
+          {/* Added a skeleton shimmer background directly to the container so it never looks blank */}
+          <div className="relative rounded-3xl overflow-hidden h-[240px] sm:h-[340px] md:h-[460px] lg:h-[520px] bg-[#FFE4EC]" style={{ perspective: 1500 }}>
+            
+            {/* Shimmer effect stays active underneath images until they cover it */}
+            <div className="absolute inset-0 animate-pulse bg-[#F8BBD9]/30" />
+
+            {/* Render all banners instantly to force immediate browser downloads */}
+            {promoBanners.map((banner, i) => (
+              <motion.div 
+                key={i} 
+                className="absolute inset-0"
+                initial={false}
+                animate={{ 
+                  rotateY: i === promoBanner ? 0 : (i < promoBanner ? -90 : 90),
+                  opacity: i === promoBanner ? 1 : 0,
+                  zIndex: i === promoBanner ? 10 : 0
+                }}
+                style={{ transformOrigin: "left center", backfaceVisibility: "hidden", pointerEvents: i === promoBanner ? 'auto' : 'none' }}
+                transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+              >
+                <img 
+                  src={banner.img} 
+                  alt={banner.label} 
+                  className="w-full h-full object-cover object-center" 
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              </motion.div>
+            ))}
 
             {/* Dot indicators */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
               {promoBanners.map((_, i) => (
                 <button key={i} onClick={() => setPromoBanner(i)}
                         className="rounded-full transition-all duration-300"
                         style={{ width: i === promoBanner ? 28 : 8, height:8,
-                                 background: i === promoBanner ? C.gold : 'rgba(184,134,42,0.3)' }} />
+                                 background: i === promoBanner ? C.gold : 'rgba(184,134,42,0.4)' }} />
               ))}
             </div>
           </div>
@@ -334,7 +344,6 @@ export default function Home() {
 
       </section>
       {/* ══ END HERO ══ */}
-
 
       {/* ══ FEATURED COLLECTIONS ══ */}
       <section className="py-20 relative overflow-hidden" style={{ background: C.bgDeep }}>
