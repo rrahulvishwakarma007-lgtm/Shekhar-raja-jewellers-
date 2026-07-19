@@ -2,6 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 
+// ── Palette (Matching Home.tsx) ───────────────────────────────────────────────
+const C = {
+  bg:        '#FFF5F7',
+  bgCard:    '#FFFFFF',
+  bgDeep:    '#FFE4EC',
+  gold:      '#C2185B',
+  goldDk:    '#880E4F',
+  goldLt:    '#E91E8C',
+  goldPale:  '#F8BBD9',
+  text:      '#1A0010',
+  textMid:   '#6D1B4E',
+  textLight: '#AD6888',
+  border:    'rgba(194,24,91,0.15)',
+  borderMd:  'rgba(194,24,91,0.30)',
+};
+
 // ── YOUR GOLDAPI.IO KEY — get free key at goldapi.io ─────────────────────────
 const GOLD_API_KEY = 'YOUR_GOLDAPI_IO_KEY_HERE';
 
@@ -22,12 +38,12 @@ const purityGuide = [
 ];
 
 export default function GoldRates() {
-  const [baseRate,     setBaseRate]     = useState(0);   // anchored 24K rate
+  const [baseRate,      setBaseRate]      = useState(0);   // anchored 24K rate
   const [displayRate,  setDisplayRate]  = useState(0);   // flickering display rate
   const [history,      setHistory]      = useState<{ id: number; date: string; rate_24k: number }[]>([]);
   const [loading,      setLoading]      = useState(true);
   const [isAdmin,      setIsAdmin]      = useState(false);
-  const [password,     setPassword]     = useState('');
+  const [password,      setPassword]      = useState('');
   const [showModal,    setShowModal]    = useState(false);
   const [newRate,      setNewRate]      = useState('');
   const [saving,       setSaving]       = useState(false);
@@ -39,12 +55,12 @@ export default function GoldRates() {
   const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── Auto-calculated rates from 24K base ──────────────────────────────────
-const calculatedRates = {
-  '22K': Math.round(displayRate * PURITY_RATIOS['22K']),
-  '20K': Math.round(displayRate * PURITY_RATIOS['20K']),
-  '18K': Math.round(displayRate * PURITY_RATIOS['18K']),
-  '14K': Math.round(displayRate * PURITY_RATIOS['14K']),
-};
+  const calculatedRates = {
+    '22K': Math.round(displayRate * PURITY_RATIOS['22K']),
+    '20K': Math.round(displayRate * PURITY_RATIOS['20K']),
+    '18K': Math.round(displayRate * PURITY_RATIOS['18K']),
+    '14K': Math.round(displayRate * PURITY_RATIOS['14K']),
+  };
 
   // ── Micro-flicker (±1 or ±2) to feel live ────────────────────────────────
   const startFlicker = (base: number) => {
@@ -194,7 +210,7 @@ const calculatedRates = {
       </span>
     );
     if (liveSource === 'manual') return (
-      <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">
+      <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full" style={{ background: C.goldPale, color: C.goldDk }}>
         Live Rates
       </span>
     );
@@ -202,16 +218,16 @@ const calculatedRates = {
   };
 
   if (loading) return (
-    <div className="pt-32 pb-16 min-h-screen flex items-center justify-center bg-[#e8e0d0]">
+    <div className="pt-32 pb-16 min-h-screen flex items-center justify-center" style={{ background: C.bg }}>
       <div className="text-center">
-        <RefreshCw size={40} className="text-[#b8862a] animate-spin mx-auto" />
-        <p className="font-raleway text-[#9a8060] mt-4">Fetching live gold rates…</p>
+        <RefreshCw size={40} className="animate-spin mx-auto" style={{ color: C.gold }} />
+        <p className="font-raleway mt-4" style={{ color: C.textLight }}>Fetching live gold rates…</p>
       </div>
     </div>
   );
 
   return (
-    <div className="pt-28 pb-16 bg-[#e8e0d0] min-h-screen">
+    <div className="pt-28 pb-16 min-h-screen" style={{ background: C.bg }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── HEADER ── */}
@@ -221,15 +237,15 @@ const calculatedRates = {
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-3 mb-4"
           >
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-            <span className="font-cinzel text-xs tracking-[0.25em] text-[#b8862a]">LIVE RATES</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
+            <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${C.gold})` }} />
+            <span className="font-cinzel text-xs tracking-[0.25em]" style={{ color: C.gold }}>LIVE RATES</span>
+            <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${C.gold})` }} />
           </motion.div>
 
-          <h1 className="font-cormorant text-4xl sm:text-5xl font-bold text-[#3a2e1e]">
+          <h1 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>
             Today's Gold Rates
           </h1>
-          <p className="font-raleway text-[#9a8060] mt-4">
+          <p className="font-raleway mt-4" style={{ color: C.textLight }}>
             Rates per 10 gram in INR
           </p>
 
@@ -237,7 +253,7 @@ const calculatedRates = {
           <div className="flex flex-col items-center gap-2 mt-4">
             <SourceBadge />
             {lastUpdated && (
-              <div className="flex items-center gap-2 text-sm text-[#9a8060]">
+              <div className="flex items-center gap-2 text-sm" style={{ color: C.textLight }}>
                 <RefreshCw size={13} className={fetchingLive ? 'animate-spin' : ''} />
                 <span>
                   {formatDate(lastUpdated)}
@@ -259,7 +275,8 @@ const calculatedRates = {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-3xl p-8 mb-8 text-center text-white shadow-xl relative overflow-hidden"
+          className="rounded-3xl p-8 mb-8 text-center text-white shadow-xl relative overflow-hidden"
+          style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
         >
           {/* Live pulse dot */}
           {liveSource === 'api' && (
@@ -282,9 +299,7 @@ const calculatedRates = {
             ₹{displayRate.toLocaleString('en-IN')}
           </motion.h2>
 
-          <p className="font-raleway text-sm text-white/60 mt-3">
-          
-          </p>
+          <p className="font-raleway text-sm text-white/60 mt-3"></p>
 
           {/* Refresh button */}
           <button
@@ -305,25 +320,27 @@ const calculatedRates = {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-[#faf7f2] rounded-2xl p-6 text-center border border-[rgba(184,134,42,0.2)] hover:shadow-lg transition-shadow"
+              className="rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+              style={{ background: C.bgCard, border: `1px solid ${C.border}` }}
             >
-              <div className="w-14 h-14 mx-auto bg-[#b8862a]/10 rounded-full flex items-center justify-center mb-3">
-                <span className="font-cinzel text-lg font-bold text-[#b8862a]">{purity}</span>
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3" style={{ background: `rgba(194,24,91,0.08)` }}>
+                <span className="font-cinzel text-lg font-bold" style={{ color: C.gold }}>{purity}</span>
               </div>
-              <p className="font-raleway text-xs text-[#9a8060]">Per 10 Gram</p>
+              <p className="font-raleway text-xs" style={{ color: C.textLight }}>Per 10 Gram</p>
               <motion.p
                 key={rate}
                 initial={{ opacity: 0.6 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.25 }}
-                className="font-cormorant text-3xl font-bold text-[#3a2e1e] mt-1"
+                className="font-cormorant text-3xl font-bold mt-1"
+                style={{ color: C.text }}
               >
                 ₹{rate.toLocaleString('en-IN')}
               </motion.p>
-              <p className="font-raleway text-xs text-[#9a8060] mt-1">
+              <p className="font-raleway text-xs mt-1" style={{ color: C.textLight }}>
                 {Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}% purity
               </p>
-              <p className="font-raleway text-[10px] text-[#b8862a] mt-1 font-semibold">
+              <p className="font-raleway text-[10px] mt-1 font-semibold" style={{ color: C.gold }}>
                 Fetching live Rates ✓
               </p>
             </motion.div>
@@ -334,25 +351,26 @@ const calculatedRates = {
         <div className="text-center mb-8">
           <button
             onClick={() => isAdmin ? setIsAdmin(false) : setShowModal(true)}
-            className="inline-flex items-center gap-2 text-[#9a8060] font-raleway text-xs tracking-[0.2em] hover:text-[#b8862a] transition-colors select-none"
-            style={{ cursor: 'default' }}
+            className="inline-flex items-center gap-2 font-raleway text-xs tracking-[0.2em] transition-colors select-none"
+            style={{ color: C.textLight, cursor: 'default' }}
           >
-            <Shield size={13} className="text-[#b8862a]" />
+            <Shield size={13} style={{ color: C.gold }} />
             {isAdmin ? 'EXIT ADMIN MODE' : 'LIVE GOLD RATES'}
           </button>
         </div>
 
-        {/* ── Live Gold Rates ── */}
+        {/* ── Live Gold Rates Admin ── */}
         {isAdmin && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-[#faf7f2] rounded-2xl p-6 mb-12 border-2 border-[#b8862a]"
+            className="rounded-2xl p-6 mb-12"
+            style={{ background: C.bgCard, border: `2px solid ${C.gold}` }}
           >
-            <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mb-2">
+            <h3 className="font-cormorant text-xl font-semibold mb-2" style={{ color: C.text }}>
               Live fetching 
             </h3>
-            <p className="font-raleway text-sm text-[#9a8060] mb-4">
+            <p className="font-raleway text-sm mb-4" style={{ color: C.textLight }}>
               Override the live API rate. All 22K, 20K, 18K, 14K rates auto-calculate from this.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -361,12 +379,14 @@ const calculatedRates = {
                 value={newRate}
                 onChange={e => setNewRate(e.target.value)}
                 placeholder="Enter 24K rate (e.g. 7850)"
-                className="flex-1 px-4 py-3 border border-[#b8862a]/30 rounded-xl font-raleway focus:outline-none focus:border-[#b8862a]"
+                className="flex-1 px-4 py-3 rounded-xl font-raleway focus:outline-none"
+                style={{ border: `1px solid ${C.borderMd}`, color: C.text }}
               />
               <button
                 onClick={handleUpdateRate}
                 disabled={saving}
-                className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#b8862a] to-[#8b6014] text-white px-8 py-3 rounded-xl font-raleway font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 text-white px-8 py-3 rounded-xl font-raleway font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
               >
                 <Save size={18} />
                 {saving ? 'Saving…' : 'Override Rate'}
@@ -374,7 +394,8 @@ const calculatedRates = {
             </div>
             <button
               onClick={() => { fetchLiveRate(); setIsAdmin(false); }}
-              className="mt-3 text-xs text-[#b8862a] underline font-raleway"
+              className="mt-3 text-xs underline font-raleway"
+              style={{ color: C.gold }}
             >
               ↩ Restore live API rate
             </button>
@@ -386,7 +407,8 @@ const calculatedRates = {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-2xl p-8 mb-12 text-center"
+          className="rounded-2xl p-8 mb-12 text-center"
+          style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
         >
           <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-white">
             Flat 9% Making Charges
@@ -402,31 +424,32 @@ const calculatedRates = {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-[#faf7f2] rounded-2xl p-6 sm:p-8"
+          className="rounded-2xl p-6 sm:p-8"
+          style={{ background: C.bgCard }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <Info size={24} className="text-[#b8862a]" />
-            <h2 className="font-cormorant text-2xl font-semibold text-[#3a2e1e]">
+            <Info size={24} style={{ color: C.gold }} />
+            <h2 className="font-cormorant text-2xl font-semibold" style={{ color: C.text }}>
               Gold Purity Guide
             </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[rgba(184,134,42,0.2)]">
-                  <th className="font-cinzel text-sm text-[#b8862a] text-left py-3">Purity</th>
-                  <th className="font-raleway text-sm text-[#9a8060] text-left py-3">Gold %</th>
-                  <th className="font-raleway text-sm text-[#9a8060] text-left py-3 hidden sm:table-cell">Description</th>
-                  <th className="font-raleway text-sm text-[#9a8060] text-left py-3">Best For</th>
+                <tr style={{ borderBottom: `1px solid ${C.border}` }}>
+                  <th className="font-cinzel text-sm text-left py-3" style={{ color: C.gold }}>Purity</th>
+                  <th className="font-raleway text-sm text-left py-3" style={{ color: C.textLight }}>Gold %</th>
+                  <th className="font-raleway text-sm text-left py-3 hidden sm:table-cell" style={{ color: C.textLight }}>Description</th>
+                  <th className="font-raleway text-sm text-left py-3" style={{ color: C.textLight }}>Best For</th>
                 </tr>
               </thead>
               <tbody>
                 {purityGuide.map((item, i) => (
-                  <tr key={i} className="border-b border-[rgba(184,134,42,0.1)]">
-                    <td className="font-cormorant text-lg font-semibold text-[#3a2e1e] py-4">{item.purity}</td>
-                    <td className="font-raleway text-sm text-[#b8862a] font-medium py-4">{item.percentage}</td>
-                    <td className="font-raleway text-sm text-[#3a2e1e] py-4 hidden sm:table-cell">{item.desc}</td>
-                    <td className="font-raleway text-sm text-[#9a8060] py-4">{item.use}</td>
+                  <tr key={i} style={{ borderBottom: `1px solid ${C.border}` }}>
+                    <td className="font-cormorant text-lg font-semibold py-4" style={{ color: C.text }}>{item.purity}</td>
+                    <td className="font-raleway text-sm font-medium py-4" style={{ color: C.gold }}>{item.percentage}</td>
+                    <td className="font-raleway text-sm py-4 hidden sm:table-cell" style={{ color: C.text }}>{item.desc}</td>
+                    <td className="font-raleway text-sm py-4" style={{ color: C.textLight }}>{item.use}</td>
                   </tr>
                 ))}
               </tbody>
@@ -435,7 +458,7 @@ const calculatedRates = {
         </motion.div>
 
         {/* BIS Badge */}
-        <div className="flex items-center justify-center gap-3 mt-12 text-[#b8862a]">
+        <div className="flex items-center justify-center gap-3 mt-12" style={{ color: C.gold }}>
           <Shield size={24} />
           <span className="font-cinzel text-sm tracking-[0.2em]">BIS HALLMARK CERTIFIED</span>
         </div>
@@ -447,27 +470,31 @@ const calculatedRates = {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#faf7f2] rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+            className="rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+            style={{ background: C.bgCard }}
           >
-            <h3 className="font-cormorant text-2xl font-semibold text-[#3a2e1e] mb-4">Admin Login</h3>
+            <h3 className="font-cormorant text-2xl font-semibold mb-4" style={{ color: C.text }}>Admin Login</h3>
             <input
               type="password"
               placeholder="Enter password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
-              className="w-full px-4 py-3 border border-[#b8862a]/30 rounded-xl font-raleway mb-4 focus:outline-none focus:border-[#b8862a]"
+              className="w-full px-4 py-3 rounded-xl font-raleway mb-4 focus:outline-none"
+              style={{ border: `1px solid ${C.borderMd}`, color: C.text }}
             />
             <div className="flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-3 border border-[#b8862a] text-[#b8862a] rounded-xl font-raleway hover:bg-[#b8862a]/10 transition-colors"
+                className="flex-1 px-4 py-3 rounded-xl font-raleway transition-colors"
+                style={{ border: `1px solid ${C.gold}`, color: C.gold }}
               >
                 Cancel
               </button>
               <button
                 onClick={handleAdminLogin}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-[#b8862a] to-[#8b6014] text-white rounded-xl font-raleway hover:shadow-lg transition-all"
+                className="flex-1 px-4 py-3 text-white rounded-xl font-raleway hover:shadow-lg transition-all"
+                style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
               >
                 Login
               </button>
