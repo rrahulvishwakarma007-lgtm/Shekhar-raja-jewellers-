@@ -9,6 +9,7 @@ import {
   QrCode, Share2, Printer, Package, ShoppingBag, RotateCcw, CheckCircle2
 } from 'lucide-react';
 import { loadStockMap, saveStockMap, type StockStatus } from '../lib/stockStore';
+import { ALL_PRODUCTS } from './PrivateCatalogue';
 
 const ADMIN_PASSWORD = 'srj@2025';
 
@@ -24,13 +25,17 @@ const C = {
 };
 
 const CATEGORIES = [
-  { key:'bangles',   label:'Bangles',   icon:'📿' },
-  { key:'rings',     label:'Rings',     icon:'💍' },
-  { key:'necklaces', label:'Necklaces', icon:'✨' },
-  { key:'earrings',  label:'Earrings',  icon:'🌸' },
-  { key:'bridal',    label:'Bridal',    icon:'👑' },
-  { key:'chains',    label:'Chains',    icon:'⛓️' },
-  { key:'antique',   label:'Antique',   icon:'🏛️' },
+  { key:'bangles',     label:'Bangles',      icon:'📿' },
+  { key:'rings',       label:'Rings',        icon:'💍' }, // Retained for backwards compatibility on active links
+  { key:'womens_ring', label:"Women's Ring", icon:'💍' },
+  { key:'mens_ring',   label:"Men's Ring",   icon:'💍' },
+  { key:'necklaces',   label:'Necklaces',    icon:'✨' },
+  { key:'chokers',     label:'Chokers',      icon:'📿' },
+  { key:'earrings',    label:'Earrings',     icon:'🌸' },
+  { key:'pendants',    label:'Pendants',     icon:'💎' },
+  { key:'bridal',      label:'Bridal',       icon:'👑' },
+  { key:'chains',      label:'Chains',       icon:'⛓️' },
+  { key:'antique',     label:'Antique',      icon:'🏛️' },
 ];
 
 const DURATIONS = [
@@ -76,31 +81,12 @@ function downloadQRFromDiv(divEl: HTMLDivElement | null, filename: string) {
   img.src = url;
 }
 
-// ── Flat product list for stock manager (mirrors PrivateCatalogue's ALL_PRODUCTS) ──
-const ALL_PRODUCTS_FLAT = [
-  { id:'b1', name:'Classic Gold Bangles',    category:'Bangles'   },
-  { id:'b2', name:'Designer Bangles',         category:'Bangles'   },
-  { id:'b3', name:'Antique Finish Bangles',   category:'Bangles'   },
-  { id:'b4', name:'Bridal Bangles Set',       category:'Bangles'   },
-  { id:'b5', name:'Peacock Bangles',          category:'Bangles'   },
-  { id:'r1', name:'Solitaire Ring',           category:'Rings'     },
-  { id:'r2', name:'Polki Diamond Ring',       category:'Rings'     },
-  { id:'r3', name:'Classic Gold Ring',        category:'Rings'     },
-  { id:'r4', name:'Floral Ring',              category:'Rings'     },
-  { id:'r5', name:'Gents Statement Ring',     category:'Rings'     },
-  { id:'n1', name:'Maharani Bridal Necklace', category:'Necklaces' },
-  { id:'n2', name:'Temple Gold Haar',         category:'Necklaces' },
-  { id:'n3', name:'Kundan Choker',            category:'Necklaces' },
-  { id:'e1', name:'Antique Gold Jhumkas',     category:'Earrings'  },
-  { id:'e2', name:'Chandbali Earrings',       category:'Earrings'  },
-  { id:'e3', name:'Antique Earrings Set',     category:'Earrings'  },
-  { id:'br1',name:'Bridal Set – Maharani',    category:'Bridal'    },
-  { id:'br2',name:'Kundan Bridal Choker',     category:'Bridal'    },
-  { id:'c1', name:'Figaro Gold Chain',        category:'Chains'    },
-  { id:'c2', name:'Rope Gold Chain',          category:'Chains'    },
-  { id:'a1', name:'Antique Temple Set',       category:'Antique'   },
-  { id:'a2', name:'Antique Choker Necklace',  category:'Antique'   },
-];
+// ── Dynamically generates flat product list directly from PrivateCatalogue ──
+const ALL_PRODUCTS_FLAT = Object.values(ALL_PRODUCTS).flat().map(p => ({
+  id: String(p.id),
+  name: p.name,
+  category: p.category
+}));
 
 export default function CatalogueAdmin() {
   const [password,      setPassword]      = useState('');
