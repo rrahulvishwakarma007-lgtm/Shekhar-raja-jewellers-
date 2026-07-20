@@ -11,7 +11,7 @@ import {
 import { loadStockMap, saveStockMap, type StockStatus } from '../lib/stockStore';
 import { ALL_PRODUCTS } from './PrivateCatalogue';
 
-const ADMIN_PASSWORD = 'srj@2025';
+const ADMIN_PASSWORD = 'srj@2026';
 
 const C = {
   bg:       '#FFF5F7',
