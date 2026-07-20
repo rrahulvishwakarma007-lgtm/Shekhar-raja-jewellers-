@@ -15,6 +15,7 @@ import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore
 const C = {
   bg:        '#FFF5F7',
   bgDeep:    '#FCE4EC',
+  bgCard:    '#FFFFFF',
   gold:      '#C2185B',
   goldDk:    '#880E4F',
   goldLt:    '#E91E8C',
@@ -334,6 +335,73 @@ function InvalidPage() {
   );
 }
 
+// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
+function PrivateCatalogueSkeleton() {
+  return (
+    <div className="min-h-screen relative" style={{ background: C.bg }}>
+      <AmbientBackground />
+      
+      {/* Hero Header Skeleton */}
+      <div className="relative overflow-hidden shadow-2xl flex flex-col items-center justify-center px-6 py-16 sm:py-20" style={{ minHeight: 320, background: `linear-gradient(135deg, #2D0A18 0%, #6D1B4E 45%, #880E4F 75%, #C2185B 100%)` }}>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage:'linear-gradient(rgba(248,187,217,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(248,187,217,0.3) 1px, transparent 1px)', backgroundSize:'60px 60px' }} />
+        
+        <div className="h-4 w-48 rounded-full animate-pulse mb-4 z-10" style={{ background: 'rgba(255,255,255,0.15)' }} />
+        <div className="h-16 w-64 sm:w-96 rounded-2xl animate-pulse mb-6 z-10" style={{ background: 'rgba(255,255,255,0.2)' }} />
+        <div className="h-4 w-72 rounded-full animate-pulse mb-6 z-10" style={{ background: 'rgba(255,255,255,0.15)' }} />
+        <div className="h-10 w-32 rounded-full animate-pulse z-10" style={{ background: 'rgba(255,255,255,0.2)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-12 overflow-hidden z-10">
+          <svg viewBox="0 0 1200 48" preserveAspectRatio="none" className="w-full h-full">
+            <path d="M0,48 C300,0 900,0 1200,48 L1200,48 L0,48 Z" fill={C.bg} />
+          </svg>
+        </div>
+      </div>
+
+      {/* Nav Skeleton */}
+      <div className="backdrop-blur-md shadow-sm" style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}>
+         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full animate-pulse" style={{ background: C.goldPale }} />
+              <div className="h-4 w-32 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+            </div>
+            <div className="w-24 h-8 rounded-full animate-pulse" style={{ background: C.goldPale }} />
+         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
+        {/* Stock Cards Skeleton */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="h-28 rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+          <div className="h-28 rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+        </div>
+
+        {/* Search/Filter Skeleton */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="flex-1 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
+          <div className="w-full sm:w-64 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
+          <div className="w-full sm:w-32 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
+        </div>
+
+        <div className="h-4 w-32 rounded animate-pulse mb-5" style={{ background: 'rgba(248,187,217,0.3)' }} />
+
+        {/* Grid Skeleton */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="rounded-2xl overflow-hidden shadow-sm" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
+              <div className="w-full animate-pulse" style={{ aspectRatio: '1/1', background: 'rgba(248,187,217,0.2)' }} />
+              <div className="p-4 sm:p-5 flex flex-col gap-3">
+                <div className="h-2 w-1/3 rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
+                <div className="h-5 w-3/4 rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
+                <div className="h-2 w-full rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
+                <div className="h-10 w-full rounded-xl animate-pulse mt-2" style={{ background: 'rgba(248,187,217,0.3)' }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function PrivateCatalogue() {
   const [searchParams]                        = useSearchParams();
@@ -344,6 +412,7 @@ export default function PrivateCatalogue() {
   const [orderedToast, setOrderedToast]       = useState<string|null>(null);
   const [searchQuery, setSearchQuery]         = useState('');
   const [activeFilter, setActiveFilter]       = useState<'all'|'ready'|'ordered'>('all');
+  const [isLoading, setIsLoading]             = useState(true);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start','end start'] });
@@ -370,6 +439,35 @@ export default function PrivateCatalogue() {
     const t = setInterval(tick, 1000);
     return () => clearInterval(t);
   }, [decoded?.expiry]);
+
+  // Preload images for skeleton
+  useEffect(() => {
+    if (!decoded || expired) return;
+    
+    const imagesToLoad = allProducts.map(p => p.image);
+    
+    if (imagesToLoad.length === 0) {
+       setIsLoading(false);
+       return;
+    }
+
+    const imagePromises = imagesToLoad.map(src => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = resolve; // Resolve anyway to avoid blocking on failed images
+      });
+    });
+
+    // Wait for images to load, with a minimum simulated delay of 800ms
+    Promise.all([
+      ...imagePromises,
+      new Promise(resolve => setTimeout(resolve, 800))
+    ]).then(() => {
+      setIsLoading(false);
+    });
+  }, [allProducts.length, decoded, expired]);
 
   const readyCount   = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ready').length;
   const orderedCount = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ordered').length;
@@ -420,6 +518,7 @@ export default function PrivateCatalogue() {
 
   if (!token || !decoded) return <InvalidPage />;
   if (expired)            return <ExpiredPage />;
+  if (isLoading)          return <PrivateCatalogueSkeleton />;
 
   const urgentColor = timeLeft < 5 * 60 * 1000 ? '#EF4444' : C.gold;
 
