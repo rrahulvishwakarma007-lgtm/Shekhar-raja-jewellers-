@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Info, Lock, Unlock, RefreshCw, Save, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 
-// ── Palette (Matching Home.tsx) ───────────────────────────────────────────────
+// ── Palette (Matching your App Theme) ─────────────────────────────────────────
 const C = {
   bg:        '#FFF5F7',
   bgCard:    '#FFFFFF',
@@ -11,11 +11,13 @@ const C = {
   goldDk:    '#880E4F',
   goldLt:    '#E91E8C',
   goldPale:  '#F8BBD9',
+  goldBg:    'rgba(194,24,91,0.08)',
   text:      '#1A0010',
   textMid:   '#6D1B4E',
   textLight: '#AD6888',
   border:    'rgba(194,24,91,0.15)',
   borderMd:  'rgba(194,24,91,0.30)',
+  shadow:    'rgba(194,24,91,0.08)',
 };
 
 // ── YOUR GOLDAPI.IO KEY — get free key at goldapi.io ─────────────────────────
@@ -37,20 +39,68 @@ const purityGuide = [
   { purity: '14K', percentage: '58.3%', desc: 'Very durable, lighter gold color',                      use: 'Everyday jewellery' },
 ];
 
+// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
+function GoldRatesSkeleton() {
+  return (
+    <div className="pt-28 pb-16 min-h-screen relative overflow-hidden" style={{ background: C.bg }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Header Skeleton */}
+        <div className="flex flex-col items-center justify-center mb-12">
+          <div className="h-3 w-32 rounded-full animate-pulse mb-6" style={{ background: C.goldPale }} />
+          <div className="h-12 sm:h-14 w-64 sm:w-80 rounded-2xl animate-pulse mb-6" style={{ background: 'rgba(248,187,217,0.6)' }} />
+          <div className="h-4 w-48 rounded-full animate-pulse mb-6" style={{ background: 'rgba(248,187,217,0.4)' }} />
+          <div className="h-8 w-40 rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
+        </div>
+
+        {/* 24K Featured Card Skeleton */}
+        <div className="rounded-3xl p-8 mb-8 flex flex-col items-center justify-center shadow-xl animate-pulse" style={{ background: 'rgba(194,24,91,0.1)', border: `1px solid ${C.border}` }}>
+          <div className="h-3 w-48 rounded-full mb-4" style={{ background: 'rgba(194,24,91,0.15)' }} />
+          <div className="h-3 w-32 rounded-full mb-6" style={{ background: 'rgba(194,24,91,0.15)' }} />
+          <div className="h-20 sm:h-24 w-64 sm:w-80 rounded-2xl mb-6" style={{ background: 'rgba(194,24,91,0.25)' }} />
+          <div className="h-10 w-36 rounded-full" style={{ background: 'rgba(194,24,91,0.2)' }} />
+        </div>
+
+        {/* Calculated Rates Grid Skeleton */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="rounded-2xl p-6 flex flex-col items-center animate-pulse" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
+              <div className="w-14 h-14 rounded-full mb-4" style={{ background: 'rgba(248,187,217,0.4)' }} />
+              <div className="h-3 w-20 rounded-full mb-3" style={{ background: 'rgba(248,187,217,0.3)' }} />
+              <div className="h-10 w-32 rounded-xl mb-3" style={{ background: 'rgba(248,187,217,0.6)' }} />
+              <div className="h-3 w-24 rounded-full mb-3" style={{ background: 'rgba(248,187,217,0.3)' }} />
+              <div className="h-2 w-16 rounded-full" style={{ background: 'rgba(248,187,217,0.5)' }} />
+            </div>
+          ))}
+        </div>
+        
+        {/* Offer Card Skeleton */}
+        <div className="rounded-2xl p-8 mb-12 flex flex-col items-center justify-center animate-pulse" style={{ background: 'rgba(194,24,91,0.1)' }}>
+           <div className="h-10 sm:h-12 w-3/4 max-w-md rounded-xl mb-4" style={{ background: 'rgba(194,24,91,0.25)' }} />
+           <div className="h-4 w-64 rounded-full mb-4" style={{ background: 'rgba(194,24,91,0.2)' }} />
+           <div className="h-3 w-80 rounded-full" style={{ background: 'rgba(194,24,91,0.15)' }} />
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 export default function GoldRates() {
   const [baseRate,      setBaseRate]      = useState(0);   // anchored 24K rate
-  const [displayRate,  setDisplayRate]  = useState(0);   // flickering display rate
-  const [history,      setHistory]      = useState<{ id: number; date: string; rate_24k: number }[]>([]);
-  const [loading,      setLoading]      = useState(true);
-  const [isAdmin,      setIsAdmin]      = useState(false);
+  const [displayRate,   setDisplayRate]   = useState(0);   // flickering display rate
+  const [history,       setHistory]       = useState<{ id: number; date: string; rate_24k: number }[]>([]);
+  const [loading,       setLoading]       = useState(true);
+  const [isAdmin,       setIsAdmin]       = useState(false);
   const [password,      setPassword]      = useState('');
-  const [showModal,    setShowModal]    = useState(false);
-  const [newRate,      setNewRate]      = useState('');
-  const [saving,       setSaving]       = useState(false);
-  const [lastUpdated,  setLastUpdated]  = useState('');
-  const [error,        setError]        = useState('');
-  const [liveSource,   setLiveSource]   = useState<'api' | 'manual' | 'fallback'>('fallback');
-  const [fetchingLive, setFetchingLive] = useState(false);
+  const [showModal,     setShowModal]     = useState(false);
+  const [newRate,       setNewRate]       = useState('');
+  const [saving,        setSaving]        = useState(false);
+  const [lastUpdated,   setLastUpdated]   = useState('');
+  const [error,         setError]         = useState('');
+  const [liveSource,    setLiveSource]    = useState<'api' | 'manual' | 'fallback'>('fallback');
+  const [fetchingLive,  setFetchingLive]  = useState(false);
 
   const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -143,16 +193,18 @@ export default function GoldRates() {
       console.error('Backend fetch failed:', err);
       setError('Unable to fetch gold rates');
       setLiveSource('fallback');
-    } finally {
-      setLoading(false);
     }
   };
 
-  // ── On mount: fetch live API first, refresh every 15 minutes ─────────────
+  // ── On mount: fetch live API first, with a minimum skeleton display time ──
   useEffect(() => {
     const init = async () => {
       setLoading(true);
-      await fetchLiveRate();
+      // Promise.all ensures the skeleton is shown for at least 800ms for a smooth, premium feel
+      await Promise.all([
+        fetchLiveRate(),
+        new Promise(resolve => setTimeout(resolve, 800))
+      ]);
       setLoading(false);
     };
     init();
@@ -217,17 +269,12 @@ export default function GoldRates() {
     return null;
   };
 
-  if (loading) return (
-    <div className="pt-32 pb-16 min-h-screen flex items-center justify-center" style={{ background: C.bg }}>
-      <div className="text-center">
-        <RefreshCw size={40} className="animate-spin mx-auto" style={{ color: C.gold }} />
-        <p className="font-raleway mt-4" style={{ color: C.textLight }}>Fetching live gold rates…</p>
-      </div>
-    </div>
-  );
+  if (loading) {
+    return <GoldRatesSkeleton />;
+  }
 
   return (
-    <div className="pt-28 pb-16 min-h-screen" style={{ background: C.bg }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="pt-28 pb-16 min-h-screen" style={{ background: C.bg }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── HEADER ── */}
@@ -360,54 +407,57 @@ export default function GoldRates() {
         </div>
 
         {/* ── Live Gold Rates Admin ── */}
-        {isAdmin && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl p-6 mb-12"
-            style={{ background: C.bgCard, border: `2px solid ${C.gold}` }}
-          >
-            <h3 className="font-cormorant text-xl font-semibold mb-2" style={{ color: C.text }}>
-              Live fetching 
-            </h3>
-            <p className="font-raleway text-sm mb-4" style={{ color: C.textLight }}>
-              Override the live API rate. All 22K, 20K, 18K, 14K rates auto-calculate from this.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input
-                type="number"
-                value={newRate}
-                onChange={e => setNewRate(e.target.value)}
-                placeholder="Enter 24K rate (e.g. 7850)"
-                className="flex-1 px-4 py-3 rounded-xl font-raleway focus:outline-none"
-                style={{ border: `1px solid ${C.borderMd}`, color: C.text }}
-              />
-              <button
-                onClick={handleUpdateRate}
-                disabled={saving}
-                className="flex items-center justify-center gap-2 text-white px-8 py-3 rounded-xl font-raleway font-medium hover:shadow-lg transition-all disabled:opacity-50"
-                style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
-              >
-                <Save size={18} />
-                {saving ? 'Saving…' : 'Override Rate'}
-              </button>
-            </div>
-            <button
-              onClick={() => { fetchLiveRate(); setIsAdmin(false); }}
-              className="mt-3 text-xs underline font-raleway"
-              style={{ color: C.gold }}
+        <AnimatePresence>
+          {isAdmin && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              exit={{ opacity: 0, y: -20, height: 0 }}
+              className="rounded-2xl p-6 mb-12 overflow-hidden"
+              style={{ background: C.bgCard, border: `2px solid ${C.gold}` }}
             >
-              ↩ Restore live API rate
-            </button>
-          </motion.div>
-        )}
+              <h3 className="font-cormorant text-xl font-semibold mb-2" style={{ color: C.text }}>
+                Live fetching 
+              </h3>
+              <p className="font-raleway text-sm mb-4" style={{ color: C.textLight }}>
+                Override the live API rate. All 22K, 20K, 18K, 14K rates auto-calculate from this.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="number"
+                  value={newRate}
+                  onChange={e => setNewRate(e.target.value)}
+                  placeholder="Enter 24K rate (e.g. 7850)"
+                  className="flex-1 px-4 py-3 rounded-xl font-raleway focus:outline-none"
+                  style={{ border: `1px solid ${C.borderMd}`, color: C.text }}
+                />
+                <button
+                  onClick={handleUpdateRate}
+                  disabled={saving}
+                  className="flex items-center justify-center gap-2 text-white px-8 py-3 rounded-xl font-raleway font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                  style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
+                >
+                  <Save size={18} />
+                  {saving ? 'Saving…' : 'Override Rate'}
+                </button>
+              </div>
+              <button
+                onClick={() => { fetchLiveRate(); setIsAdmin(false); }}
+                className="mt-3 text-xs underline font-raleway"
+                style={{ color: C.gold }}
+              >
+                ↩ Restore live API rate
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ── OFFER CARD ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-2xl p-8 mb-12 text-center"
+          className="rounded-2xl p-8 mb-12 text-center shadow-lg"
           style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldDk})` }}
         >
           <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-white">
@@ -424,8 +474,8 @@ export default function GoldRates() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-2xl p-6 sm:p-8"
-          style={{ background: C.bgCard }}
+          className="rounded-2xl p-6 sm:p-8 shadow-sm"
+          style={{ background: C.bgCard, border: `1px solid ${C.border}` }}
         >
           <div className="flex items-center gap-3 mb-6">
             <Info size={24} style={{ color: C.gold }} />
@@ -502,6 +552,6 @@ export default function GoldRates() {
           </motion.div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
