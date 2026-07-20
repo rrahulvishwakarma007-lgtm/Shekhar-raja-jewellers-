@@ -13,11 +13,13 @@ const C = {
   goldDk:    '#880E4F',   // dark magenta
   goldLt:    '#E91E8C',   // bright pink
   goldPale:  '#F8BBD9',   // pale pink
+  goldBg:    'rgba(194,24,91,0.08)',
   text:      '#1A0010',   // near black with pink tint
   textMid:   '#6D1B4E',   // deep rose text
   textLight: '#AD6888',   // muted rose
   border:    'rgba(194,24,91,0.15)',
   borderMd:  'rgba(194,24,91,0.30)',
+  shadow:    'rgba(194,24,91,0.08)',
 };
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
@@ -138,12 +140,12 @@ function VideoCarousel() {
               onClick={() => { goTo(i); startTimer(); }}
               animate={{ scale: isActive ? 1.08 : 0.88, opacity: isActive ? 1 : 0.55 }}
               transition={{ type:'spring', stiffness:300, damping:28 }}
-              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#E91E8C] shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
-              style={{ transition:'width 0.4s ease, height 0.4s ease' }}>
+              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
+              style={{ transition:'width 0.4s ease, height 0.4s ease', ringColor: C.goldLt }}>
               <video ref={el => { videoRefs.current[i] = el; }} src={src} muted playsInline loop={false}
                      onEnded={isActive ? handleEnded : undefined} className="w-full h-full object-cover" />
-              {!isActive && <div className="absolute inset-0 bg-[#1a0010]/50" />}
-              {isActive && <div className="absolute inset-0 bg-gradient-to-t from-[#880E4F]/60 via-transparent to-transparent pointer-events-none" />}
+              {!isActive && <div className="absolute inset-0" style={{ background: 'rgba(26,0,16,0.5)' }} />}
+              {isActive && <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, ${C.goldDk}99, transparent)` }} />}
               {!isActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
@@ -163,11 +165,13 @@ function VideoCarousel() {
       <div className="flex items-center justify-center gap-2 mt-8">
         {VIDEOS.map((_, i) => (
           <button key={i} onClick={() => { goTo(i); startTimer(); }}
-                  className={`rounded-full transition-all duration-300 ${i === active ? 'w-8 h-2 bg-[#C2185B]' : 'w-2 h-2 bg-white/25 hover:bg-white/50'}`} />
+                  className="rounded-full transition-all duration-300" 
+                  style={{ width: i === active ? 32 : 8, height: 8, background: i === active ? C.gold : 'rgba(255,255,255,0.25)' }} />
         ))}
       </div>
       <div className="mt-4 mx-auto max-w-xs h-px bg-white/10 rounded-full overflow-hidden">
-        <motion.div key={active} className="h-full bg-gradient-to-r from-[#C2185B] to-[#E91E8C]"
+        <motion.div key={active} className="h-full"
+                    style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }}
                     initial={{ width:'0%' }} animate={{ width:'100%' }} transition={{ duration:6, ease:'linear' }} />
       </div>
     </div>
@@ -236,10 +240,10 @@ export default function Home() {
                 background: '#fff',
                 border: `1.5px solid ${C.borderMd}`,
                 color: C.text,
-                boxShadow: '0 2px 12px rgba(184,134,42,0.08)',
+                boxShadow: `0 2px 12px ${C.shadow}`,
               }}
-              onFocus={e => e.target.style.boxShadow = `0 0 0 2px rgba(184,134,42,0.25)`}
-              onBlur={e => e.target.style.boxShadow = '0 2px 12px rgba(184,134,42,0.08)'}
+              onFocus={e => e.target.style.boxShadow = `0 0 0 2px ${C.goldBorder}`}
+              onBlur={e => e.target.style.boxShadow = `0 2px 12px ${C.shadow}`}
             />
           </div>
         </div>
@@ -258,14 +262,14 @@ export default function Home() {
                   style={{
                     width: 90, height: 90,
                     border: `1.5px solid ${C.border}`,
-                    boxShadow: '0 2px 10px rgba(184,134,42,0.08)',
+                    boxShadow: `0 2px 10px ${C.shadow}`,
                   }}
-                  whileHover={{ scale:1.05, boxShadow:`0 6px 20px rgba(184,134,42,0.2)` }}>
+                  whileHover={{ scale:1.05, boxShadow:`0 6px 20px rgba(194,24,91,0.2)` }}>
                   <img src={cat.image} alt={cat.name}
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                   {/* subtle gold overlay on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                       style={{ background:'linear-gradient(to bottom, transparent 40%, rgba(184,134,42,0.25) 100%)' }} />
+                       style={{ background:`linear-gradient(to bottom, transparent 40%, ${C.goldBorder} 100%)` }} />
                 </motion.div>
                 <span className="font-raleway text-xs font-medium text-center whitespace-nowrap transition-colors"
                       style={{ color: C.textMid }}
@@ -280,13 +284,12 @@ export default function Home() {
 
         {/* ── PROMO HERO BANNER (auto-rotating) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          {/* Increased container height significantly for desktop (md, lg, xl breakpoints) to prevent heavy top/bottom cropping */}
-          <div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] bg-[#FFE4EC]" style={{ perspective: 1500 }}>
+          <div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px]" style={{ perspective: 1500, background: C.bgDeep }}>
             
             {/* Shimmer effect stays active underneath images until they cover it */}
-            <div className="absolute inset-0 animate-pulse bg-[#F8BBD9]/30" />
+            <div className="absolute inset-0 animate-pulse opacity-50" style={{ background: C.goldPale }} />
 
-            {/* Static fallback for the very first image to ensure instant loading (bypasses Framer Motion initial calculation) */}
+            {/* Static fallback for the very first image to ensure instant loading */}
             <img 
               src={promoBanners[0].img} 
               alt={promoBanners[0].label} 
@@ -326,7 +329,7 @@ export default function Home() {
                 <button key={i} onClick={() => setPromoBanner(i)}
                         className="rounded-full transition-all duration-300"
                         style={{ width: i === promoBanner ? 28 : 8, height:8,
-                                 background: i === promoBanner ? C.gold : 'rgba(184,134,42,0.4)' }} />
+                                 background: i === promoBanner ? C.gold : 'rgba(255,255,255,0.6)' }} />
               ))}
             </div>
           </div>
@@ -378,12 +381,12 @@ export default function Home() {
               <motion.div key={col.id} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
                           transition={{ delay: i*0.1 }} viewport={{ once:true }}
                           className="group rounded-2xl overflow-hidden cursor-pointer"
-                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:'0 4px 20px rgba(44,26,14,0.08)' }}
-                          whileHover={{ y:-6, boxShadow:'0 16px 40px rgba(44,26,14,0.15)' }}>
+                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:`0 4px 20px ${C.shadow}` }}
+                          whileHover={{ y:-6, boxShadow:`0 16px 40px rgba(194,24,91,0.15)` }}>
                 <div className="relative overflow-hidden" style={{ height: col.featured ? 320 : 240 }}>
                   <img src={col.image} alt={col.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                       style={{ background:'linear-gradient(to top, rgba(44,26,14,0.5) 0%, transparent 60%)' }} />
+                       style={{ background:`linear-gradient(to top, rgba(136,14,79,0.5) 0%, transparent 60%)` }} />
                   {col.featured && (
                     <div className="absolute top-4 left-4 font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
                          style={{ background: C.gold, color:'#fff' }}>FEATURED</div>
@@ -395,7 +398,7 @@ export default function Home() {
                     <h3 className="font-cormorant text-xl font-semibold" style={{ color: C.text }}>{col.name}</h3>
                   </div>
                   <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                       style={{ background:`rgba(184,134,42,0.1)`, border:`1px solid ${C.border}` }}>
+                       style={{ background: C.goldBg, border:`1px solid ${C.border}` }}>
                     <ArrowRight size={14} style={{ color: C.gold }} />
                   </div>
                 </div>
@@ -406,13 +409,13 @@ export default function Home() {
       </section>
 
       {/* ══ VIDEO CAROUSEL ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'#880E4F' }}>
-        <div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,134,42,0.15) 0%, transparent 70%)` }} />
+      <section className="py-20 relative overflow-hidden" style={{ background: C.goldDk }}>
+        <div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(233,30,140,0.15) 0%, transparent 70%)` }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
-            <span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.gold }}>EXPLORE</span>
+            <span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.goldPale }}>EXPLORE</span>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-light text-white">
-              Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> In Motion
+              Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> Reels
             </h2>
           </motion.div>
           <VideoCarousel />
@@ -444,21 +447,21 @@ export default function Home() {
                           transition={{ delay: i*0.08 }} viewport={{ once:true }}
                           onClick={() => setSelectedProduct(product)}
                           className="group rounded-2xl overflow-hidden cursor-pointer"
-                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:'0 4px 16px rgba(44,26,14,0.07)' }}
-                          whileHover={{ y:-5, boxShadow:'0 14px 36px rgba(44,26,14,0.14)' }}>
+                          style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:`0 4px 16px ${C.shadow}` }}
+                          whileHover={{ y:-5, boxShadow:`0 14px 36px rgba(194,24,91,0.14)` }}>
                 <div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
                   <img src={product.image} alt={product.name}
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                       style={{ background:'linear-gradient(to top, rgba(44,26,14,0.55) 0%, rgba(44,26,14,0.1) 50%, transparent 100%)' }} />
+                       style={{ background:`linear-gradient(to top, rgba(136,14,79,0.55) 0%, rgba(136,14,79,0.1) 50%, transparent 100%)` }} />
                   <div className="absolute top-3 left-3">
                     <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
-                          style={{ background:'rgba(44,26,14,0.85)', color: C.goldPale }}>{product.tag}</span>
+                          style={{ background:'rgba(26,0,16,0.85)', color: C.goldPale }}>{product.tag}</span>
                   </div>
                   <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-400"
                        style={{ transform:'translateY(4px)' }}>
                     <div className="flex items-center justify-between backdrop-blur-md rounded-xl px-3 py-2"
-                         style={{ background:'rgba(250,246,238,0.18)', border:'1px solid rgba(250,246,238,0.25)' }}>
+                         style={{ background:'rgba(255,255,255,0.18)', border:'1px solid rgba(255,255,255,0.25)' }}>
                       <span className="font-raleway text-xs text-white">View Details</span>
                       <ArrowRight size={12} style={{ color: C.goldPale }} />
                     </div>
@@ -485,7 +488,7 @@ export default function Home() {
                   <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop:`1px solid ${C.border}` }}>
                     <span className="font-cinzel text-[9px] tracking-[0.12em]" style={{ color: C.textLight }}>ENQUIRE ON WHATSAPP</span>
                     <div className="w-6 h-6 rounded-full flex items-center justify-center"
-                         style={{ background:`rgba(184,134,42,0.1)`, border:`1px solid ${C.border}` }}>
+                         style={{ background: C.goldBg, border:`1px solid ${C.border}` }}>
                       <ArrowRight size={10} style={{ color: C.gold }} />
                     </div>
                   </div>
@@ -498,7 +501,7 @@ export default function Home() {
                       className="text-center mt-12">
             <Link to="/collections"
                   className="inline-flex items-center gap-3 text-white px-10 py-4 rounded-full font-raleway font-medium shadow-lg hover:-translate-y-1 transition-all duration-300"
-                  style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldDk})`, boxShadow:`0 6px 24px rgba(184,134,42,0.3)` }}>
+                  style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldDk})`, boxShadow:`0 6px 24px rgba(194,24,91,0.3)` }}>
               <span>View All Collection</span>
               <ArrowRight size={18} />
             </Link>
@@ -507,68 +510,115 @@ export default function Home() {
       </section>
 
       {/* ══ APP PROMO ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'#880E4F' }}>
-        <div className="absolute inset-0" style={{ background:`linear-gradient(to right, rgba(194,24,91,0.12), transparent)` }} />
+      <section className="py-20 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${C.text} 0%, ${C.goldDk} 100%)` }}>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                   style={{ background:'rgba(255,255,255,0.15)' }}>
-                <Smartphone size={18} style={{ color: C.goldLt }} />
-                <span className="font-raleway text-sm" style={{ color: C.goldLt }}>Now on Android</span>
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-6 backdrop-blur-sm"
+                   style={{ background:'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <Smartphone size={18} style={{ color: C.goldPale }} />
+                <span className="font-raleway text-sm font-medium" style={{ color: C.goldPale }}>Now Available on Android</span>
               </div>
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">Download Our App</h2>
-              <p className="font-raleway text-lg mt-4" style={{ color:'rgba(255,255,255,0.7)' }}>
+              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">Shekhar Raja<br/>Jewellers App</h2>
+              <p className="font-raleway text-lg mt-4" style={{ color:'rgba(255,255,255,0.8)' }}>
                 Browse our entire collection, check gold rates, and get exclusive offers right on your phone.
               </p>
+              
               <div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start">
                 {[{icon:<Tag size={16}/>, label:'Catalogue'},{icon:<Bell size={16}/>, label:'Gold Rate'},{icon:<Headphones size={16}/>, label:'WA Support'}].map((f,i) => (
-                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background:'rgba(255,255,255,0.1)' }}>
-                    <span style={{ color:'#F8BBD9' }}>{f.icon}</span>
-                    <span className="font-raleway text-sm text-white">{f.label}</span>
+                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: C.bgCard }}>
+                    <span style={{ color: C.gold }}>{f.icon}</span>
+                    <span className="font-raleway text-sm font-medium" style={{ color: C.text }}>{f.label}</span>
                   </div>
                 ))}
               </div>
+
               <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                <Link to="/app" className="flex items-center gap-2 text-white px-6 py-3 rounded-full font-raleway font-medium transition-colors"
-                      style={{ background: C.gold }}>
+                <Link to="/app" className="flex items-center gap-2 text-white px-8 py-4 rounded-full font-raleway font-bold transition-all hover:scale-105 shadow-lg"
+                      style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }}>
                   <Download size={18} /> Download APK
                 </Link>
                 <a href="https://wa.me/918377911745?text=Please%20send%20me%20the%20SRJ%20app%20download%20link"
                    target="_blank" rel="noopener noreferrer"
-                   className="flex items-center gap-2 text-white px-6 py-3 rounded-full font-raleway font-medium transition-colors"
+                   className="flex items-center gap-2 text-white px-8 py-4 rounded-full font-raleway font-bold transition-all hover:scale-105 shadow-lg"
                    style={{ background:'#25D366' }}>
                   <MessageCircle size={18} /> Get Link on WA
                 </a>
               </div>
             </div>
-            <div className="flex justify-center">
-              <div className="relative">
-                <div className="w-64 h-[500px] rounded-[3rem] border-4 p-3 shadow-2xl"
-                     style={{ background:'linear-gradient(to bottom, #880E4F, #560027)', borderColor:'#C2185B' }}>
-                  <div className="w-full h-full rounded-[2.5rem] overflow-hidden" style={{ background: C.bg }}>
-                    <div className="py-4 px-6 text-center" style={{ background: C.gold }}>
-                      <span className="font-cinzel text-xs tracking-[0.2em] text-white">SHEKHAR RAJA</span>
+
+            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 40 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
+              className="flex justify-center"
+            >
+              <motion.div 
+                animate={{ y: [0, -15, 0] }} 
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="relative"
+              >
+                {/* Phone Frame */}
+                <div className="w-[300px] h-[600px] rounded-[3rem] border-[6px] p-2 shadow-2xl relative" style={{ background: 'linear-gradient(to bottom, #1A0010, #3D001C)', borderColor: C.gold }}>
+                  {/* Notch */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#1A0010] rounded-b-2xl z-30" />
+
+                  {/* Phone Screen */}
+                  <div className="w-full h-full rounded-[2.2rem] overflow-hidden relative flex flex-col" style={{ background: C.bg }}>
+                    {/* App Header */}
+                    <div className="pt-10 pb-4 px-6 text-center shadow-md relative z-20" style={{ background: C.gold }}>
+                      <span className="font-cinzel text-sm tracking-[0.2em] text-white font-bold">SHEKHAR RAJA</span>
+                      <p className="font-cormorant text-xs text-white/80 mt-0.5">Jewellers</p>
                     </div>
-                    <div className="p-4 space-y-3">
-                      {[20, 24, 16].map((w, i) => (
-                        <div key={i} className="bg-white rounded-lg p-3 shadow-sm">
-                          <div className="h-3 rounded mb-2" style={{ width:`${w * 4}px`, background: C.gold }} />
-                          <div className="h-2 w-full bg-gray-200 rounded" />
+
+                    {/* App Content */}
+                    <div className="p-4 flex-1 overflow-hidden flex flex-col relative z-10">
+                      {/* Fake Search Bar */}
+                      <div className="w-full h-10 rounded-full mb-4 flex items-center px-4 shadow-sm" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
+                        <Search size={14} style={{ color: C.textLight }} />
+                        <span className="font-raleway text-xs ml-2" style={{ color: C.textLight }}>Search jewellery...</span>
+                      </div>
+
+                      {/* Fake Promo Banner */}
+                      <div className="w-full h-32 rounded-2xl mb-5 overflow-hidden shadow-md shrink-0 relative" style={{ border: '1px solid ' + C.border }}>
+                        <img src="/hero-1.jpg" className="w-full h-full object-cover" alt="promo preview" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                          <span className="font-cormorant text-white font-semibold">New Collection</span>
                         </div>
-                      ))}
+                      </div>
+
+                      {/* Fake Product Grid */}
+                      <div className="grid grid-cols-2 gap-3">
+                        {['/ring6.png', '/necklace88.png', '/bangle1.png', '/earring1.jpg'].map((img, idx) => (
+                          <div key={idx} className="rounded-xl overflow-hidden shadow-sm flex flex-col" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
+                            <div className="h-28 overflow-hidden bg-gray-50">
+                              <img src={img} className="w-full h-full object-cover" alt="product preview" />
+                            </div>
+                            <div className="p-2.5">
+                              <div className="h-2 w-3/4 rounded mb-1.5" style={{ background: C.borderMd }} />
+                              <div className="h-2 w-1/2 rounded" style={{ background: C.goldPale }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full" style={{ background:'#C2185B' }} />
-              </div>
-            </div>
+                {/* Ground Shadow */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-3 bg-black/40 blur-xl rounded-full" />
+              </motion.div>
+            </motion.div>
+
           </div>
         </div>
       </section>
 
       {/* ══ TRUST STRIP ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background:'linear-gradient(to right, #fff5f7, #ffffff, #fff5f7)' }}>
+      <section className="py-20 relative overflow-hidden" style={{ background: C.bgCard, borderTop: `1px solid ${C.border}` }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {trustItems.map((item, i) => (
@@ -576,11 +626,12 @@ export default function Home() {
                           transition={{ delay: i*0.1 }} viewport={{ once:true }}
                           whileHover={{ y:-5 }} className="text-center group">
                 <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4 transition-all duration-300"
-                     style={{ background:`linear-gradient(to br, rgba(184,134,42,0.1), rgba(212,168,67,0.1))`,
-                              boxShadow:'0 4px 16px rgba(184,134,42,0.1)' }}>
+                     style={{ background: C.goldBg, border: `1px solid ${C.border}`, boxShadow:`0 4px 16px ${C.shadow}` }}>
                   <span className="text-3xl" style={{ color: C.gold }}>{item.icon}</span>
                 </div>
-                <h3 className="font-cormorant text-xl font-semibold group-hover:text-[#C2185B] transition-colors" style={{ color: C.text }}>
+                <h3 className="font-cormorant text-xl font-semibold transition-colors" style={{ color: C.text }}
+                    onMouseEnter={e => e.currentTarget.style.color = C.gold}
+                    onMouseLeave={e => e.currentTarget.style.color = C.text}>
                   {item.title}
                 </h3>
                 <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>{item.desc}</p>
