@@ -133,47 +133,72 @@ function VideoCarousel() {
 
   return (
     <div className="relative">
-      <div ref={trackRef} className="flex items-center gap-3 sm:gap-5 overflow-x-auto pb-4 px-2" style={{ scrollbarWidth:'none' }}>
+      {/* 
+        FIX APPLIED: Added py-12 (48px top and bottom padding) to the container. 
+        This prevents the glowing shadow and scaled height of the active reel from 
+        getting cropped by the overflow-x-auto bounds.
+      */}
+      <div ref={trackRef} className="flex items-center gap-4 sm:gap-6 overflow-x-auto py-12 px-6 sm:px-12 scroll-smooth" style={{ scrollbarWidth:'none' }}>
         {VIDEOS.map((src, i) => {
           const isActive = i === active;
           return (
-            <motion.div key={i} ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
+            <div 
+              key={i} 
+              ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
               onClick={() => { goTo(i); startTimer(); }}
-              animate={{ scale: isActive ? 1.08 : 0.88, opacity: isActive ? 1 : 0.55 }}
-              transition={{ type:'spring', stiffness:300, damping:28 }}
-              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#E91E8C] shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
-              style={{ transition:'width 0.4s ease, height 0.4s ease' }}>
-              <video ref={el => { videoRefs.current[i] = el; }} src={src} muted playsInline loop={false}
-                     onEnded={isActive ? handleEnded : undefined} className="w-full h-full object-cover" />
-              {!isActive && <div className="absolute inset-0" style={{ background: 'rgba(26,0,16,0.5)' }} />}
-              {isActive && <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, ${C.goldDk}99, transparent)` }} />}
+              className={`relative flex-shrink-0 cursor-pointer rounded-3xl overflow-hidden transition-all duration-500 ease-out origin-center ${
+                isActive 
+                  ? 'w-[240px] h-[426px] sm:w-[320px] sm:h-[568px] ring-[3px] ring-[#E91E8C] shadow-[0_0_50px_rgba(233,30,140,0.5)] z-10 scale-100' 
+                  : 'w-[160px] h-[284px] sm:w-[200px] sm:h-[355px] ring-1 ring-transparent opacity-90 hover:opacity-100 z-0 scale-95 hover:scale-100'
+              }`}
+            >
+              <video 
+                ref={el => { videoRefs.current[i] = el; }} 
+                src={src} 
+                muted playsInline loop={false}
+                onEnded={isActive ? handleEnded : undefined} 
+                className="w-full h-full object-cover" 
+              />
+              
+              {/* Luxury Inactive Overlay (Matches the screenshot with dark magenta multiply) */}
+              {!isActive && (
+                <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(136,14,79,0.7)', mixBlendMode: 'multiply' }} />
+              )}
+              {!isActive && (
+                <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(26,0,16,0.2)' }} />
+              )}
+              
+              {/* Glass Frosted Play Button for Inactive Slides */}
               {!isActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                    <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[12px] border-l-white ml-1" />
+                  <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 transition-transform duration-300">
+                    <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-white/90 ml-1" />
                   </div>
                 </div>
               )}
-              <div className="absolute bottom-3 left-3">
-                <span className="font-cinzel text-[10px] tracking-[0.15em] text-white/80 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded-full">
+
+              {/* Active Inner Shadow for cinematic depth */}
+              {isActive && (
+                <div className="absolute inset-0 pointer-events-none transition-opacity duration-500" style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.3)' }} />
+              )}
+
+              {/* Numbering at bottom left */}
+              <div className="absolute bottom-5 left-5">
+                <span className={`font-cinzel text-xs tracking-[0.2em] font-bold ${isActive ? 'text-white drop-shadow-md' : 'text-white/60'}`}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
-      <div className="flex items-center justify-center gap-2 mt-8">
+      
+      {/* Paginator */}
+      <div className="flex items-center justify-center gap-3 mt-2">
         {VIDEOS.map((_, i) => (
           <button key={i} onClick={() => { goTo(i); startTimer(); }}
-                  className="rounded-full transition-all duration-300" 
-                  style={{ width: i === active ? 32 : 8, height: 8, background: i === active ? C.gold : 'rgba(255,255,255,0.25)' }} />
+                  className={`rounded-full transition-all duration-500 ${i === active ? 'w-10 h-2 bg-[#E91E8C] shadow-[0_0_10px_#E91E8C]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'}`} />
         ))}
-      </div>
-      <div className="mt-4 mx-auto max-w-xs h-px bg-white/10 rounded-full overflow-hidden">
-        <motion.div key={active} className="h-full"
-                    style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }}
-                    initial={{ width:'0%' }} animate={{ width:'100%' }} transition={{ duration:6, ease:'linear' }} />
       </div>
     </div>
   );
@@ -469,16 +494,18 @@ export default function Home() {
       </section>
 
       {/* ══ VIDEO CAROUSEL ══ */}
-      <section className="py-20 relative overflow-hidden" style={{ background: C.goldDk }}>
+      <section className="py-24 relative overflow-hidden" style={{ background: C.goldDk }}>
         <div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(233,30,140,0.15) 0%, transparent 70%)` }} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
+        <div className="max-w-7xl mx-auto relative">
+          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-8">
             <span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.goldPale }}>EXPLORE</span>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-light text-white">
               Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> Reels
             </h2>
           </motion.div>
+          
           <VideoCarousel />
+          
         </div>
       </section>
 
