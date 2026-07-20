@@ -20,6 +20,7 @@ const C = {
   border:    'rgba(194,24,91,0.15)',
   borderMd:  'rgba(194,24,91,0.30)',
   shadow:    'rgba(194,24,91,0.08)',
+  goldBorder:'rgba(194,24,91,0.25)',
 };
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
@@ -140,8 +141,8 @@ function VideoCarousel() {
               onClick={() => { goTo(i); startTimer(); }}
               animate={{ scale: isActive ? 1.08 : 0.88, opacity: isActive ? 1 : 0.55 }}
               transition={{ type:'spring', stiffness:300, damping:28 }}
-              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
-              style={{ transition:'width 0.4s ease, height 0.4s ease', ringColor: C.goldLt }}>
+              className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden ${isActive ? 'w-52 sm:w-64 h-80 sm:h-96 ring-2 ring-[#E91E8C] shadow-[0_0_40px_rgba(233,30,140,0.35)]' : 'w-36 sm:w-44 h-60 sm:h-72'}`}
+              style={{ transition:'width 0.4s ease, height 0.4s ease' }}>
               <video ref={el => { videoRefs.current[i] = el; }} src={src} muted playsInline loop={false}
                      onEnded={isActive ? handleEnded : undefined} className="w-full h-full object-cover" />
               {!isActive && <div className="absolute inset-0" style={{ background: 'rgba(26,0,16,0.5)' }} />}
@@ -549,7 +550,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
+            {/* Realistic Phone Mockup */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
