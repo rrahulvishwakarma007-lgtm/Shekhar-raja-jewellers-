@@ -500,7 +500,7 @@ export default function Home() {
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-8">
             <span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.goldPale }}>EXPLORE</span>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-light text-white">
-              Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> Reels
+              Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> In Motion
             </h2>
           </motion.div>
           
