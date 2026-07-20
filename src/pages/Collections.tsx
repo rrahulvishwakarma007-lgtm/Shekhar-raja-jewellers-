@@ -59,7 +59,6 @@ const categories = [
 
 // ── Products ──────────────────────────────────────────────────────────────────
 const allProducts = [
-
   // ── EXISTING (1–33) ──────────────────────────────────────────────────────
   { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',    description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller',  featured:true  },
   { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring2.png',           tag:'Premium',     featured:false },
@@ -194,7 +193,6 @@ const allProducts = [
   { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
 ];
 
-
 // ─────────────────────────────────────────────────────────────────────────────
 // ── 3D Tilt Card — cursor-driven perspective rotation + glare sweep ────────────
 function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
@@ -238,8 +236,7 @@ function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: (
         className="relative"
       >
         {children}
-
-        {/* Moving glare sheen — gives the surface a glassy, lit-from-cursor feel */}
+        {/* Moving glare sheen */}
         <div
           className="absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300"
           style={{
@@ -252,7 +249,6 @@ function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: (
     </div>
   );
 }
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ── Hero Tilt Card — bolder cursor-driven tilt for the spotlight ──────────────
@@ -267,7 +263,7 @@ function HeroTiltWrapper({ children, onClick }: { children: React.ReactNode; onC
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width;
     const py = (e.clientY - rect.top) / rect.height;
-    const ry = (px - 0.5) * 26;   // noticeably wider swing than grid cards
+    const ry = (px - 0.5) * 26;   
     const rx = (0.5 - py) * 22;
     setTilt({ rx, ry, gx: px * 100, gy: py * 100 });
   };
@@ -295,8 +291,6 @@ function HeroTiltWrapper({ children, onClick }: { children: React.ReactNode; onC
         className="relative cursor-pointer"
       >
         {children}
-
-        {/* Moving glare sheen */}
         <div
           className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
           style={{
@@ -310,9 +304,76 @@ function HeroTiltWrapper({ children, onClick }: { children: React.ReactNode; onC
   );
 }
 
+// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
+function CollectionsSkeleton() {
+  return (
+    <div style={{ background: C.bg, minHeight: '100vh' }}>
+      <section className="relative overflow-hidden pt-28 pb-16" style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #FFF0F5 50%, ${C.bgDeep} 100%)` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+            {/* Left Skeleton */}
+            <div>
+              <div className="h-8 w-40 rounded-full animate-pulse mb-7" style={{ background: 'rgba(248,187,217,0.4)' }} />
+              <div className="h-16 w-3/4 rounded-md animate-pulse mb-4" style={{ background: 'rgba(248,187,217,0.6)' }} />
+              <div className="h-16 w-1/2 rounded-md animate-pulse mb-8" style={{ background: 'rgba(248,187,217,0.6)' }} />
+              <div className="h-4 w-full rounded-md animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.3)' }} />
+              <div className="h-4 w-5/6 rounded-md animate-pulse mb-10" style={{ background: 'rgba(248,187,217,0.3)' }} />
+              <div className="h-6 w-56 rounded-md animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
+            </div>
+            {/* Right Skeleton */}
+            <div className="hidden sm:block">
+              <div className="w-full rounded-2xl animate-pulse shadow-xl" style={{ aspectRatio: '4/5', background: 'rgba(248,187,217,0.25)' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Category Rail Skeleton */}
+      <section style={{ background: C.bgDeep, borderBottom: `1px solid ${C.border}` }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
+          <div className="flex items-center gap-5 sm:gap-7 overflow-hidden">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
+                <div className="w-[68px] h-[68px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
+                <div className="w-12 h-2 rounded-md animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Search Bar Skeleton */}
+      <section className="py-6" style={{ background: C.bgDeep }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-md mx-auto h-[46px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+        </div>
+      </section>
+
+      {/* Product Grid Skeleton */}
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="rounded-xl overflow-hidden shadow-sm" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
+                <div className="w-full animate-pulse" style={{ aspectRatio: '1/1', background: 'rgba(248,187,217,0.2)' }} />
+                <div className="p-4">
+                  <div className="h-2 w-1/3 rounded animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.5)' }} />
+                  <div className="h-5 w-3/4 rounded animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.4)' }} />
+                  <div className="h-2 w-full rounded animate-pulse mb-1" style={{ background: 'rgba(248,187,217,0.2)' }} />
+                  <div className="h-2 w-5/6 rounded animate-pulse mt-4" style={{ background: 'rgba(248,187,217,0.2)' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Collections() {
+  const [isLoading, setIsLoading]             = useState(true);
   const [activeTab, setActiveTab]             = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<typeof allProducts[0] | null>(null);
   const [searchQuery, setSearchQuery]         = useState('');
@@ -321,13 +382,39 @@ export default function Collections() {
 
   const featuredPool = allProducts.filter(p => p.featured);
 
-  // Rotate hero spotlight every 4.2s
+  // Background Preloader Logic
   useEffect(() => {
+    const imagesToLoad = [
+      ...featuredPool.map(p => p.image),
+      ...categories.map(c => c.image).filter(Boolean)
+    ];
+
+    const imagePromises = imagesToLoad.map(src => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = src as string;
+        img.onload = resolve;
+        img.onerror = resolve; // Ensure it resolves even on failure
+      });
+    });
+
+    // Ensure the elegant skeleton shows for at least 800ms
+    Promise.all([
+      ...imagePromises,
+      new Promise(resolve => setTimeout(resolve, 800))
+    ]).then(() => {
+      setIsLoading(false);
+    });
+  }, [featuredPool]);
+
+  // Rotate hero spotlight every 4.2s (ONLY after loading completes)
+  useEffect(() => {
+    if (isLoading) return;
     const t = setInterval(() => {
       setHeroIndex(i => (i + 1) % featuredPool.length);
     }, 4200);
     return () => clearInterval(t);
-  }, [featuredPool.length]);
+  }, [featuredPool.length, isLoading]);
 
   const heroProduct = featuredPool[heroIndex] || allProducts[0];
 
@@ -338,8 +425,12 @@ export default function Collections() {
     return matchCat && matchSearch;
   });
 
+  if (isLoading) {
+    return <CollectionsSkeleton />;
+  }
+
   return (
-    <div style={{ background: C.bg, minHeight: '100vh' }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} style={{ background: C.bg, minHeight: '100vh' }}>
 
       {/* ══════════════════════════════════════════════
           HERO — cinematic split: copy + rotating spotlight
@@ -364,7 +455,7 @@ export default function Collections() {
             <div>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                           className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full"
-                          style={{ background: 'rgba(255,255,255,0.65)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
+                          style={{ background: 'rgba(255,253,250,0.65)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
                 <Crown size={11} style={{ color: C.gold }} />
                 <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.textMid }}>
                   EST. 1987 · JABALPUR
@@ -661,6 +752,6 @@ export default function Collections() {
         )}
       </AnimatePresence>
 
-    </div>
+    </motion.div>
   );
 }
