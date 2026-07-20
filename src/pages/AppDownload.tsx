@@ -1,6 +1,23 @@
 import { motion } from 'framer-motion';
-import { Download, MessageCircle, Smartphone, Tag, Bell, Headphones, Check, ChevronRight } from 'lucide-react';
+import { Download, MessageCircle, Smartphone, Tag, Bell, Headphones, Check, ChevronRight, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// ── Palette (Matching your App Theme) ─────────────────────────────────────────
+const C = {
+  bg:        '#FFF5F7',
+  bgCard:    '#FFFFFF',
+  bgDeep:    '#FFE4EC',
+  gold:      '#C2185B',
+  goldDk:    '#880E4F',
+  goldLt:    '#E91E8C',
+  goldPale:  '#F8BBD9',
+  goldBg:    'rgba(194,24,91,0.08)',
+  text:      '#1A0010',
+  textMid:   '#6D1B4E',
+  textLight: '#AD6888',
+  border:    'rgba(194,24,91,0.15)',
+  borderMd:  'rgba(194,24,91,0.30)',
+};
 
 const features = [
   { icon: Tag, title: 'Complete Catalogue', desc: 'Browse our entire collection of gold and diamond jewellery' },
@@ -20,101 +37,128 @@ const APK_URL = 'https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/d
 
 export default function AppDownload() {
   return (
-    <div className="pt-28 pb-16 bg-[#e8e0d0] min-h-screen">
+    <div className="pt-20 min-h-screen relative overflow-hidden" style={{ background: C.bg }}>
+
+      {/* Decorative Ambient Background */}
+      <div className="absolute top-0 right-0 w-[50vw] h-[50vw] rounded-full opacity-30 mix-blend-multiply filter blur-[120px] pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(233,30,140,0.1) 0%, transparent 70%)' }} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#1a0f05] to-[#3a2e1e] py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 sm:py-24 overflow-hidden shadow-xl" style={{ background: 'linear-gradient(135deg, ' + C.text + ' 0%, ' + C.goldDk + ' 100%)' }}>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             {/* Content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
               className="text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2 bg-[#b8862a]/20 px-4 py-2 rounded-full mb-6">
-                <Smartphone size={18} className="text-[#d4a843]" />
-                <span className="font-raleway text-sm text-[#d4a843]">Now Available on Android</span>
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-6 backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <Smartphone size={18} style={{ color: C.goldPale }} />
+                <span className="font-raleway text-sm font-medium" style={{ color: C.goldPale }}>Now Available on Android</span>
               </div>
-              <h1 className="font-cormorant text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
-                Shekhar Raja Jewellers App
+              <h1 className="font-cormorant text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                Shekhar Raja <br />Jewellers App
               </h1>
-              <p className="font-raleway text-lg text-white/70 mt-6">
-                Your favourite jewellery store now in your pocket. Browse collections, check gold rates, and shop from anywhere.
+              <p className="font-raleway text-lg mt-6 max-w-lg mx-auto lg:mx-0" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                Your favourite jewellery store now in your pocket. Browse collections, check live gold rates, and shop from anywhere.
               </p>
-              <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-                <a
+              
+              <div className="flex flex-wrap gap-4 mt-10 justify-center lg:justify-start">
+                <motion.a
+                  whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}
+                  whileTap={{ scale: 0.95 }}
                   href={APK_URL}
                   download
-                  className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
+                  className="flex items-center gap-2 text-white px-8 py-4 rounded-full font-raleway font-bold transition-all shadow-lg"
+                  style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }}
                 >
                   <Download size={20} />
                   Download APK
-                </a>
-                <a
+                </motion.a>
+                <motion.a
+                  whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(37,211,102,0.3)' }}
+                  whileTap={{ scale: 0.95 }}
                   href={`https://wa.me/918377911745?text=${encodeURIComponent('Hello! Please share the app download link.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
+                  className="flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-raleway font-bold transition-all shadow-lg"
                 >
                   <MessageCircle size={20} />
-                  Get Link on WhatsApp
-                </a>
+                  Get Link on WA
+                </motion.a>
               </div>
             </motion.div>
 
-            {/* Phone Mockup */}
+            {/* Realistic Phone Mockup */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
+              initial={{ opacity: 0, scale: 0.9, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
               className="flex justify-center"
             >
-              <div className="relative">
-                <div className="w-72 h-[580px] bg-gradient-to-b from-[#2a1a0a] to-[#1a0f05] rounded-[3rem] border-4 border-[#3a2e1e] p-3 shadow-2xl">
-                  <div className="w-full h-full bg-[#faf7f2] rounded-[2.5rem] overflow-hidden">
-                    <div className="bg-[#b8862a] py-6 px-6 text-center">
-                      <span className="font-cinzel text-sm tracking-[0.2em] text-white">SHEKHAR RAJA</span>
-                      <p className="font-cormorant text-lg text-white/80 mt-1">Jewellers</p>
+              <motion.div 
+                animate={{ y: [0, -15, 0] }} 
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="relative"
+              >
+                {/* Phone Frame */}
+                <div className="w-[300px] h-[600px] rounded-[3rem] border-[6px] p-2 shadow-2xl relative" style={{ background: 'linear-gradient(to bottom, #1A0010, #3D001C)', borderColor: C.gold }}>
+                  
+                  {/* Notch */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#1A0010] rounded-b-2xl z-30" />
+
+                  {/* Phone Screen */}
+                  <div className="w-full h-full rounded-[2.2rem] overflow-hidden relative flex flex-col" style={{ background: C.bg }}>
+                    
+                    {/* App Header */}
+                    <div className="pt-10 pb-4 px-6 text-center shadow-md relative z-20" style={{ background: C.gold }}>
+                      <span className="font-cinzel text-sm tracking-[0.2em] text-white font-bold">SHEKHAR RAJA</span>
+                      <p className="font-cormorant text-xs text-white/80 mt-0.5">Jewellers</p>
                     </div>
-                    <div className="p-4 space-y-3">
-                      <div className="bg-white rounded-xl p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#b8862a]/10 rounded-full" />
-                          <div className="flex-1">
-                            <div className="h-3 w-24 bg-[#b8862a] rounded mb-2" />
-                            <div className="h-2 w-16 bg-gray-200 rounded" />
-                          </div>
+
+                    {/* App Content */}
+                    <div className="p-4 flex-1 overflow-hidden flex flex-col relative z-10">
+                      
+                      {/* Fake Search Bar */}
+                      <div className="w-full h-10 rounded-full mb-4 flex items-center px-4 shadow-sm" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
+                        <Search size={14} style={{ color: C.textLight }} />
+                        <span className="font-raleway text-xs ml-2" style={{ color: C.textLight }}>Search jewellery...</span>
+                      </div>
+
+                      {/* Fake Promo Banner */}
+                      <div className="w-full h-32 rounded-2xl mb-5 overflow-hidden shadow-md shrink-0 relative" style={{ border: '1px solid ' + C.border }}>
+                        <img src="/hero-1.jpg" className="w-full h-full object-cover" alt="promo preview" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                          <span className="font-cormorant text-white font-semibold">New Collection</span>
                         </div>
                       </div>
-                      <div className="bg-white rounded-xl p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#b8862a]/10 rounded-full" />
-                          <div className="flex-1">
-                            <div className="h-3 w-20 bg-[#b8862a] rounded mb-2" />
-                            <div className="h-2 w-full bg-gray-200 rounded" />
+
+                      {/* Fake Product Grid */}
+                      <div className="grid grid-cols-2 gap-3">
+                        {['/ring6.png', '/necklace88.png', '/bangle1.png', '/earring1.jpg'].map((img, idx) => (
+                          <div key={idx} className="rounded-xl overflow-hidden shadow-sm flex flex-col" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
+                            <div className="h-28 overflow-hidden bg-gray-50">
+                              <img src={img} className="w-full h-full object-cover" alt="product preview" />
+                            </div>
+                            <div className="p-2.5">
+                              <div className="h-2 w-3/4 rounded mb-1.5" style={{ background: C.borderMd }} />
+                              <div className="h-2 w-1/2 rounded" style={{ background: C.goldPale }} />
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
-                      <div className="bg-white rounded-xl p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#b8862a]/10 rounded-full" />
-                          <div className="flex-1">
-                            <div className="h-3 w-28 bg-[#b8862a] rounded mb-2" />
-                            <div className="h-2 w-20 bg-gray-200 rounded" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-[#b8862a] rounded-xl p-4">
-                        <div className="h-3 w-20 bg-white/80 rounded mb-2" />
-                        <div className="h-2 w-full bg-white/40 rounded" />
-                      </div>
+
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3a2e1e] rounded-full" />
-              </div>
+
+                {/* Ground Shadow */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-3 bg-black/40 blur-xl rounded-full" />
+              </motion.div>
             </motion.div>
 
           </div>
@@ -122,11 +166,14 @@ export default function AppDownload() {
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-[#faf7f2]">
+      <section className="py-20 relative z-10" style={{ background: C.bgDeep, borderTop: '1px solid ' + C.border, borderBottom: '1px solid ' + C.border }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] text-center mb-12">
-            App Features
-          </h2>
+          <div className="text-center mb-16">
+            <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.text }}>
+              App Features
+            </h2>
+            <div className="h-1 w-16 mx-auto mt-4 rounded-full" style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }} />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div
@@ -135,15 +182,17 @@ export default function AppDownload() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-[#e8e0d0] rounded-2xl p-6 text-center"
+                whileHover={{ y: -5, boxShadow: '0 10px 25px rgba(194,24,91,0.08)' }}
+                className="rounded-3xl p-8 text-center transition-all duration-300"
+                style={{ background: C.bgCard, border: '1px solid ' + C.border }}
               >
-                <div className="w-14 h-14 mx-auto bg-[#b8862a]/10 rounded-full flex items-center justify-center">
-                  <feature.icon size={24} className="text-[#b8862a]" />
+                <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-6" style={{ background: C.goldBg }}>
+                  <feature.icon size={28} style={{ color: C.gold }} />
                 </div>
-                <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e] mt-4">
+                <h3 className="font-cormorant text-2xl font-semibold" style={{ color: C.text }}>
                   {feature.title}
                 </h3>
-                <p className="font-raleway text-sm text-[#9a8060] mt-2">
+                <p className="font-raleway text-sm mt-3 leading-relaxed" style={{ color: C.textLight }}>
                   {feature.desc}
                 </p>
               </motion.div>
@@ -153,11 +202,14 @@ export default function AppDownload() {
       </section>
 
       {/* Install Guide */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold text-[#3a2e1e] text-center mb-12">
-            How to Install
-          </h2>
+          <div className="text-center mb-16">
+            <h2 className="font-cormorant text-3xl sm:text-4xl font-semibold" style={{ color: C.text }}>
+              How to Install
+            </h2>
+            <div className="h-1 w-16 mx-auto mt-4 rounded-full" style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }} />
+          </div>
           <div className="space-y-4">
             {installSteps.map((item, index) => (
               <motion.div
@@ -166,57 +218,66 @@ export default function AppDownload() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-6 bg-[#faf7f2] rounded-2xl p-6"
+                className="flex items-center gap-6 rounded-2xl p-6 sm:p-8 shadow-sm"
+                style={{ background: C.bgCard, border: '1px solid ' + C.border }}
               >
-                <div className="w-12 h-12 bg-[#b8862a] rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="font-cinzel text-lg font-bold text-white">{item.step}</span>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 shadow-inner" style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDk})` }}>
+                  <span className="font-cinzel text-xl font-bold text-white">{item.step}</span>
                 </div>
                 <div>
-                  <h3 className="font-cormorant text-xl font-semibold text-[#3a2e1e]">
+                  <h3 className="font-cormorant text-2xl font-semibold" style={{ color: C.text }}>
                     {item.title}
                   </h3>
-                  <p className="font-raleway text-sm text-[#9a8060] mt-1">
+                  <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
                     {item.desc}
                   </p>
                 </div>
-                <Check size={24} className="text-[#b8862a] ml-auto hidden sm:block" />
+                <Check size={28} className="ml-auto hidden sm:block opacity-30" style={{ color: C.gold }} />
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 bg-[#1a0f05]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-white">
+      {/* Footer CTA */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${C.goldDk} 0%, ${C.gold} 100%)` }} />
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">
             Download Now
           </h2>
-          <p className="font-raleway text-lg text-white/70 mt-4">
-            Get the app and start exploring our beautiful collection
+          <p className="font-raleway text-lg text-white/80 mt-4 max-w-xl mx-auto">
+            Get the app today and start exploring our beautiful collections with exclusive offers.
           </p>
-          <div className="flex flex-wrap gap-4 mt-8 justify-center">
-            <a
+          <div className="flex flex-wrap gap-4 mt-10 justify-center">
+            <motion.a
+              whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}
+              whileTap={{ scale: 0.95 }}
               href={APK_URL}
               download
-              className="flex items-center gap-2 bg-[#b8862a] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#8b6014] transition-colors"
+              className="flex items-center gap-2 bg-white px-8 py-4 rounded-full font-raleway font-bold transition-all shadow-lg"
+              style={{ color: C.gold }}
             >
               <Download size={20} />
               Download APK
-            </a>
-            <a
+            </motion.a>
+            <motion.a
+              whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(37,211,102,0.3)' }}
+              whileTap={{ scale: 0.95 }}
               href="https://wa.me/918377911745"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-raleway font-medium hover:bg-[#20bd5a] transition-colors"
+              className="flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-raleway font-bold transition-all shadow-lg"
             >
               <MessageCircle size={20} />
               Chat on WhatsApp
-            </a>
+            </motion.a>
           </div>
           <Link
             to="/"
-            className="inline-flex items-center gap-1 text-[#d4a843] font-raleway text-sm mt-8 hover:gap-2 transition-all"
+            className="inline-flex items-center gap-1 font-raleway text-sm font-medium mt-12 hover:gap-2 transition-all text-white/70 hover:text-white"
           >
             Back to Home <ChevronRight size={16} />
           </Link>
