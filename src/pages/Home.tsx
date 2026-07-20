@@ -179,33 +179,94 @@ function VideoCarousel() {
   );
 }
 
+// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
+function HomeSkeleton() {
+  return (
+    <div style={{ background: C.bg }} className="pt-20 min-h-screen">
+      <section style={{ paddingBottom: 0 }}>
+        {/* Top Nav Skeleton */}
+        <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3" style={{ borderBottom:`1px solid ${C.border}` }}>
+          <div className="h-4 w-48 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+          <div className="flex gap-6">
+            <div className="h-3 w-16 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+            <div className="h-3 w-24 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+            <div className="h-3 w-20 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+          </div>
+        </div>
+
+        {/* Search Bar Skeleton */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="max-w-2xl mx-auto h-[50px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
+        </div>
+
+        {/* Category Row Skeleton */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
+          <div className="flex gap-4 sm:gap-6 overflow-hidden pb-2">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
+                <div className="w-[90px] h-[90px] rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
+                <div className="w-16 h-3 rounded-md animate-pulse" style={{ background: C.goldPale }} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Promo Banner Skeleton */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+          <div className="w-full rounded-3xl h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Home() {
+  const [isLoading, setIsLoading]           = useState(true);
   const [currentSlide, setCurrentSlide]     = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
   const [promoBanner, setPromoBanner]        = useState(0);
   const [searchQuery, setSearchQuery]        = useState('');
 
-  // Preload all banner images immediately on mount
+  // Preload all banner images immediately on mount & handle skeleton loading
   useEffect(() => {
-    promoBanners.forEach(banner => {
-      const img = new Image();
-      img.src = banner.img;
+    const imagePromises = promoBanners.map(banner => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = banner.img;
+        img.onload = resolve;
+        img.onerror = resolve; // Resolve anyway to avoid blocking on failed images
+      });
+    });
+
+    // Wait for images to load, with a minimum simulated delay of 800ms to show the smooth skeleton effect
+    Promise.all([
+      ...imagePromises,
+      new Promise(resolve => setTimeout(resolve, 800))
+    ]).then(() => {
+      setIsLoading(false);
     });
   }, []);
 
   useEffect(() => {
+    if (isLoading) return; // Don't start carousels until loaded
     const timer = setInterval(() => setCurrentSlide(p => (p + 1) % heroSlides.length), 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
+    if (isLoading) return; // Don't start carousels until loaded
     const timer = setInterval(() => setPromoBanner(p => (p + 1) % promoBanners.length), 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isLoading]);
+
+  // Show the beautiful preloader skeleton until images are ready
+  if (isLoading) {
+    return <HomeSkeleton />;
+  }
 
   return (
-    <div style={{ background: C.bg }} className="pt-20">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} style={{ background: C.bg }} className="pt-20">
 
       {/* ══════════════════════════════════════════════════════════════
           HERO — CaratLane style: light bg, search, category row, promo
@@ -296,7 +357,6 @@ export default function Home() {
               alt={promoBanners[0].label} 
               className="absolute inset-0 w-full h-full object-cover object-center z-0" 
               style={{ opacity: promoBanner === 0 ? 1 : 0, transition: 'opacity 0.8s ease' }}
-              loading="eager"
             />
 
             {/* Render all banners instantly to force immediate browser downloads */}
@@ -318,7 +378,6 @@ export default function Home() {
                     src={banner.img} 
                     alt={banner.label} 
                     className="w-full h-full object-cover object-center" 
-                    loading="lazy"
                   />
                 </motion.div>
               )
@@ -550,7 +609,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Realistic Phone Mockup */}
+            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -644,6 +703,6 @@ export default function Home() {
 
       {/* Product Modal */}
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-    </div>
+    </motion.div>
   );
 }
