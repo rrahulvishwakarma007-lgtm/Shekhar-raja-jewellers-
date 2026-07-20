@@ -11,6 +11,7 @@ const C = {
   goldDk:    '#880E4F',
   goldLt:    '#E91E8C',
   goldPale:  '#F8BBD9',
+  goldBg:    'rgba(194,24,91,0.08)',
   text:      '#1A0010',
   textMid:   '#6D1B4E',
   textLight: '#AD6888',
