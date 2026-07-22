@@ -46,17 +46,17 @@ const bridalSets = [
 
 const testimonials = [
   {
-    name: 'Priya Sharma',
+    name: '',
     text: 'The bridal set I got from Shekhar Raja Jewellers was absolutely stunning. The craftsmanship is unmatched!',
     rating: 5
   },
   {
-    name: 'Anjali Patel',
+    name: '',
     text: 'Best jewellery shop in Jabalpur! They made my wedding so special with their beautiful designs.',
     rating: 5
   },
   {
-    name: 'Neha Gupta',
+    name: '',
     text: 'Excellent quality and fair prices. The staff was very helpful in choosing the perfect bridal set.',
     rating: 5
   }
