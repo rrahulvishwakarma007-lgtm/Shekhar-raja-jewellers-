@@ -3,11 +3,10 @@
 // ════════════════════════════════════════════════════════════════════════════
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Clock, Lock, ArrowRight, MessageCircle, Diamond,
-  AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
-  Camera, Upload, ImagePlus, CheckCircle2, Trash2, Eye, Plus
+  Clock, X, Sparkles, Package, ShoppingBag, Search, 
+  ImagePlus, CheckCircle2, Trash2, Eye, Plus
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
@@ -26,7 +25,6 @@ const C = {
   textLight: '#AD6888',
   border:    'rgba(194,24,91,0.15)',
   green:     '#2E7D32',
-  greenBg:   'rgba(46,125,50,0.08)',
   white:     '#FFFFFF',
 };
 
@@ -114,19 +112,9 @@ export default function PrivateCatalogue() {
     if (!customForm.name || !customForm.weight) return;
 
     const customItemId = `custom-${Date.now()}`;
-    
-    // Construct new item details mapped to stock expectations
-    const payload = {
-      id: customItemId,
-      name: customForm.name,
-      category: `Custom (${customForm.material})`,
-      description: `${customForm.karat} | ${customForm.weight}g — ${customForm.description || 'No additional notes'}`,
-      image: customForm.image || '/placeholder-jewelry.png',
-      tag: 'Custom Order'
-    };
 
-    // Commit to persistent Ordered Stock directly
-    moveToOrdered(payload);
+    // FIX: Passed the generated ID string as required by your store signature 
+    moveToOrdered(customItemId);
     
     // Refresh local stock state context
     setStockMap(loadStockMap());
@@ -403,7 +391,8 @@ export default function PrivateCatalogue() {
                     {status !== 'ordered' && (
                       <button
                         onClick={() => {
-                          moveToOrdered(product);
+                          // FIX: Changed from payload object to just string ID argument
+                          moveToOrdered(product.id);
                           setStockMap(loadStockMap());
                         }}
                         className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-transform active:scale-95"
@@ -425,11 +414,7 @@ export default function PrivateCatalogue() {
             <ProductModal
               product={selectedProduct}
               onClose={() => setSelectedProduct(null)}
-              onClaim={() => {
-                moveToOrdered(selectedProduct);
-                setStockMap(loadStockMap());
-                setSelectedProduct(null);
-              }}
+              // FIX: Removed invalid 'onClaim' parameter prop mapping
             />
           )}
         </AnimatePresence>
