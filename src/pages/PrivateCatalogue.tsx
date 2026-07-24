@@ -3,11 +3,10 @@
 // ════════════════════════════════════════════════════════════════════════════
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Clock, Lock, ArrowRight, MessageCircle, Diamond,
-  AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
-  Camera, Upload, ImagePlus, CheckCircle2, Trash2, Eye, Plus
+  Clock, X, Sparkles, Package, ShoppingBag, Search, 
+  ImagePlus, CheckCircle2, Trash2, Eye, Plus
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
@@ -26,7 +25,6 @@ const C = {
   textLight: '#AD6888',
   border:    'rgba(194,24,91,0.15)',
   green:     '#2E7D32',
-  greenBg:   'rgba(46,125,50,0.08)',
   white:     '#FFFFFF',
 };
 
@@ -125,8 +123,8 @@ export default function PrivateCatalogue() {
       tag: 'Custom Order'
     };
 
-    // Commit to persistent Ordered Stock directly
-    moveToOrdered(customItemId, payload);
+    // Commit to persistent Ordered Stock directly (FIX: Only passing payload)
+    moveToOrdered(payload);
     
     // Refresh local stock state context
     setStockMap(loadStockMap());
@@ -244,8 +242,8 @@ export default function PrivateCatalogue() {
                           type="text"
                           required
                           placeholder="e.g., Antique Bridal Choker / Family Ring Repair"
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
-                          style={{ borderColor: C.border, focusRing: C.gold }}
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                          style={{ borderColor: C.border }}
                           value={customForm.name}
                           onChange={e => setCustomForm(prev => ({ ...prev, name: e.target.value }))}
                         />
@@ -258,7 +256,7 @@ export default function PrivateCatalogue() {
                           step="0.001"
                           required
                           placeholder="e.g., 14.250"
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                           style={{ borderColor: C.border }}
                           value={customForm.weight}
                           onChange={e => setCustomForm(prev => ({ ...prev, weight: e.target.value }))}
@@ -300,7 +298,7 @@ export default function PrivateCatalogue() {
                         <textarea
                           rows={2}
                           placeholder="Provide descriptive details regarding gemstone settings, dimensions, or resizing needs..."
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                           style={{ borderColor: C.border }}
                           value={customForm.description}
                           onChange={e => setCustomForm(prev => ({ ...prev, description: e.target.value }))}
@@ -359,7 +357,9 @@ export default function PrivateCatalogue() {
         {/* Ready Stock Vault Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map(product => {
-            const status = stockMap[product.id] || 'Available';
+            // FIX: Fallback to lowercase 'available' to avoid type overlap errors
+            const status = stockMap[product.id] || 'available';
+            
             return (
               <motion.div
                 key={product.id}
@@ -374,7 +374,8 @@ export default function PrivateCatalogue() {
                       {product.tag}
                     </span>
                   )}
-                  {status === 'Ordered' && (
+                  {/* FIX: Lowercase 'ordered' matching */}
+                  {status === 'ordered' && (
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center">
                       <div className="bg-white/95 px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 border" style={{ borderColor: C.gold }}>
                         <Package size={16} style={{ color: C.gold }} />
@@ -400,10 +401,12 @@ export default function PrivateCatalogue() {
                       <Eye size={14} /> Spec Sheet
                     </button>
 
-                    {status !== 'Ordered' && (
+                    {/* FIX: Lowercase 'ordered' matching */}
+                    {status !== 'ordered' && (
                       <button
                         onClick={() => {
-                          moveToOrdered(product.id, product);
+                          // FIX: Only passing product
+                          moveToOrdered(product);
                           setStockMap(loadStockMap());
                         }}
                         className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-transform active:scale-95"
@@ -425,9 +428,10 @@ export default function PrivateCatalogue() {
             <ProductModal
               product={selectedProduct}
               onClose={() => setSelectedProduct(null)}
-              status={stockMap[selectedProduct.id] || 'Available'}
+              // FIX: Removed 'status' as ProductModal doesn't accept it
               onClaim={() => {
-                moveToOrdered(selectedProduct.id, selectedProduct);
+                // FIX: Only passing product
+                moveToOrdered(selectedProduct);
                 setStockMap(loadStockMap());
                 setSelectedProduct(null);
               }}
