@@ -233,52 +233,11 @@ const inputStyle: React.CSSProperties = {
 };
 
 /*
-  ── Integration into PrivateCatalogue.tsx ──────────────────────────────────
-
-  1. Import it:
-     import AddProductModal, { CategoryOption, NewProduct, StockChoice } from '../components/AddProductModal';
-
-  2. Turn ALL_PRODUCTS into state instead of reading the constant directly:
-     const [products, setProducts] = useState(ALL_PRODUCTS);
-     const [addModalOpen, setAddModalOpen] = useState(false);
-
-     Then replace any place currently reading `ALL_PRODUCTS` in render/logic
-     with `products`.
-
-  3. Build the category list once from the same keys already used:
-     const categoryOptions: CategoryOption[] = [
-       { key: 'bangles',     label: 'Bangles' },
-       { key: 'rings',       label: 'Rings' },
-       { key: 'womens_ring', label: "Women's Ring" },
-       { key: 'mens_ring',   label: "Men's Ring" },
-       { key: 'necklaces',   label: 'Necklaces' },
-     ];
-
-  4. Handle the add, updating both the product list and stock status:
-     const handleAddProduct = (categoryKey: string, product: NewProduct, stock: StockChoice) => {
-       setProducts(prev => ({
-         ...prev,
-         [categoryKey]: [...(prev[categoryKey] ?? []), product],
-       }));
-       if (stock === 'ordered') {
-         moveToOrdered(product.id); // from your existing stockStore import
-       }
-       // If your stockStore needs an explicit "mark as ready" call for new
-       // ids (rather than defaulting untouched ids to ready), add that call
-       // in the else branch here — check stockStore.ts for the right function name.
-     };
-
-  5. Add a trigger button (e.g. near the page header) and render the modal:
-     <button onClick={() => setAddModalOpen(true)}>+ Add Product</button>
-
-     <AddProductModal
-       isOpen={addModalOpen}
-       onClose={() => setAddModalOpen(false)}
-       categories={categoryOptions}
-       onAdd={handleAddProduct}
-     />
-
-  Note: step 4's "ready stock" path assumes loadStockMap() treats any id not
-  yet marked "ordered" as ready by default. If your stockStore.ts works
-  differently, share that file and I'll adjust the wiring to match exactly.
+  Already wired into src/pages/PrivateCatalogue.tsx:
+  - "Add Product" button in the search/filter row opens this modal
+  - categories is passed as a single-item array: the category the private
+    catalogue link is currently showing (each link is scoped to one category)
+  - onAdd pushes the new product into in-memory state and, if "Ordered Stock"
+    was chosen, calls moveToOrdered() from ../lib/stockStore
+  - Added products are in-memory only and reset on page refresh
 */
