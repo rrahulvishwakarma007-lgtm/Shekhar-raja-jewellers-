@@ -9,6 +9,7 @@ import {
   AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
+import AddProductModal, { type NewProduct, type StockChoice } from '../components/AddProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
@@ -413,6 +414,8 @@ export default function PrivateCatalogue() {
   const [searchQuery, setSearchQuery]         = useState('');
   const [activeFilter, setActiveFilter]       = useState<'all'|'ready'|'ordered'>('all');
   const [isLoading, setIsLoading]             = useState(true);
+  const [productsData, setProductsData]       = useState<Record<string, any[]>>(ALL_PRODUCTS);
+  const [addModalOpen, setAddModalOpen]       = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start','end start'] });
@@ -422,7 +425,7 @@ export default function PrivateCatalogue() {
 
   const token      = searchParams.get('token');
   const decoded    = token ? decodeToken(token) : null;
-  const allProducts = decoded ? (ALL_PRODUCTS[decoded.category] ?? []) : [];
+  const allProducts = decoded ? (productsData[decoded.category] ?? []) : [];
   const catLabel   = decoded?.category
     ? decoded.category.charAt(0).toUpperCase() + decoded.category.slice(1)
     : '';
@@ -485,6 +488,18 @@ export default function PrivateCatalogue() {
       return matchFilter && matchSearch;
     });
   }, [allProducts, stockMap, activeFilter, searchQuery]);
+
+  const handleAddProduct = (categoryKey: string, product: NewProduct, stock: StockChoice) => {
+    setProductsData(prev => ({
+      ...prev,
+      [categoryKey]: [...(prev[categoryKey] ?? []), product],
+    }));
+    if (stock === 'ordered') {
+      moveToOrdered(product.id);
+      setStockMap(prev => ({ ...prev, [product.id]: 'ordered' }));
+    }
+    // 'ready' needs no extra call — stockMap already defaults untouched ids to 'ready'.
+  };
 
   const handleEnquire = (product: any) => {
     const status = stockMap[product.id] ?? 'ready';
@@ -874,6 +889,16 @@ export default function PrivateCatalogue() {
             </div>
           </LayoutGroup>
 
+          {/* Add Product */}
+          <motion.button
+            whileHover={{ scale:1.04, boxShadow: `0 8px 20px rgba(194,24,91,0.3)` }} whileTap={{ scale:0.97 }}
+            onClick={() => setAddModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
+            style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDk})` }}
+          >
+            <Package size={14} /> Add Product
+          </motion.button>
+
           {/* WhatsApp */}
           <motion.a
             whileHover={{ scale:1.04, boxShadow: '0 8px 20px rgba(37,211,102,0.3)' }} whileTap={{ scale:0.97 }}
@@ -1060,6 +1085,13 @@ export default function PrivateCatalogue() {
       </div>
 
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+
+      <AddProductModal
+        isOpen={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        categories={[{ key: decoded.category, label: catLabel }]}
+        onAdd={handleAddProduct}
+      />
     </motion.div>
   );
 }
