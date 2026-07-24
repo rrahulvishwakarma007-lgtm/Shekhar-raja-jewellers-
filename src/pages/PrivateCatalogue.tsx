@@ -3,11 +3,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, LayoutGroup, Variants } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
   Clock, Lock, ArrowRight, MessageCircle, Diamond,
   AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
-  Camera, Upload, ImagePlus, CheckCircle2, Trash2, Eye,
+  Camera, Upload, ImagePlus, CheckCircle2, Trash2, Eye, Plus
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
@@ -36,1212 +36,406 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:'b1', name:'Classic Gold Bangles',   category:'Bangles',   description:'Set of 4 intricately designed 22K gold bangles.',  image:'/bangle1.png', tag:'Classic'    },
     { id:'b2', name:'Designer Bangles',        category:'Bangles',   description:'Designer gold bangles with enamel work.',           image:'/bangle2.png', tag:'Designer'   },
     { id:'b3', name:'Antique Finish Bangles',  category:'Bangles',   description:'Antique finish 22K bangles with stone work.',       image:'/bangle3.png', tag:'Heritage'   },
-    { id:'b4', name:'Bridal Bangles Set',      category:'Bangles',   description:'Heavy bridal bangle set for your special day.',     image:'/bangle4.png', tag:'Bridal'     },
-    { id:'b5', name:'Peacock Bangles',         category:'Bangles',   description:'Peacock motif 22K gold bangles.',                   image:'/bangle5.png', tag:'Exclusive'  },
-    { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle3.png',         tag:'Classic' },
-    { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                      image:'/bangle9.png',         tag:'Heritage' },
-    { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',         tag:'New Arrival' },
-    { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',         tag:'Trending' },
-    { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',         tag:'Heritage' },
-    { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                       image:'/bangleD.jpg',         tag:'Bridal Pick' },
-    { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                          image:'/bangleE.jpg',         tag:'Festive' },
-    { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                  image:'/bangleF.jpg',         tag:'Exclusive' },
-    { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',           image:'/bangleG.jpg',         tag:'Classic' },
-    { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                  image:'/bangleH.jpg',         tag:'Traditional' },
-    { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',              image:'/bangleI.jpg',         tag:'Premium' },
-    { id:34, name:'Gold Bangle ',              category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',       tag:'New Arrival' },
-    { id:35, name:'Gold Bangle ',              category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',       tag:'Classic' },
-    { id:36, name:'Gold Bangle ',              category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',       tag:'Heritage' },
-    { id:37, name:'Gold Bangle ',              category:'Bangles',      description:'Elegant 22KT gold bangle perfect for festive and bridal occasions.',            image:'/bangle103.jpg',       tag:'Festive' },
-    { id:38, name:'Gold Bangle ',              category:'Bangles',      description:'Traditional gold bangle with temple motifs and antique finish.',                image:'/bangle104.jpg',       tag:'Traditional' },
-    { id:39, name:'Gold Bangle ',              category:'Bangles',      description:'Premium 22KT gold bangle with polished finish and ornate borders.',             image:'/bangle106.jpg',       tag:'Premium' },
-    { id:40, name:'Gold Bangle ',              category:'Bangles',      description:'Trending designer bangle in 22KT gold with modern-meets-traditional design.',  image:'/bangle107.jpg',       tag:'Trending' },
-    { id:41, name:'Gold Bangle ',              category:'Bangles',      description:'Bridal-pick 22KT gold bangle set for the perfect wedding look.',               image:'/bangle108.jpg',       tag:'Bridal Pick' },
   ],
   rings: [
     { id:'r1', name:'Solitaire Ring',          category:'Rings',     description:'Brilliant solitaire diamond in 18K gold.',         image:'/ring1.png',      tag:'Premium'   },
     { id:'r2', name:'Polki Diamond Ring',       category:'Rings',     description:'Uncut polki diamonds set in 22K gold.',            image:'/ring2.png',      tag:'Exclusive' },
-    { id:'r3', name:'Classic Gold Ring',        category:'Rings',     description:'Classic 22K gold ring with intricate design.',     image:'/ring3.png',      tag:'Classic'   },
-    { id:'r4', name:'Floral Ring',             category:'Rings',     description:'Beautiful floral motif 22K gold ring.',            image:'/ring6.png',      tag:'Trending'  },
-    { id:'r5', name:'Gents Statement Ring',     category:'Rings',     description:'Bold statement ring for men in 22K gold.',         image:'/ring7.png',      tag:'Men'       },
-  ],
-  womens_ring: [
-    { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',           tag:'Limited' },
-    { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                            image:'/ring6.png',           tag:'Premium' },
-    { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',           tag:'Classic' },
-    { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',           tag:'Vintage' },
-    { id:96,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Delicate 22KT gold ring for women with floral motif and fine craftsmanship.", image:'/ladies ring1.jpg',    tag:'Classic' },
-    { id:97,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Heritage ladies gold ring with traditional design and antique finish.",       image:'/ladies ring2.jpg',    tag:'Heritage' },
-    { id:98,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Exclusive ladies 22KT gold ring with kundan stone setting.",                  image:'/ladies ring3.jpg',    tag:'Exclusive' },
-    { id:99,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium' },
-    { id:100, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",        image:'/ladies ring5.jpg',    tag:'Trending' },
-    { id:101, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival' },
-    { id:102, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Luxury ladies gold ring — a statement piece for weddings and events.",       image:'/ladies ring7.jpg',    tag:'Luxury' },
-    { id:103, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller' },
-    { id:104, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",            image:'/ladies ring9.jpg',    tag:'Traditional' },
-    { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",              image:'/ladies ring10.jpg',   tag:'Bridal Pick' },
-    { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",            image:'/ladies ring11.jpg',   tag:'Festive' },
-    { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",       image:'/ladies ring12.jpg',   tag:'Vintage' },
-    { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",       image:'/ladies ring13.jpg',   tag:'Classic' },
-    { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage' },
-    { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive' },
-    { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium' },
-  ],
-  mens_ring: [
-    { id:86, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bold 22KT gold ring for men with classic band and fine engraving.",          image:'/gents ring1.jpg',     tag:'Classic' },
-    { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",       image:'/gents ring2.jpg',     tag:'Heritage' },
-    { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                    image:'/gents ring3.jpg',     tag:'Exclusive' },
-    { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium' },
-    { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',     tag:'Trending' },
-    { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",              image:'/gents ring6.jpg',     tag:'New Arrival' },
-    { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' },
-    { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',     tag:'Bestseller' },
-    { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',     tag:'Traditional' },
-    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',    tag:'Bridal Pick' },
   ],
   necklaces: [
     { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',              image:'/necklace88.png', tag:'Bridal'    },
     { id:'n2', name:'Temple Gold Haar',         category:'Necklaces', description:'Traditional temple necklace with Lakshmi coins.', image:'/temple.png',     tag:'Heritage'  },
-    { id:'n3', name:'Kundan Choker',            category:'Necklaces', description:'Royal Kundan choker with meenakari work.',        image:'/necklace1.jpg',  tag:'Royal'     },
-    { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',    description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller' },
-    { id:6,  name:'Temple Gold Haar',          category:'Necklaces',    description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',      tag:'Traditional' },
-    { id:8,  name:'Antique Necklace Set',      category:'Necklaces',    description:'Complete antique temple set with traditional craftsmanship.',                     image:'/necklace22.png',      tag:'Trending' },
-    { id:9,  name:'Meenakari Bridal Set',      category:'Necklaces',    description:'Colorful meenakari work bridal set with traditional motifs.',                     image:'/necklace3.jpg',       tag:'Bridal Pick' },
-    { id:13, name:'Heritage Necklace',         category:'Necklaces',    description:'Elegant heritage necklace with traditional design.',                              image:'/bridal-necklace.jpg', tag:'New Arrival' },
-    { id:29, name:'Bridal Necklace ',          category:'Necklaces',    description:'Stunning 22KT bridal necklace with kundan and polki work.',                     image:'/necklaceA.jpg',       tag:'Bridal Pick' },
-    { id:30, name:'Heritage Necklace ',        category:'Necklaces',    description:'Traditional heritage necklace in 22KT gold with antique finish.',               image:'/necklaceB.jpg',       tag:'Heritage' },
-    { id:31, name:'Temple Necklace ',          category:'Necklaces',    description:'Handcrafted temple necklace with goddess motifs and ruby accents.',              image:'/necklaceC.jpg',       tag:'Traditional' },
-    { id:32, name:'Kundan Necklace ',          category:'Necklaces',    description:'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',              image:'/necklaceD.jpg',       tag:'Exclusive' },
-    { id:33, name:'Gold Haar ',                category:'Necklaces',    description:'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',            image:'/necklaceE.jpg',       tag:'New Arrival' },
-    { id:42, name:'Short Necklace ',           category:'Necklaces',    description:'Delicate short necklace in 22KT gold, ideal for everyday and festive wear.',   image:'/short necklace1.jpg', tag:'Everyday' },
-    { id:43, name:'Short Necklace ',           category:'Necklaces',    description:'Elegant short gold necklace with fine craftsmanship and classic design.',       image:'/short necklace2.jpg', tag:'Classic' },
-    { id:44, name:'Short Necklace ',           category:'Necklaces',    description:'Trendy short necklace in 22KT gold with contemporary styling.',                image:'/short necklace3.jpg', tag:'Trending' },
-    { id:45, name:'Short Necklace ',           category:'Necklaces',    description:'New arrival short necklace in 22KT gold with intricate link design.',          image:'/short necklace4.jpg', tag:'New Arrival' },
-    { id:46, name:'Turkish Necklace ',         category:'Necklaces',    description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',          image:'/turkish necklace1.jpg', tag:'Exclusive' },
-    { id:47, name:'Turkish Necklace ',         category:'Necklaces',    description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',        image:'/turkish necklace2.jpg', tag:'Heritage' },
-    { id:48, name:'Turkish Necklace ',         category:'Necklaces',    description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',           image:'/turkish necklace3.jpg', tag:'Traditional' },
-    { id:49, name:'Turkish Necklace ',         category:'Necklaces',    description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium' },
-    { id:50, name:'Turkish Necklace ',         category:'Necklaces',    description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick' },
-    { id:51, name:'Turkish Necklace ',         category:'Necklaces',    description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive' },
-    { id:52, name:'Turkish Necklace ',         category:'Necklaces',    description:'Luxury Turkish-style gold necklace with bold statement design.',               image:'/turkish necklace7.jpg', tag:'Luxury' },
-    { id:53, name:'Turkish Necklace ',         category:'Necklaces',    description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',        image:'/turkish necklace8.jpg', tag:'Trending' },
-    { id:60, name:'Jadau Necklace ',           category:'Necklaces',    description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg', tag:'Luxury' },
-    { id:61, name:'Jadau Necklace ',           category:'Necklaces',    description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg', tag:'Traditional' },
-    { id:62, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg', tag:'Bridal Pick' },
-    { id:63, name:'Jadau Necklace ',           category:'Necklaces',    description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg', tag:'Heritage' },
-    { id:64, name:'Jadau Necklace ',           category:'Necklaces',    description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg', tag:'Premium' },
-    { id:65, name:'Jadau Necklace ',           category:'Necklaces',    description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg', tag:'Exclusive' },
-    { id:66, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bestselling Jadau necklace — a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller' },
-    { id:73, name:'Long Haar ',                category:'Necklaces',    description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',      tag:'Traditional' },
-    { id:74, name:'Long Haar ',                category:'Necklaces',    description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',      tag:'Heritage' },
-    { id:75, name:'Long Haar ',                category:'Necklaces',    description:'Bridal long haar in 22KT gold — a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick' },
-    { id:76, name:'Long Haar ',                category:'Necklaces',    description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',      tag:'Premium' },
-    { id:77, name:'Long Haar ',                category:'Necklaces',    description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',      tag:'Luxury' },
-  ],
-  chokers: [
-    { id:67, name:'Gold Choker ',            category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',       tag:'Classic' },
-    { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',           image:'/Choker102.jpg',       tag:'Heritage' },
-    { id:69, name:'Gold Choker ',            category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',       tag:'Bridal Pick' },
-    { id:70, name:'Gold Choker ',            category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',       tag:'Exclusive' },
-    { id:71, name:'Gold Choker ',            category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',       tag:'Trending' },
-    { id:72, name:'Gold Choker ',            category:'Chokers',      description:'New arrival gold choker with delicate beaded and filigree detailing.',       image:'/choker107.jpg',       tag:'New Arrival' },
-  ],
-  earrings: [
-    { id:'e1', name:'Antique Gold Jhumkas',     category:'Earrings',  description:'Traditional temple-style jhumkas.',               image:'/earring1.jpg',   tag:'Heritage'  },
-    { id:'e2', name:'Chandbali Earrings',       category:'Earrings',  description:'Royal chandbali with stone work.',                 image:'/earring5.jpg',   tag:'Exclusive' },
-    { id:'e3', name:'Antique Earrings Set',     category:'Earrings',  description:'Exquisite antique finish earring set.',            image:'/earrings13.png', tag:'Limited'   },
-    { id:3,  name:'Antique Gold Jhumkas',      category:'Earrings',     description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png',      tag:'Heritage' },
-    { id:11, name:'Diamond Studs',             category:'Earrings',     description:'Classic diamond studs for everyday elegance.',                                    image:'/ring4.png',           tag:'Everyday' },
-    { id:16, name:'Diamond Hoop Earrings',     category:'Earrings',     description:'Contemporary diamond hoops for modern elegance.',                                 image:'/earrings14.png',      tag:'Trending' },
-    { id:54, name:'Gold Earrings ',          category:'Earrings',     description:'Classic gold earrings with intricate detailing, perfect for every occasion.',  image:'/earrings101.jpg',     tag:'Classic' },
-    { id:55, name:'Gold Earrings ',          category:'Earrings',     description:'Heritage jhumka-style earrings in 22KT gold with traditional motifs.',        image:'/earrings102.jpg',     tag:'Heritage' },
-    { id:56, name:'Gold Earrings ',          category:'Earrings',     description:'Exclusive 22KT gold earrings with premium finish and ornate design.',         image:'/earrings104.jpg',     tag:'Exclusive' },
-    { id:57, name:'Gold Earrings ',          category:'Earrings',     description:'Trending 22KT gold earrings with contemporary meets traditional design.',     image:'/earrings105.jpg',     tag:'Trending' },
-    { id:58, name:'Gold Earrings ',          category:'Earrings',     description:'New arrival earrings in 22KT gold with delicate filigree work.',              image:'/earrings106.jpg',     tag:'New Arrival' },
-    { id:59, name:'Gold Earrings ',          category:'Earrings',     description:'Bridal earrings in 22KT gold with kundan stones and pearl drops.',            image:'/earrings107.jpg',     tag:'Bridal Pick' },
-  ],
-  pendants: [
-    { id:78, name:'Pendant ',             category:'Pendants',     description:'Elegant 22KT gold pendant with matching earrings and delicate design.',  image:'/pandent set1.jpg',    tag:'Classic' },
-    { id:79, name:'Pendant ',             category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',      image:'/pandent set2.jpg',    tag:'Heritage' },
-    { id:80, name:'Pendant ',             category:'Pendants',     description:'Bridal pendant  in 22KT gold with kundan stones and pearl drops.',       image:'/pandent set3.jpg',    tag:'Bridal Pick' },
-    { id:81, name:'Pendant ',             category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',              image:'/pandent set4.jpg',    tag:'Exclusive' },
-    { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant — contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending' },
-    { id:83, name:'Pendant ',             category:'Pendants',     description:'New arrival pendant  in 22KT gold with modern heritage styling.',        image:'/pandent set6.jpg',    tag:'New Arrival' },
-    { id:84, name:'Pendant ',             category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',      image:'/pandent set7.jpg',    tag:'Premium' },
-    { id:85, name:'Pendant ',             category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',    image:'/pandent set8.jpg',    tag:'Festive' },
-  ],
-  bridal: [
-    { id:'br1', name:'Bridal Set – Maharani',  category:'Bridal',    description:'Complete necklace, earrings & maang tikka.',       image:'/bridal.png',     tag:'Bestseller'},
-    { id:'br2', name:'Kundan Bridal Choker',   category:'Bridal',    description:'Exquisite kundan bridal choker.',                  image:'/necklace88.png', tag:'Premium'   },
-  ],
-  chains: [
-    { id:'c1', name:'Figaro Gold Chain',        category:'Chains',    description:'Italian figaro chain in 22K gold.',                image:'/chain2.png',     tag:'Classic'   },
-    { id:'c2', name:'Rope Gold Chain',          category:'Chains',    description:'Elegant rope chain in 22K gold.',                  image:'/chain4.png',     tag:'Trending'  },
-  ],
-  antique: [
-    { id:'a1', name:'Antique Temple Set',       category:'Antique',   description:'Full antique temple jewellery set.',               image:'/antique2.jpg',   tag:'Heritage'  },
-    { id:'a2', name:'Antique Choker Necklace',  category:'Antique',   description:'Traditional antique choker necklace.',             image:'/antique3.jpg',   tag:'Limited'   },
-    { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring2.png',           tag:'Premium' },
-    { id:5,  name:'Polki Diamond Ring',        category:'Antique',      description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring6.png',           tag:'Exclusive' },
-    { id:10, name:'Festive Gold Set',          category:'Antique',      description:'Elegant gold set perfect for festive occasions.',                                  image:'/bangle5.png',         tag:'Festive' },
-    { id:15, name:'Antique Choker Set',        category:'Antique',      description:'Beautiful antique choker set for festive celebrations.',                          image:'/necklace15.png',      tag:'Traditional' },
-    { id:18, name:'Diamond Cluster Ring',      category:'Antique',      description:'Beautiful cluster of diamonds in an elegant setting.',                            image:'/ring3.png',           tag:'Luxury' },
-  ],
+  ]
 };
 
-const TAG_COLORS: Record<string, string> = {
-  // Legacy tags
-  Classic: 'bg-amber-100 text-amber-800',
-  Premium: 'bg-purple-100 text-purple-800',
-  Heritage: 'bg-stone-100 text-stone-700',
-  Bridal: 'bg-pink-100 text-pink-800',
-  Exclusive: 'bg-rose-100 text-rose-800',
-  Royal: 'bg-indigo-100 text-indigo-800',
-  Bestseller: 'bg-green-100 text-green-800',
-  Trending: 'bg-blue-100 text-blue-800',
-  Limited: 'bg-red-100 text-red-800',
-  Designer: 'bg-violet-100 text-violet-800',
-  Men: 'bg-slate-100 text-slate-700',
-  
-  // Custom collection tags mapped seamlessly to match the Private Catalogue UI
-  'Traditional': 'bg-orange-100 text-orange-800',
-  'Bridal Pick': 'bg-pink-100 text-pink-800',
-  'Festive': 'bg-lime-100 text-lime-800',
-  'Everyday': 'bg-gray-100 text-gray-800',
-  'New Arrival': 'bg-teal-100 text-teal-800',
-  'Luxury': 'bg-yellow-100 text-yellow-800',
-  'Vintage': 'bg-stone-200 text-stone-800',
-};
-
-
-// ── Photo storage (localStorage, base64) ─────────────────────────────────────
-const PHOTO_KEY = 'srj_catalogue_photos';
-
-type PhotoRole = 'owner' | 'client';
-type PhotoEntry = { dataUrl: string; role: PhotoRole; ts: number };
-type PhotoMap = Record<string, PhotoEntry[]>;
-
-function loadPhotos(): PhotoMap {
-  try { return JSON.parse(localStorage.getItem(PHOTO_KEY) ?? '{}'); } catch { return {}; }
-}
-function savePhotos(map: PhotoMap) {
-  try { localStorage.setItem(PHOTO_KEY, JSON.stringify(map)); } catch {}
-}
-function addPhoto(productId: string | number, dataUrl: string, role: PhotoRole): PhotoMap {
-  const map = loadPhotos();
-  const key = String(productId);
-  map[key] = [...(map[key] ?? []), { dataUrl, role, ts: Date.now() }];
-  savePhotos(map); return map;
-}
-function removePhoto(productId: string | number, index: number): PhotoMap {
-  const map = loadPhotos();
-  const key = String(productId);
-  map[key] = (map[key] ?? []).filter((_, i) => i !== index);
-  savePhotos(map); return map;
-}
-
-// ── Who is viewing: owner (has ?role=owner) or client ────────────────────────
-function getRole(): PhotoRole {
-  return new URLSearchParams(window.location.search).get('role') === 'owner' ? 'owner' : 'client';
-}
-
-// ── Photo Upload Button ───────────────────────────────────────────────────────
-function PhotoUploadButton({
-  productId, isReady, onUploaded,
-}: {
-  productId: string | number;
-  isReady: boolean;
-  onUploaded: (map: PhotoMap) => void;
-}) {
-  const role = getRole();
-  // Owner can only upload to READY stock; client only to ORDERED stock
-  const canUpload = role === 'owner' ? isReady : !isReady;
-  const inputRef  = React.useRef<HTMLInputElement>(null);
-
-  if (!canUpload) return null;
-
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const dataUrl = ev.target?.result as string;
-      const updated = addPhoto(productId, dataUrl, role);
-      onUploaded(updated);
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-  };
-
-  return (
-    <>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-        onChange={handleFile}
-      />
-      <motion.button
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
-        onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
-        className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg font-raleway text-xs font-semibold mt-2 transition-all"
-        style={{
-          background: role === 'owner' ? 'rgba(194,24,91,0.07)' : 'rgba(37,99,235,0.07)',
-          color:      role === 'owner' ? '#C2185B'               : '#1D4ED8',
-          border: `1px solid ${role === 'owner' ? 'rgba(194,24,91,0.22)' : 'rgba(37,99,235,0.22)'}`,
-        }}
-      >
-        <Camera size={12} />
-        {role === 'owner' ? 'Add Product Photo' : 'Upload Your Reference Photo'}
-      </motion.button>
-    </>
-  );
-}
-
-// ── Photo Gallery ─────────────────────────────────────────────────────────────
-function PhotoGallery({
-  productId, photoMap, onUpdate,
-}: {
-  productId: string | number;
-  photoMap: PhotoMap;
-  onUpdate: (map: PhotoMap) => void;
-}) {
-  const role   = getRole();
-  const photos = photoMap[String(productId)] ?? [];
-  const [lightbox, setLightbox] = React.useState<string | null>(null);
-
-  if (photos.length === 0) return null;
-
-  return (
-    <>
-      <div className="mt-2 grid grid-cols-3 gap-1.5">
-        {photos.map((ph, i) => (
-          <motion.div
-            key={ph.ts}
-            initial={{ opacity:0, scale:0.8 }}
-            animate={{ opacity:1, scale:1 }}
-            className="relative group/ph cursor-pointer rounded-lg overflow-hidden"
-            style={{ aspectRatio:'1/1' }}
-            onClick={(e) => { e.stopPropagation(); setLightbox(ph.dataUrl); }}
-          >
-            <img src={ph.dataUrl} alt="photo" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/ph:opacity-100 transition-opacity flex items-center justify-center">
-              <Eye size={13} className="text-white" />
-            </div>
-            {/* Role badge */}
-            <div
-              className="absolute top-1 left-1 text-[8px] font-cinzel px-1.5 py-0.5 rounded-full leading-none"
-              style={{ background: ph.role === 'owner' ? '#C2185B' : '#1D4ED8', color:'#fff' }}
-            >
-              {ph.role === 'owner' ? 'SRJ' : 'You'}
-            </div>
-            {/* Delete — only own photos */}
-            {ph.role === role && (
-              <button
-                onClick={(e) => { e.stopPropagation(); onUpdate(removePhoto(productId, i)); }}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/ph:opacity-100 transition-opacity"
-              >
-                <Trash2 size={9} />
-              </button>
-            )}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-            className="fixed inset-0 z-[200] bg-black/92 flex items-center justify-center p-4"
-            onClick={(e) => { e.stopPropagation(); setLightbox(null); }}
-          >
-            <motion.img
-              initial={{ scale:0.85, opacity:0 }} animate={{ scale:1, opacity:1 }} exit={{ scale:0.85, opacity:0 }}
-              src={lightbox} alt="full"
-              className="max-w-full rounded-2xl shadow-2xl object-contain"
-              style={{ maxHeight:'85vh' }}
-            />
-            <button
-              className="absolute top-5 right-5 text-white bg-white/15 rounded-full p-2.5 backdrop-blur-sm hover:bg-white/25 transition-colors"
-              onClick={(e) => { e.stopPropagation(); setLightbox(null); }}
-            >
-              <X size={20} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
-function decodeToken(t: string): { category: string; expiry: number } | null {
-  try { const d = atob(t); const [cat,exp] = d.split('|'); return { category:cat, expiry:parseInt(exp) }; }
-  catch { return null; }
-}
-
-function formatTime(ms: number) {
-  if (ms <= 0) return '00:00';
-  const s = Math.floor(ms / 1000);
-  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-}
-
-// ── Floating diamond particles ────────────────────────────────────────────────
-function Particles() {
-  const items = Array.from({ length: 12 }, (_, i) => i);
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {items.map(i => (
-        <motion.div
-          key={i}
-          className="absolute"
-          style={{ left:`${8 + (i * 7.5) % 90}%`, top:`${10 + (i * 13) % 80}%` }}
-          animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], rotate: [0, 180, 360] }}
-          transition={{ duration: 5 + (i % 4), repeat: Infinity, delay: i * 0.4, ease:'easeInOut' }}
-        >
-          <Diamond size={i % 3 === 0 ? 12 : 8} style={{ color: C.goldPale }} />
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
-// ── Ambient Background Effect ──────────────────────────────────────────────────
-function AmbientBackground() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <motion.div
-        animate={{ 
-          x: ['0%', '3%', '-2%', '0%'], 
-          y: ['0%', '-4%', '3%', '0%'],
-          scale: [1, 1.05, 0.95, 1]
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full opacity-40 mix-blend-multiply filter blur-[100px]"
-        style={{ background: 'radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 70%)' }}
-      />
-      <motion.div
-        animate={{ 
-          x: ['0%', '-3%', '2%', '0%'], 
-          y: ['0%', '4%', '-3%', '0%'],
-          scale: [1, 0.95, 1.05, 1]
-        }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full opacity-30 mix-blend-multiply filter blur-[120px]"
-        style={{ background: 'radial-gradient(circle, rgba(194,24,91,0.2) 0%, transparent 70%)' }}
-      />
-    </div>
-  );
-}
-
-// ── Expired page ──────────────────────────────────────────────────────────────
-function ExpiredPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: C.bg }}>
-      <motion.div initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} className="text-center max-w-md">
-        <motion.div
-          animate={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 2, repeat: Infinity }}
-          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
-          style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`2px solid ${C.border}` }}
-        >
-          <AlertCircle size={40} style={{ color: C.gold }} />
-        </motion.div>
-        <h1 className="font-cormorant text-4xl font-bold mb-3" style={{ color: C.text }}>Oh! No, Link Expired</h1>
-        <p className="font-raleway text-base mb-8" style={{ color: C.textLight }}>
-          This private catalogue link has expired. Please contact Shekhar Raja Jewellers for a new link.
-        </p>
-        <motion.a
-          whileHover={{ scale:1.04, boxShadow: '0 10px 25px rgba(37,211,102,0.4)' }} whileTap={{ scale:0.97 }}
-          href="https://wa.me/918377911745?text=Hi!%20The%20catalogue%20link%20expired.%20Please%20send%20a%20new%20one."
-          target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg transition-shadow"
-          style={{ background:'#25D366' }}
-        >
-          <MessageCircle size={18} /> Request New Link on WhatsApp
-        </motion.a>
-        <div className="mt-6">
-          <Link to="/" className="font-raleway text-sm hover:underline transition-all" style={{ color: C.textLight }}>← Back to Home</Link>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-// ── Invalid page ──────────────────────────────────────────────────────────────
-function InvalidPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: C.bg }}>
-      <AmbientBackground />
-      <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} className="text-center max-w-md relative z-10">
-        <motion.div
-          animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
-          style={{ background:`linear-gradient(135deg, ${C.goldPale}, #fff)`, border:`2px solid ${C.border}` }}
-        >
-          <Lock size={40} style={{ color: C.gold }} />
-        </motion.div>
-        <h1 className="font-cormorant text-4xl font-bold mb-3" style={{ color: C.text }}>Private Catalogue</h1>
-        <p className="font-raleway text-base mb-8" style={{ color: C.textLight }}>
-          You need a valid link from Shekhar Raja Jewellers to view this catalogue.
-        </p>
-        <motion.a
-          whileHover={{ scale:1.04, boxShadow: '0 10px 25px rgba(37,211,102,0.4)' }} whileTap={{ scale:0.97 }}
-          href="https://wa.me/918377911745?text=Hi!%20I%20would%20like%20to%20view%20your%20jewellery%20catalogue."
-          target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-raleway font-medium shadow-lg transition-shadow"
-          style={{ background:'#25D366' }}
-        >
-          <MessageCircle size={18} /> Request Catalogue on WhatsApp
-        </motion.a>
-      </motion.div>
-    </div>
-  );
-}
-
-// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
-function PrivateCatalogueSkeleton() {
-  return (
-    <div className="min-h-screen relative" style={{ background: C.bg }}>
-      <AmbientBackground />
-      
-      {/* Hero Header Skeleton */}
-      <div className="relative overflow-hidden shadow-2xl flex flex-col items-center justify-center px-6 py-16 sm:py-20" style={{ minHeight: 320, background: `linear-gradient(135deg, #2D0A18 0%, #6D1B4E 45%, #880E4F 75%, #C2185B 100%)` }}>
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage:'linear-gradient(rgba(248,187,217,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(248,187,217,0.3) 1px, transparent 1px)', backgroundSize:'60px 60px' }} />
-        
-        <div className="h-4 w-48 rounded-full animate-pulse mb-4 z-10" style={{ background: 'rgba(255,255,255,0.15)' }} />
-        <div className="h-16 w-64 sm:w-96 rounded-2xl animate-pulse mb-6 z-10" style={{ background: 'rgba(255,255,255,0.2)' }} />
-        <div className="h-4 w-72 rounded-full animate-pulse mb-6 z-10" style={{ background: 'rgba(255,255,255,0.15)' }} />
-        <div className="h-10 w-32 rounded-full animate-pulse z-10" style={{ background: 'rgba(255,255,255,0.2)' }} />
-        <div className="absolute bottom-0 left-0 right-0 h-12 overflow-hidden z-10">
-          <svg viewBox="0 0 1200 48" preserveAspectRatio="none" className="w-full h-full">
-            <path d="M0,48 C300,0 900,0 1200,48 L1200,48 L0,48 Z" fill={C.bg} />
-          </svg>
-        </div>
-      </div>
-
-      {/* Nav Skeleton */}
-      <div className="backdrop-blur-md shadow-sm" style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}>
-         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full animate-pulse" style={{ background: C.goldPale }} />
-              <div className="h-4 w-32 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-            </div>
-            <div className="w-24 h-8 rounded-full animate-pulse" style={{ background: C.goldPale }} />
-         </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
-        {/* Stock Cards Skeleton */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="h-28 rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
-          <div className="h-28 rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
-        </div>
-
-        {/* Search/Filter Skeleton */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="flex-1 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
-          <div className="w-full sm:w-64 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
-          <div className="w-full sm:w-32 h-12 rounded-xl animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
-        </div>
-
-        <div className="h-4 w-32 rounded animate-pulse mb-5" style={{ background: 'rgba(248,187,217,0.3)' }} />
-
-        {/* Grid Skeleton */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="rounded-2xl overflow-hidden shadow-sm" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
-              <div className="w-full animate-pulse" style={{ aspectRatio: '1/1', background: 'rgba(248,187,217,0.2)' }} />
-              <div className="p-4 sm:p-5 flex flex-col gap-3">
-                <div className="h-2 w-1/3 rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
-                <div className="h-5 w-3/4 rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
-                <div className="h-2 w-full rounded animate-pulse" style={{ background: 'rgba(248,187,217,0.2)' }} />
-                <div className="h-10 w-full rounded-xl animate-pulse mt-2" style={{ background: 'rgba(248,187,217,0.3)' }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Main ──────────────────────────────────────────────────────────────────────
 export default function PrivateCatalogue() {
-  const [searchParams]                        = useSearchParams();
-  const [timeLeft, setTimeLeft]               = useState(0);
-  const [expired, setExpired]                 = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [stockMap, setStockMap]               = useState<Record<string,StockStatus>>(() => loadStockMap());
-  const [orderedToast, setOrderedToast]       = useState<string|null>(null);
-  const [photoMap,      setPhotoMap]           = useState<PhotoMap>(() => loadPhotos());
-  const [searchQuery, setSearchQuery]         = useState('');
-  const [activeFilter, setActiveFilter]       = useState<'all'|'ready'|'ordered'>('all');
-  const [isLoading, setIsLoading]             = useState(true);
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
+  
+  // States
+  const [stockMap, setStockMap] = useState<Record<string, StockStatus>>({});
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+  
+  // Custom Order Form State
+  const [showCustomForm, setShowCustomForm] = useState(false);
+  const [customForm, setCustomForm] = useState({
+    name: '',
+    material: 'Gold',
+    karat: '22K',
+    weight: '',
+    description: '',
+    image: ''
+  });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState(false);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start','end start'] });
-  const heroY   = useTransform(scrollYProgress, [0,1], ['0%', '30%']);
-  const heroOp  = useTransform(scrollYProgress, [0,0.7], [1, 0]);
-  const springY = useSpring(heroY, { stiffness: 60, damping: 20 });
-
-  const token      = searchParams.get('token');
-  const decoded    = token ? decodeToken(token) : null;
-  const allProducts = decoded ? (ALL_PRODUCTS[decoded.category] ?? []) : [];
-  const catLabel   = decoded?.category
-    ? decoded.category.charAt(0).toUpperCase() + decoded.category.slice(1)
-    : '';
-
-  // Countdown
   useEffect(() => {
-    if (!decoded) return;
-    const tick = () => {
-      const rem = decoded.expiry - Date.now();
-      if (rem <= 0) { setExpired(true); setTimeLeft(0); }
-      else setTimeLeft(rem);
+    setStockMap(loadStockMap());
+  }, []);
+
+  // Sync Categories
+  const categories = useMemo(() => {
+    return ['all', ...Object.keys(ALL_PRODUCTS)];
+  }, []);
+
+  const flattenedProducts = useMemo(() => {
+    return Object.values(ALL_PRODUCTS).flat();
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    return flattenedProducts.filter(p => {
+      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            p.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCat = activeCategory === 'all' || p.category.toLowerCase() === activeCategory.toLowerCase();
+      return matchesSearch && matchesCat;
+    });
+  }, [flattenedProducts, searchQuery, activeCategory]);
+
+  // Handle Photo Upload Conversion
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setImagePreview(base64String);
+        setCustomForm(prev => ({ ...prev, image: base64String }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Submit custom/repair item entry directly to Ordered Stock
+  const handleCustomSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customForm.name || !customForm.weight) return;
+
+    const customItemId = `custom-${Date.now()}`;
+    
+    // Construct new item details mapped to stock expectations
+    const payload = {
+      id: customItemId,
+      name: customForm.name,
+      category: `Custom (${customForm.material})`,
+      description: `${customForm.karat} | ${customForm.weight}g — ${customForm.description || 'No additional notes'}`,
+      image: customForm.image || '/placeholder-jewelry.png',
+      tag: 'Custom Order'
     };
-    tick();
-    const t = setInterval(tick, 1000);
-    return () => clearInterval(t);
-  }, [decoded?.expiry]);
 
-  // Preload images for skeleton
-  useEffect(() => {
-    if (!decoded || expired) return;
+    // Commit to persistent Ordered Stock directly
+    moveToOrdered(customItemId, payload);
     
-    const imagesToLoad = allProducts.map(p => p.image);
+    // Refresh local stock state context
+    setStockMap(loadStockMap());
+    setFormSuccess(true);
     
-    if (imagesToLoad.length === 0) {
-       setIsLoading(false);
-       return;
-    }
-
-    const imagePromises = imagesToLoad.map(src => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = resolve; // Resolve anyway to avoid blocking on failed images
-      });
-    });
-
-    // Wait for images to load, with a minimum simulated delay of 800ms
-    Promise.all([
-      ...imagePromises,
-      new Promise(resolve => setTimeout(resolve, 800))
-    ]).then(() => {
-      setIsLoading(false);
-    });
-  }, [allProducts.length, decoded, expired]);
-
-  const readyCount   = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ready').length;
-  const orderedCount = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ordered').length;
-
-  const visibleProducts = useMemo(() => {
-    return allProducts.filter(p => {
-      const status = stockMap[p.id] ?? 'ready';
-      const matchFilter =
-        activeFilter === 'all'     ? true :
-        activeFilter === 'ready'   ? status === 'ready' :
-                                     status === 'ordered';
-      const q = searchQuery.toLowerCase().trim();
-      const matchSearch = !q || p.name.toLowerCase().includes(q)
-        || p.category.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q);
-      return matchFilter && matchSearch;
-    });
-  }, [allProducts, stockMap, activeFilter, searchQuery]);
-
-  const handleEnquire = (product: any) => {
-    const status = stockMap[product.id] ?? 'ready';
-    if (status === 'ready') {
-      moveToOrdered(product.id);
-      setStockMap(prev => ({ ...prev, [product.id]: 'ordered' }));
-      setOrderedToast(product.name);
-      setTimeout(() => setOrderedToast(null), 3500);
-    }
-    const msg = `Hi! I'm interested in *${product.name}* (${product.category}) from the private catalogue. Please share details.`;
-    window.open(`https://wa.me/918377911745?text=${encodeURIComponent(msg)}`, '_blank');
+    // Reset Form
+    setTimeout(() => {
+      setCustomForm({ name: '', material: 'Gold', karat: '22K', weight: '', description: '', image: '' });
+      setImagePreview(null);
+      setFormSuccess(false);
+      setShowCustomForm(false);
+    }, 2000);
   };
-
-  // Stagger grid animation variants
-  const gridVariants: Variants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08 }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    show: { 
-      opacity: 1, y: 0, scale: 1, 
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    },
-    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
-  };
-
-  if (!token || !decoded) return <InvalidPage />;
-  if (expired)            return <ExpiredPage />;
-  if (isLoading)          return <PrivateCatalogueSkeleton />;
-
-  const urgentColor = timeLeft < 5 * 60 * 1000 ? '#EF4444' : C.gold;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="min-h-screen relative" style={{ background: C.bg }}>
-      
-      {/* Background Ambient Effect */}
-      <AmbientBackground />
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: C.bg, color: C.text }}>
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header Block */}
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }}>
+            <span className="px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase" style={{ backgroundColor: C.goldPale, color: C.goldDk }}>
+              Exclusive Access Portfolio
+            </span>
+          </motion.div>
+          <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl" style={{ color: C.goldDk }}>
+            Private Digital Showroom
+          </h1>
+          <p className="mt-4 max-w-2xl mx-auto text-base" style={{ color: C.textMid }}>
+            Review real-time ready showroom inventory or instantly place custom design entries directly into manufacturing queues.
+          </p>
+          
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <button
+              onClick={() => setShowCustomForm(!showCustomForm)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium shadow-md transition-transform hover:scale-105"
+              style={{ backgroundColor: C.gold, color: C.white }}
+            >
+              <Plus size={18} />
+              Submit Custom Order / Repair
+            </button>
+            <Link
+              to={`/order-timeline?token=${token}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium border transition-colors"
+              style={{ borderColor: C.gold, color: C.gold }}
+            >
+              <Clock size={18} />
+              View Tracked Ordered Stock
+            </Link>
+          </div>
+        </div>
 
-      {/* ── SUCCESS TOAST ── */}
-      <AnimatePresence>
-        {orderedToast && (
-          <motion.div
-            initial={{ opacity:0, y:60, scale:0.85 }}
-            animate={{ opacity:1, y:0,  scale:1, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-            exit={{   opacity:0, y:40,  scale:0.9, transition: { duration: 0.2 } }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl overflow-hidden"
-            style={{ background:'#2E7D32', color:'#fff', maxWidth:'90vw', boxShadow:'0 12px 40px rgba(46,125,50,0.4)' }}
-          >
-            {/* Success sheen */}
+        {/* Custom Order / Repair Dynamic Submission Section */}
+        <AnimatePresence>
+          {showCustomForm && (
             <motion.div 
-              className="absolute inset-0 bg-white/20"
-              initial={{ x: '-100%' }} animate={{ x: '100%' }} transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-            <motion.div animate={{ rotate:[0, 15, -15, 0] }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <ShoppingBag size={18} />
-            </motion.div>
-            <span className="font-raleway text-sm font-medium relative z-10">
-              <strong>{orderedToast}</strong> moved to Ordered Stock ✓
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ══════════════════════════════════════════════════════════
-          LUXURY HERO HEADER
-      ══════════════════════════════════════════════════════════ */}
-      <div ref={heroRef} className="relative overflow-hidden shadow-2xl" style={{ minHeight: 320 }}>
-        {/* Gradient background with slow pulse */}
-        <motion.div 
-          className="absolute inset-0"
-          animate={{ scale: [1, 1.05, 1], filter: ['brightness(1)', 'brightness(1.1)', 'brightness(1)'] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-          style={{ background:`linear-gradient(135deg, #2D0A18 0%, #6D1B4E 45%, #880E4F 75%, #C2185B 100%)` }} 
-        />
-
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-10"
-             style={{ backgroundImage:'linear-gradient(rgba(248,187,217,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(248,187,217,0.3) 1px, transparent 1px)',
-                      backgroundSize:'60px 60px' }} />
-
-        <Particles />
-
-        {/* Radial glow */}
-        <motion.div
-          animate={{ scale:[1,1.15,1], opacity:[0.3,0.5,0.3] }}
-          transition={{ duration:4, repeat:Infinity, ease:'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none z-0"
-          style={{ background:`radial-gradient(ellipse, rgba(194,24,91,0.35) 0%, transparent 70%)`, filter:'blur(40px)' }}
-        />
-
-        {/* Content */}
-        <motion.div
-          style={{ y: springY, opacity: heroOp }}
-          className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20"
-        >
-          {/* Brand eyebrow */}
-          <motion.div
-            initial={{ opacity:0, y:-20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2, duration:0.8, ease: "easeOut" }}
-            className="flex items-center gap-3 mb-4"
-          >
-            <motion.div animate={{ rotate:360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
-              <Crown size={16} style={{ color: C.goldPale }} />
-            </motion.div>
-            <span className="font-cinzel text-[10px] tracking-[0.5em] text-white/60">
-              PRIVATE · EXCLUSIVE · CURATED
-            </span>
-            <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
-              <Crown size={16} style={{ color: C.goldPale }} />
-            </motion.div>
-          </motion.div>
-
-          {/* Main title */}
-          <motion.h1
-            initial={{ opacity:0, y:24, filter: 'blur(10px)' }} animate={{ opacity:1, y:0, filter: 'blur(0px)' }} transition={{ delay:0.3, duration:0.9, ease:[0.22,1,0.36,1] }}
-            className="font-cormorant font-light text-white leading-tight"
-            style={{ fontSize:'clamp(2.2rem, 6vw, 4rem)' }}
-          >
-            Shekhar Raja{' '}
-            <motion.em
-              className="italic not-italic font-semibold"
-              style={{ color: C.goldPale }}
-              animate={{ opacity:[0.85, 1, 0.85], textShadow: ['0px 0px 0px rgba(248,187,217,0)', '0px 0px 15px rgba(248,187,217,0.5)', '0px 0px 0px rgba(248,187,217,0)'] }}
-              transition={{ duration:3, repeat:Infinity, ease: "easeInOut" }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-12 overflow-hidden"
             >
-              Jewellers
-            </motion.em>
-          </motion.h1>
+              <div className="p-6 rounded-2xl border shadow-sm" style={{ backgroundColor: C.bgCard, borderColor: C.border }}>
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={20} style={{ color: C.gold }} />
+                    <h3 className="text-xl font-bold" style={{ color: C.goldDk }}>New Custom Entry Log</h3>
+                  </div>
+                  <button onClick={() => setShowCustomForm(false)} className="p-1 rounded-full hover:bg-gray-100">
+                    <X size={20} />
+                  </button>
+                </div>
 
-          {/* Collection name */}
-          <motion.div
-            initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} transition={{ delay:0.45, duration:0.7 }}
-            className="mt-3 flex items-center gap-3"
-          >
-            <motion.div initial={{ width: 0 }} animate={{ width: 40 }} transition={{ delay: 0.7, duration: 0.8 }} className="h-px" style={{ background:`rgba(248,187,217,0.4)` }} />
-            <span className="font-cinzel text-xs tracking-[0.4em]" style={{ color: C.goldPale }}>
-              {catLabel.toUpperCase()} COLLECTION
-            </span>
-            <motion.div initial={{ width: 0 }} animate={{ width: 40 }} transition={{ delay: 0.7, duration: 0.8 }} className="h-px" style={{ background:`rgba(248,187,217,0.4)` }} />
-          </motion.div>
+                {formSuccess ? (
+                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center py-8">
+                    <CheckCircle2 size={48} className="mx-auto mb-3" style={{ color: C.green }} />
+                    <h4 className="text-lg font-bold" style={{ color: C.green }}>Added Successfully!</h4>
+                    <p className="text-sm text-gray-600">This custom design instance has been pushed into your Ordered Stock portfolio.</p>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleCustomSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Media Slot */}
+                    <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-4 transition-colors relative" style={{ borderColor: C.border, backgroundColor: C.bg }}>
+                      {imagePreview ? (
+                        <div className="w-full h-48 relative rounded-lg overflow-hidden group">
+                          <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          <button 
+                            type="button" 
+                            onClick={() => setImagePreview(null)}
+                            className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-90 hover:opacity-100 shadow-md"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-center cursor-pointer py-8" onClick={() => fileInputRef.current?.click()}>
+                          <ImagePlus size={36} className="mx-auto mb-2" style={{ color: C.goldLt }} />
+                          <span className="text-sm font-medium" style={{ color: C.textMid }}>Upload Benchmark Photo</span>
+                          <p className="text-xs text-gray-500 mt-1">PNG, JPG, or Camera Snap</p>
+                        </div>
+                      )}
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={handleImageChange} 
+                      />
+                    </div>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.55, duration:0.7 }}
-            className="font-raleway text-sm mt-4 max-w-md"
-            style={{ color:'rgba(255,255,255,0.6)' }}
-          >
-            Handpicked exclusively for you. Each piece crafted with love &amp; heritage.
-          </motion.p>
+                    {/* Metadata Inputs */}
+                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase mb-1" style={{ color: C.textMid }}>Jewellery Variant Name *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g., Antique Bridal Choker / Family Ring Repair"
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
+                          style={{ borderColor: C.border, focusRing: C.gold }}
+                          value={customForm.name}
+                          onChange={e => setCustomForm(prev => ({ ...prev, name: e.target.value }))}
+                        />
+                      </div>
 
-          {/* Countdown pill */}
-          <motion.div
-            initial={{ opacity:0, y:16, scale: 0.9 }} animate={{ opacity:1, y:0, scale: 1 }} transition={{ delay:0.65, type: "spring", stiffness: 200, damping: 20 }}
-            className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-full relative overflow-hidden"
-            style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.2)', backdropFilter:'blur(10px)' }}
-          >
-            <motion.div animate={{ scale:[1,1.2,1] }} transition={{ duration:1, repeat:Infinity }}>
-              <Clock size={14} style={{ color: urgentColor }} />
+                      <div>
+                        <label className="block text-xs font-bold uppercase mb-1" style={{ color: C.textMid }}>Target Base Weight (Grams) *</label>
+                        <input
+                          type="number"
+                          step="0.001"
+                          required
+                          placeholder="e.g., 14.250"
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
+                          style={{ borderColor: C.border }}
+                          value={customForm.weight}
+                          onChange={e => setCustomForm(prev => ({ ...prev, weight: e.target.value }))}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold uppercase mb-1" style={{ color: C.textMid }}>Material Class</label>
+                        <select
+                          className="w-full px-3 py-2 border rounded-lg bg-white"
+                          style={{ borderColor: C.border }}
+                          value={customForm.material}
+                          onChange={e => setCustomForm(prev => ({ ...prev, material: e.target.value }))}
+                        >
+                          <option value="Gold">Fine Yellow Gold</option>
+                          <option value="Rose Gold">Rose Gold Alloys</option>
+                          <option value="Platinum">Platinum 950</option>
+                          <option value="Silver">Sterling Silver</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold uppercase mb-1" style={{ color: C.textMid }}>Purity Tier (Karat)</label>
+                        <select
+                          className="w-full px-3 py-2 border rounded-lg bg-white"
+                          style={{ borderColor: C.border }}
+                          value={customForm.karat}
+                          onChange={e => setCustomForm(prev => ({ ...prev, karat: e.target.value }))}
+                        >
+                          <option value="24K">24K (Pure bullion)</option>
+                          <option value="22K">22K (Standard Indian Ornament)</option>
+                          <option value="18K">18K (Diamond / Hard setting)</option>
+                          <option value="14K">14K (High Durability)</option>
+                        </select>
+                      </div>
+
+                      <div className="sm:col-span-2">
+                        <label className="block text-xs font-bold uppercase mb-1" style={{ color: C.textMid }}>Refinement Specification / Repair Notes</label>
+                        <textarea
+                          rows={2}
+                          placeholder="Provide descriptive details regarding gemstone settings, dimensions, or resizing needs..."
+                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1"
+                          style={{ borderColor: C.border }}
+                          value={customForm.description}
+                          onChange={e => setCustomForm(prev => ({ ...prev, description: e.target.value }))}
+                        />
+                      </div>
+
+                      <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
+                        <button
+                          type="submit"
+                          className="px-6 py-2 rounded-lg text-sm font-bold shadow transition-transform active:scale-95"
+                          style={{ backgroundColor: C.gold, color: C.white }}
+                        >
+                          Push to Ordered Pipeline
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </div>
             </motion.div>
-            <span className="font-cinzel text-sm font-bold tabular-nums" style={{ color: urgentColor }}>
-              {formatTime(timeLeft)}
-            </span>
-            <span className="font-raleway text-xs" style={{ color:'rgba(255,255,255,0.5)' }}>
-              remaining
-            </span>
-          </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Lock badge */}
-          <motion.div
-            initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.8, duration: 1 }}
-            className="mt-4 flex items-center gap-1.5"
-          >
-            <Lock size={11} style={{ color:'rgba(255,255,255,0.35)' }} />
-            <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:'rgba(255,255,255,0.35)' }}>
-              PRIVATE CATALOGUE · CONFIDENTIAL
-            </span>
-          </motion.div>
-        </motion.div>
-
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 overflow-hidden z-10">
-          <svg viewBox="0 0 1200 48" preserveAspectRatio="none" className="w-full h-full">
-            <path d="M0,48 C300,0 900,0 1200,48 L1200,48 L0,48 Z" fill={C.bg} />
-          </svg>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
-          STICKY NAV HEADER
-      ══════════════════════════════════════════════════════════ */}
-      <motion.div
-        className="sticky top-0 z-40 backdrop-blur-md shadow-sm"
-        style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
-      >
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-md"
-                 style={{ background:`linear-gradient(135deg, ${C.gold}, ${C.goldDk})` }}>
-              <Diamond size={12} className="text-white" />
-            </div>
-            <div>
-              <p className="font-cinzel text-[9px] tracking-[0.25em]" style={{ color: C.textLight }}>
-                SHEKHAR RAJA JEWELLERS
-              </p>
-              <h2 className="font-cormorant text-base font-bold leading-none" style={{ color: C.text }}>
-                {catLabel} Collection
-              </h2>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-               style={{ background:`rgba(194,24,91,0.08)`, border:`1px solid ${C.border}` }}>
-            <motion.div animate={{ scale:[1,1.15,1] }} transition={{ duration:1, repeat:Infinity }}>
-              <Clock size={13} style={{ color: urgentColor }} />
-            </motion.div>
-            <span className="font-cinzel text-sm font-bold tabular-nums" style={{ color: urgentColor }}>
-              {formatTime(timeLeft)}
-            </span>
-          </div>
-        </div>
-        {/* Animated progress bar */}
-        <motion.div
-          className="h-0.5"
-          style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldLt})`,
-                   width:`${Math.max(0, Math.min(100, (timeLeft/3600000)*100))}%`,
-                   transition:'width 1s linear', boxShadow: `0 0 8px ${C.goldLt}` }}
-        />
-      </motion.div>
-
-      {/* ══════════════════════════════════════════════════════════
-          BODY
-      ══════════════════════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
-
-        {/* ── STOCK SUMMARY CARDS ── */}
-        <motion.div
-          initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7, ease: "easeOut" }}
-          className="grid grid-cols-2 gap-4 mb-8"
-        >
-          {/* Ready Stock */}
-          <motion.button
-            whileHover={{ y:-4, scale: 1.01, boxShadow:'0 12px 30px rgba(46,125,50,0.25)' }}
-            whileTap={{ scale:0.97 }}
-            onClick={() => setActiveFilter(f => f === 'ready' ? 'all' : 'ready')}
-            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
-            style={{
-              background: activeFilter === 'ready' ? C.green : C.greenBg,
-              border:`2px solid ${activeFilter === 'ready' ? C.green : 'rgba(46,125,50,0.2)'}`,
-            }}
-          >
-            {/* Glass Sheen */}
-            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
-            
-            <motion.div
-              animate={activeFilter === 'ready' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
-              style={{ background: activeFilter === 'ready' ? 'rgba(255,255,255,0.2)' : 'rgba(46,125,50,0.12)' }}
-            >
-              <Package size={20} style={{ color: activeFilter === 'ready' ? '#fff' : C.green }} />
-            </motion.div>
-            <div className="relative z-10">
-              <p className="font-cinzel text-[9px] tracking-[0.25em]"
-                 style={{ color: activeFilter === 'ready' ? 'rgba(255,255,255,0.8)' : '#4a7c59' }}>
-                READY STOCK
-              </p>
-              <motion.p
-                key={readyCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
-                className="font-cormorant text-3xl font-bold leading-none mt-0.5"
-                style={{ color: activeFilter === 'ready' ? '#fff' : C.green }}
-              >
-                {readyCount}
-              </motion.p>
-              <p className="font-raleway text-xs mt-0.5"
-                 style={{ color: activeFilter === 'ready' ? 'rgba(255,255,255,0.6)' : '#4a7c59' }}>
-                pieces available
-              </p>
-            </div>
-          </motion.button>
-
-          {/* Ordered Stock */}
-          <motion.button
-            whileHover={{ y:-4, scale: 1.01, boxShadow:`0 12px 30px rgba(194,24,91,0.25)` }}
-            whileTap={{ scale:0.97 }}
-            onClick={() => setActiveFilter(f => f === 'ordered' ? 'all' : 'ordered')}
-            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
-            style={{
-              background: activeFilter === 'ordered' ? C.gold : `rgba(194,24,91,0.06)`,
-              border:`2px solid ${activeFilter === 'ordered' ? C.gold : C.border}`,
-            }}
-          >
-            {/* Glass Sheen */}
-            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
-
-            <motion.div
-              animate={activeFilter === 'ordered' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
-              style={{ background: activeFilter === 'ordered' ? 'rgba(255,255,255,0.2)' : `rgba(194,24,91,0.10)` }}
-            >
-              <ShoppingBag size={20} style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }} />
-            </motion.div>
-            <div className="relative z-10">
-              <p className="font-cinzel text-[9px] tracking-[0.25em]"
-                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.8)' : C.textMid }}>
-                ORDERED STOCK
-              </p>
-              <motion.p
-                key={orderedCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
-                className="font-cormorant text-3xl font-bold leading-none mt-0.5"
-                style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }}
-              >
-                {orderedCount}
-              </motion.p>
-              <p className="font-raleway text-xs mt-0.5"
-                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.6)' : C.textLight }}>
-                pieces ordered
-              </p>
-            </div>
-          </motion.button>
-        </motion.div>
-
-        {/* ── SEARCH + FILTER ROW ── */}
-        <motion.div
-          initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true }} transition={{ delay:0.2, duration:0.6 }}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 relative z-10"
-        >
-          {/* Search */}
-          <div className="relative flex-1 group">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300" style={{ color: searchQuery ? C.gold : C.textLight }} />
+        {/* Search & Filtering Bars */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-b pb-6 mb-8" style={{ borderColor: C.border }}>
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <input
+              type="text"
+              placeholder="Search ready collection..."
+              className="w-full pl-9 pr-4 py-2 border rounded-xl text-sm bg-white focus:outline-none"
+              style={{ borderColor: C.border }}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name, category or tag…"
-              className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-all duration-300"
-              style={{ background:'#fff', border:`1.5px solid ${C.border}`, color: C.text,
-                       boxShadow:'0 2px 10px rgba(194,24,91,0.05)' }}
             />
-            <AnimatePresence>
-              {searchQuery && (
-                <motion.button
-                  initial={{ opacity:0, scale:0.8, rotate: -90 }}
-                  animate={{ opacity:1, scale:1, rotate: 0 }}
-                  exit={{ opacity:0, scale:0.8, rotate: 90 }}
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-rose-50 p-1 rounded-full"
-                >
-                  <X size={13} style={{ color: C.gold }} />
-                </motion.button>
-              )}
-            </AnimatePresence>
           </div>
 
-          {/* Filter tabs - Refactored for fluid LayoutGroup sliding */}
-          <LayoutGroup>
-            <div className="flex rounded-xl overflow-hidden p-1 relative z-0"
-                 style={{ border:`1.5px solid ${C.border}`, background:'#fff', boxShadow: '0 2px 10px rgba(194,24,91,0.05)' }}>
-              {(['all','ready','ordered'] as const).map(f => (
-                <button
-                  key={f}
-                  onClick={() => setActiveFilter(f)}
-                  className="relative flex-1 px-3 sm:px-4 py-2 font-cinzel text-[9px] tracking-[0.2em] whitespace-nowrap transition-colors duration-300 outline-none"
-                  style={{ color: activeFilter === f ? '#fff' : C.textLight }}
-                >
-                  {/* Active Background Indicator */}
-                  {activeFilter === f && (
-                    <motion.div
-                      layoutId="activeFilterBg"
-                      className="absolute inset-0 rounded-lg -z-10 shadow-sm"
-                      style={{ background: f === 'ready' ? C.green : f === 'ordered' ? C.gold : C.goldDk }}
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
+          <div className="flex flex-wrap gap-2 w-full md:w-auto">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className="px-4 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors"
+                style={{
+                  backgroundColor: activeCategory === cat ? C.gold : 'transparent',
+                  color: activeCategory === cat ? C.white : C.textMid,
+                  border: activeCategory === cat ? `1px solid ${C.gold}` : `1px solid ${C.border}`
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Ready Stock Vault Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProducts.map(product => {
+            const status = stockMap[product.id] || 'Available';
+            return (
+              <motion.div
+                key={product.id}
+                layoutId={`card-${product.id}`}
+                className="rounded-2xl border overflow-hidden flex flex-col transition-shadow hover:shadow-md"
+                style={{ backgroundColor: C.bgCard, borderColor: C.border }}
+              >
+                <div className="relative h-64 bg-gray-50 flex items-center justify-center p-4">
+                  <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                  {product.tag && (
+                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white" style={{ backgroundColor: C.goldLt }}>
+                      {product.tag}
+                    </span>
                   )}
-                  <span className="relative z-10 flex items-center justify-center gap-1.5 font-semibold">
-                     {f === 'ready' && <span className="w-1.5 h-1.5 rounded-full bg-white opacity-80" />}
-                     {f === 'ordered' && <Diamond size={8} className="text-white opacity-80" />}
-                     {f.toUpperCase()}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </LayoutGroup>
-
-          {/* WhatsApp */}
-          <motion.a
-            whileHover={{ scale:1.04, boxShadow: '0 8px 20px rgba(37,211,102,0.3)' }} whileTap={{ scale:0.97 }}
-            href="https://wa.me/918377911745?text=Hi!%20I%20am%20viewing%20the%20private%20catalogue."
-            target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
-            style={{ background:'#25D366' }}
-          >
-            <MessageCircle size={14} /> WhatsApp
-          </motion.a>
-        </motion.div>
-
-        {/* Count */}
-        <motion.p
-          initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once: true }} transition={{ delay:0.4 }}
-          className="font-raleway text-xs mb-5"
-          style={{ color: C.textLight }}
-        >
-          Showing <strong style={{ color: C.text }}>{visibleProducts.length}</strong> of {allProducts.length} pieces
-          {activeFilter !== 'all' && ` · ${activeFilter === 'ready' ? 'Ready' : 'Ordered'} stock only`}
-          {searchQuery && ` · "${searchQuery}"`}
-        </motion.p>
-
-        {/* ── PRODUCT GRID ── */}
-        {visibleProducts.length === 0 ? (
-          <motion.div
-            initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-            className="text-center py-24"
-          >
-            <motion.div
-              animate={{ scale:[1,1.08,1] }} transition={{ duration:2, repeat:Infinity }}
-              className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ background:`rgba(194,24,91,0.08)` }}
-            >
-              <Search size={24} style={{ color: C.textLight }} />
-            </motion.div>
-            <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No products found</p>
-            <motion.button
-              whileHover={{ scale:1.05 }} whileTap={{ scale:0.97 }}
-              onClick={() => { setSearchQuery(''); setActiveFilter('all'); }}
-              className="mt-4 font-raleway text-sm underline"
-              style={{ color: C.gold }}
-            >
-              Clear filters
-            </motion.button>
-          </motion.div>
-        ) : (
-          <motion.div 
-            variants={gridVariants} initial="hidden" animate="show"
-            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10"
-          >
-            <AnimatePresence mode="popLayout">
-              {visibleProducts.map((product) => {
-                const isReady = (stockMap[product.id] ?? 'ready') === 'ready';
-                return (
-                  <motion.div
-                    key={product.id}
-                    layout
-                    variants={itemVariants}
-                    whileHover={{ y:-7, scale:1.02, boxShadow: '0 12px 30px rgba(194,24,91,0.15)' }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer group flex flex-col relative"
-                    style={{ boxShadow:'0 4px 15px rgba(194,24,91,0.05)', border: `1px solid ${C.bgDeep}` }}
-                    onClick={() => setSelectedProduct(product)}
-                  >
-                    {/* Glass Sheen on Card Hover */}
-                    <motion.div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                                initial={{ x: '-150%', skewX: -20 }} whileHover={{ x: '150%' }} transition={{ duration: 0.8, ease: "easeInOut" }} />
-
-                    {/* Image */}
-                    <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio:'1/1' }}>
-                      <motion.img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                        onError={(e:any) => { e.target.src = '/bridal.png'; }}
-                        style={{ filter: isReady ? 'none' : 'grayscale(35%) brightness(0.9)' }}
-                      />
-
-                      {/* Elegant Overlay */}
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                           style={{ background:'linear-gradient(to top, rgba(136,14,79,0.3) 0%, transparent 60%)' }} />
-
-                      {/* Hover CTA Button */}
-                      <motion.div
-                        initial={{ opacity:0, y: 10 }}
-                        whileHover={{ opacity:1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-center z-10"
-                      >
-                        <div className="bg-white/95 backdrop-blur-sm rounded-full px-5 py-2.5 flex items-center gap-2 shadow-xl border border-white/50">
-                          <span className="font-cinzel text-xs font-bold" style={{ color: C.gold }}>VIEW PIECE</span>
-                          <ArrowRight size={12} style={{ color: C.gold }} />
-                        </div>
-                      </motion.div>
-
-                      {/* Tag */}
-                      <div className="absolute top-3 left-3 z-10">
-                        <span className={`text-[10px] font-cinzel font-bold tracking-wider px-2.5 py-1 rounded-md shadow-sm border border-black/5 ${TAG_COLORS[product.tag] ?? 'bg-gray-100 text-gray-700'}`}>
-                          {product.tag}
-                        </span>
+                  {status === 'Ordered' && (
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center">
+                      <div className="bg-white/95 px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 border" style={{ borderColor: C.gold }}>
+                        <Package size={16} style={{ color: C.gold }} />
+                        <span className="text-xs font-bold uppercase tracking-wide" style={{ color: C.text }}>Allocation Dispatched</span>
                       </div>
-
-                      {/* Sparkle effect for ready items */}
-                      {isReady && (
-                        <motion.div
-                          className="absolute top-3 right-3 z-10 bg-white/80 p-1.5 rounded-full shadow-sm backdrop-blur-sm"
-                          animate={{ scale:[1,1.15,1], opacity:[0.8,1,0.8] }}
-                          transition={{ duration:2.5, repeat:Infinity, ease: "easeInOut" }}
-                        >
-                          <Sparkles size={13} style={{ color:'#2E7D32' }} />
-                        </motion.div>
-                      )}
                     </div>
+                  )}
+                </div>
 
-                    {/* Info */}
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col">
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        <motion.div
-                          animate={{ scale:[1,1.4,1], opacity: [0.7, 1, 0.7] }}
-                          transition={{ duration:3, repeat:Infinity, ease: "easeInOut" }}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: C.gold }}
-                        />
-                        <span className="font-cinzel text-[9px] font-bold tracking-[0.2em]" style={{ color: C.gold }}>
-                          {product.category.toUpperCase()}
-                        </span>
-                      </div>
-                      <h3 className="font-cormorant text-xl font-semibold leading-tight mb-2 group-hover:text-pink-800 transition-colors" style={{ color: C.text }}>
-                        {product.name}
-                      </h3>
-                      <p className="font-raleway text-xs leading-relaxed mt-auto line-clamp-2" style={{ color: C.textLight }}>
-                        {product.description}
-                      </p>
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold" style={{ color: C.text }}>{product.name}</h3>
+                    <p className="text-xs mt-1 uppercase font-semibold" style={{ color: C.textLight }}>{product.category}</p>
+                    <p className="text-sm mt-2 line-clamp-2 text-gray-600">{product.description}</p>
+                  </div>
 
-                      {/* Divider */}
-                      <div className="h-px w-full my-4" style={{ background: `linear-gradient(to right, transparent, ${C.border}, transparent)` }} />
+                  <div className="mt-5 pt-4 border-t flex items-center justify-between" style={{ borderColor: 'rgba(194,24,91,0.08)' }}>
+                    <button
+                      onClick={() => setSelectedProduct(product)}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider hover:opacity-80"
+                      style={{ color: C.gold }}
+                    >
+                      <Eye size={14} /> Spec Sheet
+                    </button>
 
-                      {/* CTA */}
-                      <motion.button
-                        whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
-                        onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
-                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-xs font-bold transition-all relative overflow-hidden"
-                        style={{
-                          background: isReady ? '#25D366' : `rgba(194,24,91,0.04)`,
-                          color:      isReady ? '#fff'    : C.gold,
-                          border:     isReady ? 'none'    : `1px solid ${C.goldPale}`,
-                          boxShadow:  isReady ? '0 4px 15px rgba(37,211,102,0.25)' : 'none',
+                    {status !== 'Ordered' && (
+                      <button
+                        onClick={() => {
+                          moveToOrdered(product.id, product);
+                          setStockMap(loadStockMap());
                         }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-transform active:scale-95"
+                        style={{ backgroundColor: C.gold }}
                       >
-                        <MessageCircle size={14} />
-                        {isReady ? 'Order on WhatsApp' : 'Enquire Now'}
-                      </motion.button>
+                        <ShoppingBag size={12} /> Claim Stock
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
-                      {/* ── PHOTO GALLERY ── */}
-                      <PhotoGallery
-                        productId={product.id}
-                        photoMap={photoMap}
-                        onUpdate={(m) => setPhotoMap({ ...m })}
-                      />
+        {/* Global Inspection Modals */}
+        <AnimatePresence>
+          {selectedProduct && (
+            <ProductModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+              status={stockMap[selectedProduct.id] || 'Available'}
+              onClaim={() => {
+                moveToOrdered(selectedProduct.id, selectedProduct);
+                setStockMap(loadStockMap());
+                setSelectedProduct(null);
+              }}
+            />
+          )}
+        </AnimatePresence>
 
-                      {/* ── UPLOAD BUTTON ── */}
-                      <PhotoUploadButton
-                        productId={product.id}
-                        isReady={isReady}
-                        onUploaded={(m) => setPhotoMap({ ...m })}
-                      />
-
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-        {/* ── FOOTER WATERMARK ── */}
-        <motion.div
-          initial={{ opacity:0, y: 20 }} whileInView={{ opacity:1, y: 0 }}
-          viewport={{ once:true }} transition={{ delay:0.3, duration: 0.8 }}
-          className="text-center mt-20 pb-10"
-        >
-          <div className="inline-flex items-center gap-4 mb-4">
-            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to right, transparent, ${C.goldLt})` }} />
-            <motion.div animate={{ rotate:360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={16} style={{ color: C.gold }} />
-            </motion.div>
-            <span className="font-cinzel text-xs font-bold tracking-[0.35em]" style={{ color: C.textMid }}>
-              SHEKHAR RAJA JEWELLERS
-            </span>
-            <motion.div animate={{ rotate:-360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={16} style={{ color: C.gold }} />
-            </motion.div>
-            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to left, transparent, ${C.goldLt})` }} />
-          </div>
-          <p className="font-raleway text-xs" style={{ color: C.textLight }}>
-            This catalogue is confidential and intended for the recipient only.
-          </p>
-        </motion.div>
       </div>
-
-      <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-    </motion.div>
+    </div>
   );
 }
