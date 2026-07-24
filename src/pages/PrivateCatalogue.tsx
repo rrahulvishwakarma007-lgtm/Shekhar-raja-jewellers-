@@ -3,10 +3,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
-  Clock, X, Sparkles, Package, ShoppingBag, Search, 
-  ImagePlus, CheckCircle2, Trash2, Eye, Plus
+  Clock, Lock, ArrowRight, MessageCircle, Diamond,
+  AlertCircle, Package, ShoppingBag, Search, X, Sparkles, Crown,
+  Camera, Upload, ImagePlus, CheckCircle2, Trash2, Eye, Plus
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
@@ -25,6 +26,7 @@ const C = {
   textLight: '#AD6888',
   border:    'rgba(194,24,91,0.15)',
   green:     '#2E7D32',
+  greenBg:   'rgba(46,125,50,0.08)',
   white:     '#FFFFFF',
 };
 
@@ -123,7 +125,7 @@ export default function PrivateCatalogue() {
       tag: 'Custom Order'
     };
 
-    // Commit to persistent Ordered Stock directly (FIX: Only passing payload)
+    // Commit to persistent Ordered Stock directly
     moveToOrdered(payload);
     
     // Refresh local stock state context
@@ -357,9 +359,7 @@ export default function PrivateCatalogue() {
         {/* Ready Stock Vault Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map(product => {
-            // FIX: Fallback to lowercase 'available' to avoid type overlap errors
             const status = stockMap[product.id] || 'available';
-            
             return (
               <motion.div
                 key={product.id}
@@ -374,7 +374,6 @@ export default function PrivateCatalogue() {
                       {product.tag}
                     </span>
                   )}
-                  {/* FIX: Lowercase 'ordered' matching */}
                   {status === 'ordered' && (
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center">
                       <div className="bg-white/95 px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 border" style={{ borderColor: C.gold }}>
@@ -401,11 +400,9 @@ export default function PrivateCatalogue() {
                       <Eye size={14} /> Spec Sheet
                     </button>
 
-                    {/* FIX: Lowercase 'ordered' matching */}
                     {status !== 'ordered' && (
                       <button
                         onClick={() => {
-                          // FIX: Only passing product
                           moveToOrdered(product);
                           setStockMap(loadStockMap());
                         }}
@@ -428,9 +425,7 @@ export default function PrivateCatalogue() {
             <ProductModal
               product={selectedProduct}
               onClose={() => setSelectedProduct(null)}
-              // FIX: Removed 'status' as ProductModal doesn't accept it
               onClaim={() => {
-                // FIX: Only passing product
                 moveToOrdered(selectedProduct);
                 setStockMap(loadStockMap());
                 setSelectedProduct(null);
