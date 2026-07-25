@@ -11,13 +11,43 @@ import {
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
-import {
-  loadClientItems,
-  saveClientItem,
-  deleteClientItem,
-  migrateFromLocalStorage,
-  type ClientItem,
-} from '../lib/clientPhotoStore';
+
+// ── Client item store (localStorage + IndexedDB fallback) ─────────────────────
+// Replace with ../lib/clientPhotoStore once Supabase env vars are configured
+export interface ClientItem {
+  id:        string;
+  name:      string;
+  weight:    string;
+  carat:     string;
+  material:  string;
+  note:      string;
+  imageUrl:  string;   // base64 locally; Supabase public URL after migration
+  imagePath?: string;  // Supabase storage path (empty until cloud is configured)
+  addedAt:   number;
+  token?:    string;
+}
+
+const CLIENT_ITEMS_KEY = 'srj_client_items';
+
+function loadClientItems(): ClientItem[] {
+  try { return JSON.parse(localStorage.getItem(CLIENT_ITEMS_KEY) ?? '[]'); }
+  catch { return []; }
+}
+
+async function saveClientItem(item: Omit<ClientItem,'imageUrl'|'imagePath'> & { base64: string }): Promise<ClientItem> {
+  const saved: ClientItem = { ...item, imageUrl: item.base64, imagePath: '' };
+  const all = loadClientItems();
+  const updated = [saved, ...all.filter(i => i.id !== saved.id)];
+  try { localStorage.setItem(CLIENT_ITEMS_KEY, JSON.stringify(updated)); } catch {}
+  return saved;
+}
+
+async function deleteClientItem(id: string, _imagePath?: string): Promise<void> {
+  const updated = loadClientItems().filter(i => i.id !== id);
+  try { localStorage.setItem(CLIENT_ITEMS_KEY, JSON.stringify(updated)); } catch {}
+}
+
+async function migrateFromLocalStorage(): Promise<void> { /* no-op until Supabase configured */ }
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
@@ -903,12 +933,12 @@ export default function PrivateCatalogue() {
     setShowAddModal(false);
   };
 
-  // Load client items from Supabase on mount (with localStorage migration)
+  // Load client items from localStorage on mount + migrate old data
   useEffect(() => {
-    migrateFromLocalStorage().catch(() => {});
-    loadClientItems()
-      .then(items => setClientItems(items))
-      .catch(() => {});
+    migrateFromLocalStorage().then(() => {
+      const items: ClientItem[] = loadClientItems();
+      setClientItems(items);
+    });
   }, []);
 
   const handleClientDelete = (id: string) => {
@@ -933,13 +963,6 @@ export default function PrivateCatalogue() {
       '\n\nPlease review and advise. Thank you!';
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
-
-  // Load client items from IndexedDB on mount + migrate old localStorage data
-  useEffect(() => {
-    migrateFromLocalStorage().then(() => {
-      idbLoad().then(items => setClientItems(items));
-    });
-  }, []);
 
   // Stagger grid animation variants
   const gridVariants: Variants = {
