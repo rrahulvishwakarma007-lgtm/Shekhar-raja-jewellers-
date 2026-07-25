@@ -11,6 +11,13 @@ import {
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
+import {
+  loadClientItems,
+  saveClientItem,
+  deleteClientItem,
+  migrateFromLocalStorage,
+  type ClientItem,
+} from '../lib/clientPhotoStore';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
@@ -216,34 +223,8 @@ const TAG_COLORS: Record<string, string> = {
 
 
 
-// ════════════════════════════════════════════════════════════════════════════
-// CLIENT JEWELLERY SYSTEM
-// Client can add their own jewellery as new entries in Ordered Stock
-// Stored in localStorage with photo (base64), weight, carat, material
-// ════════════════════════════════════════════════════════════════════════════
-
-const CLIENT_ITEMS_KEY = 'srj_client_items';
-
-export interface ClientItem {
-  id:        string;
-  name:      string;
-  weight:    string;
-  carat:     string;
-  material:  string;
-  note:      string;
-  imageUrl:  string;   // base64
-  addedAt:   number;
-}
-
-function loadClientItems(): ClientItem[] {
-  try { return JSON.parse(localStorage.getItem(CLIENT_ITEMS_KEY) ?? '[]'); }
-  catch { return []; }
-}
-function saveClientItems(items: ClientItem[]) {
-  try { localStorage.setItem(CLIENT_ITEMS_KEY, JSON.stringify(items)); } catch {}
-}
-
-const CARAT_OPTIONS  = ['18K', '20K', '22K', '24K', 'Silver', 'Platinum', 'Other'];
+// ── Carat / Material options ───────────────────────────────────────────────────
+const CARAT_OPTIONS    = ['18K', '20K', '22K', '24K', 'Silver', 'Platinum', 'Other'];
 const MATERIAL_OPTIONS = ['Yellow Gold', 'Rose Gold', 'White Gold', 'Silver', 'Diamond', 'Kundan', 'Meenakari', 'Platinum', 'Other'];
 
 // ── Add Client Item Modal ─────────────────────────────────────────────────────
@@ -260,6 +241,7 @@ function AddClientItemModal({
   const [note,     setNote]     = React.useState('');
   const [imageUrl, setImageUrl] = React.useState('');
   const [saving,   setSaving]   = React.useState(false);
+  const [uploadMsg, setUploadMsg] = React.useState('');
   const imgRef = React.useRef<HTMLInputElement>(null);
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,24 +253,35 @@ function AddClientItemModal({
     e.target.value = '';
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!imageUrl) { alert('Please add a photo of your jewellery.'); return; }
     if (!name.trim()) { alert('Please enter a name or description.'); return; }
     setSaving(true);
-    const item: ClientItem = {
+    setUploadMsg('Uploading photo to cloud…');
+
+    const itemData = {
       id:       `client_${Date.now()}`,
       name:     name.trim(),
       weight:   weight.trim(),
       carat,
       material,
       note:     note.trim(),
-      imageUrl,
       addedAt:  Date.now(),
+      base64:   imageUrl,   // passed to saveClientItem for Supabase upload
     };
-    setTimeout(() => {
-      onAdded(item);
+
+    try {
+      setUploadMsg('Saving to catalogue…');
+      const saved = await saveClientItem(itemData);
+      setUploadMsg('');
+      onAdded(saved);
+    } catch (err) {
+      console.error('Save failed:', err);
+      setUploadMsg('');
+      alert('Upload failed. Please check your connection and try again.');
+    } finally {
       setSaving(false);
-    }, 400);
+    }
   };
 
   return (
@@ -474,18 +467,31 @@ function AddClientItemModal({
             style={{
               background:`linear-gradient(135deg, ${C.gold}, ${C.goldDk})`,
               boxShadow:`0 6px 24px rgba(194,24,91,0.3)`,
-              opacity: saving ? 0.75 : 1,
+              opacity: saving ? 0.85 : 1,
             }}
           >
             {saving ? (
-              <motion.div animate={{ rotate:360 }} transition={{ duration:0.8, repeat:Infinity, ease:'linear' }}>
-                <Plus size={16} />
-              </motion.div>
+              <>
+                <motion.div animate={{ rotate:360 }} transition={{ duration:0.8, repeat:Infinity, ease:'linear' }}>
+                  <Plus size={16} />
+                </motion.div>
+                {uploadMsg || 'UPLOADING…'}
+              </>
             ) : (
-              <ShoppingBag size={16} />
+              <>
+                <ShoppingBag size={16} />
+                ADD TO ORDERED STOCK
+              </>
             )}
-            {saving ? 'ADDING…' : 'ADD TO ORDERED STOCK'}
           </motion.button>
+
+          {saving && (
+            <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }}
+                      className="font-raleway text-xs text-center mt-2"
+                      style={{ color: C.textLight }}>
+              📸 Photo is uploading to cloud storage — visible on all devices once done
+            </motion.p>
+          )}
 
           <p className="font-raleway text-xs text-center mt-3" style={{ color:C.textLight }}>
             Our team will review and contact you on WhatsApp
@@ -803,7 +809,7 @@ export default function PrivateCatalogue() {
   const [searchQuery, setSearchQuery]         = useState('');
   const [activeFilter, setActiveFilter]       = useState<'all'|'ready'|'ordered'>('all');
   const [isLoading, setIsLoading]             = useState(true);
-  const [clientItems, setClientItems]           = useState<ClientItem[]>(() => loadClientItems());
+  const [clientItems, setClientItems]           = useState<ClientItem[]>([]);
   const [showAddModal, setShowAddModal]         = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
@@ -892,16 +898,26 @@ export default function PrivateCatalogue() {
 
 
   const handleClientAdd = (item: ClientItem) => {
-    const updated = [...clientItems, item];
-    setClientItems(updated);
-    saveClientItems(updated);
+    // item is already saved to Supabase/IndexedDB by AddClientItemModal before calling onAdded
+    setClientItems(prev => [item, ...prev]);
     setShowAddModal(false);
   };
 
+  // Load client items from Supabase on mount (with localStorage migration)
+  useEffect(() => {
+    migrateFromLocalStorage().catch(() => {});
+    loadClientItems()
+      .then(items => setClientItems(items))
+      .catch(() => {});
+  }, []);
+
   const handleClientDelete = (id: string) => {
-    const updated = clientItems.filter(i => i.id !== id);
-    setClientItems(updated);
-    saveClientItems(updated);
+    deleteClientItem(id, clientItems.find(i => i.id === id)?.imagePath).then(() => {
+      setClientItems(prev => prev.filter(i => i.id !== id));
+    }).catch(() => {
+      // Still remove from UI even if cloud delete fails
+      setClientItems(prev => prev.filter(i => i.id !== id));
+    });
   };
 
   const handleClientEnquire = (item: ClientItem) => {
@@ -917,6 +933,13 @@ export default function PrivateCatalogue() {
       '\n\nPlease review and advise. Thank you!';
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
+
+  // Load client items from IndexedDB on mount + migrate old localStorage data
+  useEffect(() => {
+    migrateFromLocalStorage().then(() => {
+      idbLoad().then(items => setClientItems(items));
+    });
+  }, []);
 
   // Stagger grid animation variants
   const gridVariants: Variants = {
