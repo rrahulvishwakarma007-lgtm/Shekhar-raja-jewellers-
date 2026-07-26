@@ -1841,7 +1841,6 @@ export default function PrivateCatalogue() {
           <ProductModal
             product={selectedProduct}
             onClose={() => setSelectedProduct(null)}
-            onEnquire={() => handleEnquire(selectedProduct)}
           />
         )}
         {showAddModal && (
