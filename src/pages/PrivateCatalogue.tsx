@@ -21,29 +21,7 @@ import {
   migrateFromLocalStorage,
   type ClientItem,
 } from '../lib/clientPhotoStore';
-}
 
-const CLIENT_ITEMS_KEY = 'srj_client_items';
-
-function loadClientItems(): ClientItem[] {
-  try { return JSON.parse(localStorage.getItem(CLIENT_ITEMS_KEY) ?? '[]'); }
-  catch { return []; }
-}
-
-async function saveClientItem(item: Omit<ClientItem,'imageUrl'|'imagePath'> & { base64: string }): Promise<ClientItem> {
-  const saved: ClientItem = { ...item, imageUrl: item.base64, imagePath: '' };
-  const all = loadClientItems();
-  const updated = [saved, ...all.filter(i => i.id !== saved.id)];
-  try { localStorage.setItem(CLIENT_ITEMS_KEY, JSON.stringify(updated)); } catch {}
-  return saved;
-}
-
-async function deleteClientItem(id: string, _imagePath?: string): Promise<void> {
-  const updated = loadClientItems().filter(i => i.id !== id);
-  try { localStorage.setItem(CLIENT_ITEMS_KEY, JSON.stringify(updated)); } catch {}
-}
-
-async function migrateFromLocalStorage(): Promise<void> { /* no-op until Supabase configured */ }
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
