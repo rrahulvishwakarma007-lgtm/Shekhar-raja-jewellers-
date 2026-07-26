@@ -14,17 +14,13 @@ import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore
 
 // ── Client item store (localStorage + IndexedDB fallback) ─────────────────────
 // Replace with ../lib/clientPhotoStore once Supabase env vars are configured
-export interface ClientItem {
-  id:        string;
-  name:      string;
-  weight:    string;
-  carat:     string;
-  material:  string;
-  note:      string;
-  imageUrl:  string;   // base64 locally; Supabase public URL after migration
-  imagePath?: string;  // Supabase storage path (empty until cloud is configured)
-  addedAt:   number;
-  token?:    string;
+import {
+  loadClientItems,
+  saveClientItem,
+  deleteClientItem,
+  migrateFromLocalStorage,
+  type ClientItem,
+} from '../lib/clientPhotoStore';
 }
 
 const CLIENT_ITEMS_KEY = 'srj_client_items';
