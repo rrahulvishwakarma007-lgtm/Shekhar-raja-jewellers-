@@ -907,11 +907,10 @@ export default function PrivateCatalogue() {
     setShowAddModal(false);
   };
 
-  // Load client items from localStorage on mount + migrate old data
+  // Load client items from IndexedDB/Supabase on mount
   useEffect(() => {
     migrateFromLocalStorage().then(() => {
-      const items: ClientItem[] = loadClientItems();
-      setClientItems(items);
+      loadClientItems().then(items => setClientItems(items));
     });
   }, []);
 
