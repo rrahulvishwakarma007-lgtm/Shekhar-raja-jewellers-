@@ -343,7 +343,7 @@ function AddClientItemModal({
 
           {/* Photo picker */}
           <div className="mb-5">
-            <input ref={imgRef} type="file" accept="image/*" capture="environment"
+            <input ref={imgRef} type="file" accept="image/*"
                    className="hidden" onChange={handleImage} />
             {imageUrl ? (
               <div className="relative rounded-2xl overflow-hidden" style={{ aspectRatio:'1/1' }}>
