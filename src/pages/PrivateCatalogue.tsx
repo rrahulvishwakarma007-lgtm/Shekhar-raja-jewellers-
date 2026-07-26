@@ -234,9 +234,19 @@ const MATERIAL_OPTIONS = ['Yellow Gold', 'Rose Gold', 'White Gold', 'Silver', 'D
 // ── Add Client Item Modal ─────────────────────────────────────────────────────
 function AddClientItemModal({
   onClose, onAdded,
+  title = 'Add Your Jewellery',
+  subtitle = 'Upload a photo with details for our team',
+  stockLabel = 'ORDERED STOCK',
+  stockColor = '#1D4ED8',
+  btnLabel = 'ADD TO ORDERED STOCK',
 }: {
   onClose: () => void;
   onAdded: (item: ClientItem) => void;
+  title?: string;
+  subtitle?: string;
+  stockLabel?: string;
+  stockColor?: string;
+  btnLabel?: string;
 }) {
   const [name,     setName]     = React.useState('');
   const [weight,   setWeight]   = React.useState('');
@@ -317,16 +327,16 @@ function AddClientItemModal({
         <div className="flex items-center justify-between px-6 pt-3 pb-4 flex-shrink-0">
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <ShoppingBag size={13} style={{ color:'#1D4ED8' }} />
-              <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:'#1D4ED8' }}>
-                ORDERED STOCK
+              <ShoppingBag size={13} style={{ color:stockColor }} />
+              <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:stockColor }}>
+                {stockLabel}
               </span>
             </div>
             <h2 className="font-cormorant text-2xl font-bold" style={{ color:C.text }}>
-              Add Your Jewellery
+              {title}
             </h2>
             <p className="font-raleway text-xs mt-0.5" style={{ color:C.textLight }}>
-              Upload a photo with details for our team
+              {subtitle}
             </p>
           </div>
           <button
@@ -508,11 +518,13 @@ function AddClientItemModal({
 
 // ── Client Item Card ──────────────────────────────────────────────────────────
 function ClientItemCard({
-  item, onDelete, onEnquire,
+  item, onDelete, onEnquire, accentColor = '#1D4ED8', badgeLabel = 'YOUR ITEM',
 }: {
   item: ClientItem;
   onDelete: () => void;
   onEnquire: () => void;
+  accentColor?: string;
+  badgeLabel?: string;
 }) {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -528,7 +540,7 @@ function ClientItemCard({
       onClick={() => setExpanded(e => !e)}
     >
       {/* Blue top bar = client item */}
-      <div className="h-1" style={{ background:'linear-gradient(90deg,#1D4ED8,#3B82F6)' }} />
+      <div className="h-1" style={{ background:`linear-gradient(90deg,${accentColor},${accentColor}99)` }} />
 
       <div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
         <img
@@ -557,8 +569,8 @@ function ClientItemCard({
         {/* Blue dot + YOUR ITEM label */}
         <div className="flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full" style={{ background:'#1D4ED8' }} />
-          <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color:'#1D4ED8' }}>
-            ORDERED STOCK
+          <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color:accentColor }}>
+            {badgeLabel}
           </span>
         </div>
 
@@ -1188,7 +1200,8 @@ export default function PrivateCatalogue() {
   const [isLoading, setIsLoading]             = useState(true);
   const [clientItems, setClientItems]           = useState<ClientItem[]>([]);
   const [showAddModal, setShowAddModal]         = useState(false);
-  const [ownerItems, setOwnerItems]             = useState<ClientItem[]>(() => {
+  const [ownerItems, setOwnerItems]             = useState<ClientItem[]>([]);
+
     try { return JSON.parse(localStorage.getItem('srj_owner_items') || '[]'); } catch { return []; }
   });
   const [showOwnerModal, setShowOwnerModal]     = useState(false);
@@ -1287,7 +1300,10 @@ export default function PrivateCatalogue() {
   // Load client items from IndexedDB/Supabase on mount
   useEffect(() => {
     migrateFromLocalStorage().then(() => {
-      loadClientItems().then(items => setClientItems(items));
+      loadClientItems().then(items => {
+        setClientItems(items.filter(i => (i as any).addedBy === 'client' || !(i as any).addedBy));
+        setOwnerItems(items.filter(i => (i as any).addedBy === 'owner'));
+      });
     });
   }, []);
 
@@ -1298,6 +1314,31 @@ export default function PrivateCatalogue() {
       // Still remove from UI even if cloud delete fails
       setClientItems(prev => prev.filter(i => i.id !== id));
     });
+  };
+
+  const handleOwnerAdd = (item: ClientItem) => {
+    const withRole = { ...item, addedBy: 'owner' } as any;
+    saveClientItem(withRole).then(() => {
+      setOwnerItems(prev => [withRole, ...prev]);
+    });
+    setShowOwnerModal(false);
+  };
+
+  const handleOwnerDelete = (id: string) => {
+    deleteClientItem(id, ownerItems.find(i => i.id === id)?.imagePath).then(() => {
+      setOwnerItems(prev => prev.filter(i => i.id !== id));
+    });
+  };
+
+  const handleOwnerEnquire = (item: ClientItem) => {
+    const msg =
+      'Hi! Owner added product for reference:\n\n' +
+      '\ud83d\udc8e ' + item.name + '\n' +
+      '\u2696\ufe0f Weight: ' + (item.weight || 'N/A') + 'g\n' +
+      '\ud83d\udd22 Carat: ' + item.carat + '\n' +
+      '\ud83e\uddf1 Material: ' + item.material +
+      (item.note ? ('\n\ud83d\udcdd Note: ' + item.note) : '');
+    window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
 
   const handleClientEnquire = (item: ClientItem) => {
@@ -1314,14 +1355,7 @@ export default function PrivateCatalogue() {
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
 
-  const handleOwnerAdd = (item: ClientItem) => {
-    const updated = [item, ...ownerItems];
-    setOwnerItems(updated);
-    try { localStorage.setItem('srj_owner_items', JSON.stringify(updated)); } catch {}
-    setShowOwnerModal(false);
-    setOrderedToast(item.name + ' added to Ready Stock!');
-    setTimeout(() => setOrderedToast(null), 3500);
-  };
+
 
   const handleOwnerDelete = (id: string) => {
     const updated = ownerItems.filter(i => i.id !== id);
@@ -1712,29 +1746,4 @@ export default function PrivateCatalogue() {
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
             style={{ background:'#25D366' }}
-          >
-            <MessageCircle size={14} /> WhatsApp
-          </motion.a>
-        </motion.div>
-
-        {/* Count */}
-        <motion.p
-          initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once: true }} transition={{ delay:0.4 }}
-          className="font-raleway text-xs mb-5"
-          style={{ color: C.textLight }}
-        >
-          Showing <strong style={{ color: C.text }}>{visibleProducts.length}</strong> of {allProducts.length} pieces
-          {activeFilter !== 'all' && ` . ${activeFilter === 'ready' ? 'Ready' : 'Ordered'} stock only`}
-          {searchQuery && ` . "${searchQuery}"`}
-        </motion.p>
-
-        {/* ── PRODUCT GRID ── */}
-        {visibleProducts.length === 0 ? (
-          <motion.div
-            initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-            className="text-center py-24"
-          >
-            <motion.div
-              animate={{ scale:[1,1.08,1] }} transition={{ duration:2, repeat:Infinity }}
-              className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ background
+       
