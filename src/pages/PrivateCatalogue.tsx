@@ -87,7 +87,7 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:99,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium' },
     { id:100, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",        image:'/ladies ring5.jpg',    tag:'Trending' },
     { id:101, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival' },
-    { id:102, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Luxury ladies gold ring — a statement piece for weddings and events.",       image:'/ladies ring7.jpg',    tag:'Luxury' },
+    { id:102, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Luxury ladies gold ring - a statement piece for weddings and events.",       image:'/ladies ring7.jpg',    tag:'Luxury' },
     { id:103, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller' },
     { id:104, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",            image:'/ladies ring9.jpg',    tag:'Traditional' },
     { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",              image:'/ladies ring10.jpg',   tag:'Bridal Pick' },
@@ -105,10 +105,10 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium' },
     { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',     tag:'Trending' },
     { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",              image:'/gents ring6.jpg',     tag:'New Arrival' },
-    { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' },
+    { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring - a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' },
     { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',     tag:'Bestseller' },
     { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',     tag:'Traditional' },
-    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',    tag:'Bridal Pick' },
+    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring - perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',    tag:'Bridal Pick' },
   ],
   necklaces: [
     { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',              image:'/necklace88.png', tag:'Bridal'    },
@@ -142,10 +142,10 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:63, name:'Jadau Necklace ',           category:'Necklaces',    description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg', tag:'Heritage' },
     { id:64, name:'Jadau Necklace ',           category:'Necklaces',    description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg', tag:'Premium' },
     { id:65, name:'Jadau Necklace ',           category:'Necklaces',    description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg', tag:'Exclusive' },
-    { id:66, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bestselling Jadau necklace — a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller' },
+    { id:66, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bestselling Jadau necklace - a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller' },
     { id:73, name:'Long Haar ',                category:'Necklaces',    description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',      tag:'Traditional' },
     { id:74, name:'Long Haar ',                category:'Necklaces',    description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',      tag:'Heritage' },
-    { id:75, name:'Long Haar ',                category:'Necklaces',    description:'Bridal long haar in 22KT gold — a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick' },
+    { id:75, name:'Long Haar ',                category:'Necklaces',    description:'Bridal long haar in 22KT gold - a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick' },
     { id:76, name:'Long Haar ',                category:'Necklaces',    description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',      tag:'Premium' },
     { id:77, name:'Long Haar ',                category:'Necklaces',    description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',      tag:'Luxury' },
   ],
@@ -176,13 +176,13 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:79, name:'Pendant ',             category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',      image:'/pandent set2.jpg',    tag:'Heritage' },
     { id:80, name:'Pendant ',             category:'Pendants',     description:'Bridal pendant  in 22KT gold with kundan stones and pearl drops.',       image:'/pandent set3.jpg',    tag:'Bridal Pick' },
     { id:81, name:'Pendant ',             category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',              image:'/pandent set4.jpg',    tag:'Exclusive' },
-    { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant — contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending' },
+    { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant - contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending' },
     { id:83, name:'Pendant ',             category:'Pendants',     description:'New arrival pendant  in 22KT gold with modern heritage styling.',        image:'/pandent set6.jpg',    tag:'New Arrival' },
     { id:84, name:'Pendant ',             category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',      image:'/pandent set7.jpg',    tag:'Premium' },
     { id:85, name:'Pendant ',             category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',    image:'/pandent set8.jpg',    tag:'Festive' },
   ],
   bridal: [
-    { id:'br1', name:'Bridal Set – Maharani',  category:'Bridal',    description:'Complete necklace, earrings & maang tikka.',       image:'/bridal.png',     tag:'Bestseller'},
+    { id:'br1', name:'Bridal Set - Maharani',  category:'Bridal',    description:'Complete necklace, earrings & maang tikka.',       image:'/bridal.png',     tag:'Bestseller'},
     { id:'br2', name:'Kundan Bridal Choker',   category:'Bridal',    description:'Exquisite kundan bridal choker.',                  image:'/necklace88.png', tag:'Premium'   },
   ],
   chains: [
@@ -261,7 +261,7 @@ function AddClientItemModal({
     if (!imageUrl) { alert('Please add a photo of your jewellery.'); return; }
     if (!name.trim()) { alert('Please enter a name or description.'); return; }
     setSaving(true);
-    setUploadMsg('Uploading photo to cloud…');
+    setUploadMsg('Uploading photo to cloud...');
 
     const itemData = {
       id:       `client_${Date.now()}`,
@@ -275,7 +275,7 @@ function AddClientItemModal({
     };
 
     try {
-      setUploadMsg('Saving to catalogue…');
+      setUploadMsg('Saving to catalogue...');
       const saved = await saveClientItem(itemData);
       setUploadMsg('');
       onAdded(saved);
@@ -360,7 +360,7 @@ function AddClientItemModal({
                 </div>
                 {/* checkmark */}
                 <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
-                  <span className="text-white text-sm">✓</span>
+                  <span className="text-white text-sm">v</span>
                 </div>
               </div>
             ) : (
@@ -393,7 +393,7 @@ function AddClientItemModal({
             </label>
             <input
               value={name} onChange={e => setName(e.target.value)}
-              placeholder="e.g. Gold Necklace, My Bangle Set…"
+              placeholder="e.g. Gold Necklace, My Bangle Set..."
               className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none"
               style={{ border:`1.5px solid ${C.border}`, background:'#fff', color:C.text }}
             />
@@ -456,7 +456,7 @@ function AddClientItemModal({
             </label>
             <textarea
               value={note} onChange={e => setNote(e.target.value)}
-              placeholder="Any special instructions, condition, design preference…"
+              placeholder="Any special instructions, condition, design preference..."
               rows={3}
               className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none resize-none"
               style={{ border:`1.5px solid ${C.border}`, background:'#fff', color:C.text }}
@@ -479,7 +479,7 @@ function AddClientItemModal({
                 <motion.div animate={{ rotate:360 }} transition={{ duration:0.8, repeat:Infinity, ease:'linear' }}>
                   <Plus size={16} />
                 </motion.div>
-                {uploadMsg || 'UPLOADING…'}
+                {uploadMsg || 'UPLOADING...'}
               </>
             ) : (
               <>
@@ -493,7 +493,7 @@ function AddClientItemModal({
             <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }}
                       className="font-raleway text-xs text-center mt-2"
                       style={{ color: C.textLight }}>
-              📸 Photo is uploading to cloud storage — visible on all devices once done
+              📸 Photo is uploading to cloud storage - visible on all devices once done
             </motion.p>
           )}
 
@@ -612,6 +612,379 @@ function ClientItemCard({
   );
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ADD OWNER ITEM MODAL — green theme, adds to Ready Stock
+// ══════════════════════════════════════════════════════════════════════════════
+function AddOwnerItemModal({
+  onClose, onAdded, catLabel,
+}: {
+  onClose:  () => void;
+  onAdded:  (item: ClientItem) => void;
+  catLabel: string;
+}) {
+  const [name,     setName]     = React.useState('');
+  const [weight,   setWeight]   = React.useState('');
+  const [carat,    setCarat]    = React.useState('22K');
+  const [material, setMaterial] = React.useState('Yellow Gold');
+  const [note,     setNote]     = React.useState('');
+  const [imageUrl, setImageUrl] = React.useState('');
+  const [saving,   setSaving]   = React.useState(false);
+  const [uploadMsg, setUploadMsg] = React.useState('');
+  const imgRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setImageUrl(ev.target?.result as string);
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleSubmit = async () => {
+    if (!imageUrl) { alert('Please add a photo of your jewellery.'); return; }
+    if (!name.trim()) { alert('Please enter a product name.'); return; }
+    setSaving(true);
+    setUploadMsg('Uploading photo...');
+    const itemData = {
+      id:      `owner_${Date.now()}`,
+      name:    name.trim(),
+      weight:  weight.trim(),
+      carat,
+      material,
+      note:    note.trim(),
+      addedAt: Date.now(),
+      base64:  imageUrl,
+    };
+    try {
+      setUploadMsg('Saving to catalogue...');
+      const saved = await saveClientItem(itemData);
+      setUploadMsg('');
+      onAdded(saved);
+    } catch {
+      setUploadMsg('');
+      alert('Upload failed. Please check your connection and try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const G = '#2E7D32'; // green accent
+
+  return (
+    <motion.div
+      initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background:'rgba(0,20,6,0.75)', backdropFilter:'blur(6px)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <motion.div
+        initial={{ y:80, opacity:0, scale:0.97 }}
+        animate={{ y:0,  opacity:1, scale:1 }}
+        exit={{   y:60,  opacity:0, scale:0.97 }}
+        transition={{ type:'spring', stiffness:320, damping:32 }}
+        className="w-full sm:max-w-md bg-white overflow-hidden shadow-2xl flex flex-col"
+        style={{ maxHeight:'95dvh', borderRadius:'24px 24px 0 0' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Green top bar = owner/ready */}
+        <div className="h-1 flex-shrink-0"
+             style={{ background:`linear-gradient(90deg, #1B5E20, #2E7D32, #4CAF50, #2E7D32, #1B5E20)` }} />
+
+        {/* Handle */}
+        <div className="flex justify-center pt-3 flex-shrink-0">
+          <div className="w-10 h-1 rounded-full" style={{ background:'rgba(46,125,50,0.25)' }} />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-3 pb-4 flex-shrink-0">
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <Package size={13} style={{ color: G }} />
+              <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color: G }}>
+                READY STOCK . {catLabel.toUpperCase()}
+              </span>
+            </div>
+            <h2 className="font-cormorant text-2xl font-bold" style={{ color:C.text }}>
+              Add Jewellery to Stock
+            </h2>
+            <p className="font-raleway text-xs mt-0.5" style={{ color:C.textLight }}>
+              Owner upload - appears in Ready Stock for client
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-full flex items-center justify-center"
+            style={{ background:'rgba(46,125,50,0.07)', border:`1px solid rgba(46,125,50,0.2)` }}
+          >
+            <X size={16} style={{ color:'#2E7D32' }} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="overflow-y-auto flex-1 px-6 pb-6">
+
+          {/* Photo picker */}
+          <div className="mb-5">
+            <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+              PRODUCT PHOTO *
+            </label>
+            <input ref={imgRef} type="file" accept="image/*"
+                   className="hidden" onChange={handleImage} />
+            {imageUrl ? (
+              <div className="relative rounded-2xl overflow-hidden" style={{ aspectRatio:'1/1', border:`2px solid ${G}` }}>
+                <img src={imageUrl} alt="product" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+                     style={{ background:'rgba(0,0,0,0.4)' }}>
+                  <button onClick={() => imgRef.current?.click()}
+                          className="bg-white text-sm font-raleway px-4 py-2 rounded-full flex items-center gap-2"
+                          style={{ color:C.text }}>
+                    <Camera size={14} /> Change Photo
+                  </button>
+                </div>
+                <div className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center shadow-lg"
+                     style={{ background: G }}>
+                  <span className="text-white text-sm font-bold">v</span>
+                </div>
+                <div className="absolute top-3 left-3">
+                  <span className="font-cinzel text-[9px] tracking-wider px-2.5 py-1.5 rounded-full shadow-lg text-white"
+                        style={{ background: G }}>READY STOCK</span>
+                </div>
+              </div>
+            ) : (
+              <motion.button
+                whileHover={{ scale:1.02 }} whileTap={{ scale:0.98 }}
+                onClick={() => imgRef.current?.click()}
+                className="w-full rounded-2xl flex flex-col items-center justify-center gap-3 py-10 transition-all"
+                style={{ border:`2px dashed rgba(46,125,50,0.35)`, background:'rgba(46,125,50,0.04)' }}
+              >
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                     style={{ background:'rgba(46,125,50,0.12)' }}>
+                  <Camera size={26} style={{ color: G }} />
+                </div>
+                <div className="text-center">
+                  <p className="font-cormorant text-lg font-semibold" style={{ color:C.text }}>
+                    Add Product Photo
+                  </p>
+                  <p className="font-raleway text-xs mt-1" style={{ color:C.textLight }}>
+                    Tap to take photo or choose from gallery
+                  </p>
+                </div>
+              </motion.button>
+            )}
+          </div>
+
+          {/* Name */}
+          <div className="mb-4">
+            <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+              PRODUCT NAME *
+            </label>
+            <input
+              value={name} onChange={e => setName(e.target.value)}
+              placeholder="e.g. Royal Kundan Necklace, Gold Bangles Set..."
+              className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none"
+              style={{ border:`1.5px solid rgba(46,125,50,0.25)`, background:'#fff', color:C.text }}
+            />
+          </div>
+
+          {/* Weight + Carat */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+                WEIGHT (grams)
+              </label>
+              <input
+                type="number" value={weight} onChange={e => setWeight(e.target.value)}
+                placeholder="e.g. 12.5"
+                className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none"
+                style={{ border:`1.5px solid rgba(46,125,50,0.25)`, background:'#fff', color:C.text }}
+              />
+            </div>
+            <div>
+              <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+                KARATE / PURITY
+              </label>
+              <select
+                value={carat} onChange={e => setCarat(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none appearance-none"
+                style={{ border:`1.5px solid rgba(46,125,50,0.25)`, background:'#fff', color:C.text }}
+              >
+                {CARAT_OPTIONS.map(o => <option key={o}>{o}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Material */}
+          <div className="mb-4">
+            <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+              MATERIAL TYPE
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {MATERIAL_OPTIONS.map(m => (
+                <button key={m} onClick={() => setMaterial(m)}
+                        className="px-3 py-1.5 rounded-full text-xs font-raleway font-semibold transition-all"
+                        style={{
+                          background: material === m ? G : 'rgba(46,125,50,0.06)',
+                          color:      material === m ? '#fff' : '#2E7D32',
+                          border:     material === m ? 'none' : `1px solid rgba(46,125,50,0.2)`,
+                        }}>
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Note */}
+          <div className="mb-6">
+            <label className="font-cinzel text-[9px] tracking-[0.25em] mb-2 block" style={{ color:C.textLight }}>
+              ADDITIONAL NOTES (OPTIONAL)
+            </label>
+            <textarea
+              value={note} onChange={e => setNote(e.target.value)}
+              placeholder="Price, availability, special details..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none resize-none"
+              style={{ border:`1.5px solid rgba(46,125,50,0.25)`, background:'#fff', color:C.text }}
+            />
+          </div>
+
+          {/* Submit */}
+          <motion.button
+            whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
+            onClick={handleSubmit} disabled={saving}
+            className="w-full py-4 rounded-2xl font-cinzel text-sm tracking-[0.2em] text-white flex items-center justify-center gap-3 shadow-lg"
+            style={{
+              background:`linear-gradient(135deg, #2E7D32, #1B5E20)`,
+              boxShadow:`0 6px 24px rgba(46,125,50,0.35)`,
+              opacity: saving ? 0.85 : 1,
+            }}
+          >
+            {saving ? (
+              <>
+                <motion.div animate={{ rotate:360 }} transition={{ duration:0.8, repeat:Infinity, ease:'linear' }}>
+                  <Plus size={16} />
+                </motion.div>
+                {uploadMsg || 'UPLOADING...'}
+              </>
+            ) : (
+              <>
+                <Package size={16} />
+                ADD TO READY STOCK
+              </>
+            )}
+          </motion.button>
+
+          {saving && (
+            <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }}
+                      className="font-raleway text-xs text-center mt-2"
+                      style={{ color: C.textLight }}>
+              Uploading photo - will be visible to client once done
+            </motion.p>
+          )}
+          <p className="font-raleway text-xs text-center mt-3" style={{ color:C.textLight }}>
+            This product will appear in Ready Stock for the client to order
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ── Owner Item Card ───────────────────────────────────────────────────────────
+function OwnerItemCard({
+  item, onDelete,
+}: {
+  item:     ClientItem;
+  onDelete: () => void;
+}) {
+  const G = '#2E7D32';
+  return (
+    <motion.div
+      layout
+      initial={{ opacity:0, y:20, scale:0.96 }}
+      animate={{ opacity:1, y:0, scale:1 }}
+      exit={{ opacity:0, scale:0.9 }}
+      whileHover={{ y:-5, boxShadow:'0 14px 32px rgba(46,125,50,0.16)' }}
+      className="bg-white rounded-2xl overflow-hidden flex flex-col"
+      style={{ border:`2px solid rgba(46,125,50,0.18)`, boxShadow:'0 3px 14px rgba(46,125,50,0.07)' }}
+    >
+      {/* Green top bar */}
+      <div className="h-1" style={{ background:`linear-gradient(90deg,#1B5E20,#4CAF50)` }} />
+
+      <div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
+        <img
+          src={item.imageUrl} alt={item.name}
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+        />
+        {/* Owner badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="font-cinzel text-[9px] tracking-wider px-2.5 py-1.5 rounded-full shadow-lg text-white"
+                style={{ background: G }}>
+            READY STOCK
+          </span>
+        </div>
+        {/* Delete */}
+        <motion.button
+          whileTap={{ scale:0.9 }}
+          onClick={onDelete}
+          className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+          style={{ background:'rgba(239,68,68,0.9)', color:'#fff' }}
+        >
+          <Trash2 size={13} />
+        </motion.button>
+      </div>
+
+      <div className="p-4 flex flex-col gap-2 flex-1">
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full" style={{ background: G }} />
+          <span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color: G }}>
+            OWNER ADDED
+          </span>
+        </div>
+
+        <h3 className="font-cormorant text-lg font-semibold leading-tight" style={{ color:C.text }}>
+          {item.name}
+        </h3>
+
+        <div className="flex flex-wrap gap-2 mt-1">
+          {item.weight && (
+            <span className="text-xs font-raleway px-2 py-1 rounded-lg font-bold"
+                  style={{ background:'rgba(46,125,50,0.08)', color: G }}>
+              {item.weight}g
+            </span>
+          )}
+          <span className="text-xs font-raleway px-2 py-1 rounded-lg"
+                style={{ background:'rgba(194,24,91,0.07)', color:C.gold }}>
+            {item.carat}
+          </span>
+          <span className="text-xs font-raleway px-2 py-1 rounded-lg"
+                style={{ background:'rgba(46,125,50,0.07)', color: G }}>
+            {item.material}
+          </span>
+        </div>
+
+        {item.note && (
+          <p className="font-raleway text-xs leading-relaxed" style={{ color:C.textLight }}>
+            {item.note}
+          </p>
+        )}
+
+        <p className="font-raleway text-[10px]" style={{ color:'rgba(46,125,50,0.5)' }}>
+          Added {new Date(item.addedAt).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
+        </p>
+
+        <div className="h-px w-full my-1" style={{ background:`linear-gradient(to right, transparent, rgba(46,125,50,0.2), transparent)` }} />
+
+        <div className="flex items-center justify-center gap-2 py-2 rounded-xl font-raleway text-xs font-semibold"
+             style={{ background:'rgba(46,125,50,0.08)', color: G, border:`1px solid rgba(46,125,50,0.15)` }}>
+          <Sparkles size={12} />
+          Available for Client Order
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function decodeToken(t: string): { category: string; expiry: number } | null {
   try { const d = atob(t); const [cat,exp] = d.split('|'); return { category:cat, expiry:parseInt(exp) }; }
   catch { return null; }
@@ -697,7 +1070,7 @@ function ExpiredPage() {
           <MessageCircle size={18} /> Request New Link on WhatsApp
         </motion.a>
         <div className="mt-6">
-          <Link to="/" className="font-raleway text-sm hover:underline transition-all" style={{ color: C.textLight }}>← Back to Home</Link>
+          <Link to="/" className="font-raleway text-sm hover:underline transition-all" style={{ color: C.textLight }}><- Back to Home</Link>
         </div>
       </motion.div>
     </div>
@@ -815,6 +1188,10 @@ export default function PrivateCatalogue() {
   const [isLoading, setIsLoading]             = useState(true);
   const [clientItems, setClientItems]           = useState<ClientItem[]>([]);
   const [showAddModal, setShowAddModal]         = useState(false);
+  const [ownerItems, setOwnerItems]             = useState<ClientItem[]>(() => {
+    try { return JSON.parse(localStorage.getItem('srj_owner_items') || '[]'); } catch { return []; }
+  });
+  const [showOwnerModal, setShowOwnerModal]     = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start','end start'] });
@@ -871,8 +1248,8 @@ export default function PrivateCatalogue() {
     });
   }, [allProducts.length, decoded, expired]);
 
-  const readyCount   = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ready').length;
-  const orderedCount = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ordered').length;
+  const readyCount   = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ready').length + ownerItems.length;
+  const orderedCount = allProducts.filter(p => (stockMap[p.id] ?? 'ready') === 'ordered').length + clientItems.length;
 
   const visibleProducts = useMemo(() => {
     return allProducts.filter(p => {
@@ -937,6 +1314,21 @@ export default function PrivateCatalogue() {
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
 
+  const handleOwnerAdd = (item: ClientItem) => {
+    const updated = [item, ...ownerItems];
+    setOwnerItems(updated);
+    try { localStorage.setItem('srj_owner_items', JSON.stringify(updated)); } catch {}
+    setShowOwnerModal(false);
+    setOrderedToast(item.name + ' added to Ready Stock!');
+    setTimeout(() => setOrderedToast(null), 3500);
+  };
+
+  const handleOwnerDelete = (id: string) => {
+    const updated = ownerItems.filter(i => i.id !== id);
+    setOwnerItems(updated);
+    try { localStorage.setItem('srj_owner_items', JSON.stringify(updated)); } catch {}
+  };
+
   // Stagger grid animation variants
   const gridVariants: Variants = {
     hidden: { opacity: 0 },
@@ -986,7 +1378,7 @@ export default function PrivateCatalogue() {
               <ShoppingBag size={18} />
             </motion.div>
             <span className="font-raleway text-sm font-medium relative z-10">
-              <strong>{orderedToast}</strong> moved to Ordered Stock ✓
+              <strong>{orderedToast}</strong> moved to Ordered Stock v
             </span>
           </motion.div>
         )}
@@ -994,7 +1386,7 @@ export default function PrivateCatalogue() {
 
       {/* ══════════════════════════════════════════════════════════
           LUXURY HERO HEADER
-      ══════════════════════════════════════════════════════════ */}
+      ========================================================== */}
       <div ref={heroRef} className="relative overflow-hidden shadow-2xl" style={{ minHeight: 320 }}>
         {/* Gradient background with slow pulse */}
         <motion.div 
@@ -1033,7 +1425,7 @@ export default function PrivateCatalogue() {
               <Crown size={16} style={{ color: C.goldPale }} />
             </motion.div>
             <span className="font-cinzel text-[10px] tracking-[0.5em] text-white/60">
-              PRIVATE · EXCLUSIVE · CURATED
+              PRIVATE . EXCLUSIVE . CURATED
             </span>
             <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
               <Crown size={16} style={{ color: C.goldPale }} />
@@ -1102,7 +1494,7 @@ export default function PrivateCatalogue() {
           >
             <Lock size={11} style={{ color:'rgba(255,255,255,0.35)' }} />
             <span className="font-cinzel text-[9px] tracking-[0.3em]" style={{ color:'rgba(255,255,255,0.35)' }}>
-              PRIVATE CATALOGUE · CONFIDENTIAL
+              PRIVATE CATALOGUE . CONFIDENTIAL
             </span>
           </motion.div>
         </motion.div>
@@ -1117,7 +1509,7 @@ export default function PrivateCatalogue() {
 
       {/* ══════════════════════════════════════════════════════════
           STICKY NAV HEADER
-      ══════════════════════════════════════════════════════════ */}
+      ========================================================== */}
       <motion.div
         className="sticky top-0 z-40 backdrop-blur-md shadow-sm"
         style={{ background:'rgba(255,245,247,0.95)', borderBottom:`1px solid ${C.border}` }}
@@ -1161,7 +1553,7 @@ export default function PrivateCatalogue() {
 
       {/* ══════════════════════════════════════════════════════════
           BODY
-      ══════════════════════════════════════════════════════════ */}
+      ========================================================== */}
       <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
 
         {/* ── STOCK SUMMARY CARDS ── */}
@@ -1263,7 +1655,7 @@ export default function PrivateCatalogue() {
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name, category or tag…"
+              placeholder="Search by name, category or tag..."
               className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-all duration-300"
               style={{ background:'#fff', border:`1.5px solid ${C.border}`, color: C.text,
                        boxShadow:'0 2px 10px rgba(194,24,91,0.05)' }}
@@ -1332,8 +1724,8 @@ export default function PrivateCatalogue() {
           style={{ color: C.textLight }}
         >
           Showing <strong style={{ color: C.text }}>{visibleProducts.length}</strong> of {allProducts.length} pieces
-          {activeFilter !== 'all' && ` · ${activeFilter === 'ready' ? 'Ready' : 'Ordered'} stock only`}
-          {searchQuery && ` · "${searchQuery}"`}
+          {activeFilter !== 'all' && ` . ${activeFilter === 'ready' ? 'Ready' : 'Ordered'} stock only`}
+          {searchQuery && ` . "${searchQuery}"`}
         </motion.p>
 
         {/* ── PRODUCT GRID ── */}
@@ -1345,251 +1737,4 @@ export default function PrivateCatalogue() {
             <motion.div
               animate={{ scale:[1,1.08,1] }} transition={{ duration:2, repeat:Infinity }}
               className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ background:`rgba(194,24,91,0.08)` }}
-            >
-              <Search size={24} style={{ color: C.textLight }} />
-            </motion.div>
-            <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No products found</p>
-            <motion.button
-              whileHover={{ scale:1.05 }} whileTap={{ scale:0.97 }}
-              onClick={() => { setSearchQuery(''); setActiveFilter('all'); }}
-              className="mt-4 font-raleway text-sm underline"
-              style={{ color: C.gold }}
-            >
-              Clear filters
-            </motion.button>
-          </motion.div>
-        ) : (
-          <motion.div 
-            variants={gridVariants} initial="hidden" animate="show"
-            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10"
-          >
-            <AnimatePresence mode="popLayout">
-              {visibleProducts.map((product) => {
-                const isReady = (stockMap[product.id] ?? 'ready') === 'ready';
-                return (
-                  <motion.div
-                    key={product.id}
-                    layout
-                    variants={itemVariants}
-                    whileHover={{ y:-7, scale:1.02, boxShadow: '0 12px 30px rgba(194,24,91,0.15)' }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer group flex flex-col relative"
-                    style={{ boxShadow:'0 4px 15px rgba(194,24,91,0.05)', border: `1px solid ${C.bgDeep}` }}
-                    onClick={() => setSelectedProduct(product)}
-                  >
-                    {/* Glass Sheen on Card Hover */}
-                    <motion.div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                                initial={{ x: '-150%', skewX: -20 }} whileHover={{ x: '150%' }} transition={{ duration: 0.8, ease: "easeInOut" }} />
-
-                    {/* Image */}
-                    <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio:'1/1' }}>
-                      <motion.img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                        onError={(e:any) => { e.target.src = '/bridal.png'; }}
-                        style={{ filter: isReady ? 'none' : 'grayscale(35%) brightness(0.9)' }}
-                      />
-
-                      {/* Elegant Overlay */}
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                           style={{ background:'linear-gradient(to top, rgba(136,14,79,0.3) 0%, transparent 60%)' }} />
-
-                      {/* Hover CTA Button */}
-                      <motion.div
-                        initial={{ opacity:0, y: 10 }}
-                        whileHover={{ opacity:1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-center z-10"
-                      >
-                        <div className="bg-white/95 backdrop-blur-sm rounded-full px-5 py-2.5 flex items-center gap-2 shadow-xl border border-white/50">
-                          <span className="font-cinzel text-xs font-bold" style={{ color: C.gold }}>VIEW PIECE</span>
-                          <ArrowRight size={12} style={{ color: C.gold }} />
-                        </div>
-                      </motion.div>
-
-                      {/* Tag */}
-                      <div className="absolute top-3 left-3 z-10">
-                        <span className={`text-[10px] font-cinzel font-bold tracking-wider px-2.5 py-1 rounded-md shadow-sm border border-black/5 ${TAG_COLORS[product.tag] ?? 'bg-gray-100 text-gray-700'}`}>
-                          {product.tag}
-                        </span>
-                      </div>
-
-                      {/* Sparkle effect for ready items */}
-                      {isReady && (
-                        <motion.div
-                          className="absolute top-3 right-3 z-10 bg-white/80 p-1.5 rounded-full shadow-sm backdrop-blur-sm"
-                          animate={{ scale:[1,1.15,1], opacity:[0.8,1,0.8] }}
-                          transition={{ duration:2.5, repeat:Infinity, ease: "easeInOut" }}
-                        >
-                          <Sparkles size={13} style={{ color:'#2E7D32' }} />
-                        </motion.div>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col">
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        <motion.div
-                          animate={{ scale:[1,1.4,1], opacity: [0.7, 1, 0.7] }}
-                          transition={{ duration:3, repeat:Infinity, ease: "easeInOut" }}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: C.gold }}
-                        />
-                        <span className="font-cinzel text-[9px] font-bold tracking-[0.2em]" style={{ color: C.gold }}>
-                          {product.category.toUpperCase()}
-                        </span>
-                      </div>
-                      <h3 className="font-cormorant text-xl font-semibold leading-tight mb-2 group-hover:text-pink-800 transition-colors" style={{ color: C.text }}>
-                        {product.name}
-                      </h3>
-                      <p className="font-raleway text-xs leading-relaxed mt-auto line-clamp-2" style={{ color: C.textLight }}>
-                        {product.description}
-                      </p>
-
-                      {/* Divider */}
-                      <div className="h-px w-full my-4" style={{ background: `linear-gradient(to right, transparent, ${C.border}, transparent)` }} />
-
-                      {/* CTA */}
-                      <motion.button
-                        whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
-                        onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
-                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-xs font-bold transition-all relative overflow-hidden"
-                        style={{
-                          background: isReady ? '#25D366' : `rgba(194,24,91,0.04)`,
-                          color:      isReady ? '#fff'    : C.gold,
-                          border:     isReady ? 'none'    : `1px solid ${C.goldPale}`,
-                          boxShadow:  isReady ? '0 4px 15px rgba(37,211,102,0.25)' : 'none',
-                        }}
-                      >
-                        <MessageCircle size={14} />
-                        {isReady ? 'Order on WhatsApp' : 'Enquire Now'}
-                      </motion.button>
-
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-
-        {/* ══════════════════════════════════════════════════════════
-            CLIENT JEWELLERY SECTION — Ordered Stock additions
-        ══════════════════════════════════════════════════════════ */}
-        {(activeFilter === 'all' || activeFilter === 'ordered') && (
-          <motion.div
-            initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }}
-            viewport={{ once:true }} transition={{ delay:0.1 }}
-            className="mt-12"
-          >
-            {/* Section header */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px flex-1" style={{ background:`linear-gradient(to right, transparent, rgba(29,78,216,0.25))` }} />
-              <div className="flex items-center gap-2">
-                <ShoppingBag size={15} style={{ color:'#1D4ED8' }} />
-                <span className="font-cinzel text-xs tracking-[0.3em]" style={{ color:'#1D4ED8' }}>YOUR ITEMS</span>
-              </div>
-              <div className="h-px flex-1" style={{ background:`linear-gradient(to left, transparent, rgba(29,78,216,0.25))` }} />
-            </div>
-
-            {/* Add button */}
-            <motion.button
-              whileHover={{ scale:1.02, boxShadow:'0 8px 28px rgba(194,24,91,0.18)' }}
-              whileTap={{ scale:0.98 }}
-              onClick={() => setShowAddModal(true)}
-              className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl mb-6 font-raleway text-sm font-semibold transition-all"
-              style={{
-                border:`2px dashed rgba(29,78,216,0.3)`,
-                background:'rgba(29,78,216,0.04)',
-                color:'#1D4ED8',
-              }}
-            >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                   style={{ background:'rgba(29,78,216,0.12)' }}>
-                <Plus size={18} style={{ color:'#1D4ED8' }} />
-              </div>
-              <div className="text-left">
-                <p className="font-cinzel text-xs tracking-[0.2em]">ADD YOUR JEWELLERY</p>
-                <p className="font-raleway text-xs mt-0.5" style={{ color:'rgba(29,78,216,0.55)' }}>
-                  Upload photo with weight, carat & material
-                </p>
-              </div>
-            </motion.button>
-
-            {/* Client items grid */}
-            {clientItems.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                <AnimatePresence mode="popLayout">
-                  {clientItems.map(item => (
-                    <ClientItemCard
-                      key={item.id}
-                      item={item}
-                      onDelete={() => handleClientDelete(item.id)}
-                      onEnquire={() => handleClientEnquire(item)}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-
-            {clientItems.length === 0 && (
-              <motion.div
-                initial={{ opacity:0 }} animate={{ opacity:1 }}
-                className="text-center py-10"
-              >
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
-                     style={{ background:'rgba(29,78,216,0.07)' }}>
-                  <Camera size={24} style={{ color:'rgba(29,78,216,0.4)' }} />
-                </div>
-                <p className="font-cormorant text-xl" style={{ color:C.textLight }}>
-                  No items added yet
-                </p>
-                <p className="font-raleway text-xs mt-1" style={{ color:'rgba(173,104,136,0.6)' }}>
-                  Tap the button above to add your jewellery
-                </p>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
-
-        {/* ── FOOTER WATERMARK ── */}
-        <motion.div
-          initial={{ opacity:0, y: 20 }} whileInView={{ opacity:1, y: 0 }}
-          viewport={{ once:true }} transition={{ delay:0.3, duration: 0.8 }}
-          className="text-center mt-20 pb-10"
-        >
-          <div className="inline-flex items-center gap-4 mb-4">
-            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to right, transparent, ${C.goldLt})` }} />
-            <motion.div animate={{ rotate:360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={16} style={{ color: C.gold }} />
-            </motion.div>
-            <span className="font-cinzel text-xs font-bold tracking-[0.35em]" style={{ color: C.textMid }}>
-              SHEKHAR RAJA JEWELLERS
-            </span>
-            <motion.div animate={{ rotate:-360, scale: [1, 1.2, 1], filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)'] }} transition={{ duration:8, repeat:Infinity, ease:'linear' }}>
-              <Diamond size={16} style={{ color: C.gold }} />
-            </motion.div>
-            <div className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to left, transparent, ${C.goldLt})` }} />
-          </div>
-          <p className="font-raleway text-xs" style={{ color: C.textLight }}>
-            This catalogue is confidential and intended for the recipient only.
-          </p>
-        </motion.div>
-      </div>
-
-      <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-
-      {/* Add Client Jewellery Modal */}
-      <AnimatePresence>
-        {showAddModal && (
-          <AddClientItemModal
-            onClose={() => setShowAddModal(false)}
-            onAdded={handleClientAdd}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+              style={{ background
