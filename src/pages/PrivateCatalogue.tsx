@@ -13,7 +13,6 @@ import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
 
 // ── Client item store (localStorage + IndexedDB fallback) ─────────────────────
-// Replace with ../lib/clientPhotoStore once Supabase env vars are configured
 import {
   loadClientItems,
   saveClientItem,
@@ -48,17 +47,17 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:'b3', name:'Antique Finish Bangles',  category:'Bangles',  description:'Antique finish 22K bangles with stone work.',      image:'/bangle3.png', tag:'Heritage'   },
     { id:'b4', name:'Bridal Bangles Set',      category:'Bangles',  description:'Heavy bridal bangle set for your special day.',    image:'/bangle4.png', tag:'Bridal'     },
     { id:'b5', name:'Peacock Bangles',         category:'Bangles',  description:'Peacock motif 22K gold bangles.',                  image:'/bangle5.png', tag:'Exclusive'  },
-    { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle3.png',         tag:'Classic' },
-    { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                       image:'/bangle9.png',         tag:'Heritage' },
-    { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',         tag:'New Arrival' },
-    { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',         tag:'Trending' },
-    { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',         tag:'Heritage' },
-    { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                       image:'/bangleD.jpg',         tag:'Bridal Pick' },
-    { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                          image:'/bangleE.jpg',         tag:'Festive' },
-    { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                  image:'/bangleF.jpg',         tag:'Exclusive' },
-    { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',           image:'/bangleG.jpg',         tag:'Classic' },
-    { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                  image:'/bangleH.jpg',         tag:'Traditional' },
-    { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',              image:'/bangleI.jpg',         tag:'Premium' },
+    { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                  image:'/bangle3.png',         tag:'Classic' },
+    { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                        image:'/bangle9.png',         tag:'Heritage' },
+    { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',            image:'/bangleA.jpg',         tag:'New Arrival' },
+    { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',         image:'/bangleB.jpg',         tag:'Trending' },
+    { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                    image:'/bangleC.jpg',         tag:'Heritage' },
+    { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                        image:'/bangleD.jpg',         tag:'Bridal Pick' },
+    { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                           image:'/bangleE.jpg',         tag:'Festive' },
+    { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                 image:'/bangleF.jpg',         tag:'Exclusive' },
+    { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',            image:'/bangleG.jpg',         tag:'Classic' },
+    { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                 image:'/bangleH.jpg',         tag:'Traditional' },
+    { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',               image:'/bangleI.jpg',         tag:'Premium' },
     { id:34, name:'Gold Bangle ',              category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',       tag:'New Arrival' },
     { id:35, name:'Gold Bangle ',              category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',       tag:'Classic' },
     { id:36, name:'Gold Bangle ',              category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',       tag:'Heritage' },
@@ -70,48 +69,48 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
   ],
   rings: [
     { id:'r1', name:'Solitaire Ring',          category:'Rings',      description:'Brilliant solitaire diamond in 18K gold.',         image:'/ring1.png',      tag:'Premium'   },
-    { id:'r2', name:'Polki Diamond Ring',       category:'Rings',      description:'Uncut polki diamonds set in 22K gold.',            image:'/ring2.png',      tag:'Exclusive' },
+    { id:'r2', name:'Polki Diamond Ring',       category:'Rings',      description:'Uncut polki diamonds set in 22K gold.',             image:'/ring2.png',      tag:'Exclusive' },
     { id:'r3', name:'Classic Gold Ring',        category:'Rings',      description:'Classic 22K gold ring with intricate design.',     image:'/ring3.png',      tag:'Classic'   },
-    { id:'r4', name:'Floral Ring',             category:'Rings',      description:'Beautiful floral motif 22K gold ring.',            image:'/ring6.png',      tag:'Trending'  },
+    { id:'r4', name:'Floral Ring',             category:'Rings',      description:'Beautiful floral motif 22K gold ring.',             image:'/ring6.png',      tag:'Trending'  },
     { id:'r5', name:'Gents Statement Ring',     category:'Rings',      description:'Bold statement ring for men in 22K gold.',         image:'/ring7.png',      tag:'Men'       },
   ],
   womens_ring: [
-    { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',           tag:'Limited' },
-    { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                             image:'/ring6.png',           tag:'Premium' },
-    { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',           tag:'Classic' },
-    { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',           tag:'Vintage' },
+    { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',            tag:'Limited' },
+    { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                             image:'/ring6.png',            tag:'Premium' },
+    { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',            tag:'Classic' },
+    { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',            tag:'Vintage' },
     { id:96,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Delicate 22KT gold ring for women with floral motif and fine craftsmanship.", image:'/ladies ring1.jpg',    tag:'Classic' },
     { id:97,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Heritage ladies gold ring with traditional design and antique finish.",       image:'/ladies ring2.jpg',    tag:'Heritage' },
     { id:98,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Exclusive ladies 22KT gold ring with kundan stone setting.",                  image:'/ladies ring3.jpg',    tag:'Exclusive' },
     { id:99,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium' },
-    { id:100, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",        image:'/ladies ring5.jpg',    tag:'Trending' },
+    { id:100, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",         image:'/ladies ring5.jpg',    tag:'Trending' },
     { id:101, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival' },
-    { id:102, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Luxury ladies gold ring - a statement piece for weddings and events.",       image:'/ladies ring7.jpg',    tag:'Luxury' },
+    { id:102, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Luxury ladies gold ring - a statement piece for weddings and events.",        image:'/ladies ring7.jpg',    tag:'Luxury' },
     { id:103, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller' },
-    { id:104, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",             image:'/ladies ring9.jpg',    tag:'Traditional' },
-    { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",              image:'/ladies ring10.jpg',   tag:'Bridal Pick' },
-    { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",            image:'/ladies ring11.jpg',   tag:'Festive' },
-    { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",       image:'/ladies ring12.jpg',   tag:'Vintage' },
-    { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",       image:'/ladies ring13.jpg',   tag:'Classic' },
+    { id:104, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",              image:'/ladies ring9.jpg',    tag:'Traditional' },
+    { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",               image:'/ladies ring10.jpg',   tag:'Bridal Pick' },
+    { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",             image:'/ladies ring11.jpg',   tag:'Festive' },
+    { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",        image:'/ladies ring12.jpg',   tag:'Vintage' },
+    { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",        image:'/ladies ring13.jpg',   tag:'Classic' },
     { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage' },
     { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive' },
     { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium' },
   ],
   mens_ring: [
     { id:86, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bold 22KT gold ring for men with classic band and fine engraving.",          image:'/gents ring1.jpg',     tag:'Classic' },
-    { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",       image:'/gents ring2.jpg',     tag:'Heritage' },
-    { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                    image:'/gents ring3.jpg',     tag:'Exclusive' },
+    { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",        image:'/gents ring2.jpg',     tag:'Heritage' },
+    { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                     image:'/gents ring3.jpg',     tag:'Exclusive' },
     { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium' },
-    { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',     tag:'Trending' },
-    { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",              image:'/gents ring6.jpg',     tag:'New Arrival' },
+    { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",       image:'/gents ring5.jpg',     tag:'Trending' },
+    { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",               image:'/gents ring6.jpg',     tag:'New Arrival' },
     { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring - a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' },
-    { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',     tag:'Bestseller' },
-    { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',     tag:'Traditional' },
-    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring - perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',    tag:'Bridal Pick' },
+    { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",       image:'/gents ring8.jpg',     tag:'Bestseller' },
+    { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                    image:'/gents ring9.jpg',     tag:'Traditional' },
+    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring - perfect for grooms seeking bold elegance.",         image:'/gents ring10.jpg',    tag:'Bridal Pick' },
   ],
   necklaces: [
-    { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',               image:'/necklace88.png', tag:'Bridal'    },
-    { id:'n2', name:'Temple Gold Haar',         category:'Necklaces', description:'Traditional temple necklace with Lakshmi coins.', image:'/temple.png',     tag:'Heritage'  },
+    { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',                image:'/necklace88.png', tag:'Bridal'    },
+    { id:'n2', name:'Temple Gold Haar',        category:'Necklaces', description:'Traditional temple necklace with Lakshmi coins.', image:'/temple.png',     tag:'Heritage'  },
     { id:'n3', name:'Kundan Choker',            category:'Necklaces', description:'Royal Kundan choker with meenakari work.',        image:'/necklace1.jpg',  tag:'Royal'     },
     { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller' },
     { id:6,  name:'Temple Gold Haar',          category:'Necklaces',   description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',      tag:'Traditional' },
@@ -128,13 +127,13 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
     { id:44, name:'Short Necklace ',           category:'Necklaces',   description:'Trendy short necklace in 22KT gold with contemporary styling.',                 image:'/short necklace3.jpg', tag:'Trending' },
     { id:45, name:'Short Necklace ',           category:'Necklaces',   description:'New arrival short necklace in 22KT gold with intricate link design.',         image:'/short necklace4.jpg', tag:'New Arrival' },
     { id:46, name:'Turkish Necklace ',         category:'Necklaces',   description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',         image:'/turkish necklace1.jpg', tag:'Exclusive' },
-    { id:47, name:'Turkish Necklace ',         category:'Necklaces',   description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',        image:'/turkish necklace2.jpg', tag:'Heritage' },
-    { id:48, name:'Turkish Necklace ',         category:'Necklaces',   description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',            image:'/turkish necklace3.jpg', tag:'Traditional' },
-    { id:49, name:'Turkish Necklace ',         category:'Necklaces',   description:'Premium Turkish necklace in 22KT gold with intricate detailing.',             image:'/turkish necklace4.jpg', tag:'Premium' },
-    { id:50, name:'Turkish Necklace ',         category:'Necklaces',   description:'Bridal Turkish necklace with kundan accents and rich gold work.',             image:'/turkish necklace5.jpg', tag:'Bridal Pick' },
+    { id:47, name:'Turkish Necklace ',         category:'Necklaces',   description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',         image:'/turkish necklace2.jpg', tag:'Heritage' },
+    { id:48, name:'Turkish Necklace ',         category:'Necklaces',   description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',             image:'/turkish necklace3.jpg', tag:'Traditional' },
+    { id:49, name:'Turkish Necklace ',         category:'Necklaces',   description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium' },
+    { id:50, name:'Turkish Necklace ',         category:'Necklaces',   description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick' },
     { id:51, name:'Turkish Necklace ',         category:'Necklaces',   description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive' },
-    { id:52, name:'Turkish Necklace ',         category:'Necklaces',   description:'Luxury Turkish-style gold necklace with bold statement design.',               image:'/turkish necklace7.jpg', tag:'Luxury' },
-    { id:53, name:'Turkish Necklace ',         category:'Necklaces',   description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',        image:'/turkish necklace8.jpg', tag:'Trending' },
+    { id:52, name:'Turkish Necklace ',         category:'Necklaces',   description:'Luxury Turkish-style gold necklace with bold statement design.',                image:'/turkish necklace7.jpg', tag:'Luxury' },
+    { id:53, name:'Turkish Necklace ',         category:'Necklaces',   description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',         image:'/turkish necklace8.jpg', tag:'Trending' },
     { id:60, name:'Jadau Necklace ',           category:'Necklaces',   description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg', tag:'Luxury' },
     { id:61, name:'Jadau Necklace ',           category:'Necklaces',   description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg', tag:'Traditional' },
     { id:62, name:'Jadau Necklace ',           category:'Necklaces',   description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg', tag:'Bridal Pick' },
@@ -150,7 +149,7 @@ export const ALL_PRODUCTS: Record<string, any[]> = {
   ],
   chokers: [
     { id:67, name:'Gold Choker ',            category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',       tag:'Classic' },
-    { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',           image:'/Choker102.jpg',       tag:'Heritage' },
+    { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',            image:'/Choker102.jpg',       tag:'Heritage' },
     { id:69, name:'Gold Choker ',            category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',       tag:'Bridal Pick' },
     { id:70, name:'Gold Choker ',            category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',       tag:'Exclusive' },
     { id:71, name:'Gold Choker ',            category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',       tag:'Trending' },
@@ -227,6 +226,98 @@ const TAG_COLORS: Record<string, string> = {
 const CARAT_OPTIONS    = ['18K', '20K', '22K', '24K', 'Silver', 'Platinum', 'Other'];
 const MATERIAL_OPTIONS = ['Yellow Gold', 'Rose Gold', 'White Gold', 'Silver', 'Diamond', 'Kundan', 'Meenakari', 'Platinum', 'Other'];
 
+// ── Uploaded Item Modal ───────────────────────────────────────────────────────
+function UploadedItemModal({
+  item,
+  onClose,
+  onEnquire,
+  accentColor = '#C2185B',
+  badgeLabel = 'YOUR ITEM'
+}: {
+  item: ClientItem;
+  onClose: () => void;
+  onEnquire: () => void;
+  accentColor?: string;
+  badgeLabel?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(26,0,16,0.85)', backdropFilter: 'blur(6px)' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <motion.div
+        initial={{ y: 80, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 60, opacity: 0, scale: 0.95 }}
+        transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+        className="relative w-full sm:max-w-md bg-white sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+        style={{ maxHeight: '92vh', borderRadius: '24px 24px 0 0' }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 w-9 h-9 bg-black/40 hover:bg-black/60 transition-colors text-white rounded-full flex items-center justify-center backdrop-blur-md"
+        >
+          <X size={18} />
+        </button>
+        
+        <div className="relative w-full flex-shrink-0" style={{ aspectRatio: '1/1' }}>
+          <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+          <div className="absolute top-4 left-4 z-10">
+             <span className="font-cinzel text-[10px] tracking-wider px-3 py-1.5 rounded-full shadow-lg text-white font-bold"
+                   style={{ background: accentColor }}>
+               {badgeLabel}
+             </span>
+          </div>
+        </div>
+        
+        <div className="p-6 flex flex-col gap-4 overflow-y-auto">
+          <div>
+            <h2 className="font-cormorant text-3xl font-bold leading-tight mb-1" style={{ color: C.text }}>{item.name}</h2>
+            <p className="font-raleway text-[11px]" style={{ color: C.textLight }}>
+              Added {new Date(item.addedAt).toLocaleDateString('en-IN', { day:'numeric', month:'long', year: 'numeric' })}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-3">
+             <div className="flex flex-col items-center justify-center p-3 rounded-2xl" style={{ background: 'rgba(194,24,91,0.03)', border: `1px solid ${C.border}` }}>
+               <span className="font-cinzel text-[9px] tracking-widest text-gray-500 mb-1">WEIGHT</span>
+               <span className="font-raleway font-bold text-center" style={{ color: C.text }}>{item.weight ? `${item.weight}g` : 'N/A'}</span>
+             </div>
+             <div className="flex flex-col items-center justify-center p-3 rounded-2xl" style={{ background: 'rgba(194,24,91,0.03)', border: `1px solid ${C.border}` }}>
+               <span className="font-cinzel text-[9px] tracking-widest text-gray-500 mb-1">PURITY</span>
+               <span className="font-raleway font-bold text-center" style={{ color: C.text }}>{item.carat}</span>
+             </div>
+             <div className="flex flex-col items-center justify-center p-3 rounded-2xl" style={{ background: 'rgba(194,24,91,0.03)', border: `1px solid ${C.border}` }}>
+               <span className="font-cinzel text-[9px] tracking-widest text-gray-500 mb-1">MATERIAL</span>
+               <span className="font-raleway font-bold text-xs text-center" style={{ color: C.text }}>{item.material}</span>
+             </div>
+          </div>
+
+          {item.note && (
+            <div className="mt-2">
+              <span className="font-cinzel text-[10px] tracking-widest text-gray-500 mb-2 block">NOTES</span>
+              <p className="font-raleway text-sm leading-relaxed p-4 rounded-xl" style={{ background: '#f9f9f9', color: C.textMid }}>{item.note}</p>
+            </div>
+          )}
+
+          <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${C.border}` }}>
+            <motion.button
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+              onClick={onEnquire}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-raleway text-sm font-bold text-white shadow-lg"
+              style={{ background: '#25D366', boxShadow: '0 8px 24px rgba(37,211,102,0.25)' }}
+            >
+              <MessageCircle size={18} /> Enquire on WhatsApp
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 // ── Add Client Item Modal ─────────────────────────────────────────────────────
 function AddClientItemModal({
   onClose, onAdded,
@@ -244,13 +335,13 @@ function AddClientItemModal({
   stockColor?: string;
   btnLabel?: string;
 }) {
-  const [name,     setName]     = React.useState('');
-  const [weight,   setWeight]   = React.useState('');
-  const [carat,    setCarat]    = React.useState('22K');
-  const [material, setMaterial] = React.useState('Yellow Gold');
-  const [note,     setNote]     = React.useState('');
-  const [imageUrl, setImageUrl] = React.useState('');
-  const [saving,   setSaving]   = React.useState(false);
+  const [name,      setName]      = React.useState('');
+  const [weight,    setWeight]    = React.useState('');
+  const [carat,     setCarat]     = React.useState('22K');
+  const [material,  setMaterial]  = React.useState('Yellow Gold');
+  const [note,      setNote]      = React.useState('');
+  const [imageUrl,  setImageUrl]  = React.useState('');
+  const [saving,    setSaving]    = React.useState(false);
   const [uploadMsg, setUploadMsg] = React.useState('');
   const imgRef = React.useRef<HTMLInputElement>(null);
 
@@ -270,14 +361,14 @@ function AddClientItemModal({
     setUploadMsg('Uploading photo to cloud...');
 
     const itemData = {
-      id:       `client_${Date.now()}`,
-      name:     name.trim(),
-      weight:   weight.trim(),
+      id:        `client_${Date.now()}`,
+      name:      name.trim(),
+      weight:    weight.trim(),
       carat,
       material,
-      note:     note.trim(),
-      addedAt:  Date.now(),
-      base64:   imageUrl,   // passed to saveClientItem for Supabase upload
+      note:      note.trim(),
+      addedAt:   Date.now(),
+      base64:    imageUrl,   // passed to saveClientItem for Supabase upload
     };
 
     try {
@@ -513,16 +604,15 @@ function AddClientItemModal({
 
 // ── Client Item Card ──────────────────────────────────────────────────────────
 function ClientItemCard({
-  item, onDelete, onEnquire, accentColor = '#1D4ED8', badgeLabel = 'YOUR ITEM',
+  item, onDelete, onEnquire, onClick, accentColor = '#1D4ED8', badgeLabel = 'YOUR ITEM',
 }: {
   item: ClientItem;
   onDelete: () => void;
   onEnquire: () => void;
+  onClick: () => void;
   accentColor?: string;
   badgeLabel?: string;
 }) {
-  const [expanded, setExpanded] = React.useState(false);
-
   return (
     <motion.div
       layout
@@ -532,7 +622,7 @@ function ClientItemCard({
       whileHover={{ y:-5, boxShadow:'0 14px 32px rgba(29,78,216,0.14)' }}
       className="bg-white rounded-2xl overflow-hidden cursor-pointer flex flex-col"
       style={{ border:`2px solid rgba(29,78,216,0.15)`, boxShadow:'0 3px 14px rgba(29,78,216,0.07)' }}
-      onClick={() => setExpanded(e => !e)}
+      onClick={onClick}
     >
       {/* Blue top bar = client item */}
       <div className="h-1" style={{ background:`linear-gradient(90deg,${accentColor},${accentColor}99)` }} />
@@ -629,13 +719,13 @@ function AddOwnerItemModal({
   onAdded:  (item: ClientItem) => void;
   catLabel: string;
 }) {
-  const [name,     setName]     = React.useState('');
-  const [weight,   setWeight]   = React.useState('');
-  const [carat,    setCarat]    = React.useState('22K');
-  const [material, setMaterial] = React.useState('Yellow Gold');
-  const [note,     setNote]     = React.useState('');
-  const [imageUrl, setImageUrl] = React.useState('');
-  const [saving,   setSaving]   = React.useState(false);
+  const [name,      setName]      = React.useState('');
+  const [weight,    setWeight]    = React.useState('');
+  const [carat,     setCarat]     = React.useState('22K');
+  const [material,  setMaterial]  = React.useState('Yellow Gold');
+  const [note,      setNote]      = React.useState('');
+  const [imageUrl,  setImageUrl]  = React.useState('');
+  const [saving,    setSaving]    = React.useState(false);
   const [uploadMsg, setUploadMsg] = React.useState('');
   const imgRef = React.useRef<HTMLInputElement>(null);
 
@@ -899,10 +989,11 @@ function AddOwnerItemModal({
 
 // ── Owner Item Card ───────────────────────────────────────────────────────────
 function OwnerItemCard({
-  item, onDelete,
+  item, onDelete, onClick
 }: {
   item:     ClientItem;
   onDelete: () => void;
+  onClick:  () => void;
 }) {
   const G = '#2E7D32';
   return (
@@ -912,8 +1003,9 @@ function OwnerItemCard({
       animate={{ opacity:1, y:0, scale:1 }}
       exit={{ opacity:0, scale:0.9 }}
       whileHover={{ y:-5, boxShadow:'0 14px 32px rgba(46,125,50,0.16)' }}
-      className="bg-white rounded-2xl overflow-hidden flex flex-col"
+      className="bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer"
       style={{ border:`2px solid rgba(46,125,50,0.18)`, boxShadow:'0 3px 14px rgba(46,125,50,0.07)' }}
+      onClick={onClick}
     >
       {/* Green top bar */}
       <div className="h-1" style={{ background:`linear-gradient(90deg,#1B5E20,#4CAF50)` }} />
@@ -933,7 +1025,7 @@ function OwnerItemCard({
         {/* Delete */}
         <motion.button
           whileTap={{ scale:0.9 }}
-          onClick={onDelete}
+          onClick={(e) => { e.stopPropagation(); onDelete(); }}
           className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
           style={{ background:'rgba(239,68,68,0.9)', color:'#fff' }}
         >
@@ -1188,6 +1280,10 @@ export default function PrivateCatalogue() {
   const [timeLeft, setTimeLeft]               = useState(0);
   const [expired, setExpired]                 = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  
+  // NEW: State for showing details of user/owner uploaded items
+  const [selectedUploadedItem, setSelectedUploadedItem] = useState<ClientItem | null>(null);
+  
   const [stockMap, setStockMap]               = useState<Record<string,StockStatus>>(() => loadStockMap());
   const [orderedToast, setOrderedToast]       = useState<string|null>(null);
   const [searchQuery, setSearchQuery]         = useState('');
@@ -1283,12 +1379,10 @@ export default function PrivateCatalogue() {
   };
 
   const handleClientAdd = (item: ClientItem) => {
-    // item is already saved to Supabase/IndexedDB by AddClientItemModal before calling onAdded
     setClientItems(prev => [item, ...prev]);
     setShowAddModal(false);
   };
 
-  // Load client items from IndexedDB/Supabase on mount
   useEffect(() => {
     migrateFromLocalStorage().then(() => {
       loadClientItems().then(items => {
@@ -1302,7 +1396,6 @@ export default function PrivateCatalogue() {
     deleteClientItem(id, clientItems.find(i => i.id === id)?.imagePath).then(() => {
       setClientItems(prev => prev.filter(i => i.id !== id));
     }).catch(() => {
-      // Still remove from UI even if cloud delete fails
       setClientItems(prev => prev.filter(i => i.id !== id));
     });
   };
@@ -1326,7 +1419,7 @@ export default function PrivateCatalogue() {
       'Hi! Owner added product for reference:\n\n' +
       '💎 ' + item.name + '\n' +
       '⚖️ Weight: ' + (item.weight || 'N/A') + 'g\n' +
-      '🔢 Carat: ' + item.carat + '\n' +
+      '🔢 Purity: ' + item.carat + '\n' +
       '🧱 Material: ' + item.material +
       (item.note ? ('\n📝 Note: ' + item.note) : '');
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
@@ -1339,14 +1432,13 @@ export default function PrivateCatalogue() {
       'I have added a jewellery item for enquiry:\n\n' +
       '💎 ' + item.name + '\n' +
       '⚖️ Weight: ' + (item.weight || 'Not specified') + 'g\n' +
-      '🔢 Carat: ' + item.carat + '\n' +
+      '🔢 Purity: ' + item.carat + '\n' +
       '🧱 Material: ' + item.material +
       note +
       '\n\nPlease review and advise. Thank you!';
     window.open('https://wa.me/918377911745?text=' + encodeURIComponent(msg), '_blank');
   };
 
-  // Stagger grid animation variants
   const gridVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -1749,6 +1841,7 @@ export default function PrivateCatalogue() {
                 item={item}
                 onDelete={() => handleClientDelete(item.id)}
                 onEnquire={() => handleClientEnquire(item)}
+                onClick={() => setSelectedUploadedItem(item)}
               />
             ))}
 
@@ -1758,6 +1851,7 @@ export default function PrivateCatalogue() {
                 key={item.id}
                 item={item}
                 onDelete={() => handleOwnerDelete(item.id)}
+                onClick={() => setSelectedUploadedItem(item)}
               />
             ))}
 
@@ -1791,7 +1885,7 @@ export default function PrivateCatalogue() {
                     <span className="font-cinzel text-[10px] font-bold" style={{ color: C.goldDk }}>{product.category}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
-                      className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-[#C2185B] hover:text-white"
                       style={{ background: 'rgba(194,24,91,0.08)', color: C.gold }}
                     >
                       <ArrowRight size={14} />
@@ -1843,6 +1937,24 @@ export default function PrivateCatalogue() {
             onClose={() => setSelectedProduct(null)}
           />
         )}
+        
+        {/* ── NEW: Custom Uploaded Item Modal ── */}
+        {selectedUploadedItem && (
+          <UploadedItemModal
+            item={selectedUploadedItem}
+            onClose={() => setSelectedUploadedItem(null)}
+            onEnquire={() => {
+              if ((selectedUploadedItem as any).addedBy === 'owner') {
+                handleOwnerEnquire(selectedUploadedItem);
+              } else {
+                handleClientEnquire(selectedUploadedItem);
+              }
+            }}
+            accentColor={(selectedUploadedItem as any).addedBy === 'owner' ? '#2E7D32' : '#1D4ED8'}
+            badgeLabel={(selectedUploadedItem as any).addedBy === 'owner' ? 'READY STOCK' : 'YOUR ITEM'}
+          />
+        )}
+
         {showAddModal && (
           <AddClientItemModal
             onClose={() => setShowAddModal(false)}
