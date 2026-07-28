@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { 
   Gift, Wallet, ShieldCheck, ShoppingBag, 
-  CheckCircle2, Calculator, Sparkles, MessageCircle, Phone 
+  CheckCircle2, Calculator, Sparkles, MessageCircle, Phone, QrCode, ArrowRight, X, Image as ImageIcon
 } from 'lucide-react';
 
 // ── Design Tokens (Light Royal Pink Theme) ──
@@ -19,6 +19,7 @@ const C = {
 
 export default function SwarnaSamriddhi() {
   const [installment, setInstallment] = useState<number>(5000);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   // Calculations
   const userTotal = installment * 10;
@@ -34,7 +35,17 @@ export default function SwarnaSamriddhi() {
     }).format(amount);
   };
 
-  // Staggered animation variants correctly typed for TypeScript
+  // Pre-filled WhatsApp Message
+  const whatsappMsg = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* से जुड़ना चाहता/चाहती हूँ।\n\nमैंने अपनी पहली किस्त *₹${installment}* का भुगतान कर दिया है। पेमेंट का स्क्रीनशॉट साथ में भेज रहा/रही हूँ।`;
+  const whatsappLink = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
+
+  // Dynamic QR Code Generator (Uses a free API to generate a UPI QR code)
+  // Replace '8377911745@upi' with your actual shop UPI ID.
+  const upiId = "8377911745@upi"; 
+  const upiString = `upi://pay?pa=${upiId}&pn=Shekhar%20Raja%20Jewellers&am=${installment}&cu=INR`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}&margin=10`;
+
+  // Staggered animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -55,7 +66,6 @@ export default function SwarnaSamriddhi() {
           HERO SECTION
       ========================================================== */}
       <section className="relative pt-32 pb-20 overflow-hidden flex flex-col items-center justify-center text-center px-6">
-        {/* Background Patterns & Glows */}
         <div className="absolute inset-0 pointer-events-none opacity-30">
           <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, ${C.primary} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
         </div>
@@ -67,12 +77,9 @@ export default function SwarnaSamriddhi() {
         />
 
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 max-w-4xl mx-auto flex flex-col items-center"
         >
-          {/* Eyebrow */}
           <div className="flex items-center gap-3 mb-6">
             <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent" style={{ '--tw-gradient-to': C.primary } as React.CSSProperties} />
             <span className="font-cinzel text-[10px] sm:text-xs tracking-[0.3em] uppercase font-bold" style={{ color: C.primaryDk }}>
@@ -81,7 +88,6 @@ export default function SwarnaSamriddhi() {
             <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent" style={{ '--tw-gradient-to': C.primary } as React.CSSProperties} />
           </div>
           
-          {/* Main Title */}
           <h1 className="font-cormorant text-5xl sm:text-7xl lg:text-8xl font-bold mb-6 leading-tight" style={{ color: C.text }}>
             स्वर्ण समृद्धि <span className="italic" style={{ color: C.primary }}>योजना</span>
           </h1>
@@ -95,13 +101,13 @@ export default function SwarnaSamriddhi() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto">
-            <a href="#calculator" className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(194,24,91,0.2)] hover:shadow-[0_8px_25px_rgba(194,24,91,0.4)] hover:-translate-y-1 text-white" style={{ background: `linear-gradient(135deg, ${C.primaryLt}, ${C.primaryDk})` }}>
-              <Calculator size={18} />
+            <button onClick={() => setShowPaymentModal(true)} className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(194,24,91,0.2)] hover:shadow-[0_8px_25px_rgba(194,24,91,0.4)] hover:-translate-y-1 text-white" style={{ background: `linear-gradient(135deg, ${C.primaryLt}, ${C.primaryDk})` }}>
+              <QrCode size={18} />
+              योजना शुरू करें (Pay Now)
+            </button>
+            <a href="#calculator" className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 hover:bg-white shadow-sm hover:shadow-md hover:-translate-y-1 bg-white/50 backdrop-blur-sm" style={{ border: `1px solid ${C.border}`, color: C.text }}>
+              <Calculator size={18} className="text-[#C2185B]" />
               योजना की गणना करें
-            </a>
-            <a href="https://wa.me/918377911745?text=मुझे%20स्वर्ण%20समृद्धि%20योजना%20के%20बारे%20में%20जानना%20है" target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 hover:bg-white shadow-sm hover:shadow-md hover:-translate-y-1 bg-white/50 backdrop-blur-sm" style={{ border: `1px solid ${C.border}`, color: C.text }}>
-              <MessageCircle size={18} className="text-[#25D366]" />
-              WhatsApp पर बात करें
             </a>
           </div>
         </motion.div>
@@ -150,14 +156,10 @@ export default function SwarnaSamriddhi() {
       ========================================================== */}
       <section id="calculator" className="py-20 px-6 max-w-5xl mx-auto relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }}
           className="rounded-3xl p-8 sm:p-14 shadow-[0_20px_50px_rgba(194,24,91,0.06)] relative overflow-hidden"
           style={{ background: C.bgCard, border: `1px solid ${C.border}` }}
         >
-          {/* Decorative Corner Flairs */}
           <div className="absolute top-0 left-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at top left, ${C.primaryDk}, transparent)` }} />
           <div className="absolute bottom-0 right-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at bottom right, ${C.primaryDk}, transparent)` }} />
 
@@ -177,43 +179,27 @@ export default function SwarnaSamriddhi() {
               </label>
               <motion.span 
                 key={installment}
-                initial={{ scale: 1.2, color: C.primaryLt }}
-                animate={{ scale: 1, color: C.primaryDk }}
+                initial={{ scale: 1.2, color: C.primaryLt }} animate={{ scale: 1, color: C.primaryDk }}
                 className="font-cormorant text-3xl sm:text-4xl font-bold"
               >
                 {formatINR(installment)}
               </motion.span>
             </div>
             
-            {/* Custom Range Slider */}
             <div className="relative pt-2">
               <input 
-                type="range" 
-                min="2000" 
-                max="50000" 
-                step="1000" 
-                value={installment} 
+                type="range" min="2000" max="50000" step="1000" value={installment} 
                 onChange={(e) => setInstallment(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer outline-none relative z-10"
-                style={{ 
-                  background: `linear-gradient(to right, ${C.primary} ${(installment - 2000) / (50000 - 2000) * 100}%, #FCE4EC ${(installment - 2000) / (50000 - 2000) * 100}%)`,
-                }}
+                style={{ background: `linear-gradient(to right, ${C.primary} ${(installment - 2000) / (50000 - 2000) * 100}%, #FCE4EC ${(installment - 2000) / (50000 - 2000) * 100}%)` }}
               />
               <style>{`
                 input[type=range]::-webkit-slider-thumb {
-                  appearance: none;
-                  width: 24px;
-                  height: 24px;
-                  border-radius: 50%;
-                  background: ${C.bgCard};
-                  border: 3px solid ${C.primary};
-                  box-shadow: 0 4px 10px rgba(194,24,91,0.3);
-                  cursor: pointer;
-                  transition: transform 0.1s;
+                  appearance: none; width: 24px; height: 24px; border-radius: 50%;
+                  background: ${C.bgCard}; border: 3px solid ${C.primary};
+                  box-shadow: 0 4px 10px rgba(194,24,91,0.3); cursor: pointer; transition: transform 0.1s;
                 }
-                input[type=range]::-webkit-slider-thumb:hover {
-                  transform: scale(1.2);
-                }
+                input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
               `}</style>
             </div>
             
@@ -223,14 +209,12 @@ export default function SwarnaSamriddhi() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-            {/* User Contribution */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 mb-10">
             <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#FFFDFE', border: `1px solid rgba(194, 24, 91, 0.08)` }}>
               <p className="font-cinzel text-[10px] sm:text-xs tracking-widest mb-3 uppercase font-bold" style={{ color: C.textLight }}>आपकी 10 किस्तें</p>
               <p className="font-cormorant text-3xl font-bold" style={{ color: C.text }}>{formatINR(userTotal)}</p>
             </div>
             
-            {/* SRJ Bonus (Highlight) */}
             <motion.div 
               whileHover={{ scale: 1.02 }}
               className="p-8 rounded-2xl text-center relative shadow-[0_10px_30px_rgba(194,24,91,0.2)] flex flex-col justify-center" 
@@ -243,11 +227,18 @@ export default function SwarnaSamriddhi() {
               <p className="font-cormorant text-4xl font-bold text-white drop-shadow-md">+ {formatINR(srjBonus)}</p>
             </motion.div>
 
-            {/* Grand Total */}
             <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#FFFDFE', border: `1px solid rgba(194, 24, 91, 0.08)` }}>
               <p className="font-cinzel text-[10px] sm:text-xs tracking-widest mb-3 uppercase font-bold" style={{ color: C.textLight }}>कुल आभूषण खरीद मूल्य</p>
               <p className="font-cormorant text-4xl font-bold" style={{ color: C.primaryDk }}>{formatINR(grandTotal)}</p>
             </div>
+          </div>
+
+          <div className="flex justify-center relative z-10 mt-8 pt-8 border-t border-dashed" style={{ borderColor: C.border }}>
+             <button onClick={() => setShowPaymentModal(true)} className="px-10 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-3 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(194,24,91,0.2)] hover:shadow-[0_8px_25px_rgba(194,24,91,0.4)] hover:-translate-y-1 text-white" style={{ background: `linear-gradient(135deg, ${C.primaryLt}, ${C.primaryDk})` }}>
+              <QrCode size={20} />
+              पहली किस्त भरें और योजना शुरू करें
+              <ArrowRight size={18} />
+            </button>
           </div>
         </motion.div>
       </section>
@@ -284,50 +275,76 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          FOOTER / CTA
+          PAYMENT MODAL
       ========================================================== */}
-      <footer className="pt-20 px-6 text-center relative z-10">
-        <div className="max-w-3xl mx-auto border-t pt-16" style={{ borderColor: C.border }}>
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-bold mb-4" style={{ color: C.text }}>
-            सोना सिर्फ आभूषण नहीं, <span className="italic" style={{ color: C.primaryDk }}>आपके सपनों का निवेश है</span>
-          </h2>
-          <p className="font-raleway text-sm mb-10 max-w-xl mx-auto" style={{ color: C.textLight }}>
-            ज्वेलरी बुकिंग एवं अधिक जानकारी के लिए आज ही हमारे शोरूम पर संपर्क करें।
-          </p>
+      <AnimatePresence>
+        {showPaymentModal && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm"
+            style={{ background: 'rgba(26,0,16,0.6)' }}
+            onClick={() => setShowPaymentModal(false)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col relative"
+            >
+              {/* Header */}
+              <div className="p-6 pb-4 border-b flex justify-between items-center" style={{ borderColor: C.border, background: C.bg }}>
+                <div>
+                  <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.text }}>योजना शुरू करें</h3>
+                  <p className="font-raleway text-xs font-semibold tracking-wide" style={{ color: C.primary }}>FIRST INSTALLMENT: {formatINR(installment)}</p>
+                </div>
+                <button onClick={() => setShowPaymentModal(false)} className="w-8 h-8 rounded-full flex items-center justify-center bg-white border shadow-sm hover:bg-gray-50 transition-colors" style={{ borderColor: C.border }}>
+                  <X size={16} style={{ color: C.text }} />
+                </button>
+              </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-16">
-            {/* Phone */}
-            <motion.a whileHover={{ y: -2 }} href="tel:+918377911745" className="flex items-center gap-4 group">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-all group-hover:shadow-md" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
-                <Phone size={18} style={{ color: C.primaryDk }} />
-              </div>
-              <div className="text-left">
-                <p className="font-cinzel text-[10px] tracking-widest uppercase font-bold" style={{ color: C.textLight }}>Call Us</p>
-                <p className="font-raleway font-bold text-lg" style={{ color: C.text }}>+91 8377911745</p>
-              </div>
-            </motion.a>
-            
-            <div className="hidden sm:block w-[1px] h-12" style={{ background: C.border }}></div>
-            
-            {/* WhatsApp */}
-            <motion.a whileHover={{ y: -2 }} href="https://wa.me/918377911745" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-all group-hover:shadow-md bg-[#25D366]/10 border border-[#25D366]/30">
-                <MessageCircle size={18} className="text-[#25D366]" />
-              </div>
-              <div className="text-left">
-                <p className="font-cinzel text-[10px] tracking-widest uppercase font-bold" style={{ color: C.textLight }}>WhatsApp</p>
-                <p className="font-raleway font-bold text-lg hover:text-[#25D366] transition-colors" style={{ color: C.text }}>+91 8377911745</p>
-              </div>
-            </motion.a>
-          </div>
+              {/* Body */}
+              <div className="p-6 flex flex-col items-center">
+                {/* Step 1: QR Code */}
+                <div className="w-full text-center mb-6">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: C.primary }}>1</span>
+                    <p className="font-raleway text-sm font-bold" style={{ color: C.text }}>Scan & Pay via any UPI App</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-2xl shadow-sm inline-block" style={{ border: `2px solid ${C.border}` }}>
+                    <img src={qrCodeUrl} alt="UPI QR Code" className="w-48 h-48 object-contain" />
+                  </div>
+                  <p className="font-mono text-xs mt-3 text-gray-500">UPI ID: {upiId}</p>
+                </div>
 
-          <div className="font-cinzel text-[10px] sm:text-xs tracking-[0.25em] flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-bold uppercase opacity-80" style={{ color: C.primaryDk }}>
-            <span>Shekhar Raja Jewellers</span>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: C.primary }}></span>
-            <span>विश्वास • शुद्धता • गुणवत्ता</span>
-          </div>
-        </div>
-      </footer>
+                {/* Step 2: Screenshot */}
+                <div className="w-full text-center mb-6 opacity-80">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white bg-gray-400">2</span>
+                    <p className="font-raleway text-sm font-bold" style={{ color: C.textLight }}>Take a Screenshot</p>
+                  </div>
+                  <p className="text-xs text-gray-500">Take a screenshot of your successful payment screen.</p>
+                </div>
+
+                {/* Step 3: WhatsApp Action */}
+                <div className="w-full text-center border-t pt-6" style={{ borderColor: C.border }}>
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white bg-[#25D366]">3</span>
+                    <p className="font-raleway text-sm font-bold" style={{ color: C.text }}>Share Screenshot on WhatsApp</p>
+                  </div>
+                  
+                  <a href={whatsappLink} target="_blank" rel="noreferrer" className="w-full py-4 rounded-xl flex items-center justify-center gap-2 font-raleway font-bold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1" style={{ background: '#25D366' }}>
+                    <ImageIcon size={18} />
+                    Attach Screenshot & Send
+                    <ArrowRight size={18} className="ml-1" />
+                  </a>
+                  <p className="text-[10px] text-gray-400 mt-3 font-raleway">
+                    Our team will verify the payment and confirm your plan activation immediately.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
