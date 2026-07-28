@@ -6,24 +6,25 @@ import {
   Star, Clock, CheckCircle2,
 } from 'lucide-react';
 
-// ── Design tokens: jewel-box dark with 22KT gold ─────────────────────────────
+// ── Design tokens: matched to shekharrajajewellers.com homepage ─────────────
+// Light royal pink + white palette
 const C = {
-  void:      '#0A0603',     // near-black with warm undertone — hero bg
-  voidMid:   '#150C06',     // mid dark — section bg
-  voidLight: '#1F1208',     // lighter dark — card bg
-  gold:      '#B8862A',     // 22KT gold — primary
-  goldPale:  '#F0D080',     // pale shimmer
-  goldDeep:  '#7A5515',     // deep gold — pressed states
-  pink:      '#C2185B',     // royal pink — accent / CTA
-  pinkPale:  '#F8BBD9',
-  cream:     '#FDF6E9',     // warm cream — light sections
-  creamMid:  '#F5ECD7',
-  text:      '#FFFDF8',     // near-white on dark
-  textDim:   'rgba(255,253,248,0.55)',
-  textDark:  '#1A0E04',     // dark text for light sections
-  textDarkMid:'#6B4E2A',
-  border:    'rgba(184,134,42,0.2)',
-  borderBright:'rgba(184,134,42,0.5)',
+  void:      '#FFF5F7',     // soft blush white — hero bg (was near-black)
+  voidMid:   '#FCE4EC',     // light rose — section bg
+  voidLight: '#FFFFFF',     // white — card bg
+  gold:      '#C2185B',     // royal pink — primary accent (was 22KT gold)
+  goldPale:  '#F8BBD9',     // pale pink shimmer
+  goldDeep:  '#880E4F',     // deep pink — pressed states
+  pink:      '#B8862A',     // warm gold — secondary accent (swapped role)
+  pinkPale:  '#F0D080',
+  cream:     '#FFFFFF',     // white sections
+  creamMid:  '#FCE4EC',
+  text:      '#1A0010',     // near-black text on light bg
+  textDim:   'rgba(26,0,16,0.55)',
+  textDark:  '#1A0010',     // dark text for light sections
+  textDarkMid:'#6D1B4E',
+  border:    'rgba(194,24,91,0.15)',
+  borderBright:'rgba(194,24,91,0.4)',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -110,7 +111,7 @@ export default function SwarnaSamriddhi() {
   const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
 
   return (
-    <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#B8862A] selection:text-black">
+    <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#C2185B] selection:text-white">
 
       {/* ════════════════════════════════════════════════════════
           HERO — typographic equation as the thesis
@@ -234,7 +235,7 @@ export default function SwarnaSamriddhi() {
                       className="flex flex-col sm:flex-row items-center gap-4">
             <motion.button whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}
                            onClick={() => setShowModal(true)}
-                           className="flex items-center gap-2.5 px-8 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-black shadow-lg"
+                           className="flex items-center gap-2.5 px-8 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white shadow-lg"
                            style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
                                     boxShadow: `0 12px 36px rgba(184,134,42,0.4)` }}>
               {isMobile ? <Smartphone size={17} /> : <QrCode size={17} />}
@@ -363,7 +364,7 @@ export default function SwarnaSamriddhi() {
             {/* Result cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 relative z-10 mb-10">
               <div className="rounded-2xl p-7 text-center"
-                   style={{ background: 'rgba(255,253,248,0.04)', border: `1px solid ${C.border}` }}>
+                   style={{ background: 'rgba(194,24,91,0.04)', border: `1px solid ${C.border}` }}>
                 <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3" style={{ color: C.textDim }}>
                   आपकी 10 किस्तें
                 </p>
@@ -404,7 +405,7 @@ export default function SwarnaSamriddhi() {
             <div className="flex justify-center relative z-10">
               <motion.button whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}
                              onClick={() => setShowModal(true)}
-                             className="flex items-center gap-3 px-10 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-black"
+                             className="flex items-center gap-3 px-10 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white"
                              style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
                                       boxShadow: `0 12px 36px rgba(184,134,42,0.4)` }}>
                 {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />}
@@ -487,7 +488,7 @@ export default function SwarnaSamriddhi() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <motion.button whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.96 }}
                              onClick={() => setShowModal(true)}
-                             className="flex items-center gap-2.5 px-9 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-black"
+                             className="flex items-center gap-2.5 px-9 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white"
                              style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
                                       boxShadow: `0 16px 40px rgba(184,134,42,0.45)` }}>
                 {isMobile ? <Smartphone size={17} /> : <QrCode size={17} />}
