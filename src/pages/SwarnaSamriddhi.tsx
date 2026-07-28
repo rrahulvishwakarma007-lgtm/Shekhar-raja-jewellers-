@@ -5,16 +5,16 @@ import {
   CheckCircle2, Calculator, Sparkles, MessageCircle, Phone 
 } from 'lucide-react';
 
-// ── Design Tokens (Matched to Shekhar Raja Jewellers Theme) ──
+// ── Design Tokens (Light Royal Pink Theme) ──
 const C = {
-  bg: '#faf7f2',         // Warm Ivory Base
-  bgCard: '#ffffff',     // Pure white for cards
-  gold: '#b8862a',       // Primary Gold
-  goldLt: '#d4a843',     // Highlight Gold
-  goldDk: '#8b6014',     // Deep Gold
-  text: '#3a2e1e',       // Deep Brown/Graphite (Headings)
-  textLight: '#7a6448',  // Muted Brown (Paragraphs)
-  border: 'rgba(184, 134, 42, 0.15)', // Subtle gold border
+  bg: '#FFF5F7',         // Light Royal Pink Base
+  bgCard: '#FFFFFF',     // Pure white for cards
+  primary: '#C2185B',    // Royal Pink / Magenta
+  primaryLt: '#E91E8C',  // Highlight Pink
+  primaryDk: '#880E4F',  // Deep Royal Pink
+  text: '#1A0010',       // Deep Dark Pink/Graphite (Headings)
+  textLight: '#AD6888',  // Muted Pink (Paragraphs)
+  border: 'rgba(194, 24, 91, 0.15)', // Subtle pink border
 };
 
 export default function SwarnaSamriddhi() {
@@ -49,21 +49,21 @@ export default function SwarnaSamriddhi() {
   };
 
   return (
-    <div className="min-h-screen selection:bg-[#b8862a] selection:text-white pb-20" style={{ background: C.bg, color: C.text }}>
+    <div className="min-h-screen selection:bg-[#C2185B] selection:text-white pb-20" style={{ background: C.bg, color: C.text }}>
       
       {/* ══════════════════════════════════════════════════════════
           HERO SECTION
       ========================================================== */}
       <section className="relative pt-32 pb-20 overflow-hidden flex flex-col items-center justify-center text-center px-6">
         {/* Background Patterns & Glows */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-          <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, ${C.gold} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+        <div className="absolute inset-0 pointer-events-none opacity-30">
+          <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, ${C.primary} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
         </div>
         <motion.div 
-          animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.15, 0.1] }}
+          animate={{ scale: [1, 1.05, 1], opacity: [0.05, 0.1, 0.05] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full blur-[150px] pointer-events-none"
-          style={{ background: C.goldLt }} 
+          style={{ background: C.primaryLt }} 
         />
 
         <motion.div 
@@ -74,20 +74,20 @@ export default function SwarnaSamriddhi() {
         >
           {/* Eyebrow */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-[#b8862a]" />
-            <span className="font-cinzel text-[10px] sm:text-xs tracking-[0.3em] uppercase font-bold" style={{ color: C.goldDk }}>
+            <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent" style={{ '--tw-gradient-to': C.primary } as React.CSSProperties} />
+            <span className="font-cinzel text-[10px] sm:text-xs tracking-[0.3em] uppercase font-bold" style={{ color: C.primaryDk }}>
               शेखर राजा ज्वेलर्स प्रस्तुत करता है
             </span>
-            <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-[#b8862a]" />
+            <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent" style={{ '--tw-gradient-to': C.primary } as React.CSSProperties} />
           </div>
           
           {/* Main Title */}
           <h1 className="font-cormorant text-5xl sm:text-7xl lg:text-8xl font-bold mb-6 leading-tight" style={{ color: C.text }}>
-            स्वर्ण समृद्धि <span className="italic" style={{ color: C.gold }}>योजना</span>
+            स्वर्ण समृद्धि <span className="italic" style={{ color: C.primary }}>योजना</span>
           </h1>
           
           <p className="font-cormorant text-2xl sm:text-4xl font-medium mb-8" style={{ color: C.textLight }}>
-            10 किस्तें आपकी — <span className="font-bold border-b-2 pb-1" style={{ color: C.goldDk, borderColor: C.goldLt }}>2 किस्तें हमारी</span>
+            10 किस्तें आपकी — <span className="font-bold border-b-2 pb-1" style={{ color: C.primaryDk, borderColor: C.primaryLt }}>2 किस्तें हमारी</span>
           </p>
 
           <p className="font-raleway text-sm sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed" style={{ color: C.textLight }}>
@@ -95,7 +95,7 @@ export default function SwarnaSamriddhi() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto">
-            <a href="#calculator" className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(184,134,42,0.2)] hover:shadow-[0_8px_25px_rgba(184,134,42,0.4)] hover:-translate-y-1 text-white" style={{ background: `linear-gradient(135deg, ${C.goldLt}, ${C.goldDk})` }}>
+            <a href="#calculator" className="w-full sm:w-auto px-8 py-4 font-raleway font-bold text-sm tracking-wider flex items-center justify-center gap-2 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(194,24,91,0.2)] hover:shadow-[0_8px_25px_rgba(194,24,91,0.4)] hover:-translate-y-1 text-white" style={{ background: `linear-gradient(135deg, ${C.primaryLt}, ${C.primaryDk})` }}>
               <Calculator size={18} />
               योजना की गणना करें
             </a>
@@ -116,7 +116,7 @@ export default function SwarnaSamriddhi() {
           className="text-center mb-16"
         >
           <h2 className="font-cormorant text-4xl sm:text-5xl font-bold mb-4">योजना की विशेषताएँ</h2>
-          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)` }} />
+          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${C.primary}, transparent)` }} />
         </motion.div>
 
         <motion.div 
@@ -133,10 +133,10 @@ export default function SwarnaSamriddhi() {
             <motion.div 
               key={i} variants={itemVariants}
               className="p-8 rounded-2xl flex flex-col items-center text-center group hover:-translate-y-2 transition-all duration-500"
-              style={{ background: C.bgCard, border: `1px solid ${C.border}`, boxShadow: '0 4px 20px rgba(58,46,30,0.03)' }}
+              style={{ background: C.bgCard, border: `1px solid ${C.border}`, boxShadow: '0 4px 20px rgba(194,24,91,0.04)' }}
             >
-              <div className="w-16 h-16 rounded-full mb-6 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(184,134,42,0.3)]" style={{ background: 'linear-gradient(135deg, #fff, #fdf8f0)', border: `1px solid ${C.border}` }}>
-                <feature.icon size={26} style={{ color: C.gold }} />
+              <div className="w-16 h-16 rounded-full mb-6 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(194,24,91,0.25)]" style={{ background: 'linear-gradient(135deg, #fff, #FFF5F7)', border: `1px solid ${C.border}` }}>
+                <feature.icon size={26} style={{ color: C.primary }} />
               </div>
               <h3 className="font-cormorant text-2xl font-bold mb-3" style={{ color: C.text }}>{feature.title}</h3>
               <p className="font-raleway text-sm leading-relaxed" style={{ color: C.textLight }}>{feature.desc}</p>
@@ -154,12 +154,12 @@ export default function SwarnaSamriddhi() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="rounded-3xl p-8 sm:p-14 shadow-[0_20px_50px_rgba(58,46,30,0.08)] relative overflow-hidden"
+          className="rounded-3xl p-8 sm:p-14 shadow-[0_20px_50px_rgba(194,24,91,0.06)] relative overflow-hidden"
           style={{ background: C.bgCard, border: `1px solid ${C.border}` }}
         >
           {/* Decorative Corner Flairs */}
-          <div className="absolute top-0 left-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at top left, ${C.goldDk}, transparent)` }} />
-          <div className="absolute bottom-0 right-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at bottom right, ${C.goldDk}, transparent)` }} />
+          <div className="absolute top-0 left-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at top left, ${C.primaryDk}, transparent)` }} />
+          <div className="absolute bottom-0 right-0 w-32 h-32 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at bottom right, ${C.primaryDk}, transparent)` }} />
 
           <div className="text-center mb-12 relative z-10">
             <h2 className="font-cormorant text-4xl sm:text-5xl font-bold mb-4" style={{ color: C.text }}>
@@ -177,8 +177,8 @@ export default function SwarnaSamriddhi() {
               </label>
               <motion.span 
                 key={installment}
-                initial={{ scale: 1.2, color: C.goldLt }}
-                animate={{ scale: 1, color: C.goldDk }}
+                initial={{ scale: 1.2, color: C.primaryLt }}
+                animate={{ scale: 1, color: C.primaryDk }}
                 className="font-cormorant text-3xl sm:text-4xl font-bold"
               >
                 {formatINR(installment)}
@@ -196,7 +196,7 @@ export default function SwarnaSamriddhi() {
                 onChange={(e) => setInstallment(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer outline-none relative z-10"
                 style={{ 
-                  background: `linear-gradient(to right, ${C.gold} ${(installment - 2000) / (50000 - 2000) * 100}%, #f0e6d2 ${(installment - 2000) / (50000 - 2000) * 100}%)`,
+                  background: `linear-gradient(to right, ${C.primary} ${(installment - 2000) / (50000 - 2000) * 100}%, #FCE4EC ${(installment - 2000) / (50000 - 2000) * 100}%)`,
                 }}
               />
               <style>{`
@@ -206,8 +206,8 @@ export default function SwarnaSamriddhi() {
                   height: 24px;
                   border-radius: 50%;
                   background: ${C.bgCard};
-                  border: 3px solid ${C.gold};
-                  box-shadow: 0 4px 10px rgba(184,134,42,0.4);
+                  border: 3px solid ${C.primary};
+                  box-shadow: 0 4px 10px rgba(194,24,91,0.3);
                   cursor: pointer;
                   transition: transform 0.1s;
                 }
@@ -225,7 +225,7 @@ export default function SwarnaSamriddhi() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
             {/* User Contribution */}
-            <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#fdfbf7', border: `1px solid rgba(184, 134, 42, 0.08)` }}>
+            <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#FFFDFE', border: `1px solid rgba(194, 24, 91, 0.08)` }}>
               <p className="font-cinzel text-[10px] sm:text-xs tracking-widest mb-3 uppercase font-bold" style={{ color: C.textLight }}>आपकी 10 किस्तें</p>
               <p className="font-cormorant text-3xl font-bold" style={{ color: C.text }}>{formatINR(userTotal)}</p>
             </div>
@@ -233,8 +233,8 @@ export default function SwarnaSamriddhi() {
             {/* SRJ Bonus (Highlight) */}
             <motion.div 
               whileHover={{ scale: 1.02 }}
-              className="p-8 rounded-2xl text-center relative shadow-[0_10px_30px_rgba(184,134,42,0.15)] flex flex-col justify-center" 
-              style={{ background: `linear-gradient(135deg, ${C.goldLt}, ${C.goldDk})`, border: `1px solid ${C.goldLt}` }}
+              className="p-8 rounded-2xl text-center relative shadow-[0_10px_30px_rgba(194,24,91,0.2)] flex flex-col justify-center" 
+              style={{ background: `linear-gradient(135deg, ${C.primaryLt}, ${C.primaryDk})`, border: `1px solid ${C.primaryLt}` }}
             >
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-white text-black font-cinzel text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-md whitespace-nowrap">
                 हमारा योगदान
@@ -244,9 +244,9 @@ export default function SwarnaSamriddhi() {
             </motion.div>
 
             {/* Grand Total */}
-            <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#fdfbf7', border: `1px solid rgba(184, 134, 42, 0.08)` }}>
+            <div className="p-8 rounded-2xl text-center flex flex-col justify-center" style={{ background: '#FFFDFE', border: `1px solid rgba(194, 24, 91, 0.08)` }}>
               <p className="font-cinzel text-[10px] sm:text-xs tracking-widest mb-3 uppercase font-bold" style={{ color: C.textLight }}>कुल आभूषण खरीद मूल्य</p>
-              <p className="font-cormorant text-4xl font-bold" style={{ color: C.goldDk }}>{formatINR(grandTotal)}</p>
+              <p className="font-cormorant text-4xl font-bold" style={{ color: C.primaryDk }}>{formatINR(grandTotal)}</p>
             </div>
           </div>
         </motion.div>
@@ -259,10 +259,10 @@ export default function SwarnaSamriddhi() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="p-8 sm:p-12 rounded-3xl" 
-          style={{ border: `1px solid ${C.border}`, background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)' }}
+          style={{ border: `1px solid ${C.border}`, background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)' }}
         >
           <h2 className="font-cormorant text-3xl font-bold mb-8 flex items-center gap-4">
-            <span className="w-10 h-[1px]" style={{ background: C.gold }}></span>
+            <span className="w-10 h-[1px]" style={{ background: C.primary }}></span>
             योजना के नियम एवं शर्तें
           </h2>
           <ul className="space-y-5">
@@ -275,7 +275,7 @@ export default function SwarnaSamriddhi() {
               'नियम एवं शर्तें समय-समय पर परिवर्तित की जा सकती हैं।',
             ].map((term, i) => (
               <li key={i} className="flex items-start gap-4 font-raleway text-sm sm:text-base leading-relaxed" style={{ color: C.textLight }}>
-                <CheckCircle2 size={20} className="shrink-0 mt-0.5" style={{ color: C.gold }} />
+                <CheckCircle2 size={20} className="shrink-0 mt-0.5" style={{ color: C.primary }} />
                 <span className="pt-0.5">{term}</span>
               </li>
             ))}
@@ -289,7 +289,7 @@ export default function SwarnaSamriddhi() {
       <footer className="pt-20 px-6 text-center relative z-10">
         <div className="max-w-3xl mx-auto border-t pt-16" style={{ borderColor: C.border }}>
           <h2 className="font-cormorant text-3xl sm:text-4xl font-bold mb-4" style={{ color: C.text }}>
-            सोना सिर्फ आभूषण नहीं, <span className="italic" style={{ color: C.goldDk }}>आपके सपनों का निवेश है</span>
+            सोना सिर्फ आभूषण नहीं, <span className="italic" style={{ color: C.primaryDk }}>आपके सपनों का निवेश है</span>
           </h2>
           <p className="font-raleway text-sm mb-10 max-w-xl mx-auto" style={{ color: C.textLight }}>
             ज्वेलरी बुकिंग एवं अधिक जानकारी के लिए आज ही हमारे शोरूम पर संपर्क करें।
@@ -299,7 +299,7 @@ export default function SwarnaSamriddhi() {
             {/* Phone */}
             <motion.a whileHover={{ y: -2 }} href="tel:+918377911745" className="flex items-center gap-4 group">
               <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-all group-hover:shadow-md" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
-                <Phone size={18} style={{ color: C.goldDk }} />
+                <Phone size={18} style={{ color: C.primaryDk }} />
               </div>
               <div className="text-left">
                 <p className="font-cinzel text-[10px] tracking-widest uppercase font-bold" style={{ color: C.textLight }}>Call Us</p>
@@ -321,9 +321,9 @@ export default function SwarnaSamriddhi() {
             </motion.a>
           </div>
 
-          <div className="font-cinzel text-[10px] sm:text-xs tracking-[0.25em] flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-bold uppercase opacity-80" style={{ color: C.goldDk }}>
+          <div className="font-cinzel text-[10px] sm:text-xs tracking-[0.25em] flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-bold uppercase opacity-80" style={{ color: C.primaryDk }}>
             <span>Shekhar Raja Jewellers</span>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: C.gold }}></span>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: C.primary }}></span>
             <span>विश्वास • शुद्धता • गुणवत्ता</span>
           </div>
         </div>
