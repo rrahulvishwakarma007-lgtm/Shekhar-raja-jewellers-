@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { 
   Gift, Wallet, ShieldCheck, ShoppingBag, 
   CheckCircle2, Calculator, Sparkles, MessageCircle, Phone 
@@ -34,8 +34,8 @@ export default function SwarnaSamriddhi() {
     }).format(amount);
   };
 
-  // Staggered animation variants
-  const containerVariants = {
+  // Staggered animation variants correctly typed for TypeScript
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -43,7 +43,7 @@ export default function SwarnaSamriddhi() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
