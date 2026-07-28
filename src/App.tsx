@@ -7,13 +7,15 @@ import GoldRates from './pages/GoldRates';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import AppDownload from './pages/AppDownload';
-import PrivateCatalogue from './pages/PrivateCatalogue';   // ← ADD
-import CatalogueAdmin   from './pages/CatalogueAdmin';     // ← ADD
+import PrivateCatalogue from './pages/PrivateCatalogue';
+import CatalogueAdmin   from './pages/CatalogueAdmin';
+import SwarnaSamriddhi from './pages/SwarnaSamriddhi'; // ← ADDED IMPORT
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public pages with standard Navbar and Footer */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="collections" element={<Collections />} />
@@ -24,9 +26,10 @@ function App() {
           <Route path="app" element={<AppDownload />} />
         </Route>
 
-        {/* Private catalogue — outside Layout (no navbar/footer) */}
-        <Route path="catalogue"           element={<PrivateCatalogue />} />  {/* ← ADD */}
-        <Route path="srj" element={<CatalogueAdmin />}  />  {/* ← ADD */}
+        {/* Standalone pages — outside Layout (no standard navbar/footer) */}
+        <Route path="catalogue" element={<PrivateCatalogue />} />
+        <Route path="srj" element={<CatalogueAdmin />} />
+        <Route path="offer" element={<SwarnaSamriddhi />} /> {/* ← ADDED ROUTE */}
       </Routes>
     </BrowserRouter>
   );
