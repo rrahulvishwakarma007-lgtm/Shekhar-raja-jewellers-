@@ -9,7 +9,8 @@ import Contact from './pages/Contact';
 import AppDownload from './pages/AppDownload';
 import PrivateCatalogue from './pages/PrivateCatalogue';
 import CatalogueAdmin   from './pages/CatalogueAdmin';
-import SwarnaSamriddhi from './pages/SwarnaSamriddhi'; // ← ADDED IMPORT
+import SwarnaSamriddhi from './pages/SwarnaSamriddhi'; 
+import CustomerDashboard from './pages/CustomerDashboard'; // ← ADDED IMPORT
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
         {/* Standalone pages — outside Layout (no standard navbar/footer) */}
         <Route path="catalogue" element={<PrivateCatalogue />} />
         <Route path="srj" element={<CatalogueAdmin />} />
-        <Route path="offer" element={<SwarnaSamriddhi />} /> {/* ← ADDED ROUTE */}
+        <Route path="offer" element={<SwarnaSamriddhi />} /> 
+        <Route path="dashboard" element={<CustomerDashboard />} /> {/* ← ADDED ROUTE */}
       </Routes>
     </BrowserRouter>
   );
