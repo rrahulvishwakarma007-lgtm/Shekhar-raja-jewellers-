@@ -7,6 +7,7 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Collections', path: '/collections' },
   { name: 'Bridal', path: '/bridal' },
+  { name: 'Offers', path: '/offer' }, // ← ADDED OFFERS LINK HERE
   { name: 'Gold Rates', path: '/gold-rates' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
@@ -50,7 +51,7 @@ export default function Navbar() {
           <div className={`h-[2px] bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014] transition-opacity duration-500 ${
             isScrolled ? 'opacity-100' : 'opacity-50'
           }`} />
-          
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20 lg:h-24">
               {/* Logo */}
@@ -63,7 +64,7 @@ export default function Navbar() {
                     className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                
+
                 {/* Logo Text */}
                 <div className="flex flex-col">
                   <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">
@@ -111,7 +112,7 @@ export default function Navbar() {
                 <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/60 border border-[rgba(184,134,42,0.15)] text-[#9a8060] hover:text-[#b8862a] hover:border-[#b8862a]/30 transition-all duration-300">
                   <Heart size={18} />
                 </button>
-                
+
                 {/* WhatsApp Button */}
                 <a
                   href="https://wa.me/918377911745"
@@ -122,7 +123,7 @@ export default function Navbar() {
                   <MessageCircle size={16} />
                   <span>Enquire</span>
                 </a>
-                
+
                 {/* Mobile Menu Button */}
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -133,7 +134,7 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          
+
           {/* Gold Bottom Line */}
           <div className={`h-[1px] bg-gradient-to-r from-transparent via-[#b8862a]/40 to-transparent transition-opacity duration-500 ${
             isScrolled ? 'opacity-100' : 'opacity-30'
@@ -153,7 +154,7 @@ export default function Navbar() {
           >
             {/* Decorative Top */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014]" />
-            
+
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-5">
               <div className="absolute inset-0" style={{
@@ -161,7 +162,7 @@ export default function Navbar() {
                 backgroundSize: '30px 30px'
               }} />
             </div>
-            
+
             <div className="flex flex-col h-full pt-24 pb-8 px-6 relative">
               {/* Logo in Mobile Menu */}
               <div className="flex items-center gap-3 mb-10">
@@ -175,7 +176,7 @@ export default function Navbar() {
                   <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
                 </div>
               </div>
-              
+
               {/* Nav Links */}
               <div className="flex-1 flex flex-col justify-center">
                 <div className="space-y-1">
@@ -209,7 +210,7 @@ export default function Navbar() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Bottom Section */}
               <div className="space-y-5">
                 <motion.a
@@ -224,7 +225,7 @@ export default function Navbar() {
                   <MessageCircle size={22} />
                   <span>Chat on WhatsApp</span>
                 </motion.a>
-                
+
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
