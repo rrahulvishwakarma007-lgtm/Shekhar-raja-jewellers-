@@ -9,13 +9,13 @@ import {
 // ── Design tokens: matched to shekharrajajewellers.com homepage ─────────────
 // Light royal pink + white palette
 const C = {
-  void:      '#FFF5F7',     // soft blush white — hero bg (was near-black)
+  void:      '#FFF5F7',     // soft blush white — hero bg
   voidMid:   '#FCE4EC',     // light rose — section bg
   voidLight: '#FFFFFF',     // white — card bg
-  gold:      '#C2185B',     // royal pink — primary accent (was 22KT gold)
+  gold:      '#C2185B',     // royal pink — primary accent
   goldPale:  '#F8BBD9',     // pale pink shimmer
   goldDeep:  '#880E4F',     // deep pink — pressed states
-  pink:      '#B8862A',     // warm gold — secondary accent (swapped role)
+  pink:      '#B8862A',     // warm gold — secondary accent 
   pinkPale:  '#F0D080',
   cream:     '#FFFFFF',     // white sections
   creamMid:  '#FCE4EC',
@@ -146,7 +146,7 @@ export default function SwarnaSamriddhi() {
                       className="flex items-center gap-4 mb-8">
             <div className="h-px w-12 sm:w-20" style={{ background: `linear-gradient(to right, transparent, ${C.gold})` }} />
             <span className="font-cinzel text-[10px] sm:text-xs tracking-[0.5em] uppercase"
-                  style={{ color: C.gold }}>
+                  style={{ color: C.goldDeep }}>
               शेखर राजा ज्वेलर्स प्रस्तुत करता है
             </span>
             <div className="h-px w-12 sm:w-20" style={{ background: `linear-gradient(to left, transparent, ${C.gold})` }} />
@@ -157,10 +157,11 @@ export default function SwarnaSamriddhi() {
                       transition={{ delay: 0.4, duration: 1 }}
                       className="flex items-end justify-center gap-4 sm:gap-8 mb-6 leading-none select-none">
             <div className="flex flex-col items-center">
+              {/* FIXED: Changed text color to goldDeep for high contrast */}
               <motion.span initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
                            transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                            className="font-cormorant font-bold"
-                           style={{ fontSize: 'clamp(5rem, 18vw, 10rem)', color: C.goldPale, lineHeight: 0.9 }}>
+                           style={{ fontSize: 'clamp(5rem, 18vw, 10rem)', color: C.goldDeep, lineHeight: 0.9 }}>
                 10
               </motion.span>
               <span className="font-cinzel text-[9px] sm:text-[11px] tracking-[0.3em] mt-2" style={{ color: C.textDim }}>
@@ -199,12 +200,13 @@ export default function SwarnaSamriddhi() {
             </motion.span>
 
             <div className="flex flex-col items-center">
+              {/* FIXED: Changed text color to gradient of goldDeep and gold for contrast */}
               <motion.span initial={{ opacity: 0, y: 30, filter: 'blur(12px)' }}
                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                            transition={{ delay: 1.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                            className="font-cormorant font-bold"
-                           style={{ fontSize: 'clamp(5rem, 18vw, 10rem)', color: C.goldPale, lineHeight: 0.9,
-                                    background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
+                           style={{ fontSize: 'clamp(5rem, 18vw, 10rem)', color: C.goldDeep, lineHeight: 0.9,
+                                    background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
                                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 12
               </motion.span>
@@ -233,18 +235,20 @@ export default function SwarnaSamriddhi() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 2.2, duration: 0.6 }}
                       className="flex flex-col sm:flex-row items-center gap-4">
+            {/* FIXED: Changed to deep gold gradients to support white text */}
             <motion.button whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}
                            onClick={() => setShowModal(true)}
                            className="flex items-center gap-2.5 px-8 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white shadow-lg"
-                           style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
-                                    boxShadow: `0 12px 36px rgba(184,134,42,0.4)` }}>
+                           style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
+                                    boxShadow: `0 12px 36px rgba(194,24,91,0.3)` }}>
               {isMobile ? <Smartphone size={17} /> : <QrCode size={17} />}
               योजना शुरू करें — Pay Now
             </motion.button>
+            {/* FIXED: Increased border and text contrast */}
             <motion.a href="#calculator" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                       className="flex items-center gap-2.5 px-8 py-4 rounded-full font-raleway font-bold text-sm tracking-wide"
-                      style={{ border: `1px solid ${C.borderBright}`, color: C.goldPale,
-                               background: 'rgba(184,134,42,0.06)' }}>
+                      style={{ border: `1px solid ${C.borderBright}`, color: C.goldDeep,
+                               background: 'rgba(194,24,91,0.06)' }}>
               <Calculator size={17} style={{ color: C.gold }} />
               लाभ की गणना करें
             </motion.a>
@@ -269,7 +273,7 @@ export default function SwarnaSamriddhi() {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} className="text-center mb-16">
             <span className="font-cinzel text-[10px] tracking-[0.4em] uppercase block mb-3"
-                  style={{ color: C.gold }}>योजना की विशेषताएँ</span>
+                  style={{ color: C.goldDeep }}>योजना की विशेषताएँ</span>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-bold"
                 style={{ color: C.textDark }}>क्या मिलेगा आपको?</h2>
             <div className="mt-4 mx-auto w-20 h-0.5" style={{ background: `linear-gradient(to right, transparent, ${C.gold}, transparent)` }} />
@@ -288,8 +292,8 @@ export default function SwarnaSamriddhi() {
                           transition={{ delay: i * 0.12, duration: 0.6 }}
                           whileHover={{ y: -6 }}
                           className="p-8 sm:p-10 rounded-3xl flex flex-col items-center text-center relative overflow-hidden group"
-                          style={{ background: '#FFFFFF', border: `1px solid rgba(184,134,42,0.15)`,
-                                   boxShadow: '0 4px 24px rgba(44,26,14,0.06)' }}>
+                          style={{ background: '#FFFFFF', border: `1px solid rgba(194,24,91,0.15)`,
+                                   boxShadow: '0 4px 24px rgba(194,24,91,0.06)' }}>
                 <div className="absolute top-0 left-0 right-0 h-1 rounded-t-3xl"
                      style={{ background: f.accent }} />
                 <span className="font-cormorant font-bold mb-1"
@@ -320,7 +324,7 @@ export default function SwarnaSamriddhi() {
         <div className="max-w-5xl mx-auto px-6 py-24">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} className="text-center mb-14">
-            <span className="font-cinzel text-[10px] tracking-[0.4em] uppercase block mb-3" style={{ color: C.gold }}>
+            <span className="font-cinzel text-[10px] tracking-[0.4em] uppercase block mb-3" style={{ color: C.goldDeep }}>
               INTERACTIVE CALCULATOR
             </span>
             <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>
@@ -337,12 +341,13 @@ export default function SwarnaSamriddhi() {
             {/* Slider */}
             <div className="max-w-2xl mx-auto mb-14 relative z-10">
               <div className="flex items-end justify-between mb-6 pb-4 border-b border-dashed" style={{ borderColor: C.border }}>
-                <label className="font-cinzel text-xs tracking-widest uppercase" style={{ color: C.textDim }}>
+                <label className="font-cinzel text-xs tracking-widest uppercase" style={{ color: C.textDarkMid }}>
                   मासिक किस्त चुनें
                 </label>
+                {/* FIXED: Value display contrast */}
                 <motion.span key={installment}
-                             initial={{ scale: 1.15, color: C.goldPale }}
-                             animate={{ scale: 1, color: C.gold }}
+                             initial={{ scale: 1.15, color: C.gold }}
+                             animate={{ scale: 1, color: C.goldDeep }}
                              className="font-cormorant text-3xl sm:text-4xl font-bold tabular-nums">
                   {formatINR(installment)}
                 </motion.span>
@@ -352,7 +357,7 @@ export default function SwarnaSamriddhi() {
                        onChange={e => setInstallment(Number(e.target.value))}
                        className="w-full h-2 rounded-full outline-none cursor-pointer appearance-none"
                        style={{
-                         background: `linear-gradient(to right, ${C.gold} ${(installment - 2000) / 48000 * 100}%, rgba(184,134,42,0.18) ${(installment - 2000) / 48000 * 100}%)`,
+                         background: `linear-gradient(to right, ${C.gold} ${(installment - 2000) / 48000 * 100}%, rgba(194,24,91,0.18) ${(installment - 2000) / 48000 * 100}%)`,
                        }} />
                 <div className="flex justify-between mt-3">
                   <span className="font-cinzel text-[10px]" style={{ color: C.textDim }}>₹2,000</span>
@@ -365,7 +370,7 @@ export default function SwarnaSamriddhi() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 relative z-10 mb-10">
               <div className="rounded-2xl p-7 text-center"
                    style={{ background: 'rgba(194,24,91,0.04)', border: `1px solid ${C.border}` }}>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3" style={{ color: C.textDim }}>
+                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3" style={{ color: C.textDarkMid }}>
                   आपकी 10 किस्तें
                 </p>
                 <p className="font-cormorant text-3xl font-bold tabular-nums" style={{ color: C.text }}>
@@ -373,15 +378,16 @@ export default function SwarnaSamriddhi() {
                 </p>
               </div>
 
+              {/* FIXED: Replaced pink variable for stronger visual background for white text */}
               <motion.div whileHover={{ scale: 1.03 }}
                           className="rounded-2xl p-7 text-center relative overflow-hidden"
-                          style={{ background: `linear-gradient(135deg, ${C.pink}, #880E4F)`,
+                          style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
                                    boxShadow: `0 16px 40px rgba(194,24,91,0.35)` }}>
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-white px-4 py-1.5 rounded-full whitespace-nowrap shadow-md">
                   <span className="font-cinzel text-[10px] tracking-[0.2em] font-bold"
-                        style={{ color: C.pink }}>हमारा योगदान</span>
+                        style={{ color: C.goldDeep }}>हमारा योगदान</span>
                 </div>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3 text-white/80">
+                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3 text-white/90">
                   SRJ की 2 किस्तें
                 </p>
                 <p className="font-cormorant text-4xl font-bold text-white tabular-nums">
@@ -390,12 +396,13 @@ export default function SwarnaSamriddhi() {
               </motion.div>
 
               <div className="rounded-2xl p-7 text-center relative overflow-hidden"
-                   style={{ background: 'rgba(184,134,42,0.07)', border: `1px solid ${C.borderBright}` }}>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3" style={{ color: C.gold }}>
+                   style={{ background: 'rgba(194,24,91,0.04)', border: `1px solid ${C.borderBright}` }}>
+                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-3" style={{ color: C.goldDeep }}>
                   कुल आभूषण मूल्य
                 </p>
+                {/* FIXED: Text gradient using high-contrast colors */}
                 <p className="font-cormorant text-4xl font-bold tabular-nums"
-                   style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
+                   style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
                             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   <CountUp to={grandTotal} />
                 </p>
@@ -403,11 +410,12 @@ export default function SwarnaSamriddhi() {
             </div>
 
             <div className="flex justify-center relative z-10">
+              {/* FIXED: Button background gradient to darker shades */}
               <motion.button whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}
                              onClick={() => setShowModal(true)}
                              className="flex items-center gap-3 px-10 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white"
-                             style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
-                                      boxShadow: `0 12px 36px rgba(184,134,42,0.4)` }}>
+                             style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
+                                      boxShadow: `0 12px 36px rgba(194,24,91,0.3)` }}>
                 {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />}
                 पहली किस्त भरें और शुरू करें
                 <ArrowRight size={17} />
@@ -424,7 +432,7 @@ export default function SwarnaSamriddhi() {
         <div className="max-w-4xl mx-auto px-6 py-20">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} className="text-center mb-12">
-            <span className="font-cinzel text-[10px] tracking-[0.4em] uppercase block mb-3" style={{ color: C.gold }}>
+            <span className="font-cinzel text-[10px] tracking-[0.4em] uppercase block mb-3" style={{ color: C.goldDeep }}>
               TERMS & CONDITIONS
             </span>
             <h2 className="font-cormorant text-4xl font-bold" style={{ color: C.textDark }}>
@@ -448,7 +456,7 @@ export default function SwarnaSamriddhi() {
                           viewport={{ once: true }}
                           transition={{ delay: i * 0.08, duration: 0.5 }}
                           className="flex items-start gap-4 p-5 rounded-2xl"
-                          style={{ background: '#fff', border: `1px solid rgba(184,134,42,0.12)` }}>
+                          style={{ background: '#fff', border: `1px solid rgba(194,24,91,0.12)` }}>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
                      style={{ background: `${C.gold}15` }}>
                   <t.icon size={16} style={{ color: C.gold }} />
@@ -473,7 +481,7 @@ export default function SwarnaSamriddhi() {
         <div className="relative z-10 max-w-3xl mx-auto px-6 py-28 text-center">
           <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}>
-            <span className="font-cinzel text-[10px] tracking-[0.5em] uppercase block mb-4" style={{ color: C.gold }}>
+            <span className="font-cinzel text-[10px] tracking-[0.5em] uppercase block mb-4" style={{ color: C.goldDeep }}>
               आज ही जुड़ें
             </span>
             <h2 className="font-cormorant font-bold mb-4"
@@ -486,11 +494,12 @@ export default function SwarnaSamriddhi() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+              {/* FIXED: Background updated for visual contrast */}
               <motion.button whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.96 }}
                              onClick={() => setShowModal(true)}
                              className="flex items-center gap-2.5 px-9 py-4 rounded-full font-raleway font-bold text-sm tracking-wide text-white"
-                             style={{ background: `linear-gradient(135deg, ${C.goldPale}, ${C.gold})`,
-                                      boxShadow: `0 16px 40px rgba(184,134,42,0.45)` }}>
+                             style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
+                                      boxShadow: `0 16px 40px rgba(194,24,91,0.3)` }}>
                 {isMobile ? <Smartphone size={17} /> : <QrCode size={17} />}
                 योजना शुरू करें
               </motion.button>
@@ -539,10 +548,10 @@ export default function SwarnaSamriddhi() {
                         onClick={e => e.stopPropagation()}
                         className="w-full sm:max-w-md overflow-hidden relative"
                         style={{ background: C.cream, borderRadius: '24px 24px 0 0',
-                                 boxShadow: '0 -20px 60px rgba(184,134,42,0.2)' }}>
+                                 boxShadow: '0 -20px 60px rgba(194,24,91,0.2)' }}>
               <div className="h-1" style={{ background: `linear-gradient(90deg, ${C.goldDeep}, ${C.gold}, ${C.goldPale}, ${C.gold}, ${C.goldDeep})` }} />
 
-              <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'rgba(184,134,42,0.15)' }}>
+              <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'rgba(194,24,91,0.15)' }}>
                 <div>
                   <p className="font-cinzel text-[9px] tracking-[0.3em] uppercase" style={{ color: C.gold }}>SWARNA SAMRIDDHI YOJANA</p>
                   <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.textDark }}>योजना शुरू करें</h3>
@@ -553,7 +562,7 @@ export default function SwarnaSamriddhi() {
                 <motion.button whileHover={{ rotate: 90, scale: 1.1 }} whileTap={{ scale: 0.9 }}
                                onClick={() => setShowModal(false)}
                                className="w-9 h-9 rounded-full flex items-center justify-center"
-                               style={{ background: 'rgba(184,134,42,0.1)', border: `1px solid rgba(184,134,42,0.2)` }}>
+                               style={{ background: 'rgba(194,24,91,0.1)', border: `1px solid rgba(194,24,91,0.2)` }}>
                   <X size={16} style={{ color: C.textDark }} />
                 </motion.button>
               </div>
@@ -586,7 +595,7 @@ export default function SwarnaSamriddhi() {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-3">
-                      <div className="p-4 rounded-2xl" style={{ background: '#fff', border: `2px solid rgba(184,134,42,0.2)` }}>
+                      <div className="p-4 rounded-2xl" style={{ background: '#fff', border: `2px solid rgba(194,24,91,0.2)` }}>
                         <img src={qrUrl} alt="UPI QR" className="w-52 h-52 object-contain" />
                       </div>
                       <p className="font-mono text-xs" style={{ color: C.textDarkMid }}>UPI ID: {upiId}</p>
@@ -603,7 +612,7 @@ export default function SwarnaSamriddhi() {
                 </div>
 
                 {/* Step 3 */}
-                <div className="w-full border-t pt-5" style={{ borderColor: 'rgba(184,134,42,0.15)' }}>
+                <div className="w-full border-t pt-5" style={{ borderColor: 'rgba(194,24,91,0.15)' }}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-[#25D366]">3</div>
                     <p className="font-raleway font-bold text-sm" style={{ color: C.textDark }}>
