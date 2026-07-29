@@ -402,7 +402,7 @@ export default function SwarnaSamriddhi() {
       <AnimatePresence>
         {showModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6" style={{ background: 'rgba(26,0,16,0.6)', backdropFilter: 'blur(16px)' }} onClick={() => setShowModal(false)}>
-            <motion.div initial={{ opacity: 0, y: 100, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 100, scale: 0.95 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} onClick={e => e.stopPropagation()} className="w-full sm:max-w-md overflow-hidden relative bg-white" style={{ borderRadius: '32px 32px 0 0', sm: { borderRadius: '32px' }, boxShadow: '0 -20px 80px rgba(0,0,0,0.2)' }}>
+            <motion.div initial={{ opacity: 0, y: 100, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 100, scale: 0.95 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} onClick={e => e.stopPropagation()} className="w-full sm:max-w-md overflow-hidden relative bg-white rounded-t-[32px] sm:rounded-[32px]" style={{ boxShadow: '0 -20px 80px rgba(0,0,0,0.2)' }}>
               
               {/* Premium Header */}
               <div className="px-8 py-6 border-b relative overflow-hidden" style={{ borderColor: C.border, background: C.voidMid }}>
