@@ -4,7 +4,7 @@ import {
   Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
   ArrowRight, X, Smartphone, QrCode, Shield,
   Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
-  Heart, Menu, ChevronRight
+  Heart, Menu, ChevronRight, Play
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -66,13 +66,18 @@ export default function SwarnaSamriddhi() {
   const [isMobile, setIsMobile]       = useState(false);
   const [isScrolled, setIsScrolled]   = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+  const heroRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setIsMobile(/android|iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroY  = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
   const userTotal  = installment * 10;
   const srjBonus   = installment * 2;
@@ -89,7 +94,7 @@ export default function SwarnaSamriddhi() {
 
   // Animation Variants
   const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
   };
   const staggerContainer: Variants = {
@@ -101,7 +106,7 @@ export default function SwarnaSamriddhi() {
     <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#832729] selection:text-white">
 
       {/* ════════════════════════════════════════════════════════
-          MAIN WEBSITE NAVBAR (Untouched)
+          MAIN WEBSITE NAVBAR
       ════════════════════════════════════════════════════════ */}
       <motion.nav
         initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -188,93 +193,142 @@ export default function SwarnaSamriddhi() {
       {/* ════════════════════════════════════════════════════════
           EDITORIAL HERO SECTION (Tanishq Style Split Layout)
       ════════════════════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh]">
-        <div className="absolute inset-0 pointer-events-none opacity-50" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+      <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
         
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
           
           {/* Left Content */}
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="flex flex-col text-center lg:text-left items-center lg:items-start pt-10 lg:pt-0">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px w-10" style={{ background: C.maroon }} />
-              <span className="font-cinzel text-xs tracking-[0.4em] uppercase font-bold" style={{ color: C.maroon }}> Shekhar Raja Jewellers </span>
-              <div className="h-px w-10 lg:hidden" style={{ background: C.maroon }} />
-            </div>
+          <motion.div style={{ y: heroY }} className="flex flex-col text-center lg:text-left items-center lg:items-start pt-10 lg:pt-0 z-20">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-8">
+              <div className="h-px w-12" style={{ background: C.maroon }} />
+              <span className="font-cinzel text-xs tracking-[0.4em] uppercase font-bold" style={{ color: C.maroon }}>
+                A Golden Opportunity
+              </span>
+              <div className="h-px w-12 lg:hidden" style={{ background: C.maroon }} />
+            </motion.div>
 
-            <h1 className="font-cormorant font-bold mb-6 tracking-tight text-balance" style={{ fontSize: 'clamp(3.5rem, 6vw, 5.5rem)', lineHeight: 1.05, color: C.text }}>
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="font-cormorant font-bold mb-6 tracking-tight text-balance" style={{ fontSize: 'clamp(3.5rem, 6vw, 6rem)', lineHeight: 1.05, color: C.text }}>
               स्वर्ण समृद्धि <br className="hidden lg:block"/> 
               <span className="italic font-light" style={{ color: C.gold }}>योजना</span>
-            </h1>
+            </motion.h1>
 
-            <p className="font-raleway text-lg font-medium max-w-md mb-10" style={{ color: C.textDim, lineHeight: 1.7 }}>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="font-raleway text-lg sm:text-xl font-medium max-w-md mb-10" style={{ color: C.textDim, lineHeight: 1.7 }}>
               अपने सपनों के सोने के आभूषण अब आसान किस्तों में खरीदें। आज ही जुड़ें और 100% पारदर्शी योजना का लाभ उठाएं।
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-4 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-md" style={{ background: C.maroon }}>
-                योजना शुरू करें
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-xl flex items-center justify-center gap-2" style={{ background: C.maroon }}>
+                योजना शुरू करें <ArrowRight size={16} />
               </motion.button>
-              <motion.a href="#calculator" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-4 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-transparent hover:bg-white" style={{ border: `1px solid ${C.maroon}`, color: C.maroon }}>
+              <motion.a href="#calculator" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-transparent hover:bg-white flex items-center justify-center gap-2" style={{ border: `1px solid ${C.maroon}`, color: C.maroon }}>
                 लाभ की गणना करें
               </motion.a>
-            </div>
+            </motion.div>
           </motion.div>
 
-          {/* Right Visual (The 10+2=12 Badge) */}
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }} className="relative flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-[450px] aspect-square rounded-full flex items-center justify-center p-8" style={{ border: `1px dashed ${C.gold}` }}>
-              <div className="absolute inset-4 rounded-full border" style={{ borderColor: C.border }} />
-              <div className="absolute inset-8 rounded-full bg-white shadow-xl flex flex-col items-center justify-center text-center p-10">
-                <span className="font-cinzel text-xs tracking-widest uppercase mb-4" style={{ color: C.gold }}>Invest Smart</span>
-                
-                <div className="flex items-end justify-center gap-3">
-                  <div className="flex flex-col items-center">
-                    <span className="font-cormorant font-bold text-5xl sm:text-6xl leading-none" style={{ color: C.text }}>10</span>
-                    <span className="font-cinzel text-[9px] tracking-widest mt-2" style={{ color: C.textDim }}>आपकी<br/>किस्तें</span>
-                  </div>
-                  <span className="font-cormorant text-4xl font-light pb-4" style={{ color: C.gold }}>+</span>
-                  <div className="flex flex-col items-center">
-                    <span className="font-cormorant font-bold text-5xl sm:text-6xl leading-none" style={{ color: C.maroon }}>2</span>
-                    <span className="font-cinzel text-[9px] tracking-widest mt-2" style={{ color: C.maroon }}>हमारी<br/>किस्तें</span>
-                  </div>
+          {/* Right Visual (Tall Arched Image with Floating Badge) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative flex justify-center lg:justify-end h-[500px] sm:h-[650px]">
+            {/* The Arch Frame */}
+            <div className="relative w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
+              <motion.img 
+                style={{ scale: imgScale }}
+                src="https://images.unsplash.com/photo-1599643478524-fb66f7cefc11?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                alt="Exquisite Gold Jewelry" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+
+            {/* Decorative Outline */}
+            <div className="absolute top-4 -right-4 w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
+
+            {/* Floating Glass Badge (10+2) */}
+            <motion.div 
+              animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -bottom-8 -left-4 sm:-left-12 bg-white/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30" 
+              style={{ border: `1px solid ${C.border}`, borderRadius: '2rem 2rem 2rem 0' }}
+            >
+              <span className="font-cinzel text-xs tracking-widest uppercase mb-3 block" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.textDim }}>MONTHS<br/>YOU PAY</p>
                 </div>
-
-                <div className="w-full h-px my-6" style={{ background: C.border }} />
-
-                <div className="flex flex-col items-center">
-                  <span className="font-cinzel text-[10px] tracking-[0.2em] uppercase mb-1" style={{ color: C.gold }}>कुल लाभ</span>
-                  <span className="font-cormorant font-bold text-6xl leading-none" style={{ color: C.gold }}>12</span>
-                  <span className="font-cormorant italic text-lg mt-2" style={{ color: C.text }}>महीनों का</span>
+                <span className="font-cormorant text-3xl" style={{ color: C.gold }}>+</span>
+                <div className="text-center">
+                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroonLt }}>MONTHS<br/>WE PAY</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
         </div>
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          FEATURES (Minimal Line Art Style)
+          EDITORIAL IMAGE BANNER
+      ════════════════════════════════════════════════════════ */}
+      <section className="relative w-full h-[300px] sm:h-[400px] overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+            alt="Gold Details" 
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+        <div className="relative z-10 text-center px-6 max-w-3xl">
+          <Shield size={40} className="mx-auto mb-6 opacity-80" style={{ color: C.goldLight }} strokeWidth={1} />
+          <h2 className="font-cormorant text-3xl sm:text-5xl font-light italic text-white leading-snug">
+            "Building your golden legacy, <br/> one secure installment at a time."
+          </h2>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          PICTORIAL "HOW IT WORKS" SECTION
       ════════════════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
-            <span className="font-cinzel text-xs tracking-[0.4em] uppercase block mb-4" style={{ color: C.gold }}>Benefits</span>
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>योजना की विशेषताएँ</h2>
+            <span className="font-cinzel text-xs tracking-[0.4em] uppercase block mb-4" style={{ color: C.gold }}>The Process</span>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>यह कैसे काम करता है?</h2>
+            <div className="mt-6 mx-auto w-16 h-px" style={{ background: C.maroon }} />
           </motion.div>
 
-          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-8">
             {[
-              { icon: Wallet,      title: 'आसान भुगतान', desc: 'अपनी सुविधानुसार मासिक राशि चुनें और केवल 10 आसान किस्तें जमा करें।' },
-              { icon: Gift,        title: '2 किस्तें हमारी ओर से', desc: 'योजना पूरी होने पर अंतिम 2 किस्तों का शत-प्रतिशत भुगतान हम करेंगे।' },
-              { icon: ShoppingBag, title: 'मनचाहा आभूषण', desc: 'योजना की समाप्ति पर अपनी पसंद का कोई भी हॉलमार्क स्वर्ण आभूषण खरीदें।' },
-            ].map((f, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex flex-col items-center text-center px-6">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ border: `1px solid ${C.border}`, background: C.void }}>
-                  <f.icon size={28} style={{ color: C.maroon }} strokeWidth={1.5} />
+              { 
+                img: 'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: '1. योजना चुनें', 
+                desc: '₹2,000 से लेकर ₹50,000 तक अपनी सुविधानुसार कोई भी मासिक किस्त राशि निर्धारित करें।' 
+              },
+              { 
+                img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: '2. 10 किस्तें जमा करें', 
+                desc: 'लगातार 10 महीनों तक अपनी किस्त समय पर जमा करें। शेष 2 किस्तें हमारी ओर से मुफ्त दी जाएंगी।' 
+              },
+              { 
+                img: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: '3. आभूषण खरीदें', 
+                desc: '12वें महीने में अपने कुल जमा मूल्य (10+2) के बराबर अपनी पसंद का कोई भी सोने का आभूषण घर ले जाएं।' 
+              },
+            ].map((step, i) => (
+              <motion.div key={i} variants={fadeUp} className="group cursor-pointer">
+                <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 rounded-sm shadow-md">
+                  <motion.img 
+                    whileHover={{ scale: 1.08 }} transition={{ duration: 0.6 }}
+                    src={step.img} alt={step.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md w-10 h-10 flex items-center justify-center font-cormorant text-2xl font-bold rounded-sm shadow-sm" style={{ color: C.maroon }}>
+                    {i+1}
+                  </div>
                 </div>
-                <h3 className="font-cormorant text-2xl font-bold mb-4" style={{ color: C.text }}>{f.title}</h3>
-                <p className="font-raleway text-sm leading-relaxed" style={{ color: C.textDim }}>{f.desc}</p>
+                <h3 className="font-cormorant text-3xl font-bold mb-3" style={{ color: C.text }}>{step.title}</h3>
+                <p className="font-raleway text-sm leading-relaxed" style={{ color: C.textDim }}>{step.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -291,10 +345,10 @@ export default function SwarnaSamriddhi() {
             <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>लाभ की गणना करें</h2>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="p-8 sm:p-16 bg-white shadow-sm" style={{ border: `1px solid ${C.border}` }}>
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="p-8 sm:p-16 bg-white shadow-lg relative" style={{ border: `1px solid ${C.border}` }}>
             
             {/* Elegant Slider */}
-            <div className="max-w-3xl mx-auto mb-16">
+            <div className="max-w-3xl mx-auto mb-16 relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b" style={{ borderColor: C.border }}>
                 <label className="font-cinzel text-sm font-bold tracking-widest uppercase" style={{ color: C.textDim }}>मासिक किस्त चुनें</label>
                 <motion.span key={installment} initial={{ opacity: 0.5 }} animate={{ opacity: 1 }} className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.maroon }}>
@@ -308,40 +362,40 @@ export default function SwarnaSamriddhi() {
                        style={{ background: `linear-gradient(to right, ${C.maroon} ${(installment - 2000) / 48000 * 100}%, ${C.voidMid} ${(installment - 2000) / 48000 * 100}%)` }} />
                 <style>{`
                   input[type=range]::-webkit-slider-thumb {
-                    appearance: none; width: 24px; height: 24px; border-radius: 50%;
+                    appearance: none; width: 28px; height: 28px; border-radius: 50%;
                     background: ${C.maroon}; border: 4px solid #fff;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: grab; transition: transform 0.2s;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2); cursor: grab; transition: transform 0.2s;
                   }
                   input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.1); }
                 `}</style>
                 <div className="flex justify-between mt-6">
-                  <span className="font-cinzel text-xs" style={{ color: C.textDim }}>₹2,000</span>
-                  <span className="font-cinzel text-xs" style={{ color: C.textDim }}>₹50,000</span>
+                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹2,000</span>
+                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹50,000</span>
                 </div>
               </div>
             </div>
 
             {/* Flat Data Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 mb-12 border-y sm:border-y-0 sm:border-x" style={{ borderColor: C.border }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 mb-12 border-y sm:border-y-0 sm:border-x relative z-10" style={{ borderColor: C.border }}>
               <div className="p-8 text-center border-b sm:border-b-0 sm:border-r" style={{ borderColor: C.border }}>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-4" style={{ color: C.textDim }}>आपकी 10 किस्तें</p>
-                <p className="font-cormorant text-3xl font-bold tabular-nums" style={{ color: C.text }}><CountUp to={userTotal} /></p>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.textDim }}>आपकी 10 किस्तें</p>
+                <p className="font-cormorant text-3xl sm:text-4xl font-bold tabular-nums" style={{ color: C.text }}><CountUp to={userTotal} /></p>
               </div>
 
-              <div className="p-8 text-center border-b sm:border-b-0 sm:border-r relative" style={{ borderColor: C.border, background: C.void }}>
-                <div className="absolute top-4 right-4"><Star size={14} style={{ color: C.gold }} /></div>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-4" style={{ color: C.maroon }}>SRJ की 2 किस्तें (Bonus)</p>
-                <p className="font-cormorant text-4xl font-bold tabular-nums" style={{ color: C.maroon }}>+ <CountUp to={srjBonus} /></p>
+              <div className="p-8 text-center border-b sm:border-b-0 sm:border-r relative overflow-hidden" style={{ borderColor: C.border, background: C.void }}>
+                <div className="absolute top-4 right-4"><Star size={16} style={{ color: C.gold }} /></div>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.maroon }}>SRJ की 2 किस्तें (Bonus)</p>
+                <p className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.maroon }}>+ <CountUp to={srjBonus} /></p>
               </div>
 
               <div className="p-8 text-center" style={{ background: C.voidLight }}>
-                <p className="font-cinzel text-[10px] tracking-widest uppercase mb-4" style={{ color: C.textDim }}>कुल आभूषण मूल्य</p>
-                <p className="font-cormorant text-4xl font-bold tabular-nums" style={{ color: C.gold }}><CountUp to={grandTotal} /></p>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.gold }}>कुल आभूषण मूल्य</p>
+                <p className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.gold }}><CountUp to={grandTotal} /></p>
               </div>
             </div>
 
-            <div className="flex justify-center">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="flex items-center gap-3 px-10 py-4 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-md" style={{ background: C.maroon }}>
+            <div className="flex justify-center relative z-10">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="flex items-center gap-3 px-12 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-lg" style={{ background: C.maroon }}>
                 {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />} योजना शुरू करें <ArrowRight size={16} />
               </motion.button>
             </div>
@@ -391,10 +445,10 @@ export default function SwarnaSamriddhi() {
           <p className="font-cormorant text-xl sm:text-2xl font-light italic mb-12 text-white/80">"सोना सिर्फ आभूषण नहीं, आपके भविष्य का निवेश है।"</p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-4 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-white" style={{ color: C.maroon }}>
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-white shadow-lg" style={{ color: C.maroon }}>
               योजना शुरू करें
             </motion.button>
-            <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-4 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white border transition-all hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
+            <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white border transition-all hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
               WhatsApp पर जुड़ें
             </motion.a>
           </div>
@@ -414,9 +468,9 @@ export default function SwarnaSamriddhi() {
               <div className="px-6 py-6 border-b flex justify-between items-start" style={{ borderColor: C.border, background: C.void }}>
                 <div>
                   <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.text }}>Start Your Plan</h3>
-                  <p className="font-raleway text-sm mt-1" style={{ color: C.maroon }}>Amount: <strong>{formatINR(installment)}</strong></p>
+                  <p className="font-raleway text-sm mt-1 font-bold" style={{ color: C.maroon }}>Amount: {formatINR(installment)}</p>
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 transition-colors"><X size={20} style={{ color: C.textDim }} /></button>
+                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 transition-colors rounded-full"><X size={20} style={{ color: C.textDim }} /></button>
               </div>
 
               <div className="px-6 py-8 flex flex-col items-center gap-8">
@@ -439,7 +493,7 @@ export default function SwarnaSamriddhi() {
                   ) : (
                     <div className="flex flex-col items-center">
                       <img src={qrUrl} alt="UPI QR" className="w-48 h-48 border p-2" style={{ borderColor: C.border }} />
-                      <p className="font-mono text-xs mt-3 tracking-wide" style={{ color: C.textDim }}>{upiId}</p>
+                      <p className="font-mono text-xs mt-3 tracking-wide font-bold" style={{ color: C.textDim }}>{upiId}</p>
                     </div>
                   )}
                 </div>
@@ -449,10 +503,10 @@ export default function SwarnaSamriddhi() {
                   <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
                     2. Verify Payment
                   </p>
-                  <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-wider uppercase" style={{ background: '#25D366' }}>
+                  <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-wider uppercase shadow-md" style={{ background: '#25D366' }}>
                     <ImageIcon size={18} /> Send Screenshot
                   </motion.a>
-                  <p className="text-center font-raleway text-xs mt-4 leading-relaxed" style={{ color: C.textDim }}>
+                  <p className="text-center font-raleway text-xs mt-4 leading-relaxed font-medium" style={{ color: C.textDim }}>
                     Share your payment screenshot on WhatsApp to instantly activate your plan.
                   </p>
                 </div>
