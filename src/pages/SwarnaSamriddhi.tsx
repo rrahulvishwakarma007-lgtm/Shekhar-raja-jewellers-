@@ -3,7 +3,8 @@ import { motion, AnimatePresence, useScroll, useTransform, useInView, Variants }
 import {
   Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
   ArrowRight, X, Smartphone, QrCode, Shield, ChevronDown,
-  Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon
+  Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
+  Heart, Menu, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -25,6 +26,17 @@ const C = {
   border:    'rgba(194,24,91,0.12)',
   borderBright:'rgba(194,24,91,0.3)',
 };
+
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Collections', path: '/collections' },
+  { name: 'Bridal', path: '/bridal' },
+  { name: 'Offers', path: '/offer' },
+  { name: 'Gold Rates', path: '/gold-rates' },
+  { name: 'About', path: '/about' },
+  { name: 'Contact', path: '/contact' },
+  { name: 'App', path: '/app' },
+];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const formatINR = (n: number) =>
@@ -90,10 +102,18 @@ export default function SwarnaSamriddhi() {
   const [installment, setInstallment] = useState(5000);
   const [showModal, setShowModal]     = useState(false);
   const [isMobile, setIsMobile]       = useState(false);
+  const [isScrolled, setIsScrolled]   = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMobile(/android|iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
+    
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -127,22 +147,116 @@ export default function SwarnaSamriddhi() {
     <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#C2185B] selection:text-white">
 
       {/* ════════════════════════════════════════════════════════
-          STANDALONE NAVBAR
+          MAIN WEBSITE NAVBAR
       ════════════════════════════════════════════════════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b transition-all duration-300" style={{ borderColor: C.border }}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group text-sm font-bold tracking-wide transition-colors hover:opacity-80" style={{ color: C.goldDeep }}>
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white shadow-sm border" style={{ borderColor: C.border }}>
-              <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? 'bg-[#faf7f2]/98 backdrop-blur-xl shadow-[0_4px_30px_rgba(58,46,30,0.12)]'
+            : 'bg-[#faf7f2]/95 backdrop-blur-md'
+        }`}
+      >
+        <div className={`h-[2px] bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014] transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-50'}`} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20 lg:h-24">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">Shekhar Raja</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="h-px w-3 sm:w-4 bg-gradient-to-r from-[#b8862a] to-transparent" />
+                  <span className="font-cinzel text-[8px] sm:text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+                  <div className="h-px w-3 sm:w-4 bg-gradient-to-l from-[#b8862a] to-transparent" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center bg-white/60 backdrop-blur-sm rounded-full px-1.5 py-1.5 border border-[rgba(184,134,42,0.15)] shadow-sm">
+                {navLinks.map((link) => {
+                  const isActive = link.path === '/offer'; // Active state fixed to this page
+                  return (
+                    <Link key={link.path} to={link.path} className={`relative px-4 xl:px-5 py-2 font-cinzel text-[11px] tracking-[0.12em] uppercase transition-all duration-300 rounded-full ${isActive ? 'text-white' : 'text-[#3a2e1e] hover:text-[#b8862a]'}`}>
+                      {isActive && (
+                        <motion.div layoutId="activeNavPill" className="absolute inset-0 bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                      )}
+                      <span className="relative z-10">{link.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-            <span className="hidden sm:block">Back to Home</span>
-          </Link>
-          <div className="flex flex-col items-end">
-            <span className="font-cormorant text-2xl sm:text-3xl font-bold leading-none" style={{ color: C.text }}>Shekhar Raja</span>
-            <span className="font-cinzel text-[8px] sm:text-[10px] tracking-[0.3em] font-bold" style={{ color: C.gold }}>JEWELLERS</span>
+
+            {/* Right Section */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/60 border border-[rgba(184,134,42,0.15)] text-[#9a8060] hover:text-[#b8862a] hover:border-[#b8862a]/30 transition-all duration-300">
+                <Heart size={18} />
+              </button>
+              <a href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20bd5a] text-white px-5 py-2.5 rounded-full font-raleway text-sm font-medium shadow-lg hover:shadow-xl hover:shadow-[#25D366]/30 transition-all duration-300 hover:-translate-y-0.5">
+                <MessageCircle size={16} />
+                <span>Enquire</span>
+              </a>
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-11 h-11 rounded-full bg-gradient-to-br from-[#faf7f2] to-white border border-[rgba(184,134,42,0.2)] text-[#3a2e1e] hover:bg-[#b8862a] hover:text-white hover:border-[#b8862a] transition-all duration-300 flex items-center justify-center shadow-sm">
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
-      </nav>
+        <div className={`h-[1px] bg-gradient-to-r from-transparent via-[#b8862a]/40 to-transparent transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-30'}`} />
+      </motion.nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-40 lg:hidden bg-gradient-to-b from-[#1a0f05] via-[#2a1a0a] to-[#1a0f05]">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014]" />
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, #b8862a 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+            </div>
+
+            <div className="flex flex-col h-full pt-24 pb-8 px-6 relative">
+              <div className="flex items-center gap-3 mb-10">
+                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 w-auto object-contain" />
+                <div className="flex flex-col">
+                  <span className="font-cormorant text-xl font-bold text-white">Shekhar Raja</span>
+                  <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+                </div>
+              </div>
+
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="space-y-1">
+                  {navLinks.map((link, index) => (
+                    <motion.div key={link.path} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.07, duration: 0.4, ease: 'easeOut' }}>
+                      <Link to={link.path} onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center justify-between py-3.5 border-b border-[#b8862a]/20 group ${link.path === '/offer' ? 'text-[#d4a843]' : 'text-white/70 hover:text-white'}`}>
+                        <div className="flex items-center gap-4">
+                          <span className="font-cinzel text-xs text-[#b8862a]/60">{String(index + 1).padStart(2, '0')}</span>
+                          <span className="font-cormorant text-2xl">{link.name}</span>
+                        </div>
+                        <ChevronRight size={20} className="text-[#b8862a] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                <motion.a initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#25D366] to-[#20bd5a] text-white py-4 rounded-xl font-raleway text-lg font-medium shadow-lg">
+                  <MessageCircle size={22} />
+                  <span>Chat on WhatsApp</span>
+                </motion.a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════
           GRAND HERO SECTION
