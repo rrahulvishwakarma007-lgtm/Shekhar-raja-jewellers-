@@ -322,7 +322,8 @@ export default function SwarnaSamriddhi() {
       {/* ════════════════════════════════════════════════════════
           FOOTER CTA
       ════════════════════════════════════════════════════════ */}
-      <section style={{ background: C.void }} className="relative overflow-hidden border-t" style={{ borderColor: C.border }}>
+      {/* FIXED DUAL STYLE ATTRIBUTE: Merged into a single style prop */}
+      <section className="relative overflow-hidden border-t" style={{ background: C.void, borderColor: C.border }}>
         <GoldParticles count={30} />
         <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }} transition={{ duration: 10, repeat: Infinity }} className="absolute inset-0 blur-[160px] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 80%, ${C.gold}, transparent 60%)` }} />
 
@@ -366,7 +367,7 @@ export default function SwarnaSamriddhi() {
 
               <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: C.border }}>
                 <div>
-                  <p className="font-cinzel text-[10px] font-bold tracking-[0.3em] uppercase mb-1" style={{ color: C.gold }}>SWARNA SAMRIDDHI YOJANA</p>
+                  <p className="font-cinzel text-[9px] font-bold tracking-[0.3em] uppercase mb-1" style={{ color: C.gold }}>SWARNA SAMRIDDHI YOJANA</p>
                   <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.textDark }}>योजना शुरू करें</h3>
                   <p className="font-raleway text-sm font-bold mt-1" style={{ color: C.textDarkMid }}>किस्त राशि: {formatINR(installment)}</p>
                 </div>
