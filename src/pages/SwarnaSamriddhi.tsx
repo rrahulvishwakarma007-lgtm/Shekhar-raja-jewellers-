@@ -4,7 +4,7 @@ import {
   Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
   ArrowRight, X, Smartphone, QrCode, Shield,
   Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
-  Heart, Menu, ChevronRight, Play
+  Heart, Menu, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -233,7 +233,7 @@ export default function SwarnaSamriddhi() {
             <div className="relative w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
               <motion.img 
                 style={{ scale: imgScale }}
-                src="https://images.unsplash.com/photo-1599643478524-fb66f7cefc11?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                src="/antique1.jpg" 
                 alt="Exquisite Gold Jewelry" 
                 className="w-full h-full object-cover"
               />
@@ -273,7 +273,7 @@ export default function SwarnaSamriddhi() {
       <section className="relative w-full h-[300px] sm:h-[400px] overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+            src="/Jadau Necklace8.jpg" 
             alt="Gold Details" 
             className="w-full h-full object-cover object-center"
           />
@@ -301,27 +301,27 @@ export default function SwarnaSamriddhi() {
           <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-8">
             {[
               { 
-                img: 'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                img: '/antique2.jpg',
                 title: '1. योजना चुनें', 
                 desc: '₹2,000 से लेकर ₹50,000 तक अपनी सुविधानुसार कोई भी मासिक किस्त राशि निर्धारित करें।' 
               },
               { 
-                img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                img: '/antique3.jpg',
                 title: '2. 10 किस्तें जमा करें', 
                 desc: 'लगातार 10 महीनों तक अपनी किस्त समय पर जमा करें। शेष 2 किस्तें हमारी ओर से मुफ्त दी जाएंगी।' 
               },
               { 
-                img: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                img: '/bangle1.png',
                 title: '3. आभूषण खरीदें', 
                 desc: '12वें महीने में अपने कुल जमा मूल्य (10+2) के बराबर अपनी पसंद का कोई भी सोने का आभूषण घर ले जाएं।' 
               },
             ].map((step, i) => (
               <motion.div key={i} variants={fadeUp} className="group cursor-pointer">
-                <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 rounded-sm shadow-md">
+                <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 rounded-sm shadow-md bg-[#f9f9f9]">
                   <motion.img 
                     whileHover={{ scale: 1.08 }} transition={{ duration: 0.6 }}
                     src={step.img} alt={step.title} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain mix-blend-multiply"
                   />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md w-10 h-10 flex items-center justify-center font-cormorant text-2xl font-bold rounded-sm shadow-sm" style={{ color: C.maroon }}>
                     {i+1}
