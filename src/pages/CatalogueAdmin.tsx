@@ -1,584 +1,642 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useInView, Variants } from 'framer-motion';
+// src/pages/CatalogueAdmin.tsx
+// Dependency: npm install react-qr-code
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import QRCode from 'react-qr-code';
 import {
-  Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
-  ArrowRight, X, Smartphone, QrCode, Shield, ChevronDown,
-  Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
-  Heart, Menu, ChevronRight
+  Copy, Check, Lock, Link as LinkIcon,
+  Clock, Diamond, Eye, EyeOff, Download,
+  QrCode, Share2, Printer, Package, ShoppingBag, RotateCcw, CheckCircle2
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { loadStockMap, saveStockMap, type StockStatus } from '../lib/stockStore';
+import { ALL_PRODUCTS } from './PrivateCatalogue';
 
-// ── Design tokens: High-Contrast Royal Pink + Gold Palette ─────────────
+const ADMIN_PASSWORD = 'srj123';
+
 const C = {
-  void:      '#FFF5F7',     // soft blush white
-  voidMid:   '#FCE4EC',     // light rose
-  voidLight: '#FFFFFF',     // pure white
-  gold:      '#C2185B',     // royal pink primary
-  goldPale:  '#F8BBD9',     // pale pink
-  goldDeep:  '#880E4F',     // deep pink for contrast
-  pink:      '#B8862A',     // warm luxury gold
-  cream:     '#FFFFFF',     
-  creamMid:  '#FDF8FA',     // ultra light pink-cream
-  text:      '#1A0010',     // near-black
-  textDim:   '#5A3A4A',     // muted burgundy
-  textDark:  '#1A0010',     
-  textDarkMid:'#6D1B4E',    // magenta text
-  border:    'rgba(194,24,91,0.12)',
-  borderBright:'rgba(194,24,91,0.3)',
+  bg:       '#FFF5F7',
+  gold:     '#C2185B',
+  goldDk:   '#880E4F',
+  goldPale: '#F8BBD9',
+  text:     '#1A0010',
+  textMid:  '#6D1B4E',
+  textLight:'#AD6888',
+  border:   'rgba(194,24,91,0.15)',
 };
 
-const navLinks = [
-  { name: 'Home', path: '/' },
-  { name: 'Collections', path: '/collections' },
-  { name: 'Bridal', path: '/bridal' },
-  { name: 'Offers', path: '/offer' },
-  { name: 'Gold Rates', path: '/gold-rates' },
-  { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
-  { name: 'App', path: '/app' },
+const CATEGORIES = [
+  { key:'bangles',     label:'Bangles',      icon:'📿' },
+  { key:'rings',       label:'Rings',        icon:'💍' },
+  { key:'womens_ring', label:"Women's Ring", icon:'💍' },
+  { key:'mens_ring',   label:"Men's Ring",   icon:'💍' },
+  { key:'necklaces',   label:'Necklaces',    icon:'✨' },
+  { key:'chokers',     label:'Chokers',      icon:'📿' },
+  { key:'earrings',    label:'Earrings',     icon:'🌸' },
+  { key:'pendants',    label:'Pendants',     icon:'💎' },
+  { key:'bridal',      label:'Bridal',       icon:'👑' },
+  { key:'chains',      label:'Chains',       icon:'⛓️' },
+  { key:'antique',     label:'Antique',      icon:'🏛️' },
 ];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-const formatINR = (n: number) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
+const DURATIONS = [
+  { label:'10 minutes', value: 10 * 60 * 1000      },
+  { label:'20 minutes', value: 20 * 60 * 1000      },
+  { label:'30 minutes', value: 30 * 60 * 1000      },
+  { label:'1 hour',     value: 60 * 60 * 1000      },
+  { label:'2 hours',    value: 2  * 60 * 60 * 1000 },
+  { label:'6 hours',    value: 6  * 60 * 60 * 1000 },
+  { label:'24 hours',   value: 24 * 60 * 60 * 1000 },
+];
 
-// ── Animated counter ──────────────────────────────────────────────────────────
-function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const [val, setVal] = useState(0);
-  
-  useEffect(() => {
-    if (!inView) return;
-    let start: number | null = null;
-    const tick = (ts: number) => {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setVal(Math.round(eased * to));
-      if (p < 1) requestAnimationFrame(tick);
-      else setVal(to);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, to, duration]);
-  
-  return <span ref={ref}>{prefix}{new Intl.NumberFormat('en-IN').format(val)}</span>;
+function generateToken(category: string, durationMs: number) {
+  return btoa(category + '|' + (Date.now() + durationMs));
 }
 
-// ── Gold shimmer particle ────────────────────────────────────────────────────
-function GoldParticles({ count = 20 }: { count?: number }) {
+function buildLink(token: string) {
+  return window.location.origin + '/catalogue?token=' + token;
+}
+
+function downloadQRFromDiv(divEl: HTMLDivElement | null, filename: string) {
+  if (!divEl) return;
+  const svgEl = divEl.querySelector('svg');
+  if (!svgEl) return;
+  const svgData = new XMLSerializer().serializeToString(svgEl);
+  const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const url     = URL.createObjectURL(svgBlob);
+  const img     = new Image();
+  img.onload    = () => {
+    const canvas    = document.createElement('canvas');
+    canvas.width    = 400; canvas.height = 400;
+    const ctx       = canvas.getContext('2d')!;
+    ctx.fillStyle   = '#FFFFFF';
+    ctx.fillRect(0, 0, 400, 400);
+    ctx.drawImage(img, 0, 0, 400, 400);
+    const a         = document.createElement('a');
+    a.download      = filename;
+    a.href          = canvas.toDataURL('image/png');
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
+const ALL_PRODUCTS_FLAT = Object.values(ALL_PRODUCTS).flat().map((p: any) => ({
+  id: String(p.id),
+  name: p.name,
+  category: p.category
+}));
+
+// ── Ambient Effects matching the PrivateCatalogue ──
+function Particles() {
+  const items = Array.from({ length: 12 }, (_, i) => i);
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {Array.from({ length: count }).map((_, i) => (
-        <motion.div key={i}
-          className="absolute rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top:  `${Math.random() * 100}%`,
-            background: i % 3 === 0 ? C.goldPale : i % 3 === 1 ? C.gold : C.pink,
-            width:  i % 5 === 0 ? 3 : 1.5,
-            height: i % 5 === 0 ? 3 : 1.5,
-            boxShadow: `0 0 ${i % 5 === 0 ? '8px' : '4px'} ${C.goldPale}`,
-          }}
-          animate={{
-            y:       [0, -(50 + Math.random() * 80), 0],
-            opacity: [0, 0.8, 0],
-            scale:   [0, 1.2, 0],
-          }}
-          transition={{
-            duration:  4 + Math.random() * 5,
-            repeat:    Infinity,
-            delay:     Math.random() * 5,
-            ease:      'easeInOut',
-          }}
-        />
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {items.map(i => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{ left: (8 + (i * 7.5) % 90) + '%', top: (10 + (i * 13) % 80) + '%' }}
+          animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], rotate: [0, 180, 360] }}
+          transition={{ duration: 5 + (i % 4), repeat: Infinity, delay: i * 0.4, ease:'easeInOut' }}
+        >
+          <Diamond size={i % 3 === 0 ? 12 : 8} style={{ color: C.goldPale }} />
+        </motion.div>
       ))}
     </div>
   );
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
-export default function SwarnaSamriddhi() {
-  const [installment, setInstallment] = useState(5000);
-  const [showModal, setShowModal]     = useState(false);
-  const [isMobile, setIsMobile]       = useState(false);
-  const [isScrolled, setIsScrolled]   = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsMobile(/android|iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
-    
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY  = useTransform(scrollYProgress, [0, 1], ['0%', '35%']);
-  const heroOp = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  const userTotal  = installment * 10;
-  const srjBonus   = installment * 2;
-  const grandTotal = userTotal + srjBonus;
-
-  // Payment Links
-  const upiId  = '8377911745@upi';
-  const note   = 'Swarna Samriddhi Installment';
-  const name   = 'Shekhar Raja Jewellers';
-  const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
-  const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
-  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* से जुड़ना चाहता/चाहती हूँ।\n\nमासिक किस्त: *${formatINR(installment)}*\nपेमेंट स्क्रीनशॉट संलग्न है।`;
-  const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
-
-  // Animation Variants
-  const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
-  };
-  const staggerContainer: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
-  };
-
+function AmbientBackground() {
   return (
-    <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#C2185B] selection:text-white">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <motion.div
+        animate={{ 
+          x: ['0%', '3%', '-2%', '0%'], 
+          y: ['0%', '-4%', '3%', '0%'],
+          scale: [1, 1.05, 0.95, 1]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full opacity-40 mix-blend-multiply filter blur-[100px]"
+        style={{ background: 'radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 70%)' }}
+      />
+      <motion.div
+        animate={{ 
+          x: ['0%', '-3%', '2%', '0%'], 
+          y: ['0%', '4%', '-3%', '0%'],
+          scale: [1, 0.95, 1.05, 1]
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full opacity-30 mix-blend-multiply filter blur-[120px]"
+        style={{ background: 'radial-gradient(circle, rgba(194,24,91,0.2) 0%, transparent 70%)' }}
+      />
+    </div>
+  );
+}
 
-      {/* ════════════════════════════════════════════════════════
-          MAIN WEBSITE NAVBAR
-      ════════════════════════════════════════════════════════ */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-[#faf7f2]/98 backdrop-blur-xl shadow-[0_4px_30px_rgba(58,46,30,0.12)]'
-            : 'bg-[#faf7f2]/95 backdrop-blur-md'
-        }`}
-      >
-        <div className={`h-[2px] bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014] transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-50'}`} />
+export default function CatalogueAdmin() {
+  const [password,      setPassword]      = useState('');
+  const [showPass,      setShowPass]      = useState(false);
+  const [authed,        setAuthed]        = useState(false);
+  const [wrongPass,     setWrongPass]     = useState(false);
+  const [activeTab,     setActiveTab]     = useState<'links'|'stock'>('links');
+  const [category,      setCategory]      = useState('bangles');
+  const [duration,      setDuration]      = useState(DURATIONS[2].value);
+  const [generatedLink, setGeneratedLink] = useState('');
+  const [copiedLink,    setCopiedLink]    = useState(false);
+  const [showQR,        setShowQR]        = useState(false);
+  const [history,       setHistory]       = useState<
+    { link: string; cat: string; exp: string; label: string }[]
+  >([]);
+  const [stockMap,      setStockMap]      = useState<Record<string,StockStatus>>(() => loadStockMap());
+  const [stockFilter,   setStockFilter]   = useState<'all'|'ready'|'ordered'>('all');
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 lg:h-24">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">Shekhar Raja</span>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="h-px w-3 sm:w-4 bg-gradient-to-r from-[#b8862a] to-transparent" />
-                  <span className="font-cinzel text-[8px] sm:text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
-                  <div className="h-px w-3 sm:w-4 bg-gradient-to-l from-[#b8862a] to-transparent" />
-                </div>
-              </div>
-            </Link>
+  const qrWrapRef = useRef<HTMLDivElement>(null);
 
-            {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center">
-              <div className="flex items-center bg-white/60 backdrop-blur-sm rounded-full px-1.5 py-1.5 border border-[rgba(184,134,42,0.15)] shadow-sm">
-                {navLinks.map((link) => {
-                  const isActive = link.path === '/offer'; // Active state fixed to this page
-                  return (
-                    <Link key={link.path} to={link.path} className={`relative px-4 xl:px-5 py-2 font-cinzel text-[11px] tracking-[0.12em] uppercase transition-all duration-300 rounded-full ${isActive ? 'text-white' : 'text-[#3a2e1e] hover:text-[#b8862a]'}`}>
-                      {isActive && (
-                        <motion.div layoutId="activeNavPill" className="absolute inset-0 bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
-                      )}
-                      <span className="relative z-10">{link.name}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+  const updateStock = (id: string, status: StockStatus) => {
+    const next = { ...stockMap, [id]: status };
+    setStockMap(next);
+    saveStockMap(next);
+  };
+
+  const resetAllToReady = () => {
+    const next: Record<string,StockStatus> = {};
+    ALL_PRODUCTS_FLAT.forEach(p => { next[p.id] = 'ready'; });
+    setStockMap(next);
+    saveStockMap(next);
+  };
+
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) { setAuthed(true); setWrongPass(false); }
+    else setWrongPass(true);
+  };
+
+  const handleGenerate = () => {
+    const token    = generateToken(category, duration);
+    const link     = buildLink(token);
+    const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
+    const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
+    const expTime  = new Date(Date.now() + duration).toLocaleTimeString();
+    setGeneratedLink(link);
+    setShowQR(false);
+    setHistory(prev => [{ link, cat: catLabel, exp: expTime, label: durLabel }, ...prev.slice(0, 9)]);
+  };
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(generatedLink);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const handleWhatsApp = () => {
+    const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
+    const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
+    const msg = `✨ *Shekhar Raja Jewellers*\n\nHere is your private *${catLabel} Collection* catalogue:\n\n🔗 ${generatedLink}\n\n⏱️ *This link expires in ${durLabel}*\n\n_For personal viewing only. Do not share._`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  const handleDownloadQR = () => {
+    const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? 'catalogue';
+    downloadQRFromDiv(qrWrapRef.current, `SRJ-${catLabel}-catalogue-QR.png`);
+  };
+
+  const handlePrint = () => {
+    const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
+    const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
+    const svgEl    = qrWrapRef.current?.querySelector('svg');
+    const svgData  = svgEl ? new XMLSerializer().serializeToString(svgEl) : '';
+    const win      = window.open('', '_blank')!;
+    
+    // Extracted HTML structure and properly escaped script tag for React compilers
+    const htmlStart = '<html><head><title>SRJ Catalogue QR</title>';
+    const htmlStyles = '<style>body{font-family:Georgia,serif;text-align:center;padding:40px;background:#fff;}.logo{font-size:28px;font-weight:bold;color:#880E4F;letter-spacing:4px;}.sub{font-size:12px;letter-spacing:8px;color:#AD6888;margin-top:4px;}svg{width:280px;height:280px;margin:30px auto;display:block;}.cat{font-size:22px;font-weight:bold;color:#1A0010;margin:16px 0 6px;}.info{font-size:13px;color:#6D1B4E;}.scan{font-size:14px;color:#AD6888;margin-top:20px;}.box{border:2px solid #F8BBD9;border-radius:20px;padding:30px;max-width:360px;margin:0 auto;}</style></head>';
+    const htmlBody = '<body><div class="box"><div class="logo">SHEKHAR RAJA</div><div class="sub">JEWELLERS</div>' + svgData + '<div class="cat">' + catLabel + ' Collection</div><div class="info">Private Catalogue · Expires in ' + durLabel + '</div><div class="scan">📱 Scan QR code to view the collection</div></div><script>window.onload=()=>window.print();</' + 'script></body></html>';
+
+    win.document.write(htmlStart + htmlStyles + htmlBody);
+    win.document.close();
+  };
+
+  if (!authed) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: C.bg }}>
+        <AmbientBackground />
+        <Particles />
+        <motion.div 
+          initial={{ opacity:0, y:40, scale: 0.95 }} 
+          animate={{ opacity:1, y:0, scale: 1 }} 
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="w-full max-w-sm relative z-10"
+        >
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl" style={{ border: '1px solid ' + C.border }}>
+            <div className="text-center mb-8">
+              <motion.div 
+                animate={{ rotateY: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: 'linear-gradient(135deg, ' + C.goldPale + ', #fff)', border: '1.5px solid ' + C.border, transformStyle: "preserve-3d" }}
+              >
+                <Lock size={28} style={{ color: C.gold }} />
+              </motion.div>
+              <h1 className="font-cormorant text-3xl font-bold" style={{ color: C.text }}> SRJ Catalogue Panel</h1>
+              <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>Catalogue Link & QR Generator</p>
             </div>
-
-            {/* Right Section */}
-            <div className="flex items-center gap-3 sm:gap-4">
-              <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/60 border border-[rgba(184,134,42,0.15)] text-[#9a8060] hover:text-[#b8862a] hover:border-[#b8862a]/30 transition-all duration-300">
-                <Heart size={18} />
-              </button>
-              <a href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20bd5a] text-white px-5 py-2.5 rounded-full font-raleway text-sm font-medium shadow-lg hover:shadow-xl hover:shadow-[#25D366]/30 transition-all duration-300 hover:-translate-y-0.5">
-                <MessageCircle size={16} />
-                <span>Enquire</span>
-              </a>
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-11 h-11 rounded-full bg-gradient-to-br from-[#faf7f2] to-white border border-[rgba(184,134,42,0.2)] text-[#3a2e1e] hover:bg-[#b8862a] hover:text-white hover:border-[#b8862a] transition-all duration-300 flex items-center justify-center shadow-sm">
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
+            <div className="space-y-4">
+              <div className="relative">
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  placeholder="Admin Password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                  className="w-full px-4 py-3 rounded-xl font-raleway text-sm outline-none pr-12 transition-all"
+                  style={{ border: '1.5px solid ' + (wrongPass ? '#EF4444' : C.border), background:'#FFF5F7', color: C.text }}
+                />
+                <button onClick={() => setShowPass(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2"
+                        style={{ color: C.textLight }}>
+                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <AnimatePresence>
+                {wrongPass ? (
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="font-raleway text-xs text-red-500 text-center">
+                    Incorrect password.
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+              <motion.button 
+                whileHover={{ scale: 1.02, boxShadow: '0 8px 20px rgba(194,24,91,0.25)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogin}
+                className="w-full py-3 rounded-xl text-white font-raleway font-medium transition-all"
+                style={{ background: 'linear-gradient(to right, ' + C.gold + ', ' + C.goldDk + ')' }}
+              >
+                Enter Shekhar Raja Jewellers Catalouge
+              </motion.button>
             </div>
           </div>
-        </div>
-        <div className={`h-[1px] bg-gradient-to-r from-transparent via-[#b8862a]/40 to-transparent transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-30'}`} />
-      </motion.nav>
+        </motion.div>
+      </div>
+    );
+  }
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-40 lg:hidden bg-gradient-to-b from-[#1a0f05] via-[#2a1a0a] to-[#1a0f05]">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014]" />
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, #b8862a 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="min-h-screen pt-8 pb-16 px-4 relative overflow-hidden" style={{ background: C.bg }}>
+      <AmbientBackground />
+      
+      <div className="max-w-2xl mx-auto relative z-10">
+
+        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }} className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 mb-2">
+            <motion.div animate={{ rotate:360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={13} style={{ color: C.gold }} />
+            </motion.div>
+            <span className="font-cinzel text-xs tracking-[0.25em]" style={{ color: C.gold }}>ADMIN PANEL</span>
+            <motion.div animate={{ rotate:-360 }} transition={{ duration:10, repeat:Infinity, ease:'linear' }}>
+              <Diamond size={13} style={{ color: C.gold }} />
+            </motion.div>
+          </div>
+          <h1 className="font-cormorant text-4xl font-bold" style={{ color: C.text }}> Shekhar Raja Jewellers Special Collections</h1>
+          <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
+            Generate private links + QR codes for customers
+          </p>
+        </motion.div>
+
+        <LayoutGroup>
+          <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }} className="flex gap-2 p-1 rounded-2xl mb-5 bg-white/80 backdrop-blur-md shadow-sm relative z-0" style={{ border: '1px solid ' + C.border }}>
+            {[
+              { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
+              { key:'stock', label:'Stock Manager',  icon:<Package size={15}/> },
+            ].map(tab => (
+              <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock')}
+                      className="relative flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-colors outline-none"
+                      style={{ color: activeTab === tab.key ? '#fff' : C.textLight, fontWeight: activeTab === tab.key ? 600 : 400 }}>
+                {activeTab === tab.key ? (
+                  <motion.div layoutId="mainAdminTab" className="absolute inset-0 rounded-xl -z-10 shadow-md" style={{ background: C.gold }} transition={{ type: "spring", stiffness: 300, damping: 25 }} />
+                ) : null}
+                <span className="relative z-10 flex items-center gap-2">{tab.icon} {tab.label}</span>
+              </button>
+            ))}
+          </motion.div>
+        </LayoutGroup>
+
+        {activeTab === 'stock' ? (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }} className="w-full">
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              {[
+                { label:'Total',   count: ALL_PRODUCTS_FLAT.length,                                               color: C.textMid  },
+                { label:'Ready',   count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ready').length,  color: '#2E7D32'  },
+                { label:'Ordered', count: ALL_PRODUCTS_FLAT.filter(p=>(stockMap[p.id]??'ready')==='ordered').length,color: C.gold     },
+              ].map((s, idx) => (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (idx * 0.1) }} key={s.label} className="bg-white rounded-2xl py-3 px-4 text-center shadow-sm" style={{ border: '1px solid ' + C.border }}>
+                  <p className="font-cormorant text-3xl font-bold" style={{ color: s.color }}>{s.count}</p>
+                  <p className="font-cinzel text-[10px] tracking-[0.2em] mt-0.5" style={{ color: C.textLight }}>{s.label.toUpperCase()}</p>
+                </motion.div>
+              ))}
             </div>
 
-            <div className="flex flex-col h-full pt-24 pb-8 px-6 relative">
-              <div className="flex items-center gap-3 mb-10">
-                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 w-auto object-contain" />
-                <div className="flex flex-col">
-                  <span className="font-cormorant text-xl font-bold text-white">Shekhar Raja</span>
-                  <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              {(['all','ready','ordered'] as const).map(f => (
+                <button key={f} onClick={() => setStockFilter(f)}
+                        className="px-4 py-1.5 rounded-full font-raleway text-xs transition-all active:scale-95"
+                        style={{
+                          background: stockFilter === f ? C.gold : 'rgba(194,24,91,0.06)',
+                          color:      stockFilter === f ? '#fff' : C.textLight,
+                          border:     '1px solid ' + (stockFilter === f ? C.gold : C.border),
+                        }}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={resetAllToReady}
+                      className="ml-auto flex items-center gap-1.5 px-4 py-1.5 rounded-full font-raleway text-xs transition-all hover:shadow-md"
+                      style={{ background:'rgba(194,24,91,0.06)', color: C.textMid, border: '1px solid ' + C.border }}>
+                <RotateCcw size={11}/> Reset All to Ready
+              </motion.button>
+            </div>
+
+            {CATEGORIES.map(cat => {
+              const catProducts = ALL_PRODUCTS_FLAT.filter(p => {
+                if (p.category.toLowerCase() !== cat.key && p.category.toLowerCase() !== cat.label.toLowerCase()) return false;
+                const status = stockMap[p.id] ?? 'ready';
+                if (stockFilter === 'ready')   return status === 'ready';
+                if (stockFilter === 'ordered') return status === 'ordered';
+                return true;
+              });
+              if (catProducts.length === 0) return null;
+              return (
+                <div key={cat.key} className="mb-4">
+                  <div className="flex items-center gap-2 mb-2 px-1">
+                    <span>{cat.icon}</span>
+                    <span className="font-cinzel text-xs tracking-[0.2em]" style={{ color: C.textLight }}>{cat.label.toUpperCase()}</span>
+                  </div>
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm" style={{ border: '1px solid ' + C.border }}>
+                    <AnimatePresence>
+                      {catProducts.map((product, idx) => {
+                        const status = stockMap[product.id] ?? 'ready';
+                        const isReady = status === 'ready';
+                        return (
+                          <motion.div key={product.id}
+                               initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(idx * 0.05, 0.5) }}
+                               className="flex items-center justify-between px-4 py-3 hover:bg-rose-50/50 transition-colors"
+                               style={{ borderBottom: idx < catProducts.length-1 ? ('1px solid ' + C.border) : 'none' }}>
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-colors duration-500"
+                                   style={{ background: isReady ? '#4CAF50' : C.gold }} />
+                              <div className="min-w-0">
+                                <p className="font-raleway text-sm font-medium truncate" style={{ color: C.text }}>{product.name}</p>
+                                <p className="font-cinzel text-[9px] tracking-[0.15em]" style={{ color: C.textLight }}>{product.category.toUpperCase()}</p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                              <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full transition-colors duration-500"
+                                    style={{
+                                      background: isReady ? 'rgba(76,175,80,0.1)' : 'rgba(194,24,91,0.1)',
+                                      color:      isReady ? '#2E7D32' : C.gold,
+                                    }}>
+                                {isReady ? '● READY' : '◆ ORDERED'}
+                              </span>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                onClick={() => updateStock(product.id, isReady ? 'ordered' : 'ready')}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-full font-raleway text-xs transition-colors duration-500 shadow-sm"
+                                style={{
+                                  background: isReady ? 'rgba(194,24,91,0.08)' : 'rgba(76,175,80,0.1)',
+                                  color:      isReady ? C.gold : '#2E7D32',
+                                  border:     '1px solid ' + (isReady ? C.border : 'rgba(76,175,80,0.3)'),
+                                }}
+                              >
+                                {isReady ? (
+                                  <span className="flex items-center gap-1"><ShoppingBag size={11}/> Mark Ordered</span>
+                                ) : (
+                                  <span className="flex items-center gap-1"><CheckCircle2 size={11}/> Mark Ready</span>
+                                )}
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </div>
                 </div>
+              );
+            })}
+
+            <div className="p-4 rounded-2xl mt-4" style={{ background:'rgba(194,24,91,0.04)', border: '1px solid ' + C.border }}>
+              <h3 className="font-cinzel text-xs tracking-[0.15em] mb-2" style={{ color: C.gold }}>HOW STOCK WORKS</h3>
+              <ol className="font-raleway text-sm space-y-1.5" style={{ color: C.textLight }}>
+                <li>1. All products start as <strong style={{color:'#2E7D32'}}>Ready Stock</strong></li>
+                <li>2. When a customer orders, tap <strong style={{color:C.gold}}>Mark Ordered</strong> — it moves automatically</li>
+                <li>3. Customers see live stock status on the private catalogue</li>
+                <li>4. Tap <strong style={{color:'#2E7D32'}}>Mark Ready</strong> when the piece is back in stock</li>
+              </ol>
+            </div>
+          </motion.div>
+        ) : null}
+
+        {activeTab === 'links' ? (
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }} className="w-full">
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-lg mb-6" style={{ border: '1px solid ' + C.border }}>
+              <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
+                SELECT CATEGORY
+              </label>
+              <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
+                {CATEGORIES.map(cat => (
+                  <motion.button key={cat.key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setCategory(cat.key)}
+                          className="flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-colors"
+                          style={{
+                            border: '1.5px solid ' + (category === cat.key ? C.gold : C.border),
+                            background: category === cat.key ? 'rgba(194,24,91,0.07)' : '#FFF5F7',
+                          }}>
+                    <motion.span animate={category === cat.key ? { scale: [1, 1.2, 1] } : {}} className="text-lg">{cat.icon}</motion.span>
+                    <span className="font-cinzel text-[9px] tracking-wide leading-tight text-center"
+                          style={{ color: category === cat.key ? C.gold : C.textLight }}>
+                      {cat.label}
+                    </span>
+                  </motion.button>
+                ))}
               </div>
 
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="space-y-1">
-                  {navLinks.map((link, index) => (
-                    <motion.div key={link.path} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.07, duration: 0.4, ease: 'easeOut' }}>
-                      <Link to={link.path} onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center justify-between py-3.5 border-b border-[#b8862a]/20 group ${link.path === '/offer' ? 'text-[#d4a843]' : 'text-white/70 hover:text-white'}`}>
-                        <div className="flex items-center gap-4">
-                          <span className="font-cinzel text-xs text-[#b8862a]/60">{String(index + 1).padStart(2, '0')}</span>
-                          <span className="font-cormorant text-2xl">{link.name}</span>
+              <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
+                LINK EXPIRY
+              </label>
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">
+                {DURATIONS.map(d => (
+                  <motion.button key={d.value} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDuration(d.value)}
+                          className="py-2 px-3 rounded-xl text-sm font-raleway transition-colors"
+                          style={{
+                            border: '1.5px solid ' + (duration === d.value ? C.gold : C.border),
+                            background: duration === d.value ? C.gold : '#FFF5F7',
+                            color: duration === d.value ? '#fff' : C.textMid,
+                          }}>
+                    {d.label}
+                  </motion.button>
+                ))}
+              </div>
+
+              <motion.button 
+                      whileHover={{ scale: 1.02, boxShadow: '0 8px 20px rgba(194,24,91,0.3)' }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={handleGenerate}
+                      className="w-full py-4 rounded-2xl text-white font-cormorant text-xl font-semibold flex items-center justify-center gap-3 shadow-lg transition-all"
+                      style={{ background: 'linear-gradient(135deg, ' + C.gold + ', ' + C.goldDk + ')' }}>
+                <LinkIcon size={20} />
+                Generate Link &amp; QR Code
+              </motion.button>
+            </div>
+
+            <AnimatePresence>
+              {generatedLink ? (
+                <motion.div initial={{ opacity:0, y:30, scale: 0.95 }} animate={{ opacity:1, y:0, scale: 1 }} exit={{ opacity:0, scale: 0.9 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                            className="bg-white/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl mb-6"
+                            style={{ border: '2px solid ' + C.gold }}>
+
+                  <div className="px-6 py-3 flex items-center gap-2"
+                       style={{ background:'rgba(194,24,91,0.06)', borderBottom: '1px solid ' + C.border }}>
+                    <Clock size={14} style={{ color: C.gold }} />
+                    <span className="font-cinzel text-xs tracking-[0.12em]" style={{ color: C.gold }}>
+                      {CATEGORIES.find(c => c.key === category)?.label?.toUpperCase()} · {DURATIONS.find(d => d.value === duration)?.label?.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="p-6">
+                    <LayoutGroup>
+                      <div className="flex gap-2 mb-5 p-1 rounded-2xl relative z-0" style={{ background:'#FFF5F7' }}>
+                        {[
+                          { label:'Link', icon:<LinkIcon size={15}/>, qr:false },
+                          { label:'QR Code', icon:<QrCode size={15}/>, qr:true  },
+                        ].map(tab => (
+                          <button key={tab.label} onClick={() => setShowQR(tab.qr)}
+                                  className="relative flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-colors outline-none"
+                                  style={{ color: showQR === tab.qr ? C.gold : C.textLight, fontWeight: showQR === tab.qr ? 600 : 400 }}>
+                            {showQR === tab.qr ? (
+                              <motion.div layoutId="generatorResultTab" className="absolute inset-0 rounded-xl -z-10 shadow-sm" style={{ background: '#fff' }} transition={{ type: "spring", stiffness: 300, damping: 25 }} />
+                            ) : null}
+                            <span className="relative z-10 flex items-center gap-2">{tab.icon} {tab.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </LayoutGroup>
+
+                    {!showQR ? (
+                      <motion.div initial={{ opacity:0, x: -10 }} animate={{ opacity:1, x: 0 }}>
+                        <div className="rounded-xl p-3 mb-4 font-mono text-xs break-all"
+                             style={{ background:'#FFF5F7', border: '1px solid ' + C.border, color: C.textMid }}>
+                          {generatedLink}
                         </div>
-                        <ChevronRight size={20} className="text-[#b8862a] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                      </Link>
+                        <div className="flex gap-3">
+                          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} onClick={handleCopyLink}
+                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm transition-colors"
+                                  style={{ border: '1.5px solid ' + C.border, color: C.gold, background: copiedLink ? 'rgba(194,24,91,0.06)' : '#FFF5F7' }}>
+                            {copiedLink ? (
+                              <span className="flex items-center gap-2"><Check size={15}/>Copied!</span>
+                            ) : (
+                              <span className="flex items-center gap-2"><Copy size={15}/>Copy Link</span>
+                            )}
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.03, boxShadow: '0 8px 15px rgba(37,211,102,0.3)' }} whileTap={{ scale: 0.95 }} onClick={handleWhatsApp}
+                                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-raleway text-sm text-white shadow-md"
+                                  style={{ background:'#25D366' }}>
+                            <Share2 size={15}/> Send on WhatsApp
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    ) : null}
+
+                    {showQR ? (
+                      <motion.div initial={{ opacity:0, scale:0.95 }} animate={{ opacity:1, scale:1 }}
+                                  className="flex flex-col items-center">
+                        <div className="relative p-5 rounded-3xl mb-5"
+                             style={{ background:'#fff', border: '2px solid ' + C.goldPale, boxShadow: '0 4px 30px rgba(194,24,91,0.1)' }}>
+                          {[
+                            'top-3 left-3 border-t-2 border-l-2 rounded-tl-md',
+                            'top-3 right-3 border-t-2 border-r-2 rounded-tr-md',
+                            'bottom-3 left-3 border-b-2 border-l-2 rounded-bl-md',
+                            'bottom-3 right-3 border-b-2 border-r-2 rounded-br-md',
+                          ].map((cls, i) => (
+                            <div key={i} className={"absolute w-5 h-5 " + cls} style={{ borderColor: C.gold }} />
+                          ))}
+
+                          <div ref={qrWrapRef}>
+                            <QRCode
+                              value={generatedLink}
+                              size={220}
+                              bgColor="#ffffff"
+                              fgColor="#1A0010"
+                              level="H"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="text-center mb-5">
+                          <p className="font-cormorant text-lg font-semibold" style={{ color: C.text }}>
+                            {CATEGORIES.find(c => c.key === category)?.label} Collection
+                          </p>
+                          <p className="font-raleway text-xs mt-1" style={{ color: C.textLight }}>
+                            Scan to view · Expires in {DURATIONS.find(d => d.value === duration)?.label}
+                          </p>
+                        </div>
+
+                        <div className="w-full grid grid-cols-3 gap-3">
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleDownloadQR}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-colors"
+                                  style={{ border: '1.5px solid ' + C.border, color: C.gold, background:'#FFF5F7' }}>
+                            <Download size={18}/> Download
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.05, boxShadow: '0 8px 15px rgba(37,211,102,0.3)' }} whileTap={{ scale: 0.95 }} onClick={handleWhatsApp}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs text-white shadow-md"
+                                  style={{ background:'#25D366' }}>
+                            <Share2 size={18}/> WhatsApp
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handlePrint}
+                                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-raleway text-xs transition-colors"
+                                  style={{ border: '1.5px solid ' + C.border, color: C.textMid, background:'#FFF5F7' }}>
+                            <Printer size={18}/> Print
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+
+            {history.length > 0 ? (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-sm mb-6" style={{ border: '1px solid ' + C.border }}>
+                <h3 className="font-cinzel text-xs tracking-[0.2em] mb-4" style={{ color: C.textLight }}>
+                  RECENT LINKS (THIS SESSION)
+                </h3>
+                <div className="space-y-2">
+                  {history.map((h, i) => (
+                    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={i} className="flex items-center justify-between p-3 rounded-xl"
+                         style={{ background:'#FFF5F7', border: '1px solid ' + C.border }}>
+                      <div className="min-w-0 flex-1">
+                        <span className="font-cinzel text-xs font-bold" style={{ color: C.text }}>{h.cat}</span>
+                        <span className="font-raleway text-xs ml-2" style={{ color: C.textLight }}>
+                          · {h.label} · exp {h.exp}
+                        </span>
+                      </div>
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => navigator.clipboard.writeText(h.link)}
+                              className="ml-2 p-1.5 rounded-lg hover:bg-pink-50 flex-shrink-0">
+                        <Copy size={13} style={{ color: C.textLight }} />
+                      </motion.button>
                     </motion.div>
                   ))}
                 </div>
-              </div>
-
-              <div className="space-y-5">
-                <motion.a initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#25D366] to-[#20bd5a] text-white py-4 rounded-xl font-raleway text-lg font-medium shadow-lg">
-                  <MessageCircle size={22} />
-                  <span>Chat on WhatsApp</span>
-                </motion.a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ════════════════════════════════════════════════════════
-          GRAND HERO SECTION
-      ════════════════════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative pt-48 pb-32 px-6 flex flex-col items-center justify-center overflow-hidden text-center min-h-[85vh]">
-        {/* Abstract Glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.08, 0.15, 0.08] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full blur-[120px]" style={{ background: C.gold }} />
-          <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.1, 0.05] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full blur-[140px]" style={{ background: C.pink }} />
-        </div>
-        
-        <GoldParticles count={30} />
-        
-        {/* Subtle Grid */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${C.goldDeep} 1px, transparent 1px), linear-gradient(90deg, ${C.goldDeep} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
-
-        <motion.div style={{ y: heroY, opacity: heroOp }} className="relative z-10 flex flex-col items-center max-w-4xl mx-auto">
-          
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="px-4 py-1.5 rounded-full mb-8 border backdrop-blur-sm shadow-sm flex items-center gap-2" style={{ background: 'rgba(255,255,255,0.6)', borderColor: C.borderBright }}>
-            <Shield size={12} style={{ color: C.gold }} />
-            <span className="font-cinzel text-[10px] tracking-[0.2em] uppercase font-bold" style={{ color: C.goldDeep }}>100% Secure & Transparent</span>
-          </motion.div>
-
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} className="font-cormorant font-bold mb-6 tracking-tight" style={{ fontSize: 'clamp(3.5rem, 8vw, 6.5rem)', lineHeight: 1.05, color: C.text }}>
-            स्वर्ण समृद्धि <span className="italic relative whitespace-nowrap" style={{ color: C.gold }}>
-              योजना
-              <svg className="absolute -bottom-2 sm:-bottom-4 left-0 w-full" viewBox="0 0 200 20" preserveAspectRatio="none">
-                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 1, duration: 1.5, ease: "easeInOut" }} d="M0,10 Q100,20 200,5" fill="none" stroke={C.goldPale} strokeWidth="4" strokeLinecap="round"/>
-              </svg>
-            </span>
-          </motion.h1>
-
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.8 }} className="font-raleway text-lg sm:text-2xl font-medium max-w-2xl mx-auto mb-12" style={{ color: C.textDim, lineHeight: 1.6 }}>
-            अपने सपनों के सोने के आभूषण अब आसान किस्तों में खरीदें। आज ही जुड़ें और शानदार लाभ उठाएं।
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-            <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full font-raleway font-bold text-sm tracking-widest uppercase text-white shadow-2xl transition-all" style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`, boxShadow: `0 20px 40px -10px ${C.gold}` }}>
-              {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />} योजना शुरू करें
-            </motion.button>
-            <motion.a href="#calculator" whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full font-raleway font-bold text-sm tracking-widest uppercase bg-white shadow-xl transition-all hover:bg-gray-50" style={{ border: `1px solid ${C.border}`, color: C.goldDeep }}>
-              <Calculator size={18} style={{ color: C.gold }} /> लाभ की गणना करें
-            </motion.a>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          THE EQUATION BAND (10 + 2 = 12) - Glassmorphism Upgrade
-      ════════════════════════════════════════════════════════ */}
-      <section className="py-20 relative z-20 -mt-10">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8, ease: "easeOut" }} 
-                      className="rounded-[2.5rem] p-10 sm:p-16 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12 select-none shadow-2xl backdrop-blur-xl border"
-                      style={{ background: 'rgba(255, 255, 255, 0.8)', borderColor: C.borderBright }}>
-            
-            <div className="flex flex-col items-center">
-              <span className="font-cormorant font-bold drop-shadow-sm" style={{ fontSize: 'clamp(4.5rem, 10vw, 7rem)', color: C.textDark, lineHeight: 0.9 }}>10</span>
-              <span className="font-cinzel text-xs sm:text-sm tracking-[0.3em] font-bold mt-4 uppercase px-4 py-1 rounded-full bg-gray-100" style={{ color: C.textDim }}>आपकी किस्तें</span>
-            </div>
-
-            <span className="font-cormorant font-light pb-6 sm:pb-10" style={{ fontSize: 'clamp(3rem, 6vw, 4rem)', color: C.goldPale }}>+</span>
-
-            <div className="flex flex-col items-center relative group">
-              <motion.span whileHover={{ scale: 1.1 }} className="font-cormorant font-bold relative z-10 transition-transform" style={{ fontSize: 'clamp(4.5rem, 10vw, 7rem)', color: C.gold, lineHeight: 0.9 }}>2</motion.span>
-              <span className="font-cinzel text-xs sm:text-sm tracking-[0.3em] font-bold mt-4 uppercase px-4 py-1 rounded-full relative z-10" style={{ background: `${C.gold}15`, color: C.goldDeep }}>हमारी किस्तें</span>
-              <div className="absolute inset-0 blur-2xl rounded-full bg-gradient-to-r from-[#C2185B] to-[#F8BBD9] opacity-30 group-hover:opacity-50 transition-opacity" />
-            </div>
-
-            <span className="font-cormorant font-light pb-6 sm:pb-10" style={{ fontSize: 'clamp(3rem, 6vw, 4rem)', color: C.goldPale }}>=</span>
-
-            <div className="flex flex-col items-center">
-              <span className="font-cormorant font-bold" style={{ fontSize: 'clamp(4.5rem, 10vw, 7rem)', color: C.pink, lineHeight: 0.9, background: `linear-gradient(135deg, ${C.pink}, #d4a843)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>12</span>
-              <span className="font-cinzel text-xs sm:text-sm tracking-[0.3em] font-bold mt-4 uppercase px-4 py-1 rounded-full" style={{ background: '#fdf8ec', color: C.pink }}>किस्तों का लाभ</span>
-            </div>
-            
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          FEATURES
-      ════════════════════════════════════════════════════════ */}
-      <section className="py-24 sm:py-32" style={{ background: C.creamMid }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
-            <span className="font-cinzel text-xs font-bold tracking-[0.4em] uppercase block mb-4" style={{ color: C.goldDeep }}>योजना की विशेषताएँ</span>
-            <h2 className="font-cormorant text-4xl sm:text-6xl font-bold" style={{ color: C.textDark }}>क्या मिलेगा आपको?</h2>
-          </motion.div>
-
-          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {[
-              { icon: Wallet,      title: 'आसान भुगतान', desc: 'ग्राहक केवल 10 मासिक किस्तें जमा करेगा। अपनी सुविधानुसार राशि चुनें।', accent: C.gold },
-              { icon: Gift,        title: '2 किस्तें मुफ्त', desc: 'अंतिम 2 किस्तों का पूर्ण भुगतान शेखर राजा ज्वेलर्स द्वारा किया जाएगा।', accent: C.pink },
-              { icon: ShoppingBag, title: 'पसंदीदा आभूषण', desc: 'कुल 12 किस्तों के मूल्य का अपनी पसंद का सोने का आभूषण खरीदें।', accent: C.goldDeep },
-            ].map((f, i) => (
-              <motion.div key={i} variants={fadeUp} whileHover={{ y: -8 }} className="p-10 rounded-[2rem] flex flex-col items-center text-center relative overflow-hidden group bg-white shadow-xl transition-all" style={{ border: `1px solid ${C.border}` }}>
-                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300" style={{ backgroundImage: `linear-gradient(to right, ${f.accent}, ${C.goldPale})` }} />
-                
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mb-8 relative">
-                  <div className="absolute inset-0 rounded-full opacity-10 transition-transform duration-500 group-hover:scale-150" style={{ background: f.accent }} />
-                  <div className="relative z-10 w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center border" style={{ borderColor: `${f.accent}30` }}>
-                    <f.icon size={26} style={{ color: f.accent }} />
-                  </div>
-                </div>
-                <h3 className="font-cormorant text-2xl sm:text-3xl font-bold mb-4" style={{ color: C.textDark }}>{f.title}</h3>
-                <p className="font-raleway text-sm sm:text-base leading-relaxed font-medium" style={{ color: C.textDim }}>{f.desc}</p>
               </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+            ) : null}
 
-      {/* ════════════════════════════════════════════════════════
-          FINTECH CALCULATOR
-      ════════════════════════════════════════════════════════ */}
-      <section id="calculator" className="py-24 sm:py-32 relative overflow-hidden" style={{ background: C.voidLight }}>
-        {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#FCE4EC] to-transparent opacity-40 pointer-events-none" />
-        
-        <div className="max-w-5xl mx-auto px-6 relative z-10">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-16">
-            <span className="font-cinzel text-xs font-bold tracking-[0.4em] uppercase block mb-4" style={{ color: C.goldDeep }}>Interactive Tool</span>
-            <h2 className="font-cormorant text-4xl sm:text-6xl font-bold" style={{ color: C.text }}>लाभ की गणना करें</h2>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="rounded-[2.5rem] p-8 sm:p-16 shadow-[0_20px_60px_-15px_rgba(194,24,91,0.15)] bg-white relative border" style={{ borderColor: C.borderBright }}>
-            
-            {/* Custom Fintech Slider */}
-            <div className="max-w-3xl mx-auto mb-16">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b border-dashed gap-4" style={{ borderColor: C.borderBright }}>
-                <label className="font-cinzel text-sm sm:text-base font-bold tracking-widest uppercase" style={{ color: C.textDarkMid }}>मासिक किस्त चुनें</label>
-                <motion.span key={installment} initial={{ scale: 1.1, color: C.gold }} animate={{ scale: 1, color: C.goldDeep }} className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums bg-gray-50 px-6 py-2 rounded-2xl border" style={{ borderColor: C.border }}>
-                  {formatINR(installment)}
-                </motion.span>
-              </div>
-              
-              <div className="relative pt-4 pb-2">
-                {/* Custom Slider Styling */}
-                <input type="range" min={2000} max={50000} step={1000} value={installment} onChange={e => setInstallment(Number(e.target.value))} 
-                       className="w-full h-3 rounded-full outline-none cursor-pointer appearance-none shadow-inner z-10 relative" 
-                       style={{ background: `linear-gradient(to right, ${C.goldDeep} ${(installment - 2000) / 48000 * 100}%, #FDE9F0 ${(installment - 2000) / 48000 * 100}%)` }} />
-                <style>{`
-                  input[type=range]::-webkit-slider-thumb {
-                    appearance: none; width: 32px; height: 32px; border-radius: 50%;
-                    background: #fff; border: 4px solid ${C.goldDeep};
-                    box-shadow: 0 4px 12px rgba(136, 14, 79, 0.4); cursor: grab; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                  }
-                  input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); }
-                `}</style>
-                <div className="flex justify-between mt-5">
-                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹2,000</span>
-                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹50,000</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Premium Result Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <div className="rounded-[1.5rem] p-8 text-center bg-[#FFFDFE] border hover:shadow-lg transition-shadow" style={{ borderColor: C.border }}>
-                <p className="font-cinzel text-xs font-bold tracking-widest uppercase mb-4" style={{ color: C.textDarkMid }}>आपकी 10 किस्तें</p>
-                <p className="font-cormorant text-4xl font-bold tabular-nums" style={{ color: C.text }}><CountUp to={userTotal} /></p>
-              </div>
-
-              <motion.div whileHover={{ scale: 1.02 }} className="rounded-[1.5rem] p-8 text-center relative overflow-hidden shadow-2xl" style={{ background: `linear-gradient(145deg, ${C.goldDeep}, ${C.gold})` }}>
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 50% 0%, #fff 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-5 py-1.5 rounded-b-xl shadow-md z-10">
-                  <span className="font-cinzel text-[10px] tracking-[0.2em] font-bold" style={{ color: C.goldDeep }}>FREE BONUS</span>
-                </div>
-                <p className="font-cinzel text-xs font-bold tracking-widest uppercase mb-4 mt-2 text-white/90 relative z-10">SRJ की 2 किस्तें</p>
-                <p className="font-cormorant text-5xl font-bold text-white tabular-nums relative z-10 drop-shadow-md">+ <CountUp to={srjBonus} /></p>
-              </motion.div>
-
-              <div className="rounded-[1.5rem] p-8 text-center bg-gray-50 border-2 hover:shadow-lg transition-shadow" style={{ borderColor: C.borderBright }}>
-                <p className="font-cinzel text-xs font-bold tracking-widest uppercase mb-4" style={{ color: C.goldDeep }}>कुल आभूषण मूल्य</p>
-                <p className="font-cormorant text-4xl font-bold tabular-nums" style={{ color: C.goldDeep }}><CountUp to={grandTotal} /></p>
-              </div>
-            </div>
-
-            <div className="flex justify-center border-t border-dashed pt-10" style={{ borderColor: C.borderBright }}>
-              <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="flex items-center gap-3 px-12 py-5 rounded-full font-raleway font-bold text-sm sm:text-base tracking-widest uppercase text-white shadow-xl" style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`, boxShadow: `0 15px 30px -10px ${C.goldDeep}` }}>
-                {isMobile ? <Smartphone size={20} /> : <QrCode size={20} />} भुगतान करें और शुरू करें <ArrowRight size={20} />
-              </motion.button>
+            <div className="p-6 rounded-2xl" style={{ background:'rgba(194,24,91,0.04)', border: '1px solid ' + C.border }}>
+              <h3 className="font-cinzel text-xs tracking-[0.15em] mb-3" style={{ color: C.gold }}>HOW TO USE</h3>
+              <ol className="font-raleway text-sm space-y-2" style={{ color: C.textLight }}>
+                <li>1. Pick category + expiry time → click Generate</li>
+                <li>2. <strong style={{ color: C.textMid }}>Link tab</strong> → copy or send via WhatsApp</li>
+                <li>3. <strong style={{ color: C.textMid }}>QR tab</strong> → download PNG, WhatsApp, or print</li>
+                <li>4. Customer scans QR or opens link → sees only that collection</li>
+                <li>5. After expiry → link &amp; QR both stop working automatically</li>
+              </ol>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          TERMS & CONDITIONS
-      ════════════════════════════════════════════════════════ */}
-      <section className="py-24 sm:py-32" style={{ background: C.voidMid }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-16">
-            <span className="font-cinzel text-xs tracking-[0.4em] uppercase font-bold block mb-4" style={{ color: C.goldDeep }}>Guidelines</span>
-            <h2 className="font-cormorant text-4xl sm:text-6xl font-bold" style={{ color: C.textDark }}>नियम एवं शर्तें</h2>
-          </motion.div>
-
-          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { icon: Clock,        text: 'योजना की कुल अवधि 12 माह की होगी।' },
-              { icon: CheckCircle2, text: 'ग्राहक को लगातार 10 मासिक किस्तें नियत समय पर जमा करनी अनिवार्य हैं।' },
-              { icon: Gift,         text: 'अंतिम 2 किस्तों (बोनस) का लाभ केवल योजना की सभी शर्तें सफलतापूर्वक पूरी करने पर ही देय होगा।' },
-              { icon: Star,         text: 'यह योजना विशेष रूप से केवल सोने के आभूषणों की खरीद पर लागू है।' },
-              { icon: Shield,       text: 'योजना का लाभ किसी भी स्थिति में नकद भुगतान (Cash) के रूप में नहीं दिया जाएगा।' },
-              { icon: CheckCircle2, text: 'प्रबंधन के पास बिना पूर्व सूचना के नियम एवं शर्तों में परिवर्तन करने का अधिकार सुरक्षित है।' },
-            ].map((t, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex items-start gap-5 p-6 rounded-3xl bg-white shadow-sm hover:shadow-md transition-shadow" style={{ border: `1px solid ${C.border}` }}>
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gray-50 border" style={{ borderColor: `${C.gold}20` }}>
-                  <t.icon size={20} style={{ color: C.goldDeep }} />
-                </div>
-                <p className="font-raleway text-sm sm:text-base font-semibold leading-relaxed pt-2" style={{ color: C.textDim }}>{t.text}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          FOOTER CTA
-      ════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-t py-32" style={{ background: C.voidLight, borderColor: C.border }}>
-        <GoldParticles count={40} />
-        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }} transition={{ duration: 12, repeat: Infinity }} className="absolute inset-0 blur-[150px] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 50%, ${C.gold}, transparent 70%)` }} />
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-            <span className="font-cinzel text-xs font-bold tracking-[0.5em] uppercase block mb-6" style={{ color: C.goldDeep }}>आज ही जुड़ें</span>
-            <h2 className="font-cormorant font-bold mb-6 tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', color: C.text, lineHeight: 1.1 }}>
-              अपने सपनों के गहनों की <em className="italic" style={{ color: C.gold }}>शुरुआत करें!</em>
-            </h2>
-            <p className="font-cormorant text-2xl sm:text-3xl font-bold italic mb-14" style={{ color: C.textDim }}>"सोना सिर्फ आभूषण नहीं, आपके भविष्य का निवेश है।"</p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-              <motion.button whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto flex items-center justify-center gap-3 px-12 py-5 rounded-full font-raleway font-bold text-sm tracking-widest uppercase text-white shadow-xl" style={{ background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`, boxShadow: `0 15px 30px -10px ${C.goldDeep}` }}>
-                {isMobile ? <Smartphone size={20} /> : <QrCode size={20} />} योजना शुरू करें
-              </motion.button>
-              <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }} className="w-full sm:w-auto flex items-center justify-center gap-3 px-12 py-5 rounded-full font-raleway font-bold text-sm tracking-widest uppercase text-white shadow-xl" style={{ background: '#25D366', boxShadow: '0 15px 30px -10px #25D366' }}>
-                <MessageCircle size={20} /> WhatsApp पर जुड़ें
-              </motion.a>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 font-raleway font-bold text-base bg-gray-50 py-4 px-8 rounded-full border inline-flex mx-auto" style={{ color: C.textDarkMid, borderColor: C.border }}>
-              <a href="tel:+918377911745" className="flex items-center gap-2 hover:text-[#C2185B] transition-colors"><span style={{ color: C.gold }}>☎</span> +91 83779 11745</a>
-              <div className="hidden sm:block w-px h-5" style={{ background: C.borderBright }} />
-              <a href="/" className="hover:text-[#C2185B] transition-colors">shekharrajajewellers.com</a>
-            </div>
-
-            <p className="font-cinzel text-xs font-bold tracking-[0.3em] mt-16 uppercase" style={{ color: C.goldDeep }}>विश्वास · शुद्धता · गुणवत्ता</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          MODERN PAYMENT MODAL
-      ════════════════════════════════════════════════════════ */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6" style={{ background: 'rgba(26,0,16,0.6)', backdropFilter: 'blur(16px)' }} onClick={() => setShowModal(false)}>
-            <motion.div initial={{ opacity: 0, y: 100, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 100, scale: 0.95 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} onClick={e => e.stopPropagation()} className="w-full sm:max-w-md overflow-hidden relative bg-white rounded-t-[32px] sm:rounded-[32px]" style={{ boxShadow: '0 -20px 80px rgba(0,0,0,0.2)' }}>
-              
-              {/* Premium Header */}
-              <div className="px-8 py-6 border-b relative overflow-hidden" style={{ borderColor: C.border, background: C.voidMid }}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl opacity-50 pointer-events-none" />
-                <div className="flex justify-between items-start relative z-10">
-                  <div>
-                    <span className="font-cinzel text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block bg-white px-2 py-0.5 rounded shadow-sm inline-block" style={{ color: C.goldDeep }}>Step 1 of 2</span>
-                    <h3 className="font-cormorant text-3xl font-bold" style={{ color: C.textDark }}>Start Your Plan</h3>
-                    <p className="font-raleway text-sm font-bold mt-1" style={{ color: C.textDarkMid }}>Installment: {formatINR(installment)}</p>
-                  </div>
-                  <button onClick={() => setShowModal(false)} className="w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-sm border hover:bg-gray-50 transition-colors" style={{ borderColor: C.border }}><X size={18} style={{ color: C.textDark }} /></button>
-                </div>
-              </div>
-
-              <div className="px-8 py-8 flex flex-col items-center gap-8">
-                
-                {/* 1. Payment Action */}
-                <div className="w-full">
-                  <p className="font-raleway font-bold text-sm mb-4 text-center text-gray-500 uppercase tracking-wider">
-                    {isMobile ? '1. Tap to Pay via UPI App' : '1. Scan to Pay via UPI'}
-                  </p>
-
-                  {isMobile ? (
-                    <div className="grid grid-cols-2 gap-4">
-                      {[
-                        { label: 'Google Pay',  href: `gpay://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR`, color: '#1a73e8' },
-                        { label: 'PhonePe',     href: `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR`,   color: '#5f259f' },
-                        { label: 'Paytm',       href: `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR`,   color: '#00baf2' },
-                        { label: 'Other Apps',  href: genericUpi,                                                                              color: '#333333' },
-                      ].map(btn => (
-                        <a key={btn.label} href={btn.href} className="py-4 rounded-2xl font-raleway font-bold text-sm text-center shadow-sm border bg-white hover:bg-gray-50 transition-colors" style={{ borderColor: `${btn.color}30`, color: btn.color }}>
-                          {btn.label}
-                        </a>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="p-4 rounded-3xl bg-white shadow-lg border" style={{ borderColor: C.borderBright }}>
-                        <img src={qrUrl} alt="UPI QR" className="w-56 h-56 object-contain rounded-xl" />
-                      </div>
-                      <p className="font-mono text-sm font-bold bg-gray-100 px-4 py-2 rounded-lg" style={{ color: C.textDarkMid }}>{upiId}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* 2. Verification Action */}
-                <div className="w-full border-t pt-8" style={{ borderColor: C.border }}>
-                  <p className="font-raleway font-bold text-sm mb-4 text-center text-gray-500 uppercase tracking-wider">
-                    2. Verify Payment
-                  </p>
-                  <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-5 rounded-2xl font-raleway font-bold text-white text-base shadow-xl" style={{ background: 'linear-gradient(135deg, #25D366, #128C7E)' }}>
-                    <ImageIcon size={20} /> Attach Screenshot on WhatsApp
-                  </motion.a>
-                  <p className="text-center font-raleway text-xs text-gray-400 mt-4 font-medium leading-relaxed">
-                    Take a screenshot of your successful payment and send it to us. Our team will instantly activate your plan.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        ) : null}
+      </div>
+    </motion.div>
   );
 }
