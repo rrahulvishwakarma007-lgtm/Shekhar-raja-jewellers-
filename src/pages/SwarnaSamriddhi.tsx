@@ -16,7 +16,9 @@ const C = {
   maroon:    '#832729',     // Deep heritage maroon (Primary)
   maroonLt:  '#A53540',     // Lighter maroon for hovers
   gold:      '#C5A059',     // Muted sophisticated gold
+  goldPale:  '#E8DCC4',     // Pale gold shimmer (Added back to fix TS error)
   goldLight: '#E8DCC4',     // Pale gold for borders
+  pink:      '#C5A059',     // Fallback for gold particles (Added back to fix TS error)
   text:      '#2C1A1D',     // Very dark brown/maroon for headings
   textDim:   '#5C4A4D',     // Muted text for paragraphs
   border:    'rgba(197, 160, 89, 0.3)', // Subtle gold border
@@ -291,7 +293,7 @@ export default function SwarnaSamriddhi() {
                 <span className="font-cormorant text-3xl" style={{ color: C.gold }}>+</span>
                 <div className="text-center">
                   <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.maroon }}>2</span>
-                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroonLt }}>MONTHS<br/>WE PAY</p>
+                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroon }}>MONTHS<br/>WE PAY</p>
                 </div>
               </div>
             </motion.div>
