@@ -267,7 +267,7 @@ export default function SwarnaSamriddhi() {
             <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
               <motion.video
                 style={{ scale: imgScale }}
-                src="/srjyojna.mp4"
+                src="/goldoffer.mp4"
                 autoPlay
                 loop
                 muted
