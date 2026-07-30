@@ -60,9 +60,9 @@ const categories = [
 
 // ── Collections ───────────────────────────────────────────────────────────────
 const collections = [
-  { id:1, name:'Maharani Bridal Set', category:'Bridal', image:'/necklace88.png', featured:true },
-  { id:2, name:'Diamond Ring', category:'Diamond', image:'/ring1.png', featured:false },
-  { id:3, name:'Temple Gold Necklace',category:'Temple', image:'/temple.png', featured:false },
+  { id:1, name:'Traditional Choker', category:'Bridal', image:'/Choker101.jpg', featured:true },
+  { id:2, name:'Classic Earrings', category:'Gold', image:'/earrings 101.jpg', featured:false },
+  { id:3, name:'Gold Earrings',category:'Earrings', image:'/earrings 102.jpg', featured:false },
 ];
 
 // ── Products ──────────────────────────────────────────────────────────────────
