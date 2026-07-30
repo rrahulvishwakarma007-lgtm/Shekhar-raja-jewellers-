@@ -67,9 +67,9 @@ const collections = [
 
 // ── Products ──────────────────────────────────────────────────────────────────
 const products = [
-  { id:1, name:'Bridal Chain',            category:'Bridal',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/bridal.png',     tag:'Bestseller' },
+  { id:1, name:'Bridal Chain',            category:'Bridal',  description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/bridal.png',     tag:'Bestseller' },
   { id:2, name:'Diamond Eternity Ring',  category:'Diamond',  description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring6.png',      tag:'Premium'    },
-  { id:3, name:'Antique Gold Jhumkas',   category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png', tag:'Heritage'   },
+  { id:3, name:'Antique Gold Jhumkas',   category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.',                 image:'/earrings13.png', tag:'Heritage'   },
   { id:4, name:'22KT Gold Bangles Set',  category:'Bangles',  description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle5.png',    tag:'Classic'    },
   { id:5, name:'Polki Diamond Ring',     category:'Rings',    description:'Uncut polki diamonds set in 22KT gold with a classic design.',                     image:'/ring7.png',      tag:'Exclusive'  },
   { id:6, name:'Temple Gold Haar',       category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',               image:'/necklace88.png', tag:'Traditional'},
@@ -160,7 +160,7 @@ function VideoCarousel() {
                 className="w-full h-full object-cover" 
               />
               
-              {/* Luxury Inactive Overlay (Matches the screenshot with dark magenta multiply) */}
+              {/* Luxury Inactive Overlay */}
               {!isActive && (
                 <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(136,14,79,0.7)', mixBlendMode: 'multiply' }} />
               )}
@@ -443,6 +443,30 @@ export default function Home() {
 
       </section>
       {/* ══ END HERO ══ */}
+
+      {/* ══ ZERO MAKING PROMO VIDEO ══ */}
+      <section className="py-8 sm:py-12" style={{ background: C.bg }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative rounded-3xl overflow-hidden shadow-2xl"
+            style={{ border: `1px solid ${C.borderMd}` }}
+          >
+            <video 
+              src="/zeromaking.mp4" 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="w-full h-auto object-cover max-h-[600px]"
+            />
+            {/* Soft inner shadow for cinematic depth */}
+            <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 40px rgba(26,0,16,0.1)' }} />
+          </motion.div>
+        </div>
+      </section>
 
       {/* ══ FEATURED COLLECTIONS ══ */}
       <section className="py-20 relative overflow-hidden" style={{ background: C.bgDeep }}>
