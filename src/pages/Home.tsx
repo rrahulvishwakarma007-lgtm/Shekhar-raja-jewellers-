@@ -454,7 +454,7 @@ export default function Home() {
           .sliding-teleprompter {
             display: inline-block;
             white-space: nowrap;
-            animation: scrollText 30s linear infinite;
+            animation: scrollText 150s linear infinite;
           }
         `}</style>
         <div className="sliding-teleprompter font-raleway text-sm md:text-base font-semibold tracking-wide text-white">
