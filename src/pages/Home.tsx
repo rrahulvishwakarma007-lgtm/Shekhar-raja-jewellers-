@@ -473,7 +473,7 @@ export default function Home() {
             style={{ border: `1px solid ${C.borderMd}` }}
           >
             <video
-              src="/zeromaking.mp4"
+              src="/makingoffer.mp4"
               autoPlay
               loop
               muted
