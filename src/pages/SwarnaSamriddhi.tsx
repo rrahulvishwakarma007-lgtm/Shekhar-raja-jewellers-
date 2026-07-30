@@ -59,6 +59,38 @@ function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: 
   return <span ref={ref}>{prefix}{new Intl.NumberFormat('en-IN').format(val)}</span>;
 }
 
+// ── Gold shimmer particle ────────────────────────────────────────────────────
+function GoldParticles({ count = 20 }: { count?: number }) {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {Array.from({ length: count }).map((_, i) => (
+        <motion.div key={i}
+          className="absolute rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top:  `${Math.random() * 100}%`,
+            background: i % 3 === 0 ? C.goldPale : i % 3 === 1 ? C.gold : C.pink,
+            width:  i % 5 === 0 ? 3 : 1.5,
+            height: i % 5 === 0 ? 3 : 1.5,
+            boxShadow: `0 0 ${i % 5 === 0 ? '8px' : '4px'} ${C.goldPale}`,
+          }}
+          animate={{
+            y:       [0, -(50 + Math.random() * 80), 0],
+            opacity: [0, 0.8, 0],
+            scale:   [0, 1.2, 0],
+          }}
+          transition={{
+            duration:  4 + Math.random() * 5,
+            repeat:    Infinity,
+            delay:     Math.random() * 5,
+            ease:      'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function SwarnaSamriddhi() {
   const [installment, setInstallment] = useState(5000);
@@ -191,7 +223,7 @@ export default function SwarnaSamriddhi() {
       </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════
-          EDITORIAL HERO SECTION (Tanishq Style Split Layout)
+          EDITORIAL HERO SECTION
       ════════════════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
@@ -227,50 +259,39 @@ export default function SwarnaSamriddhi() {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual (Simple Landscape Video with Floating Badge) */}
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex justify-center lg:justify-end">
-            {/* Landscape Frame */}
-            <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
-              <motion.video
+          {/* Right Visual (Tall Arched Media with Stacked Mobile Badge) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative flex flex-col items-center lg:items-end mt-4 lg:mt-0">
+            
+            {/* The Arch Frame */}
+            <div className="relative w-[85%] sm:w-[80%] lg:w-[400px] h-[400px] sm:h-[650px] rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
+              <motion.img 
                 style={{ scale: imgScale }}
-                src="/srjyojna.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
+                src="/antique1.jpg" 
+                alt="Exquisite Gold Jewelry" 
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
 
-            {/* Decorative Outline — offset so it doesn't clip */}
-            <div className="absolute top-3 -right-3 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
+            {/* Decorative Outline (Hidden on Mobile) */}
+            <div className="absolute top-4 -right-4 w-[90%] sm:w-[80%] lg:w-[400px] h-[650px] rounded-t-full border z-0 hidden lg:block" style={{ borderColor: C.gold }} />
 
-            {/* Floating Glass Badge (10+2) — bottom-right inside video, compact so showroom is fully visible */}
+            {/* Floating Glass Badge (10+2) */}
             <motion.div 
-              animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-xl z-30 shadow-xl"
-              style={{
-                border: `1px solid ${C.border}`,
-                borderRadius: '1rem',
-                padding: '12px 16px',
-              }}
+              animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="mt-6 lg:mt-0 relative lg:absolute lg:-bottom-8 lg:-left-12 bg-white/90 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30 w-[90%] lg:w-auto flex flex-col items-center lg:items-start" 
+              style={{ border: `1px solid ${C.border}`, borderRadius: '2rem 2rem 2rem 0' }}
             >
-              <span className="font-cinzel text-[8px] tracking-widest uppercase mb-2 block" style={{ color: C.gold }}>Golden Benefit</span>
-              <div className="flex items-center gap-3">
+              <span className="font-cinzel text-xs tracking-widest uppercase mb-3 block" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
-                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
+                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.textDim }}>MONTHS<br/>YOU PAY</p>
                 </div>
-                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
+                <span className="font-cormorant text-3xl" style={{ color: C.gold }}>+</span>
                 <div className="text-center">
-                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
-                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
-                </div>
-                <div className="w-px h-8 mx-1" style={{ background: C.border }} />
-                <div className="text-center">
-                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
-                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
+                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroonLt }}>MONTHS<br/>WE PAY</p>
                 </div>
               </div>
             </motion.div>
@@ -333,7 +354,7 @@ export default function SwarnaSamriddhi() {
                   <motion.img 
                     whileHover={{ scale: 1.08 }} transition={{ duration: 0.6 }}
                     src={step.img} alt={step.title} 
-                    className="w-full h-full object-contain mix-blend-multiply"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md w-10 h-10 flex items-center justify-center font-cormorant text-2xl font-bold rounded-sm shadow-sm" style={{ color: C.maroon }}>
                     {i+1}
