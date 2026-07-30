@@ -16,9 +16,7 @@ const C = {
   maroon:    '#832729',     // Deep heritage maroon (Primary)
   maroonLt:  '#A53540',     // Lighter maroon for hovers
   gold:      '#C5A059',     // Muted sophisticated gold
-  goldPale:  '#E8DCC4',     // Pale gold shimmer (Added back to fix TS error)
   goldLight: '#E8DCC4',     // Pale gold for borders
-  pink:      '#C5A059',     // Fallback for gold particles (Added back to fix TS error)
   text:      '#2C1A1D',     // Very dark brown/maroon for headings
   textDim:   '#5C4A4D',     // Muted text for paragraphs
   border:    'rgba(197, 160, 89, 0.3)', // Subtle gold border
@@ -225,7 +223,7 @@ export default function SwarnaSamriddhi() {
       </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════
-          EDITORIAL HERO SECTION
+          EDITORIAL HERO SECTION (Tanishq Style Split Layout)
       ════════════════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
@@ -261,39 +259,70 @@ export default function SwarnaSamriddhi() {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual (Tall Arched Media with Stacked Mobile Badge) */}
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative flex flex-col items-center lg:items-end mt-4 lg:mt-0">
-            
-            {/* The Arch Frame */}
-            <div className="relative w-[85%] sm:w-[80%] lg:w-[400px] h-[400px] sm:h-[650px] rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
-              <motion.img 
+          {/* Right Visual (Simple Landscape Video with Floating Badge) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex flex-col items-center lg:items-end">
+            {/* Landscape Frame */}
+            <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
+              <motion.video
                 style={{ scale: imgScale }}
-                src="/antique1.jpg" 
-                alt="Exquisite Gold Jewelry" 
+                src="/srjyojna.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
 
-            {/* Decorative Outline (Hidden on Mobile) */}
-            <div className="absolute top-4 -right-4 w-[90%] sm:w-[80%] lg:w-[400px] h-[650px] rounded-t-full border z-0 hidden lg:block" style={{ borderColor: C.gold }} />
+            {/* Decorative Outline — offset so it doesn't clip */}
+            <div className="absolute top-3 -right-3 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
 
-            {/* Floating Glass Badge (10+2) */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="mt-6 lg:mt-0 relative lg:absolute lg:-bottom-8 lg:-left-12 bg-white/90 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30 w-[90%] lg:w-auto flex flex-col items-center lg:items-start" 
-              style={{ border: `1px solid ${C.border}`, borderRadius: '2rem 2rem 2rem 0' }}
-            >
-              <span className="font-cinzel text-xs tracking-widest uppercase mb-3 block" style={{ color: C.gold }}>Golden Benefit</span>
-              <div className="flex items-center gap-4">
+            {/* Golden Benefit Badge — below video on mobile, overlaid inside on sm+ */}
+
+            {/* MOBILE: sits below the video, full-width pill row, no overlap */}
+            <div className="flex sm:hidden items-center justify-center gap-6 mt-4 w-full px-4 py-3 rounded-2xl"
+                 style={{ background: '#fff', border: `1px solid ${C.border}`, boxShadow:'0 4px 16px rgba(197,160,89,0.12)' }}>
+              <span className="font-cinzel text-[8px] tracking-widest uppercase self-center" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-3">
                 <div className="text-center">
-                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>10</span>
-                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.textDim }}>MONTHS<br/>YOU PAY</p>
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
                 </div>
-                <span className="font-cormorant text-3xl" style={{ color: C.gold }}>+</span>
+                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
                 <div className="text-center">
-                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.maroon }}>2</span>
-                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroon }}>MONTHS<br/>WE PAY</p>
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
+                </div>
+                <div className="w-px h-6" style={{ background: C.border }} />
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
+                </div>
+              </div>
+            </div>
+
+            {/* SM+: floating overlay inside video, bottom-right corner, compact */}
+            <motion.div
+              animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-xl z-30 shadow-xl hidden sm:block"
+              style={{ border: `1px solid ${C.border}`, borderRadius: '1rem', padding: '12px 16px' }}
+            >
+              <span className="font-cinzel text-[8px] tracking-widest uppercase mb-2 block" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
+                </div>
+                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
+                </div>
+                <div className="w-px h-8 mx-1" style={{ background: C.border }} />
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
                 </div>
               </div>
             </motion.div>
