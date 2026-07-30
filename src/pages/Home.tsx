@@ -87,11 +87,10 @@ const trustItems = [
 
 // ── Promo banners ──────────────────────────────────────────────────────────────
 const promoBanners = [
-  { label:'0% Deduction on Old Gold Exchange', img:'/hero2.jpg',  cta:'Exchange Now' },
-  { label:'Flat 9% Off Making Charges',        img:'/hero1.jpg',  cta:'Shop Now'     },
-  { label:'Gold Earrings Collection',          img:'/slide3.jpg', cta:'Shop Now'     },
-  { label:'Gold Bangles Collection',           img:'/slide4.jpg', cta:'Explore Now'  },
-  { label:'Royal Necklace Collection',         img:'/slide5.jpg', cta:'View Now'     },
+  { label:'0% Deduction on Old Gold Exchange', img:'/zeromaking.png',     cta:'Exchange Now' },
+  { label:'Swarna Samriddhi Yojana',           img:'/swarnasamriddhi.png', cta:'View Offer'   },
+  { label:'Flat 9% Off Making Charges',        img:'/hero1.jpg',           cta:'Shop Now'     },
+  { label:'Gold Bangles Collection',           img:'/slide4.jpg',          cta:'Explore Now'  },
 ];
 
 // ── Video Carousel ─────────────────────────────────────────────────────────────
@@ -649,7 +648,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Realistic Phone Mockup */}
+            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
