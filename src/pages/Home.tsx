@@ -133,11 +133,6 @@ function VideoCarousel() {
 
   return (
     <div className="relative">
-      {/* 
-        FIX APPLIED: Added py-12 (48px top and bottom padding) to the container. 
-        This prevents the glowing shadow and scaled height of the active reel from 
-        getting cropped by the overflow-x-auto bounds.
-      */}
       <div ref={trackRef} className="flex items-center gap-4 sm:gap-6 overflow-x-auto py-12 px-6 sm:px-12 scroll-smooth" style={{ scrollbarWidth:'none' }}>
         {VIDEOS.map((src, i) => {
           const isActive = i === active;
@@ -160,7 +155,6 @@ function VideoCarousel() {
                 className="w-full h-full object-cover" 
               />
               
-              {/* Luxury Inactive Overlay */}
               {!isActive && (
                 <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(136,14,79,0.7)', mixBlendMode: 'multiply' }} />
               )}
@@ -168,7 +162,6 @@ function VideoCarousel() {
                 <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(26,0,16,0.2)' }} />
               )}
               
-              {/* Glass Frosted Play Button for Inactive Slides */}
               {!isActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 transition-transform duration-300">
@@ -177,12 +170,10 @@ function VideoCarousel() {
                 </div>
               )}
 
-              {/* Active Inner Shadow for cinematic depth */}
               {isActive && (
                 <div className="absolute inset-0 pointer-events-none transition-opacity duration-500" style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.3)' }} />
               )}
 
-              {/* Numbering at bottom left */}
               <div className="absolute bottom-5 left-5">
                 <span className={`font-cinzel text-xs tracking-[0.2em] font-bold ${isActive ? 'text-white drop-shadow-md' : 'text-white/60'}`}>
                   {String(i + 1).padStart(2, '0')}
@@ -237,8 +228,8 @@ function HomeSkeleton() {
         </div>
 
         {/* Promo Banner Skeleton */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          <div className="w-full rounded-3xl h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+        <div className="w-full overflow-hidden pb-8 pt-4">
+          <div className="w-[90%] mx-auto rounded-3xl h-[200px] sm:h-[350px] md:h-[450px] lg:h-[500px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
         </div>
       </section>
     </div>
@@ -335,7 +326,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── CATEGORY ROW (CaratLane squares) ── */}
+        {/* ── CATEGORY ROW ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
           <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2" style={{ scrollbarWidth:'none' }}>
             {categories.map((cat, i) => (
@@ -354,7 +345,6 @@ export default function Home() {
                   whileHover={{ scale:1.05, boxShadow:`0 6px 20px rgba(194,24,91,0.2)` }}>
                   <img src={cat.image} alt={cat.name}
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                  {/* subtle gold overlay on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                        style={{ background:`linear-gradient(to bottom, transparent 40%, ${C.goldBorder} 100%)` }} />
                 </motion.div>
@@ -369,58 +359,57 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── PROMO HERO BANNER (auto-rotating) ── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-          <div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px]" style={{ perspective: 1500, background: C.bgDeep }}>
-            
-            {/* Shimmer effect stays active underneath images until they cover it */}
-            <div className="absolute inset-0 animate-pulse opacity-50" style={{ background: C.goldPale }} />
+        {/* ── TANISHQ-STYLE CENTER MODE CAROUSEL ── */}
+        <div className="w-full relative overflow-hidden py-4 sm:py-6" style={{ background: C.bg }}>
+          {/* Main slider track */}
+          <div className="relative h-[200px] sm:h-[350px] md:h-[450px] lg:h-[500px] w-full flex items-center justify-center">
+            {promoBanners.map((banner, i) => {
+              // Calculate offset relative to the active slide (-1, 0, 1)
+              let offset = 0;
+              if (i === promoBanner) offset = 0;
+              else if (i === (promoBanner + 1) % promoBanners.length) offset = 1;
+              else if (i === (promoBanner - 1 + promoBanners.length) % promoBanners.length) offset = -1;
+              else offset = i > promoBanner ? 2 : -2; // Hide others further away
 
-            {/* Static fallback for the very first image to ensure instant loading */}
-            <img 
-              src={promoBanners[0].img} 
-              alt={promoBanners[0].label} 
-              className="absolute inset-0 w-full h-full object-cover object-center z-0" 
-              style={{ opacity: promoBanner === 0 ? 1 : 0, transition: 'opacity 0.8s ease' }}
-            />
-
-            {/* Render all banners instantly to force immediate browser downloads */}
-            {promoBanners.map((banner, i) => (
-              i !== 0 && (
-                <motion.div 
-                  key={i} 
-                  className="absolute inset-0"
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute w-[92%] sm:w-[85%] lg:w-[80%] h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg cursor-grab active:cursor-grabbing"
                   initial={false}
-                  animate={{ 
-                    rotateY: i === promoBanner ? 0 : (i < promoBanner ? -90 : 90),
-                    opacity: i === promoBanner ? 1 : 0,
-                    zIndex: i === promoBanner ? 10 : 0
+                  animate={{
+                    x: `${offset * 104}%`, // 104% creates a small visual gap between slides
+                    scale: offset === 0 ? 1 : 0.92, // Scale down the adjacent side-slides
+                    opacity: Math.abs(offset) > 1 ? 0 : (offset === 0 ? 1 : 0.6), // Dim the adjacent slides slightly
+                    zIndex: offset === 0 ? 10 : 5,
                   }}
-                  style={{ transformOrigin: "left center", backfaceVisibility: "hidden", pointerEvents: i === promoBanner ? 'auto' : 'none' }}
-                  transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+                  transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, info) => {
+                    // Swipe logic to switch banners manually
+                    if (info.offset.x < -50) setPromoBanner(p => (p + 1) % promoBanners.length);
+                    if (info.offset.x > 50) setPromoBanner(p => (p - 1 + promoBanners.length) % promoBanners.length);
+                  }}
                 >
-                  <img 
-                    src={banner.img} 
-                    alt={banner.label} 
-                    className="w-full h-full object-cover object-center" 
-                  />
+                  <img src={banner.img} alt={banner.label} className="w-full h-full object-cover object-center pointer-events-none" />
                 </motion.div>
-              )
-            ))}
+              );
+            })}
+          </div>
 
-            {/* Dot indicators */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-              {promoBanners.map((_, i) => (
-                <button key={i} onClick={() => setPromoBanner(i)}
-                        className="rounded-full transition-all duration-300"
-                        style={{ width: i === promoBanner ? 28 : 8, height:8,
-                                 background: i === promoBanner ? C.gold : 'rgba(255,255,255,0.6)' }} />
-              ))}
-            </div>
+          {/* Dots Indicator */}
+          <div className="flex justify-center gap-2 mt-4 sm:mt-6 z-20 relative">
+            {promoBanners.map((_, i) => (
+              <button key={i} onClick={() => setPromoBanner(i)}
+                      className="rounded-full transition-all duration-300"
+                      style={{ width: i === promoBanner ? 32 : 8, height: 8,
+                               background: i === promoBanner ? C.gold : C.goldPale }} />
+            ))}
           </div>
         </div>
 
-        {/* ── BOTTOM NAV TABS (CaratLane style) ── */}
+        {/* ── BOTTOM NAV TABS ── */}
         <div style={{ background:'#fff', borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
           <div className="max-w-7xl mx-auto">
             <div className="flex overflow-x-auto" style={{ scrollbarWidth:'none' }}>
@@ -660,7 +649,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
+            {/* Realistic Phone Mockup */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
