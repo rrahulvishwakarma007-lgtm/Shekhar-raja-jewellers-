@@ -7,7 +7,7 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Collections', path: '/collections' },
   { name: 'Bridal', path: '/bridal' },
-  { name: 'Offers', path: '/offer' }, // ← ADDED OFFERS LINK HERE
+  { name: 'Swarna Samriddhi Yojana', path: '/offer' }, // ← ADDED OFFERS LINK HERE
   { name: 'Gold Rates', path: '/gold-rates' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
