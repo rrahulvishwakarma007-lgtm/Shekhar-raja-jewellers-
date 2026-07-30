@@ -227,10 +227,10 @@ export default function SwarnaSamriddhi() {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual (Tall Arched Image with Floating Badge) */}
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative flex justify-center lg:justify-end h-[500px] sm:h-[650px]">
-            {/* The Arch Frame */}
-            <div className="relative w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
+          {/* Right Visual (Simple Landscape Video with Floating Badge) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex justify-center lg:justify-end">
+            {/* Landscape Frame */}
+            <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
               <motion.video
                 style={{ scale: imgScale }}
                 src="/srjyojna.mp4"
@@ -244,12 +244,12 @@ export default function SwarnaSamriddhi() {
             </div>
 
             {/* Decorative Outline */}
-            <div className="absolute top-4 -right-4 w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
+            <div className="absolute top-4 -right-4 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
 
             {/* Floating Glass Badge (10+2) */}
             <motion.div 
               animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -bottom-8 -left-4 sm:-left-12 bg-white/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30" 
+              className="absolute -bottom-8 -left-4 sm:-left-8 bg-white/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30" 
               style={{ border: `1px solid ${C.border}`, borderRadius: '2rem 2rem 2rem 0' }}
             >
               <span className="font-cinzel text-xs tracking-widest uppercase mb-3 block" style={{ color: C.gold }}>Golden Benefit</span>
