@@ -243,25 +243,34 @@ export default function SwarnaSamriddhi() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
 
-            {/* Decorative Outline */}
-            <div className="absolute top-4 -right-4 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
+            {/* Decorative Outline — offset so it doesn't clip */}
+            <div className="absolute top-3 -right-3 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
 
-            {/* Floating Glass Badge (10+2) */}
+            {/* Floating Glass Badge (10+2) — bottom-right inside video, compact so showroom is fully visible */}
             <motion.div 
-              animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -bottom-8 -left-4 sm:-left-8 bg-white/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl z-30" 
-              style={{ border: `1px solid ${C.border}`, borderRadius: '2rem 2rem 2rem 0' }}
+              animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-xl z-30 shadow-xl"
+              style={{
+                border: `1px solid ${C.border}`,
+                borderRadius: '1rem',
+                padding: '12px 16px',
+              }}
             >
-              <span className="font-cinzel text-xs tracking-widest uppercase mb-3 block" style={{ color: C.gold }}>Golden Benefit</span>
-              <div className="flex items-center gap-4">
+              <span className="font-cinzel text-[8px] tracking-widest uppercase mb-2 block" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-3">
                 <div className="text-center">
-                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>10</span>
-                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.textDim }}>MONTHS<br/>YOU PAY</p>
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
                 </div>
-                <span className="font-cormorant text-3xl" style={{ color: C.gold }}>+</span>
+                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
                 <div className="text-center">
-                  <span className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.maroon }}>2</span>
-                  <p className="font-cinzel text-[8px] sm:text-[10px] tracking-wider font-bold mt-1" style={{ color: C.maroonLt }}>MONTHS<br/>WE PAY</p>
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
+                </div>
+                <div className="w-px h-8 mx-1" style={{ background: C.border }} />
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
                 </div>
               </div>
             </motion.div>
