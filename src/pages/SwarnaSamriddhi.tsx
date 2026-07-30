@@ -1,759 +1,586 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useInView, Variants } from 'framer-motion';
+import {
+  Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
+  ArrowRight, X, Smartphone, QrCode, Shield,
+  Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
+  Heart, Menu, ChevronRight
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Download, Smartphone, Tag, Bell, Headphones, Sparkles, Diamond, Crown, Search, MapPin } from 'lucide-react';
-import ProductModal from '../components/ProductModal';
 
-// ── Palette ───────────────────────────────────────────────────────────────────
+// ── Tanishq-Inspired Heritage Luxury Palette ─────────────
 const C = {
-bg: '#FFF5F7', // soft blush white
-bgCard: '#FFFFFF',
-bgDeep: '#FFE4EC', // light rose
-gold: '#C2185B', // royal pink (deep rose)
-goldDk: '#880E4F', // dark magenta
-goldLt: '#E91E8C', // bright pink
-goldPale: '#F8BBD9', // pale pink
-goldBg: 'rgba(194,24,91,0.08)',
-text: '#1A0010', // near black with pink tint
-textMid: '#6D1B4E', // deep rose text
-textLight: '#AD6888', // muted rose
-border: 'rgba(194,24,91,0.15)',
-borderMd: 'rgba(194,24,91,0.30)',
-shadow: 'rgba(194,24,91,0.08)',
-goldBorder:'rgba(194,24,91,0.25)',
+  void:      '#FAF7F2',     // Ivory / Cream base
+  voidMid:   '#F4EFEA',     // Slightly darker ivory for contrast sections
+  voidLight: '#FFFFFF',     // Pure white
+  maroon:    '#832729',     // Deep heritage maroon (Primary)
+  maroonLt:  '#A53540',     // Lighter maroon for hovers
+  gold:      '#C5A059',     // Muted sophisticated gold
+  goldPale:  '#E8DCC4',     // Pale gold shimmer (Added to fix TS error)
+  goldLight: '#E8DCC4',     // Pale gold for borders
+  pink:      '#C5A059',     // Fallback for gold particles (Added to fix TS error)
+  text:      '#2C1A1D',     // Very dark brown/maroon for headings
+  textDim:   '#5C4A4D',     // Muted text for paragraphs
+  border:    'rgba(197, 160, 89, 0.3)', // Subtle gold border
 };
 
-// ── Hero Slides ───────────────────────────────────────────────────────────────
-const heroSlides = [
-{
-id: 1,
-image: '/hero-1.jpg',
-eyebrow: 'New Collection',
-title: 'Diamond',
-accent: 'Rings',
-subtitle: 'Celebrate your eternal bond with handcrafted masterpieces',
-category: 'Rings',
-},
-{
-id: 2,
-image: '/hero-2.jpg',
-eyebrow: 'Bridal Heritage',
-title: 'Bridal',
-accent: 'Necklaces',
-subtitle: 'Make your special day unforgettable with our bridal treasures',
-category: 'Bridal',
-},
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Collections', path: '/collections' },
+  { name: 'Bridal', path: '/bridal' },
+  { name: 'Offers', path: '/offer' },
+  { name: 'Gold Rates', path: '/gold-rates' },
+  { name: 'About', path: '/about' },
+  { name: 'Contact', path: '/contact' },
+  { name: 'App', path: '/app' },
 ];
 
-// ── Categories ────────────────────────────────────────────────────────────────
-const categories = [
-{ name:'Antique', image:'/antique2.jpg' },
-{ name:'Necklaces', image:'/necklace1.jpg' },
-{ name:'Earrings', image:'/earring1.jpg' },
-{ name:'Bangles', image:'/bangle1.png' },
-{ name:"Men's Ring", image:'/ring7.png' },
-{ name:'Pendants', image:'/pendant.png' },
-{ name:"Women's Ring", image:'/ring2.png' },
-{ name:'Chains', image:'/chain2.png' },
-{ name:'Chokers', image:'/antique3.jpg' },
-];
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const formatINR = (n: number) =>
+  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
 
-// ── Collections ───────────────────────────────────────────────────────────────
-const collections = [
-{ id:1, name:'Maharani Bridal Set', category:'Bridal', image:'/necklace88.png', featured:true },
-{ id:2, name:'Diamond Ring', category:'Diamond', image:'/ring1.png', featured:false },
-{ id:3, name:'Temple Gold Necklace',category:'Temple', image:'/temple.png', featured:false },
-];
-
-// ── Products ──────────────────────────────────────────────────────────────────
-const products = [
-{ id:1, name:'Bridal Chain', category:'Bridal', description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.', image:'/bridal.png', tag:'Bestseller' },
-{ id:2, name:'Diamond Eternity Ring', category:'Diamond', description:'A stunning circle of brilliant diamonds symbolizing eternal love.', image:'/ring6.png', tag:'Premium' },
-{ id:3, name:'Antique Gold Jhumkas', category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.', image:'/earrings13.png', tag:'Heritage' },
-{ id:4, name:'22KT Gold Bangles Set', category:'Bangles', description:'Set of 4 intricately designed bangles with traditional patterns.', image:'/bangle5.png', tag:'Classic' },
-{ id:5, name:'Polki Diamond Ring', category:'Rings', description:'Uncut polki diamonds set in 22KT gold with a classic design.', image:'/ring7.png', tag:'Exclusive' },
-{ id:6, name:'Temple Gold Haar', category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.', image:'/necklace88.png', tag:'Traditional'},
-{ id:7, name:'Antique Earrings Set', category:'Antique', description:'Exquisite antique finish jewellery with traditional craftsmanship.', image:'/earring5.jpg', tag:'Limited' },
-{ id:8, name:'Festive Gold Set', category:'Festive', description:'Elegant gold set perfect for festive occasions and celebrations.', image:'/chain4.png', tag:'Trending' },
-];
-
-// ── Trust items ───────────────────────────────────────────────────────────────
-const trustItems = [
-{ icon:'✓', title:'Hallmark Certified', desc:'BIS Hallmark on all gold jewellery' },
-{ icon:'♦', title:'Bridal Specialist', desc:'35+ years of bridal expertise' },
-{ icon:'⬡', title:'Two Showrooms', desc:'Conveniently located in Jabalpur' },
-{ icon:'◈', title:'WA Support', desc:'Instant WhatsApp assistance' },
-];
-
-// ── Promo banners ──────────────────────────────────────────────────────────────
-const promoBanners = [
-{ label:'0% Deduction on Old Gold Exchange', img:'/hero2.jpg', cta:'Exchange Now' },
-{ label:'Flat 9% Off Making Charges', img:'/hero1.jpg', cta:'Shop Now' },
-{ label:'Gold Earrings Collection', img:'/slide3.jpg', cta:'Shop Now' },
-{ label:'Gold Bangles Collection', img:'/slide4.jpg', cta:'Explore Now' },
-{ label:'Royal Necklace Collection', img:'/slide5.jpg', cta:'View Now' },
-];
-
-// ── Video Carousel ─────────────────────────────────────────────────────────────
-const VIDEOS = ['/video1.mp4','/video2.mp4','/video3.mp4','/video4.mp4','/video5.mp4','/video6.mp4','/video7.mp4'];
-
-function VideoCarousel() {
-const [active, setActive] = useState(0);
-const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-const trackRef = useRef<HTMLDivElement | null>(null);
-const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-const total = VIDEOS.length;
-
-const goTo = useCallback((idx: number) => setActive(idx), []);
-
-const startTimer = useCallback(() => {
-if (intervalRef.current) clearInterval(intervalRef.current);
-intervalRef.current = setInterval(() => setActive(prev => (prev + 1) % total), 6000);
-}, [total]);
-
-useEffect(() => { startTimer(); return () => { if (intervalRef.current) clearInterval(intervalRef.current); }; }, [startTimer]);
-
-useEffect(() => {
-videoRefs.current.forEach((v, i) => {
-if (!v) return;
-if (i === active) { v.currentTime = 0; v.play().catch(() => {}); }
-else { v.pause(); v.currentTime = 0; }
-});
-}, [active]);
-
-useEffect(() => {
-const track = trackRef.current; const item = itemRefs.current[active];
-if (!track || !item) return;
-const trackRect = track.getBoundingClientRect(); const itemRect = item.getBoundingClientRect();
-track.scrollTo({ left: track.scrollLeft + (itemRect.left - trackRect.left) - trackRect.width / 2 + itemRect.width / 2, behavior:'smooth' });
-}, [active]);
-
-const handleEnded = () => { startTimer(); setActive(prev => (prev + 1) % total); };
-
-return (
-<div className="relative">
-{/*
-FIX APPLIED: Added py-12 (48px top and bottom padding) to the container.
-This prevents the glowing shadow and scaled height of the active reel from
-getting cropped by the overflow-x-auto bounds.
-*/}
-<div ref={trackRef} className="flex items-center gap-4 sm:gap-6 overflow-x-auto py-12 px-6 sm:px-12 scroll-smooth" style={{ scrollbarWidth:'none' }}>
-{VIDEOS.map((src, i) => {
-const isActive = i === active;
-return (
-<div
-key={i}
-ref={(el: HTMLDivElement | null) => { itemRefs.current[i] = el; }}
-onClick={() => { goTo(i); startTimer(); }}
-className={`relative flex-shrink-0 cursor-pointer rounded-3xl overflow-hidden transition-all duration-500 ease-out origin-center ${
-isActive
-? 'w-[240px] h-[426px] sm:w-[320px] sm:h-[568px] ring-[3px] ring-[#E91E8C] shadow-[0_0_50px_rgba(233,30,140,0.5)] z-10 scale-100'
-: 'w-[160px] h-[284px] sm:w-[200px] sm:h-[355px] ring-1 ring-transparent opacity-90 hover:opacity-100 z-0 scale-95 hover:scale-100'
-}`}
->
-<video
-ref={el => { videoRefs.current[i] = el; }}
-src={src}
-muted playsInline loop={false}
-onEnded={isActive ? handleEnded : undefined}
-className="w-full h-full object-cover"
-/>
-
-{/* Luxury Inactive Overlay */}
-{!isActive && (
-<div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(136,14,79,0.7)', mixBlendMode: 'multiply' }} />
-)}
-{!isActive && (
-<div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'rgba(26,0,16,0.2)' }} />
-)}
-
-{/* Glass Frosted Play Button for Inactive Slides */}
-{!isActive && (
-<div className="absolute inset-0 flex items-center justify-center">
-<div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 transition-transform duration-300">
-<div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-white/90 ml-1" />
-</div>
-</div>
-)}
-
-{/* Active Inner Shadow for cinematic depth */}
-{isActive && (
-<div className="absolute inset-0 pointer-events-none transition-opacity duration-500" style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.3)' }} />
-)}
-
-{/* Numbering at bottom left */}
-<div className="absolute bottom-5 left-5">
-<span className={`font-cinzel text-xs tracking-[0.2em] font-bold ${isActive ? 'text-white drop-shadow-md' : 'text-white/60'}`}>
-{String(i + 1).padStart(2, '0')}
-</span>
-</div>
-</div>
-);
-})}
-</div>
-
-{/* Paginator */}
-<div className="flex items-center justify-center gap-3 mt-2">
-{VIDEOS.map((_, i) => (
-<button key={i} onClick={() => { goTo(i); startTimer(); }}
-className={`rounded-full transition-all duration-500 ${i === active ? 'w-10 h-2 bg-[#E91E8C] shadow-[0_0_10px_#E91E8C]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'}`} />
-))}
-</div>
-</div>
-);
+function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [val, setVal] = useState(0);
+  
+  useEffect(() => {
+    if (!inView) return;
+    let start: number | null = null;
+    const tick = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(eased * to));
+      if (p < 1) requestAnimationFrame(tick);
+      else setVal(to);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, to, duration]);
+  
+  return <span ref={ref}>{prefix}{new Intl.NumberFormat('en-IN').format(val)}</span>;
 }
 
-// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
-function HomeSkeleton() {
-return (
-<div style={{ background: C.bg }} className="pt-20 min-h-screen">
-<section style={{ paddingBottom: 0 }}>
-{/* Top Nav Skeleton */}
-<div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3" style={{ borderBottom:`1px solid ${C.border}` }}>
-<div className="h-4 w-48 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-<div className="flex gap-6">
-<div className="h-3 w-16 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-<div className="h-3 w-24 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-<div className="h-3 w-20 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-</div>
-</div>
-
-{/* Search Bar Skeleton */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-<div className="max-w-2xl mx-auto h-[50px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
-</div>
-
-{/* Category Row Skeleton */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
-<div className="flex gap-4 sm:gap-6 overflow-hidden pb-2">
-{[...Array(8)].map((_, i) => (
-<div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
-<div className="w-[90px] h-[90px] rounded-2xl animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
-<div className="w-16 h-3 rounded-md animate-pulse" style={{ background: C.goldPale }} />
-</div>
-))}
-</div>
-</div>
-
-{/* Promo Banner Skeleton */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-<div className="w-full rounded-3xl h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
-</div>
-</section>
-</div>
-);
+// ── Gold shimmer particle ────────────────────────────────────────────────────
+function GoldParticles({ count = 20 }: { count?: number }) {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {Array.from({ length: count }).map((_, i) => (
+        <motion.div key={i}
+          className="absolute rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top:  `${Math.random() * 100}%`,
+            background: i % 3 === 0 ? C.goldPale : i % 3 === 1 ? C.gold : C.pink,
+            width:  i % 5 === 0 ? 3 : 1.5,
+            height: i % 5 === 0 ? 3 : 1.5,
+            boxShadow: `0 0 ${i % 5 === 0 ? '8px' : '4px'} ${C.goldPale}`,
+          }}
+          animate={{
+            y:       [0, -(50 + Math.random() * 80), 0],
+            opacity: [0, 0.8, 0],
+            scale:   [0, 1.2, 0],
+          }}
+          transition={{
+            duration:  4 + Math.random() * 5,
+            repeat:    Infinity,
+            delay:     Math.random() * 5,
+            ease:      'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-export default function Home() {
-const [isLoading, setIsLoading] = useState(true);
-const [currentSlide, setCurrentSlide] = useState(0);
-const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
-const [promoBanner, setPromoBanner] = useState(0);
-const [searchQuery, setSearchQuery] = useState('');
+// ── Main Component ───────────────────────────────────────────────────────────
+export default function SwarnaSamriddhi() {
+  const [installment, setInstallment] = useState(5000);
+  const [showModal, setShowModal]     = useState(false);
+  const [isMobile, setIsMobile]       = useState(false);
+  const [isScrolled, setIsScrolled]   = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
 
-// Preload all banner images immediately on mount & handle skeleton loading
-useEffect(() => {
-const imagePromises = promoBanners.map(banner => {
-return new Promise((resolve) => {
-const img = new Image();
-img.src = banner.img;
-img.onload = resolve;
-img.onerror = resolve; // Resolve anyway to avoid blocking on failed images
-});
-});
+  useEffect(() => {
+    setIsMobile(/android|iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-// Wait for images to load, with a minimum simulated delay of 800ms to show the smooth skeleton effect
-Promise.all([
-...imagePromises,
-new Promise(resolve => setTimeout(resolve, 800))
-]).then(() => {
-setIsLoading(false);
-});
-}, []);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroY  = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
-useEffect(() => {
-if (isLoading) return; // Don't start carousels until loaded
-const timer = setInterval(() => setCurrentSlide(p => (p + 1) % heroSlides.length), 4500);
-return () => clearInterval(timer);
-}, [isLoading]);
+  const userTotal  = installment * 10;
+  const srjBonus   = installment * 2;
+  const grandTotal = userTotal + srjBonus;
 
-useEffect(() => {
-if (isLoading) return; // Don't start carousels until loaded
-const timer = setInterval(() => setPromoBanner(p => (p + 1) % promoBanners.length), 5000);
-return () => clearInterval(timer);
-}, [isLoading]);
+  // Payment Links
+  const upiId  = '8377911745@upi';
+  const note   = 'Swarna Samriddhi Installment';
+  const name   = 'Shekhar Raja Jewellers';
+  const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
+  const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
+  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* से जुड़ना चाहता/चाहती हूँ।\n\nमासिक किस्त: *${formatINR(installment)}*\nपेमेंट स्क्रीनशॉट संलग्न है।`;
+  const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
 
-// Show the beautiful preloader skeleton until images are ready
-if (isLoading) {
-return <HomeSkeleton />;
-}
+  // Animation Variants
+  const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+  };
+  const staggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+  };
 
-return (
-<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} style={{ background: C.bg }} className="pt-20">
+  return (
+    <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#832729] selection:text-white">
 
-{/* ══════════════════════════════════════════════════════════════
-HERO — CaratLane style: light bg, search, category row, promo
-══════════════════════════════════════════════════════════════ */}
-<section style={{ background: C.bg, paddingBottom: 0 }}>
+      {/* ════════════════════════════════════════════════════════
+          MAIN WEBSITE NAVBAR
+      ════════════════════════════════════════════════════════ */}
+      <motion.nav
+        initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled ? 'bg-[#faf7f2]/98 backdrop-blur-xl shadow-[0_4px_30px_rgba(58,46,30,0.12)]' : 'bg-[#faf7f2]/95 backdrop-blur-md'
+        }`}
+      >
+        <div className={`h-[2px] bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014] transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-50'}`} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20 lg:h-24">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">Shekhar Raja</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="h-px w-3 sm:w-4 bg-gradient-to-r from-[#b8862a] to-transparent" />
+                  <span className="font-cinzel text-[8px] sm:text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+                  <div className="h-px w-3 sm:w-4 bg-gradient-to-l from-[#b8862a] to-transparent" />
+                </div>
+              </div>
+            </Link>
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center bg-white/60 backdrop-blur-sm rounded-full px-1.5 py-1.5 border border-[rgba(184,134,42,0.15)] shadow-sm">
+                {navLinks.map((link) => {
+                  const isActive = link.path === '/offer';
+                  return (
+                    <Link key={link.path} to={link.path} className={`relative px-4 xl:px-5 py-2 font-cinzel text-[11px] tracking-[0.12em] uppercase transition-all duration-300 rounded-full ${isActive ? 'text-white' : 'text-[#3a2e1e] hover:text-[#b8862a]'}`}>
+                      {isActive && <motion.div layoutId="activeNavPill" className="absolute inset-0 bg-gradient-to-r from-[#b8862a] to-[#8b6014] rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
+                      <span className="relative z-10">{link.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/60 border border-[rgba(184,134,42,0.15)] text-[#9a8060] hover:text-[#b8862a] hover:border-[#b8862a]/30 transition-all duration-300"><Heart size={18} /></button>
+              <a href="https://wa.me/918377911745" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20bd5a] text-white px-5 py-2.5 rounded-full font-raleway text-sm font-medium shadow-lg hover:shadow-xl hover:shadow-[#25D366]/30 transition-all duration-300 hover:-translate-y-0.5">
+                <MessageCircle size={16} /><span>Enquire</span>
+              </a>
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-11 h-11 rounded-full bg-gradient-to-br from-[#faf7f2] to-white border border-[rgba(184,134,42,0.2)] text-[#3a2e1e] hover:bg-[#b8862a] hover:text-white hover:border-[#b8862a] transition-all duration-300 flex items-center justify-center shadow-sm">
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className={`h-[1px] bg-gradient-to-r from-transparent via-[#b8862a]/40 to-transparent transition-opacity duration-500 ${isScrolled ? 'opacity-100' : 'opacity-30'}`} />
+      </motion.nav>
 
-{/* ── TOP NAV INFO BAR ── */}
-<div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3"
-style={{ borderBottom:`1px solid ${C.border}` }}>
-<div className="flex items-center gap-2">
-<MapPin size={14} style={{ color: C.gold }} />
-<span className="font-raleway text-sm" style={{ color: C.textMid }}>
-Delivering to <span style={{ color: C.gold }} className="font-semibold">Jabalpur · 482002</span>
-</span>
-</div>
-<div className="flex items-center gap-6">
-<span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>EST. 1987</span>
-<span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>BIS HALLMARK</span>
-<span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>22K GOLD</span>
-</div>
-</div>
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-40 lg:hidden bg-gradient-to-b from-[#1a0f05] via-[#2a1a0a] to-[#1a0f05]">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8b6014] via-[#d4a843] to-[#8b6014]" />
+            <div className="flex flex-col h-full pt-24 pb-8 px-6 relative">
+              <div className="flex items-center gap-3 mb-10">
+                <img src="/logo.png" alt="Shekhar Raja Jewellers" className="h-12 w-auto object-contain" />
+                <div className="flex flex-col">
+                  <span className="font-cormorant text-xl font-bold text-white">Shekhar Raja</span>
+                  <span className="font-cinzel text-[9px] tracking-[0.3em] text-[#b8862a]">JEWELLERS</span>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="space-y-1">
+                  {navLinks.map((link, index) => (
+                    <motion.div key={link.path} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.07, duration: 0.4, ease: 'easeOut' }}>
+                      <Link to={link.path} onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center justify-between py-3.5 border-b border-[#b8862a]/20 group ${link.path === '/offer' ? 'text-[#d4a843]' : 'text-white/70 hover:text-white'}`}>
+                        <div className="flex items-center gap-4">
+                          <span className="font-cinzel text-xs text-[#b8862a]/60">{String(index + 1).padStart(2, '0')}</span>
+                          <span className="font-cormorant text-2xl">{link.name}</span>
+                        </div>
+                        <ChevronRight size={20} className="text-[#b8862a] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-{/* ── SEARCH BAR ── */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-<div className="relative max-w-2xl mx-auto">
-<Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: C.textLight }} />
-<input
-value={searchQuery}
-onChange={e => setSearchQuery(e.target.value)}
-placeholder="Search Price, Jewellery, Category..."
-className="w-full pl-11 pr-5 py-3.5 rounded-full font-raleway text-sm outline-none transition-all"
-style={{
-background: '#fff',
-border: `1.5px solid ${C.borderMd}`,
-color: C.text,
-boxShadow: `0 2px 12px ${C.shadow}`,
-}}
-onFocus={e => e.target.style.boxShadow = `0 0 0 2px ${C.goldBorder}`}
-onBlur={e => e.target.style.boxShadow = `0 2px 12px ${C.shadow}`}
-/>
-</div>
-</div>
+      {/* ════════════════════════════════════════════════════════
+          EDITORIAL HERO SECTION (Tanishq Style Split Layout)
+      ════════════════════════════════════════════════════════ */}
+      <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+        
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
+          
+          {/* Left Content */}
+          <motion.div style={{ y: heroY }} className="flex flex-col text-center lg:text-left items-center lg:items-start pt-10 lg:pt-0 z-20">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-8">
+              <div className="h-px w-12" style={{ background: C.maroon }} />
+              <span className="font-cinzel text-xs tracking-[0.4em] uppercase font-bold" style={{ color: C.maroon }}>
+                A Golden Opportunity
+              </span>
+              <div className="h-px w-12 lg:hidden" style={{ background: C.maroon }} />
+            </motion.div>
 
-{/* ── CATEGORY ROW (CaratLane squares) ── */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
-<div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2" style={{ scrollbarWidth:'none' }}>
-{categories.map((cat, i) => (
-<Link key={cat.name} to="/collections"
-className="flex-shrink-0 flex flex-col items-center gap-2 group">
-<motion.div
-initial={{ opacity:0, y:16 }}
-animate={{ opacity:1, y:0 }}
-transition={{ delay: i * 0.06 }}
-className="relative overflow-hidden rounded-2xl bg-white"
-style={{
-width: 90, height: 90,
-border: `1.5px solid ${C.border}`,
-boxShadow: `0 2px 10px ${C.shadow}`,
-}}
-whileHover={{ scale:1.05, boxShadow:`0 6px 20px rgba(194,24,91,0.2)` }}>
-<img src={cat.image} alt={cat.name}
-className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-{/* subtle gold overlay on hover */}
-<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-style={{ background:`linear-gradient(to bottom, transparent 40%, ${C.goldBorder} 100%)` }} />
-</motion.div>
-<span className="font-raleway text-xs font-medium text-center whitespace-nowrap transition-colors"
-style={{ color: C.textMid }}
-onMouseEnter={e => (e.currentTarget.style.color = C.gold)}
-onMouseLeave={e => (e.currentTarget.style.color = C.textMid)}>
-{cat.name}
-</span>
-</Link>
-))}
-</div>
-</div>
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="font-cormorant font-bold mb-6 tracking-tight text-balance" style={{ fontSize: 'clamp(3.5rem, 6vw, 6rem)', lineHeight: 1.05, color: C.text }}>
+              स्वर्ण समृद्धि <br className="hidden lg:block"/> 
+              <span className="italic font-light" style={{ color: C.gold }}>योजना</span>
+            </motion.h1>
 
-{/* ── PROMO HERO BANNER (auto-rotating) ── */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-<div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px]" style={{ perspective: 1500, background: C.bgDeep }}>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="font-raleway text-lg sm:text-xl font-medium max-w-md mb-10" style={{ color: C.textDim, lineHeight: 1.7 }}>
+              अपने सपनों के सोने के आभूषण अब आसान किस्तों में खरीदें। आज ही जुड़ें और 100% पारदर्शी योजना का लाभ उठाएं।
+            </motion.p>
 
-{/* Shimmer effect stays active underneath images until they cover it */}
-<div className="absolute inset-0 animate-pulse opacity-50" style={{ background: C.goldPale }} />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-xl flex items-center justify-center gap-2" style={{ background: C.maroon }}>
+                योजना शुरू करें <ArrowRight size={16} />
+              </motion.button>
+              <motion.a href="#calculator" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-transparent hover:bg-white flex items-center justify-center gap-2" style={{ border: `1px solid ${C.maroon}`, color: C.maroon }}>
+                लाभ की गणना करें
+              </motion.a>
+            </motion.div>
+          </motion.div>
 
-{/* Static fallback for the very first image to ensure instant loading */}
-<img
-src={promoBanners[0].img}
-alt={promoBanners[0].label}
-className="absolute inset-0 w-full h-full object-cover object-center z-0"
-style={{ opacity: promoBanner === 0 ? 1 : 0, transition: 'opacity 0.8s ease' }}
-/>
+          {/* Right Visual (Video + Mobile Flow Fix) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex flex-col items-center lg:items-end mt-4 lg:mt-0">
+            {/* Landscape Frame */}
+            <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
+              <motion.video
+                style={{ scale: imgScale }}
+                src="/srjyojna.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
 
-{/* Render all banners instantly to force immediate browser downloads */}
-{promoBanners.map((banner, i) => (
-i !== 0 && (
-<motion.div
-key={i}
-className="absolute inset-0"
-initial={false}
-animate={{
-rotateY: i === promoBanner ? 0 : (i < promoBanner ? -90 : 90),
-opacity: i === promoBanner ? 1 : 0,
-zIndex: i === promoBanner ? 10 : 0
-}}
-style={{ transformOrigin: "left center", backfaceVisibility: "hidden", pointerEvents: i === promoBanner ? 'auto' : 'none' }}
-transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
->
-<img
-src={banner.img}
-alt={banner.label}
-className="w-full h-full object-cover object-center"
-/>
-</motion.div>
-)
-))}
+            {/* Decorative Outline — offset so it doesn't clip */}
+            <div className="absolute top-3 -right-3 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
 
-{/* Dot indicators */}
-<div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-{promoBanners.map((_, i) => (
-<button key={i} onClick={() => setPromoBanner(i)}
-className="rounded-full transition-all duration-300"
-style={{ width: i === promoBanner ? 28 : 8, height:8,
-background: i === promoBanner ? C.gold : 'rgba(255,255,255,0.6)' }} />
-))}
-</div>
-</div>
-</div>
+            {/* Golden Benefit Badge — below video on mobile, overlaid inside on sm+ */}
 
-{/* ── BOTTOM NAV TABS (CaratLane style) ── */}
-<div style={{ background:'#fff', borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
-<div className="max-w-7xl mx-auto">
-<div className="flex overflow-x-auto" style={{ scrollbarWidth:'none' }}>
-{['Category','New Arrivals','Bestsellers','Bridal','Diamond','Festive'].map((tab, i) => (
-<Link key={tab} to="/collections"
-className="flex-shrink-0 flex items-center gap-1.5 px-6 py-3.5 font-cinzel text-[10px] tracking-[0.2em] uppercase whitespace-nowrap transition-colors border-b-2"
-style={{ color: i === 0 ? C.gold : C.textLight,
-borderBottomColor: i === 0 ? C.gold : 'transparent' }}
-onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
-onMouseLeave={e => { e.currentTarget.style.color = i === 0 ? C.gold : C.textLight; }}>
-{i === 1 && <Sparkles size={11} style={{ color: C.goldLt }} />}
-{i === 2 && <Crown size={11} style={{ color: C.goldLt }} />}
-{i === 3 && <Diamond size={11} style={{ color: C.goldLt }} />}
-{tab}
-</Link>
-))}
-</div>
-</div>
-</div>
+            {/* MOBILE: sits below the video, full-width pill row, no overlap */}
+            <div className="flex sm:hidden items-center justify-center gap-6 mt-4 w-full px-4 py-3 rounded-2xl"
+                 style={{ background: '#fff', border: `1px solid ${C.border}`, boxShadow:'0 4px 16px rgba(197,160,89,0.12)' }}>
+              <span className="font-cinzel text-[8px] tracking-widest uppercase self-center" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
+                </div>
+                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
+                </div>
+                <div className="w-px h-6" style={{ background: C.border }} />
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
+                </div>
+              </div>
+            </div>
 
-</section>
-{/* ══ END HERO ══ */}
+            {/* SM+: floating overlay inside video, bottom-right corner, compact */}
+            <motion.div
+              animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-xl z-30 shadow-xl hidden sm:block"
+              style={{ border: `1px solid ${C.border}`, borderRadius: '1rem', padding: '12px 16px' }}
+            >
+              <span className="font-cinzel text-[8px] tracking-widest uppercase mb-2 block" style={{ color: C.gold }}>Golden Benefit</span>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.text }}>10</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.textDim }}>YOU PAY</p>
+                </div>
+                <span className="font-cormorant text-2xl" style={{ color: C.gold }}>+</span>
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.maroon }}>2</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.maroonLt }}>WE PAY</p>
+                </div>
+                <div className="w-px h-8 mx-1" style={{ background: C.border }} />
+                <div className="text-center">
+                  <span className="font-cormorant text-3xl font-bold leading-none" style={{ color: C.gold }}>12</span>
+                  <p className="font-cinzel text-[7px] tracking-wider font-bold mt-0.5" style={{ color: C.gold }}>MONTHS</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
 
-{/* ══ ZERO MAKING PROMO VIDEO ══ */}
-<section className="py-8 sm:py-12" style={{ background: C.bg }}>
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<motion.div
-initial={{ opacity: 0, y: 30 }}
-whileInView={{ opacity: 1, y: 0 }}
-viewport={{ once: true }}
-className="relative rounded-3xl overflow-hidden shadow-2xl"
-style={{ border: `1px solid ${C.borderMd}` }}
->
-<video
-src="/zeromaking.mp4"
-autoPlay
-loop
-muted
-playsInline
-className="w-full h-auto object-cover max-h-[600px]"
-/>
-{/* Soft inner shadow for cinematic depth */}
-<div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 40px rgba(26,0,16,0.1)' }} />
-</motion.div>
-</div>
-</section>
+        </div>
+      </section>
 
-{/* ══ FEATURED COLLECTIONS ══ */}
-<section className="py-20 relative overflow-hidden" style={{ background: C.bgDeep }}>
-<div className="absolute inset-0 opacity-[0.03]"
-style={{ backgroundImage:`repeating-linear-gradient(45deg, ${C.gold} 0, ${C.gold} 1px, transparent 0, transparent 50%)`, backgroundSize:'24px 24px' }} />
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-<motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
-<div className="inline-flex items-center gap-3 mb-4">
-<div className="h-px w-12" style={{ background:`linear-gradient(to right, transparent, ${C.gold})` }} />
-<Crown size={14} style={{ color: C.gold }} />
-<span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color: C.gold }}>FEATURED</span>
-<Crown size={14} style={{ color: C.gold }} />
-<div className="h-px w-12" style={{ background:`linear-gradient(to left, transparent, ${C.gold})` }} />
-</div>
-<h2 className="font-cormorant text-4xl sm:text-5xl font-light" style={{ color: C.text }}>
-Our <em className="italic" style={{ color: C.gold }}>Signature</em> Pieces
-</h2>
-</motion.div>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-{collections.map((col, i) => (
-<motion.div key={col.id} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
-transition={{ delay: i*0.1 }} viewport={{ once:true }}
-className="group rounded-2xl overflow-hidden cursor-pointer"
-style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:`0 4px 20px ${C.shadow}` }}
-whileHover={{ y:-6, boxShadow:`0 16px 40px rgba(194,24,91,0.15)` }}>
-<div className="relative overflow-hidden" style={{ height: col.featured ? 320 : 240 }}>
-<img src={col.image} alt={col.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-style={{ background:`linear-gradient(to top, rgba(136,14,79,0.5) 0%, transparent 60%)` }} />
-{col.featured && (
-<div className="absolute top-4 left-4 font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
-style={{ background: C.gold, color:'#fff' }}>FEATURED</div>
-)}
-</div>
-<div className="p-5 flex items-center justify-between">
-<div>
-<p className="font-cinzel text-[9px] tracking-[0.2em] mb-1" style={{ color: C.gold }}>{col.category.toUpperCase()}</p>
-<h3 className="font-cormorant text-xl font-semibold" style={{ color: C.text }}>{col.name}</h3>
-</div>
-<div className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
-style={{ background: C.goldBg, border:`1px solid ${C.border}` }}>
-<ArrowRight size={14} style={{ color: C.gold }} />
-</div>
-</div>
-</motion.div>
-))}
-</div>
-</div>
-</section>
+      {/* ════════════════════════════════════════════════════════
+          EDITORIAL IMAGE BANNER
+      ════════════════════════════════════════════════════════ */}
+      <section className="relative w-full h-[300px] sm:h-[400px] overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/Jadau Necklace8.jpg" 
+            alt="Gold Details" 
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+        <div className="relative z-10 text-center px-6 max-w-3xl">
+          <Shield size={40} className="mx-auto mb-6 opacity-80" style={{ color: C.goldLight }} strokeWidth={1} />
+          <h2 className="font-cormorant text-3xl sm:text-5xl font-light italic text-white leading-snug">
+            "Building your golden legacy, <br/> one secure installment at a time."
+          </h2>
+        </div>
+      </section>
 
-{/* ══ VIDEO CAROUSEL ══ */}
-<section className="py-24 relative overflow-hidden" style={{ background: C.goldDk }}>
-<div className="absolute inset-0" style={{ background:`radial-gradient(ellipse 80% 60% at 50% 0%, rgba(233,30,140,0.15) 0%, transparent 70%)` }} />
-<div className="max-w-7xl mx-auto relative">
-<motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-8">
-<span className="font-cinzel text-[10px] tracking-[0.4em] block mb-4" style={{ color: C.goldPale }}>EXPLORE</span>
-<h2 className="font-cormorant text-4xl sm:text-5xl font-light text-white">
-Our <em className="italic" style={{ color: C.goldLt }}>Jewellery</em> In Motion
-</h2>
-</motion.div>
+      {/* ════════════════════════════════════════════════════════
+          PICTORIAL "HOW IT WORKS" SECTION
+      ════════════════════════════════════════════════════════ */}
+      <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <span className="font-cinzel text-xs tracking-[0.4em] uppercase block mb-4" style={{ color: C.gold }}>The Process</span>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>यह कैसे काम करता है?</h2>
+            <div className="mt-6 mx-auto w-16 h-px" style={{ background: C.maroon }} />
+          </motion.div>
 
-<VideoCarousel />
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-8">
+            {[
+              { 
+                img: '/antique2.jpg',
+                title: '1. योजना चुनें', 
+                desc: '₹2,000 से लेकर ₹50,000 तक अपनी सुविधानुसार कोई भी मासिक किस्त राशि निर्धारित करें।' 
+              },
+              { 
+                img: '/antique3.jpg',
+                title: '2. 10 किस्तें जमा करें', 
+                desc: 'लगातार 10 महीनों तक अपनी किस्त समय पर जमा करें। शेष 2 किस्तें हमारी ओर से मुफ्त दी जाएंगी।' 
+              },
+              { 
+                img: '/bangle1.png',
+                title: '3. आभूषण खरीदें', 
+                desc: '12वें महीने में अपने कुल जमा मूल्य (10+2) के बराबर अपनी पसंद का कोई भी सोने का आभूषण घर ले जाएं।' 
+              },
+            ].map((step, i) => (
+              <motion.div key={i} variants={fadeUp} className="group cursor-pointer">
+                <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 rounded-sm shadow-md bg-[#f9f9f9]">
+                  <motion.img 
+                    whileHover={{ scale: 1.08 }} transition={{ duration: 0.6 }}
+                    src={step.img} alt={step.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md w-10 h-10 flex items-center justify-center font-cormorant text-2xl font-bold rounded-sm shadow-sm" style={{ color: C.maroon }}>
+                    {i+1}
+                  </div>
+                </div>
+                <h3 className="font-cormorant text-3xl font-bold mb-3" style={{ color: C.text }}>{step.title}</h3>
+                <p className="font-raleway text-sm leading-relaxed" style={{ color: C.textDim }}>{step.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
-</div>
-</section>
+      {/* ════════════════════════════════════════════════════════
+          FINTECH CALCULATOR (Flat & Elegant)
+      ════════════════════════════════════════════════════════ */}
+      <section id="calculator" className="py-24 sm:py-32" style={{ background: C.voidMid }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-16">
+            <span className="font-cinzel text-xs tracking-[0.4em] uppercase block mb-4" style={{ color: C.gold }}>Investment Tool</span>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold" style={{ color: C.text }}>लाभ की गणना करें</h2>
+          </motion.div>
 
-{/* ══ PRODUCTS GRID ══ */}
-<section className="py-20" style={{ background: C.bg }}>
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-16">
-<div className="inline-flex items-center gap-3 mb-4">
-<div className="h-px w-12" style={{ background:`linear-gradient(to right, transparent, ${C.gold})` }} />
-<Diamond size={14} style={{ color: C.gold }} />
-<span className="font-cinzel text-[10px] tracking-[0.35em]" style={{ color: C.gold }}>COLLECTION</span>
-<Diamond size={14} style={{ color: C.gold }} />
-<div className="h-px w-12" style={{ background:`linear-gradient(to left, transparent, ${C.gold})` }} />
-</div>
-<h2 className="font-cormorant text-4xl sm:text-5xl font-light" style={{ color: C.text }}>
-Crafted in <em className="italic" style={{ color: C.gold }}>Gold</em>
-</h2>
-<p className="font-raleway text-sm mt-4 max-w-xl mx-auto" style={{ color: C.textLight }}>
-Discover our curated pieces, each a masterpiece of 22KT craftsmanship
-</p>
-</motion.div>
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="p-8 sm:p-16 bg-white shadow-lg relative" style={{ border: `1px solid ${C.border}` }}>
+            
+            {/* Elegant Slider */}
+            <div className="max-w-3xl mx-auto mb-16 relative z-10">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b" style={{ borderColor: C.border }}>
+                <label className="font-cinzel text-sm font-bold tracking-widest uppercase" style={{ color: C.textDim }}>मासिक किस्त चुनें</label>
+                <motion.span key={installment} initial={{ opacity: 0.5 }} animate={{ opacity: 1 }} className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.maroon }}>
+                  {formatINR(installment)}
+                </motion.span>
+              </div>
+              
+              <div className="relative pt-4 pb-2">
+                <input type="range" min={2000} max={50000} step={1000} value={installment} onChange={e => setInstallment(Number(e.target.value))} 
+                       className="w-full h-1 outline-none cursor-pointer appearance-none z-10 relative" 
+                       style={{ background: `linear-gradient(to right, ${C.maroon} ${(installment - 2000) / 48000 * 100}%, ${C.voidMid} ${(installment - 2000) / 48000 * 100}%)` }} />
+                <style>{`
+                  input[type=range]::-webkit-slider-thumb {
+                    appearance: none; width: 28px; height: 28px; border-radius: 50%;
+                    background: ${C.maroon}; border: 4px solid #fff;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2); cursor: grab; transition: transform 0.2s;
+                  }
+                  input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.1); }
+                `}</style>
+                <div className="flex justify-between mt-6">
+                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹2,000</span>
+                  <span className="font-cinzel text-xs font-bold" style={{ color: C.textDim }}>₹50,000</span>
+                </div>
+              </div>
+            </div>
 
-<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-{products.map((product, i) => (
-<motion.div key={product.id} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
-transition={{ delay: i*0.08 }} viewport={{ once:true }}
-onClick={() => setSelectedProduct(product)}
-className="group rounded-2xl overflow-hidden cursor-pointer"
-style={{ background:'#fff', border:`1px solid ${C.border}`, boxShadow:`0 4px 16px ${C.shadow}` }}
-whileHover={{ y:-5, boxShadow:`0 14px 36px rgba(194,24,91,0.14)` }}>
-<div className="relative overflow-hidden" style={{ aspectRatio:'1/1' }}>
-<img src={product.image} alt={product.name}
-className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-style={{ background:`linear-gradient(to top, rgba(136,14,79,0.55) 0%, rgba(136,14,79,0.1) 50%, transparent 100%)` }} />
-<div className="absolute top-3 left-3">
-<span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
-style={{ background:'rgba(26,0,16,0.85)', color: C.goldPale }}>{product.tag}</span>
-</div>
-<div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-400"
-style={{ transform:'translateY(4px)' }}>
-<div className="flex items-center justify-between backdrop-blur-md rounded-xl px-3 py-2"
-style={{ background:'rgba(255,255,255,0.18)', border:'1px solid rgba(255,255,255,0.25)' }}>
-<span className="font-raleway text-xs text-white">View Details</span>
-<ArrowRight size={12} style={{ color: C.goldPale }} />
-</div>
-</div>
-<div className="absolute top-0 right-0 w-12 h-12 overflow-hidden opacity-15">
-<div className="absolute top-0 right-0 w-20 h-20 rotate-45 translate-x-10 -translate-y-10"
-style={{ background:`linear-gradient(to br, ${C.goldLt}, ${C.gold})` }} />
-</div>
-</div>
-<div className="p-4">
-<div className="flex items-center gap-1.5 mb-1">
-<div className="w-1.5 h-1.5 rounded-full" style={{ background: C.gold }} />
-<span className="font-cinzel text-[9px] tracking-[0.2em]" style={{ color: C.gold }}>
-{product.category.toUpperCase()}
-</span>
-</div>
-<h3 className="font-cormorant text-lg font-semibold leading-tight transition-colors"
-style={{ color: C.text }}>
-{product.name}
-</h3>
-<p className="font-raleway text-xs leading-relaxed mt-1 line-clamp-2" style={{ color: C.textLight }}>
-{product.description}
-</p>
-<div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop:`1px solid ${C.border}` }}>
-<span className="font-cinzel text-[9px] tracking-[0.12em]" style={{ color: C.textLight }}>ENQUIRE ON WHATSAPP</span>
-<div className="w-6 h-6 rounded-full flex items-center justify-center"
-style={{ background: C.goldBg, border:`1px solid ${C.border}` }}>
-<ArrowRight size={10} style={{ color: C.gold }} />
-</div>
-</div>
-</div>
-</motion.div>
-))}
-</div>
+            {/* Flat Data Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 mb-12 border-y sm:border-y-0 sm:border-x relative z-10" style={{ borderColor: C.border }}>
+              <div className="p-8 text-center border-b sm:border-b-0 sm:border-r" style={{ borderColor: C.border }}>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.textDim }}>आपकी 10 किस्तें</p>
+                <p className="font-cormorant text-3xl sm:text-4xl font-bold tabular-nums" style={{ color: C.text }}><CountUp to={userTotal} /></p>
+              </div>
 
-<motion.div initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} transition={{ delay:0.4 }} viewport={{ once:true }}
-className="text-center mt-12">
-<Link to="/collections"
-className="inline-flex items-center gap-3 text-white px-10 py-4 rounded-full font-raleway font-medium shadow-lg hover:-translate-y-1 transition-all duration-300"
-style={{ background:`linear-gradient(to right, ${C.gold}, ${C.goldDk})`, boxShadow:`0 6px 24px rgba(194,24,91,0.3)` }}>
-<span>View All Collection</span>
-<ArrowRight size={18} />
-</Link>
-</motion.div>
-</div>
-</section>
+              <div className="p-8 text-center border-b sm:border-b-0 sm:border-r relative overflow-hidden" style={{ borderColor: C.border, background: C.void }}>
+                <div className="absolute top-4 right-4"><Star size={16} style={{ color: C.gold }} /></div>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.maroon }}>SRJ की 2 किस्तें (Bonus)</p>
+                <p className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.maroon }}>+ <CountUp to={srjBonus} /></p>
+              </div>
 
-{/* ══ APP PROMO ══ */}
-<section className="py-20 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${C.text} 0%, ${C.goldDk} 100%)` }}>
-<div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="p-8 text-center" style={{ background: C.voidLight }}>
+                <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.gold }}>कुल आभूषण मूल्य</p>
+                <p className="font-cormorant text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: C.gold }}><CountUp to={grandTotal} /></p>
+              </div>
+            </div>
 
-<div className="text-center lg:text-left">
-<div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-6 backdrop-blur-sm"
-style={{ background:'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
-<Smartphone size={18} style={{ color: C.goldPale }} />
-<span className="font-raleway text-sm font-medium" style={{ color: C.goldPale }}>Now Available on Android</span>
-</div>
-<h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-white">Shekhar Raja<br/>Jewellers App</h2>
-<p className="font-raleway text-lg mt-4" style={{ color:'rgba(255,255,255,0.8)' }}>
-Browse our entire collection, check gold rates, and get exclusive offers right on your phone.
-</p>
+            <div className="flex justify-center relative z-10">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="flex items-center gap-3 px-12 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-lg" style={{ background: C.maroon }}>
+                {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />} योजना शुरू करें <ArrowRight size={16} />
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-<div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start">
-{[{icon:<Tag size={16}/>, label:'Catalogue'},{icon:<Bell size={16}/>, label:'Gold Rate'},{icon:<Headphones size={16}/>, label:'WA Support'}].map((f,i) => (
-<div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: C.bgCard }}>
-<span style={{ color: C.gold }}>{f.icon}</span>
-<span className="font-raleway text-sm font-medium" style={{ color: C.text }}>{f.label}</span>
-</div>
-))}
-</div>
+      {/* ════════════════════════════════════════════════════════
+          TERMS & CONDITIONS (Editorial List)
+      ════════════════════════════════════════════════════════ */}
+      <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-16">
+            <h2 className="font-cormorant text-3xl font-bold uppercase tracking-wide" style={{ color: C.text }}>नियम एवं शर्तें</h2>
+            <div className="mt-4 mx-auto w-10 h-px" style={{ background: C.gold }} />
+          </motion.div>
 
-<div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-<Link to="/app" className="flex items-center gap-2 text-white px-8 py-4 rounded-full font-raleway font-bold transition-all hover:scale-105 shadow-lg"
-style={{ background: `linear-gradient(to right, ${C.gold}, ${C.goldLt})` }}>
-<Download size={18} /> Download APK
-</Link>
-<a href="https://wa.me/918377911745?text=Please%20send%20me%20the%20SRJ%20app%20download%20link"
-target="_blank" rel="noopener noreferrer"
-className="flex items-center gap-2 text-white px-8 py-4 rounded-full font-raleway font-bold transition-all hover:scale-105 shadow-lg"
-style={{ background:'#25D366' }}>
-<MessageCircle size={18} /> Get Link on WA
-</a>
-</div>
-</div>
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
+            {[
+              'योजना की कुल अवधि 12 माह की होगी।',
+              'ग्राहक को लगातार 10 मासिक किस्तें नियत समय पर जमा करनी अनिवार्य हैं।',
+              'अंतिम 2 किस्तों (बोनस) का लाभ केवल योजना की सभी शर्तें सफलतापूर्वक पूरी करने पर ही देय होगा।',
+              'यह योजना विशेष रूप से केवल सोने के आभूषणों की खरीद पर लागू है।',
+              'योजना का लाभ किसी भी स्थिति में नकद भुगतान (Cash) के रूप में नहीं दिया जाएगा।',
+              'प्रबंधन के पास बिना पूर्व सूचना के नियम एवं शर्तों में परिवर्तन करने का अधिकार सुरक्षित है।',
+            ].map((text, i) => (
+              <motion.div key={i} variants={fadeUp} className="flex items-start gap-4 pb-6 border-b" style={{ borderColor: C.voidMid }}>
+                <span className="font-cormorant text-xl font-bold mt-[-2px]" style={{ color: C.gold }}>{String(i + 1).padStart(2, '0')}</span>
+                <p className="font-raleway text-sm sm:text-base font-medium" style={{ color: C.textDim }}>{text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
-{/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
-<motion.div
-initial={{ opacity: 0, scale: 0.9, y: 40 }}
-whileInView={{ opacity: 1, scale: 1, y: 0 }}
-viewport={{ once: true }}
-transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
-className="flex justify-center"
->
-<motion.div
-animate={{ y: [0, -15, 0] }}
-transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-className="relative"
->
-{/* Phone Frame */}
-<div className="w-[300px] h-[600px] rounded-[3rem] border-[6px] p-2 shadow-2xl relative" style={{ background: 'linear-gradient(to bottom, #1A0010, #3D001C)', borderColor: C.gold }}>
-{/* Notch */}
-<div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#1A0010] rounded-b-2xl z-30" />
+      {/* ════════════════════════════════════════════════════════
+          FOOTER CTA (Classic Jewelry Dark Theme)
+      ════════════════════════════════════════════════════════ */}
+      <section className="py-32 px-6 text-center relative overflow-hidden" style={{ background: C.maroon }}>
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+        
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <span className="font-cinzel text-xs font-bold tracking-[0.5em] uppercase block mb-6 text-white/60">Take The First Step</span>
+          <h2 className="font-cormorant font-bold mb-6 text-white leading-tight" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}>
+            अपने सपनों के गहनों की <br/><em className="italic font-light" style={{ color: C.gold }}>शुरुआत करें</em>
+          </h2>
+          <p className="font-cormorant text-xl sm:text-2xl font-light italic mb-12 text-white/80">"सोना सिर्फ आभूषण नहीं, आपके भविष्य का निवेश है।"</p>
 
-{/* Phone Screen */}
-<div className="w-full h-full rounded-[2.2rem] overflow-hidden relative flex flex-col" style={{ background: C.bg }}>
-{/* App Header */}
-<div className="pt-10 pb-4 px-6 text-center shadow-md relative z-20" style={{ background: C.gold }}>
-<span className="font-cinzel text-sm tracking-[0.2em] text-white font-bold">SHEKHAR RAJA</span>
-<p className="font-cormorant text-xs text-white/80 mt-0.5">Jewellers</p>
-</div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-white shadow-lg" style={{ color: C.maroon }}>
+              योजना शुरू करें
+            </motion.button>
+            <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white border transition-all hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
+              WhatsApp पर जुड़ें
+            </motion.a>
+          </div>
 
-{/* App Content */}
-<div className="p-4 flex-1 overflow-hidden flex flex-col relative z-10">
-{/* Fake Search Bar */}
-<div className="w-full h-10 rounded-full mb-4 flex items-center px-4 shadow-sm" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
-<Search size={14} style={{ color: C.textLight }} />
-<span className="font-raleway text-xs ml-2" style={{ color: C.textLight }}>Search jewellery...</span>
-</div>
+          <p className="font-cinzel text-xs font-bold tracking-[0.3em] uppercase text-white/40">विश्वास · शुद्धता · गुणवत्ता</p>
+        </div>
+      </section>
 
-{/* Fake Promo Banner */}
-<div className="w-full h-32 rounded-2xl mb-5 overflow-hidden shadow-md shrink-0 relative" style={{ border: '1px solid ' + C.border }}>
-<img src="/hero-1.jpg" className="w-full h-full object-cover" alt="promo preview" />
-<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
-<span className="font-cormorant text-white font-semibold">New Collection</span>
-</div>
-</div>
+      {/* ════════════════════════════════════════════════════════
+          CLEAN PAYMENT MODAL
+      ════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" style={{ background: 'rgba(44, 26, 29, 0.8)', backdropFilter: 'blur(8px)' }} onClick={() => setShowModal(false)}>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }} onClick={e => e.stopPropagation()} className="w-full max-w-md bg-white rounded-sm overflow-hidden shadow-2xl relative">
+              
+              <div className="px-6 py-6 border-b flex justify-between items-start" style={{ borderColor: C.border, background: C.void }}>
+                <div>
+                  <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.text }}>Start Your Plan</h3>
+                  <p className="font-raleway text-sm mt-1 font-bold" style={{ color: C.maroon }}>Amount: {formatINR(installment)}</p>
+                </div>
+                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 transition-colors rounded-full"><X size={20} style={{ color: C.textDim }} /></button>
+              </div>
 
-{/* Fake Product Grid */}
-<div className="grid grid-cols-2 gap-3">
-{['/ring6.png', '/necklace88.png', '/bangle1.png', '/earring1.jpg'].map((img, idx) => (
-<div key={idx} className="rounded-xl overflow-hidden shadow-sm flex flex-col" style={{ background: C.bgCard, border: '1px solid ' + C.border }}>
-<div className="h-28 overflow-hidden bg-gray-50">
-<img src={img} className="w-full h-full object-cover" alt="product preview" />
-</div>
-<div className="p-2.5">
-<div className="h-2 w-3/4 rounded mb-1.5" style={{ background: C.borderMd }} />
-<div className="h-2 w-1/2 rounded" style={{ background: C.goldPale }} />
-</div>
-</div>
-))}
-</div>
-</div>
-</div>
-</div>
-{/* Ground Shadow */}
-<div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-3 bg-black/40 blur-xl rounded-full" />
-</motion.div>
-</motion.div>
+              <div className="px-6 py-8 flex flex-col items-center gap-8">
+                {/* Step 1 */}
+                <div className="w-full">
+                  <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
+                    1. {isMobile ? 'Pay via UPI App' : 'Scan to Pay'}
+                  </p>
+                  {isMobile ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { label: 'GPay', href: `gpay://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                        { label: 'PhonePe', href: `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                        { label: 'Paytm', href: `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                        { label: 'Other', href: genericUpi },
+                      ].map(btn => (
+                        <a key={btn.label} href={btn.href} className="py-4 border rounded-sm font-raleway font-bold text-sm text-center transition-colors hover:bg-gray-50" style={{ borderColor: C.border, color: C.text }}>{btn.label}</a>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <img src={qrUrl} alt="UPI QR" className="w-48 h-48 border p-2" style={{ borderColor: C.border }} />
+                      <p className="font-mono text-xs mt-3 tracking-wide font-bold" style={{ color: C.textDim }}>{upiId}</p>
+                    </div>
+                  )}
+                </div>
 
-</div>
-</div>
-</section>
-
-{/* ══ TRUST STRIP ══ */}
-<section className="py-20 relative overflow-hidden" style={{ background: C.bgCard, borderTop: `1px solid ${C.border}` }}>
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-{trustItems.map((item, i) => (
-<motion.div key={i} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
-transition={{ delay: i*0.1 }} viewport={{ once:true }}
-whileHover={{ y:-5 }} className="text-center group">
-<div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4 transition-all duration-300"
-style={{ background: C.goldBg, border: `1px solid ${C.border}`, boxShadow:`0 4px 16px ${C.shadow}` }}>
-<span className="text-3xl" style={{ color: C.gold }}>{item.icon}</span>
-</div>
-<h3 className="font-cormorant text-xl font-semibold transition-colors" style={{ color: C.text }}
-onMouseEnter={e => e.currentTarget.style.color = C.gold}
-onMouseLeave={e => e.currentTarget.style.color = C.text}>
-{item.title}
-</h3>
-<p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>{item.desc}</p>
-</motion.div>
-))}
-</div>
-</div>
-</section>
-
-{/* Product Modal */}
-<ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-</motion.div>
-);
+                {/* Step 2 */}
+                <div className="w-full border-t pt-8" style={{ borderColor: C.border }}>
+                  <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
+                    2. Verify Payment
+                  </p>
+                  <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-wider uppercase shadow-md" style={{ background: '#25D366' }}>
+                    <ImageIcon size={18} /> Send Screenshot
+                  </motion.a>
+                  <p className="text-center font-raleway text-xs mt-4 leading-relaxed font-medium" style={{ color: C.textDim }}>
+                    Share your payment screenshot on WhatsApp to instantly activate your plan.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
