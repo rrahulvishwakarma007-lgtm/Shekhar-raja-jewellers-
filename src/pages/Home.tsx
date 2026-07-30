@@ -358,27 +358,27 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── TANISHQ-STYLE CENTER MODE CAROUSEL ── */}
+        {/* ── TANISHQ-STYLE CENTER MODE CAROUSEL WITH OBJECT-COVER ── */}
         <div className="w-full relative overflow-hidden py-4 sm:py-6" style={{ background: C.bg }}>
           {/* Main slider track */}
-          <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] w-full flex items-center justify-center">
+          <div className="relative h-[220px] sm:h-[350px] md:h-[450px] lg:h-[520px] w-full flex items-center justify-center">
             {promoBanners.map((banner, i) => {
               // Calculate offset relative to the active slide (-1, 0, 1)
               let offset = 0;
               if (i === promoBanner) offset = 0;
               else if (i === (promoBanner + 1) % promoBanners.length) offset = 1;
               else if (i === (promoBanner - 1 + promoBanners.length) % promoBanners.length) offset = -1;
-              else offset = i > promoBanner ? 2 : -2; // Hide others further away
+              else offset = i > promoBanner ? 2 : -2;
 
               return (
                 <motion.div
                   key={i}
-                  className="absolute w-[92%] sm:w-[85%] lg:w-[80%] h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg cursor-grab active:cursor-grabbing bg-white"
+                  className="absolute w-[95%] sm:w-[88%] lg:w-[82%] h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing bg-white flex items-center justify-center"
                   initial={false}
                   animate={{
-                    x: `${offset * 104}%`, // 104% creates a small visual gap between slides
-                    scale: offset === 0 ? 1 : 0.92, // Scale down the adjacent side-slides
-                    opacity: Math.abs(offset) > 1 ? 0 : (offset === 0 ? 1 : 0.6), // Dim the adjacent slides slightly
+                    x: `${offset * 102}%`,
+                    scale: offset === 0 ? 1 : 0.94,
+                    opacity: Math.abs(offset) > 1 ? 0 : (offset === 0 ? 1 : 0.5),
                     zIndex: offset === 0 ? 10 : 5,
                   }}
                   transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
@@ -386,12 +386,11 @@ export default function Home() {
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={1}
                   onDragEnd={(e, info) => {
-                    // Swipe logic to switch banners manually
                     if (info.offset.x < -50) setPromoBanner(p => (p + 1) % promoBanners.length);
                     if (info.offset.x > 50) setPromoBanner(p => (p - 1 + promoBanners.length) % promoBanners.length);
                   }}
                 >
-                  <img src={banner.img} alt={banner.label} className="w-full h-full object-contain object-center pointer-events-none" />
+                  <img src={banner.img} alt={banner.label} className="w-full h-full object-cover object-center pointer-events-none" />
                 </motion.div>
               );
             })}
