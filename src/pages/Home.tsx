@@ -228,7 +228,7 @@ function HomeSkeleton() {
 
         {/* Promo Banner Skeleton */}
         <div className="w-full overflow-hidden pb-8 pt-4">
-          <div className="w-[90%] mx-auto rounded-3xl h-[200px] sm:h-[350px] md:h-[450px] lg:h-[500px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
+          <div className="w-[90%] mx-auto rounded-3xl h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
         </div>
       </section>
     </div>
@@ -361,7 +361,7 @@ export default function Home() {
         {/* ── TANISHQ-STYLE CENTER MODE CAROUSEL ── */}
         <div className="w-full relative overflow-hidden py-4 sm:py-6" style={{ background: C.bg }}>
           {/* Main slider track */}
-          <div className="relative h-[200px] sm:h-[350px] md:h-[450px] lg:h-[500px] w-full flex items-center justify-center">
+          <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] w-full flex items-center justify-center">
             {promoBanners.map((banner, i) => {
               // Calculate offset relative to the active slide (-1, 0, 1)
               let offset = 0;
@@ -373,7 +373,7 @@ export default function Home() {
               return (
                 <motion.div
                   key={i}
-                  className="absolute w-[92%] sm:w-[85%] lg:w-[80%] h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg cursor-grab active:cursor-grabbing"
+                  className="absolute w-[92%] sm:w-[85%] lg:w-[80%] h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg cursor-grab active:cursor-grabbing bg-white"
                   initial={false}
                   animate={{
                     x: `${offset * 104}%`, // 104% creates a small visual gap between slides
@@ -391,7 +391,7 @@ export default function Home() {
                     if (info.offset.x > 50) setPromoBanner(p => (p - 1 + promoBanners.length) % promoBanners.length);
                   }}
                 >
-                  <img src={banner.img} alt={banner.label} className="w-full h-full object-cover object-center pointer-events-none" />
+                  <img src={banner.img} alt={banner.label} className="w-full h-full object-contain object-center pointer-events-none" />
                 </motion.div>
               );
             })}
@@ -648,7 +648,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Realistic Phone Mockup (Copied exactly from AppDownload page) */}
+            {/* Realistic Phone Mockup */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
