@@ -16,7 +16,9 @@ const C = {
   maroon:    '#832729',     // Deep heritage maroon (Primary)
   maroonLt:  '#A53540',     // Lighter maroon for hovers
   gold:      '#C5A059',     // Muted sophisticated gold
+  goldPale:  '#E8DCC4',     // Pale gold shimmer (Added to fix TS error)
   goldLight: '#E8DCC4',     // Pale gold for borders
+  pink:      '#C5A059',     // Fallback for gold particles (Added to fix TS error)
   text:      '#2C1A1D',     // Very dark brown/maroon for headings
   textDim:   '#5C4A4D',     // Muted text for paragraphs
   border:    'rgba(197, 160, 89, 0.3)', // Subtle gold border
@@ -259,8 +261,8 @@ export default function SwarnaSamriddhi() {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual (Simple Landscape Video with Floating Badge) */}
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex flex-col items-center lg:items-end">
+          {/* Right Visual (Video + Mobile Flow Fix) */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex flex-col items-center lg:items-end mt-4 lg:mt-0">
             {/* Landscape Frame */}
             <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
               <motion.video
