@@ -191,6 +191,20 @@ const allProducts = [
   { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage',    featured:false },
   { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive',   featured:false },
   { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
+
+  // ── CHAINS (chain.jpg – chain11.jpg) ─────────────────────────────────────
+  { id:112, name:'Gold Chain',             category:'Chains',       description:'Elegant 22KT gold chain with classic link design, perfect for everyday wear.',        image:'/chain.jpg',     tag:'Classic',     featured:true  },
+  { id:113, name:'Gold Chain',             category:'Chains',       description:'Lightweight 22KT gold chain ideal for pendants and daily use.',                       image:'/chain1.jpg',    tag:'Everyday',    featured:false },
+  { id:114, name:'Figaro Gold Chain',      category:'Chains',       description:'Italian figaro link chain in 22KT gold — timeless and versatile.',                    image:'/chain2.jpg',    tag:'Trending',    featured:false },
+  { id:115, name:'Rope Gold Chain',        category:'Chains',       description:'Twisted rope design in 22KT gold, a bold statement piece.',                          image:'/chain3.jpg',    tag:'Bestseller',  featured:true  },
+  { id:116, name:'Box Link Chain',         category:'Chains',       description:'Square box link chain in 22KT gold — sleek and modern.',                             image:'/chain4.jpg',    tag:'New Arrival', featured:false },
+  { id:117, name:'Heritage Gold Chain',    category:'Chains',       description:'Traditional heritage link chain in 22KT gold with antique finish.',                  image:'/chain5.jpg',    tag:'Heritage',    featured:false },
+  { id:118, name:'Designer Gold Chain',    category:'Chains',       description:'Designer pattern chain in 22KT gold, crafted for special occasions.',                image:'/chain6.jpg',    tag:'Exclusive',   featured:false },
+  { id:119, name:'Curb Link Chain',        category:'Chains',       description:'Heavy curb link chain in 22KT gold — ideal for men and women alike.',                image:'/chain7.jpg',    tag:'Premium',     featured:false },
+  { id:120, name:'Temple Gold Chain',      category:'Chains',       description:'Temple-art inspired chain in 22KT gold with traditional motifs.',                    image:'/chain8.jpg',    tag:'Traditional', featured:false },
+  { id:121, name:'Fancy Gold Chain',       category:'Chains',       description:'Fancy pattern gold chain in 22KT, perfect for gifting.',                            image:'/chain9.jpg',    tag:'Festive',     featured:false },
+  { id:122, name:'Bridal Gold Chain',      category:'Chains',       description:'Heavy bridal chain in 22KT gold with intricate detailing.',                          image:'/chain10.jpg',   tag:'Bridal Pick', featured:false },
+  { id:123, name:'Long Gold Chain',        category:'Chains',       description:'Long layering chain in 22KT gold, versatile for all looks.',                         image:'/chain11.jpg',   tag:'Classic',     featured:false },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
