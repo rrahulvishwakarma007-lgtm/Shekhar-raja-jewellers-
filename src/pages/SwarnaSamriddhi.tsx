@@ -231,10 +231,13 @@ export default function SwarnaSamriddhi() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative flex justify-center lg:justify-end h-[500px] sm:h-[650px]">
             {/* The Arch Frame */}
             <div className="relative w-[90%] sm:w-[80%] lg:w-[400px] h-full rounded-t-full overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
-              <motion.img 
+              <motion.video
                 style={{ scale: imgScale }}
-                src="/antique1.jpg" 
-                alt="Exquisite Gold Jewelry" 
+                src="/srjyojna.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
