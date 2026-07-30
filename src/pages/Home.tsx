@@ -61,8 +61,8 @@ const categories = [
 // ── Collections ───────────────────────────────────────────────────────────────
 const collections = [
   { id:1, name:'Traditional Choker', category:'Bridal', image:'/Choker101.jpg', featured:true },
-  { id:2, name:'Classic Earrings', category:'Gold', image:'/earrings 101.jpg', featured:false },
-  { id:3, name:'Gold Earrings',category:'Earrings', image:'/earrings 102.jpg', featured:false },
+  { id:2, name:'Classic Earrings', category:'Gold', image:'/earrings101.jpg', featured:false },
+  { id:3, name:'Gold Earrings',category:'Earrings', image:'/earrings102.jpg', featured:false },
 ];
 
 // ── Products ──────────────────────────────────────────────────────────────────
