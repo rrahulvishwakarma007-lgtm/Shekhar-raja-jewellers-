@@ -43,7 +43,7 @@ function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: 
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
   const [val, setVal] = useState(0);
-  
+
   useEffect(() => {
     if (!inView) return;
     let start: number | null = null;
@@ -57,7 +57,7 @@ function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: 
     };
     requestAnimationFrame(tick);
   }, [inView, to, duration]);
-  
+
   return <span ref={ref}>{prefix}{new Intl.NumberFormat('en-IN').format(val)}</span>;
 }
 
@@ -117,10 +117,10 @@ export default function SwarnaSamriddhi() {
   const srjBonus   = installment * 2;
   const grandTotal = userTotal + srjBonus;
 
-  // Payment Links
-  const upiId  = '8377911745@upi';
+  // Payment Links (Updated as per screenshot)
+  const upiId  = 'eazypay.9TF00QR5BL4W0IS@icici';
   const note   = 'Swarna Samriddhi Installment';
-  const name   = 'Shekhar Raja Jewellers';
+  const name   = 'M S Raja Jewellers';
   const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
   const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
   const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* से जुड़ना चाहता/चाहती हूँ।\n\nमासिक किस्त: *${formatINR(installment)}*\nपेमेंट स्क्रीनशॉट संलग्न है।`;
@@ -140,7 +140,7 @@ export default function SwarnaSamriddhi() {
     <div style={{ background: C.void, color: C.text, fontFamily: 'Raleway, sans-serif' }} className="min-h-screen selection:bg-[#832729] selection:text-white">
 
       {/* ════════════════════════════════════════════════════════
-          MAIN WEBSITE NAVBAR
+         MAIN WEBSITE NAVBAR
       ════════════════════════════════════════════════════════ */}
       <motion.nav
         initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -225,13 +225,13 @@ export default function SwarnaSamriddhi() {
       </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════
-          EDITORIAL HERO SECTION (Tanishq Style Split Layout)
+         EDITORIAL HERO SECTION (Tanishq Style Split Layout)
       ════════════════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
-        
+
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
-          
+
           {/* Left Content */}
           <motion.div style={{ y: heroY }} className="flex flex-col text-center lg:text-left items-center lg:items-start pt-10 lg:pt-0 z-20">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-8">
@@ -334,7 +334,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          EDITORIAL IMAGE BANNER
+         EDITORIAL IMAGE BANNER
       ════════════════════════════════════════════════════════ */}
       <section className="relative w-full h-[300px] sm:h-[400px] overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
@@ -354,7 +354,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          PICTORIAL "HOW IT WORKS" SECTION
+         PICTORIAL "HOW IT WORKS" SECTION
       ════════════════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
         <div className="max-w-7xl mx-auto px-6">
@@ -402,7 +402,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          FINTECH CALCULATOR (Flat & Elegant)
+         FINTECH CALCULATOR (Flat & Elegant)
       ════════════════════════════════════════════════════════ */}
       <section id="calculator" className="py-24 sm:py-32" style={{ background: C.voidMid }}>
         <div className="max-w-5xl mx-auto px-6">
@@ -412,7 +412,7 @@ export default function SwarnaSamriddhi() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="p-8 sm:p-16 bg-white shadow-lg relative" style={{ border: `1px solid ${C.border}` }}>
-            
+
             {/* Elegant Slider */}
             <div className="max-w-3xl mx-auto mb-16 relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b" style={{ borderColor: C.border }}>
@@ -421,7 +421,7 @@ export default function SwarnaSamriddhi() {
                   {formatINR(installment)}
                 </motion.span>
               </div>
-              
+
               <div className="relative pt-4 pb-2">
                 <input type="range" min={2000} max={50000} step={1000} value={installment} onChange={e => setInstallment(Number(e.target.value))} 
                        className="w-full h-1 outline-none cursor-pointer appearance-none z-10 relative" 
@@ -470,7 +470,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          TERMS & CONDITIONS (Editorial List)
+         TERMS & CONDITIONS (Editorial List)
       ════════════════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
         <div className="max-w-4xl mx-auto px-6">
@@ -498,11 +498,11 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          FOOTER CTA (Classic Jewelry Dark Theme)
+         FOOTER CTA (Classic Jewelry Dark Theme)
       ════════════════════════════════════════════════════════ */}
       <section className="py-32 px-6 text-center relative overflow-hidden" style={{ background: C.maroon }}>
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
-        
+
         <div className="relative z-10 max-w-3xl mx-auto">
           <span className="font-cinzel text-xs font-bold tracking-[0.5em] uppercase block mb-6 text-white/60">Take The First Step</span>
           <h2 className="font-cormorant font-bold mb-6 text-white leading-tight" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}>
@@ -515,7 +515,7 @@ export default function SwarnaSamriddhi() {
               योजना शुरू करें
             </motion.button>
             <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white border transition-all hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
-              WhatsApp पर जुड़ें
+              WhatsApp पर जुड़ें
             </motion.a>
           </div>
 
@@ -524,13 +524,13 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          CLEAN PAYMENT MODAL
+         CLEAN PAYMENT MODAL
       ════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" style={{ background: 'rgba(44, 26, 29, 0.8)', backdropFilter: 'blur(8px)' }} onClick={() => setShowModal(false)}>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }} onClick={e => e.stopPropagation()} className="w-full max-w-md bg-white rounded-sm overflow-hidden shadow-2xl relative">
-              
+
               <div className="px-6 py-6 border-b flex justify-between items-start" style={{ borderColor: C.border, background: C.void }}>
                 <div>
                   <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.text }}>Start Your Plan</h3>
