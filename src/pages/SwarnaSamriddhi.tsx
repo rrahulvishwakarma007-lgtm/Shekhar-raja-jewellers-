@@ -4,7 +4,7 @@ import {
   Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
   ArrowRight, X, Smartphone, QrCode, Shield,
   Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
-  Heart, Menu, ChevronRight
+  Heart, Menu, ChevronRight, User, Phone, MapPin, UserCheck, ArrowLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -16,9 +16,9 @@ const C = {
   maroon:    '#832729',     // Deep heritage maroon (Primary)
   maroonLt:  '#A53540',     // Lighter maroon for hovers
   gold:      '#C5A059',     // Muted sophisticated gold
-  goldPale:  '#E8DCC4',     // Pale gold shimmer (Added to fix TS error)
+  goldPale:  '#E8DCC4',     // Pale gold shimmer
   goldLight: '#E8DCC4',     // Pale gold for borders
-  pink:      '#C5A059',     // Fallback for gold particles (Added to fix TS error)
+  pink:      '#C5A059',     // Fallback for gold particles
   text:      '#2C1A1D',     // Very dark brown/maroon for headings
   textDim:   '#5C4A4D',     // Muted text for paragraphs
   border:    'rgba(197, 160, 89, 0.3)', // Subtle gold border
@@ -61,46 +61,23 @@ function CountUp({ to, prefix = '₹', duration = 1.2 }: { to: number; prefix?: 
   return <span ref={ref}>{prefix}{new Intl.NumberFormat('en-IN').format(val)}</span>;
 }
 
-// ── Gold shimmer particle ────────────────────────────────────────────────────
-function GoldParticles({ count = 20 }: { count?: number }) {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {Array.from({ length: count }).map((_, i) => (
-        <motion.div key={i}
-          className="absolute rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top:  `${Math.random() * 100}%`,
-            background: i % 3 === 0 ? C.goldPale : i % 3 === 1 ? C.gold : C.pink,
-            width:  i % 5 === 0 ? 3 : 1.5,
-            height: i % 5 === 0 ? 3 : 1.5,
-            boxShadow: `0 0 ${i % 5 === 0 ? '8px' : '4px'} ${C.goldPale}`,
-          }}
-          animate={{
-            y:       [0, -(50 + Math.random() * 80), 0],
-            opacity: [0, 0.8, 0],
-            scale:   [0, 1.2, 0],
-          }}
-          transition={{
-            duration:  4 + Math.random() * 5,
-            repeat:    Infinity,
-            delay:     Math.random() * 5,
-            ease:      'easeInOut',
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function SwarnaSamriddhi() {
   const [installment, setInstallment] = useState(5000);
   const [showModal, setShowModal]     = useState(false);
+  const [modalStep, setModalStep]     = useState<1 | 2>(1); // 1 = Registration Form, 2 = Payment
   const [isMobile, setIsMobile]       = useState(false);
   const [isScrolled, setIsScrolled]   = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+
+  // Form State for Swarna Samriddhi Yojana Registration
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    city: '',
+    nominee: '',
+  });
 
   useEffect(() => {
     setIsMobile(/android|iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
@@ -117,14 +94,30 @@ export default function SwarnaSamriddhi() {
   const srjBonus   = installment * 2;
   const grandTotal = userTotal + srjBonus;
 
-  // Payment Links (Updated as per screenshot)
+  // Payment Links
   const upiId  = 'eazypay.9TF00QR5BL4W0IS@icici';
-  const note   = 'Swarna Samriddhi Installment';
+  const note   = `Swarna Samriddhi - ${formData.fullName || 'Installment'}`;
   const name   = 'M S Raja Jewellers';
   const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
   const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
-  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* से जुड़ना चाहता/चाहती हूँ।\n\nमासिक किस्त: *${formatINR(installment)}*\nपेमेंट स्क्रीनशॉट संलग्न है।`;
+
+  // WhatsApp verification message pre-formatted with user scheme registration details
+  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* में पंजीकरण एवं किस्त भुगतान करना चाहता/चाहती हूँ।\n\n📌 *ग्राहक विवरण (Customer Details):*\n• नाम: *${formData.fullName}*\n• मोबाइल नंबर: *${formData.phone}*\n• शहर/पता: *${formData.city || 'N/A'}*\n• नॉमिनी: *${formData.nominee || 'N/A'}*\n• मासिक किस्त राशि: *${formatINR(installment)}*\n\nपेमेंट स्क्रीनशॉट संलग्न है।`;
   const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.fullName || !formData.phone) {
+      alert('कृपया अपना नाम और मोबाइल नंबर दर्ज करें।');
+      return;
+    }
+    setModalStep(2); // Proceed to Payment Page
+  };
+
+  const handleOpenModal = () => {
+    setModalStep(1);
+    setShowModal(true);
+  };
 
   // Animation Variants
   const fadeUp: Variants = {
@@ -225,7 +218,7 @@ export default function SwarnaSamriddhi() {
       </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════
-         EDITORIAL HERO SECTION (Tanishq Style Split Layout)
+         EDITORIAL HERO SECTION
       ════════════════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 flex items-center min-h-[90vh] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
@@ -252,7 +245,7 @@ export default function SwarnaSamriddhi() {
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-xl flex items-center justify-center gap-2" style={{ background: C.maroon }}>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleOpenModal} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-xl flex items-center justify-center gap-2" style={{ background: C.maroon }}>
                 योजना शुरू करें <ArrowRight size={16} />
               </motion.button>
               <motion.a href="#calculator" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-transparent hover:bg-white flex items-center justify-center gap-2" style={{ border: `1px solid ${C.maroon}`, color: C.maroon }}>
@@ -261,7 +254,7 @@ export default function SwarnaSamriddhi() {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual (Video + Mobile Flow Fix) */}
+          {/* Right Visual */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.4 }} className="relative w-full flex flex-col items-center lg:items-end mt-4 lg:mt-0">
             {/* Landscape Frame */}
             <div className="relative w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl overflow-hidden shadow-2xl z-10" style={{ border: `6px solid ${C.voidLight}` }}>
@@ -277,12 +270,10 @@ export default function SwarnaSamriddhi() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             </div>
 
-            {/* Decorative Outline — offset so it doesn't clip */}
+            {/* Decorative Outline */}
             <div className="absolute top-3 -right-3 w-full sm:w-[90%] lg:w-full aspect-video rounded-2xl border z-0 hidden sm:block" style={{ borderColor: C.gold }} />
 
-            {/* Golden Benefit Badge — below video on mobile, overlaid inside on sm+ */}
-
-            {/* MOBILE: sits below the video, full-width pill row, no overlap */}
+            {/* MOBILE Benefit Badge */}
             <div className="flex sm:hidden items-center justify-center gap-6 mt-4 w-full px-4 py-3 rounded-2xl"
                  style={{ background: '#fff', border: `1px solid ${C.border}`, boxShadow:'0 4px 16px rgba(197,160,89,0.12)' }}>
               <span className="font-cinzel text-[8px] tracking-widest uppercase self-center" style={{ color: C.gold }}>Golden Benefit</span>
@@ -304,7 +295,7 @@ export default function SwarnaSamriddhi() {
               </div>
             </div>
 
-            {/* SM+: floating overlay inside video, bottom-right corner, compact */}
+            {/* SM+ Floating Benefit Badge */}
             <motion.div
               animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-xl z-30 shadow-xl hidden sm:block"
@@ -402,7 +393,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-         FINTECH CALCULATOR (Flat & Elegant)
+         FINTECH CALCULATOR
       ════════════════════════════════════════════════════════ */}
       <section id="calculator" className="py-24 sm:py-32" style={{ background: C.voidMid }}>
         <div className="max-w-5xl mx-auto px-6">
@@ -413,7 +404,7 @@ export default function SwarnaSamriddhi() {
 
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="p-8 sm:p-16 bg-white shadow-lg relative" style={{ border: `1px solid ${C.border}` }}>
 
-            {/* Elegant Slider */}
+            {/* Slider */}
             <div className="max-w-3xl mx-auto mb-16 relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b" style={{ borderColor: C.border }}>
                 <label className="font-cinzel text-sm font-bold tracking-widest uppercase" style={{ color: C.textDim }}>मासिक किस्त चुनें</label>
@@ -441,7 +432,7 @@ export default function SwarnaSamriddhi() {
               </div>
             </div>
 
-            {/* Flat Data Cards */}
+            {/* Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-0 mb-12 border-y sm:border-y-0 sm:border-x relative z-10" style={{ borderColor: C.border }}>
               <div className="p-8 text-center border-b sm:border-b-0 sm:border-r" style={{ borderColor: C.border }}>
                 <p className="font-cinzel text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: C.textDim }}>आपकी 10 किस्तें</p>
@@ -461,7 +452,7 @@ export default function SwarnaSamriddhi() {
             </div>
 
             <div className="flex justify-center relative z-10">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="flex items-center gap-3 px-12 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-lg" style={{ background: C.maroon }}>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleOpenModal} className="flex items-center gap-3 px-12 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white transition-all shadow-lg" style={{ background: C.maroon }}>
                 {isMobile ? <Smartphone size={18} /> : <QrCode size={18} />} योजना शुरू करें <ArrowRight size={16} />
               </motion.button>
             </div>
@@ -470,7 +461,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-         TERMS & CONDITIONS (Editorial List)
+         TERMS & CONDITIONS
       ════════════════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32" style={{ background: C.voidLight }}>
         <div className="max-w-4xl mx-auto px-6">
@@ -498,7 +489,7 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-         FOOTER CTA (Classic Jewelry Dark Theme)
+         FOOTER CTA
       ════════════════════════════════════════════════════════ */}
       <section className="py-32 px-6 text-center relative overflow-hidden" style={{ background: C.maroon }}>
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(${C.goldLight} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
@@ -511,7 +502,7 @@ export default function SwarnaSamriddhi() {
           <p className="font-cormorant text-xl sm:text-2xl font-light italic mb-12 text-white/80">"सोना सिर्फ आभूषण नहीं, आपके भविष्य का निवेश है।"</p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-white shadow-lg" style={{ color: C.maroon }}>
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleOpenModal} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase transition-all bg-white shadow-lg" style={{ color: C.maroon }}>
               योजना शुरू करें
             </motion.button>
             <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto px-10 py-5 rounded-sm font-raleway font-bold text-sm tracking-widest uppercase text-white border transition-all hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
@@ -524,59 +515,184 @@ export default function SwarnaSamriddhi() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-         CLEAN PAYMENT MODAL
+         TWO-STEP SCHEME REGISTRATION & PAYMENT MODAL
       ════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" style={{ background: 'rgba(44, 26, 29, 0.8)', backdropFilter: 'blur(8px)' }} onClick={() => setShowModal(false)}>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }} onClick={e => e.stopPropagation()} className="w-full max-w-md bg-white rounded-sm overflow-hidden shadow-2xl relative">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }} onClick={e => e.stopPropagation()} className="w-full max-w-lg bg-white rounded-sm overflow-hidden shadow-2xl relative">
 
-              <div className="px-6 py-6 border-b flex justify-between items-start" style={{ borderColor: C.border, background: C.void }}>
-                <div>
-                  <h3 className="font-cormorant text-2xl font-bold" style={{ color: C.text }}>Start Your Plan</h3>
-                  <p className="font-raleway text-sm mt-1 font-bold" style={{ color: C.maroon }}>Amount: {formatINR(installment)}</p>
+              {/* Modal Header */}
+              <div className="px-6 py-5 border-b flex justify-between items-center" style={{ borderColor: C.border, background: C.void }}>
+                <div className="flex items-center gap-3">
+                  {modalStep === 2 && (
+                    <button type="button" onClick={() => setModalStep(1)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors flex items-center justify-center" style={{ color: C.maroon }}>
+                      <ArrowLeft size={20} />
+                    </button>
+                  )}
+                  <div>
+                    <h3 className="font-cormorant text-2xl font-bold leading-tight" style={{ color: C.text }}>
+                      {modalStep === 1 ? '1. Scheme Enrolment Form' : '2. Payment Details'}
+                    </h3>
+                    <p className="font-raleway text-sm mt-0.5 font-bold" style={{ color: C.maroon }}>
+                      Amount: {formatINR(installment)}
+                    </p>
+                  </div>
                 </div>
                 <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 transition-colors rounded-full"><X size={20} style={{ color: C.textDim }} /></button>
               </div>
 
-              <div className="px-6 py-8 flex flex-col items-center gap-8">
-                {/* Step 1 */}
-                <div className="w-full">
-                  <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
-                    1. {isMobile ? 'Pay via UPI App' : 'Scan to Pay'}
-                  </p>
-                  {isMobile ? (
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { label: 'GPay', href: `gpay://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
-                        { label: 'PhonePe', href: `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
-                        { label: 'Paytm', href: `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
-                        { label: 'Other', href: genericUpi },
-                      ].map(btn => (
-                        <a key={btn.label} href={btn.href} className="py-4 border rounded-sm font-raleway font-bold text-sm text-center transition-colors hover:bg-gray-50" style={{ borderColor: C.border, color: C.text }}>{btn.label}</a>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <img src={qrUrl} alt="UPI QR" className="w-48 h-48 border p-2" style={{ borderColor: C.border }} />
-                      <p className="font-mono text-xs mt-3 tracking-wide font-bold" style={{ color: C.textDim }}>{upiId}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Step 2 */}
-                <div className="w-full border-t pt-8" style={{ borderColor: C.border }}>
-                  <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
-                    2. Verify Payment
-                  </p>
-                  <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-wider uppercase shadow-md" style={{ background: '#25D366' }}>
-                    <ImageIcon size={18} /> Send Screenshot
-                  </motion.a>
-                  <p className="text-center font-raleway text-xs mt-4 leading-relaxed font-medium" style={{ color: C.textDim }}>
-                    Share your payment screenshot on WhatsApp to instantly activate your plan.
-                  </p>
-                </div>
+              {/* Step Progress Bar */}
+              <div className="w-full bg-gray-100 h-1.5 flex">
+                <div className="h-full transition-all duration-300" style={{ width: modalStep === 1 ? '50%' : '100%', background: C.maroon }} />
               </div>
+
+              {/* Modal Body with Scroll */}
+              <div className="max-h-[75vh] overflow-y-auto">
+                {/* Step 1: Essential Scheme Registration Form */}
+                {modalStep === 1 && (
+                  <form onSubmit={handleFormSubmit} className="p-6 sm:p-8 space-y-5">
+                    <p className="font-raleway text-sm text-center font-medium mb-6" style={{ color: C.textDim }}>
+                      कृपया योजना पंजीकरण के लिए निम्नलिखित आवश्यक विवरण भरें:
+                    </p>
+
+                    {/* Full Name */}
+                    <div>
+                      <label className="block font-cinzel text-xs font-bold tracking-wider uppercase mb-1.5" style={{ color: C.text }}>
+                        Full Name (पूरा नाम) <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Rahul Sharma"
+                          value={formData.fullName}
+                          onChange={e => setFormData({ ...formData, fullName: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border text-sm rounded-sm outline-none transition-colors"
+                          style={{ borderColor: C.border, color: C.text }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone Number */}
+                    <div>
+                      <label className="block font-cinzel text-xs font-bold tracking-wider uppercase mb-1.5" style={{ color: C.text }}>
+                        WhatsApp Number (मोबाइल नंबर) <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="tel"
+                          required
+                          pattern="[0-9]{10}"
+                          placeholder="10-digit mobile number"
+                          value={formData.phone}
+                          onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border text-sm rounded-sm outline-none transition-colors"
+                          style={{ borderColor: C.border, color: C.text }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* City / Address */}
+                    <div>
+                      <label className="block font-cinzel text-xs font-bold tracking-wider uppercase mb-1.5" style={{ color: C.text }}>
+                        City / Address (शहर / पता)
+                      </label>
+                      <div className="relative">
+                        <MapPin size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="e.g. Jabalpur"
+                          value={formData.city}
+                          onChange={e => setFormData({ ...formData, city: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border text-sm rounded-sm outline-none transition-colors"
+                          style={{ borderColor: C.border, color: C.text }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Nominee Name */}
+                    <div>
+                      <label className="block font-cinzel text-xs font-bold tracking-wider uppercase mb-1.5" style={{ color: C.text }}>
+                        Nominee Name (नामांकित व्यक्ति)
+                      </label>
+                      <div className="relative">
+                        <UserCheck size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="e.g. Sunita Sharma (Wife)"
+                          value={formData.nominee}
+                          onChange={e => setFormData({ ...formData, nominee: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border text-sm rounded-sm outline-none transition-colors"
+                          style={{ borderColor: C.border, color: C.text }}
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full mt-2 py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-widest uppercase shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95"
+                      style={{ background: C.maroon }}
+                    >
+                      Proceed to Payment <ArrowRight size={16} />
+                    </button>
+                  </form>
+                )}
+
+                {/* Step 2: Payment Page */}
+                {modalStep === 2 && (
+                  <div className="px-6 py-8 flex flex-col items-center gap-8">
+                    {/* Summary Box */}
+                    <div className="w-full p-4 rounded-sm bg-[#faf7f2] border flex justify-between items-center text-xs sm:text-sm font-medium" style={{ borderColor: C.border, color: C.textDim }}>
+                      <span>Applicant: <strong style={{ color: C.text }}>{formData.fullName}</strong></span>
+                      <span>Phone: <strong style={{ color: C.text }}>{formData.phone}</strong></span>
+                    </div>
+
+                    {/* Payment Options */}
+                    <div className="w-full">
+                      <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
+                        {isMobile ? 'Select UPI App to Pay' : 'Scan QR Code to Pay'}
+                      </p>
+
+                      {isMobile ? (
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { label: 'GPay', href: `gpay://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                            { label: 'PhonePe', href: `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                            { label: 'Paytm', href: `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR` },
+                            { label: 'Other UPI', href: genericUpi },
+                          ].map(btn => (
+                            <a key={btn.label} href={btn.href} className="py-4 border rounded-sm font-raleway font-bold text-sm text-center transition-colors hover:bg-gray-50 shadow-sm" style={{ borderColor: C.border, color: C.text }}>
+                              {btn.label}
+                            </a>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <img src={qrUrl} alt="UPI QR" className="w-48 h-48 border p-2 bg-white" style={{ borderColor: C.border }} />
+                          <p className="font-mono text-xs mt-3 tracking-wide font-bold" style={{ color: C.textDim }}>{upiId}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Step 2 Verification */}
+                    <div className="w-full border-t pt-8" style={{ borderColor: C.border }}>
+                      <p className="font-cinzel text-xs font-bold mb-4 text-center uppercase tracking-widest" style={{ color: C.textDim }}>
+                        Verify Payment
+                      </p>
+                      <motion.a href={waLink} target="_blank" rel="noreferrer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 w-full py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-wider uppercase shadow-md" style={{ background: '#25D366' }}>
+                        <ImageIcon size={18} /> Send Screenshot
+                      </motion.a>
+                      <p className="text-center font-raleway text-xs mt-4 leading-relaxed font-medium" style={{ color: C.textDim }}>
+                        Share your payment screenshot on WhatsApp to instantly activate your plan.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
             </motion.div>
           </motion.div>
         )}
