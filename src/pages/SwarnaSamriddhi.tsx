@@ -72,7 +72,7 @@ export default function SwarnaSamriddhi() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Form State for Swarna Samriddhi Yojana Registration (Nominee removed)
+  // Form State for Swarna Samriddhi Yojana Registration
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -101,12 +101,12 @@ export default function SwarnaSamriddhi() {
   const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
   const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
 
-  // WhatsApp verification message (Nominee removed)
+  // WhatsApp verification message
   const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* में पंजीकरण एवं किस्त भुगतान करना चाहता/चाहती हूँ।\n\n📌 *ग्राहक विवरण (Customer Details):*\n• नाम: *${formData.fullName}*\n• मोबाइल नंबर: *${formData.phone}*\n• शहर/पता: *${formData.city || 'N/A'}*\n• मासिक किस्त राशि: *${formatINR(installment)}*\n\nपेमेंट स्क्रीनशॉट संलग्न है।`;
   const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
 
-  // REPLACE THIS URL with your actual SheetDB, Sheet.best, or Google Apps Script Web App URL
-  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; 
+  // Active Google Apps Script Webhook URL
+  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyM6bnBK_ndiWcuUIu9VMacz93T85q0OSrLFXSU06boG8tfGQJbyV6pDPaEmrabfuSHUg/exec"; 
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,21 +130,15 @@ export default function SwarnaSamriddhi() {
     };
 
     try {
-      /* 
-       * Uncomment the below block once you have replaced GOOGLE_SHEETS_WEBHOOK_URL
-       * with your actual endpoint. 
-       */
-      
-      // await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(payload),
-      // });
-      
-      // Simulating a network delay for the loading state (Remove this when actual fetch is active)
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Send data to Google Sheets
+      await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          // 'text/plain' prevents strict CORS errors from blocking the request in the browser
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+      });
 
       setModalStep(2); // Proceed to Payment Page on success
     } catch (error) {
