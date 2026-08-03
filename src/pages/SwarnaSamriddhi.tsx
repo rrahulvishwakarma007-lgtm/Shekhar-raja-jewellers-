@@ -4,7 +4,7 @@ import {
   Gift, Wallet, ShoppingBag, Calculator, MessageCircle,
   ArrowRight, X, Smartphone, QrCode, Shield,
   Star, Clock, CheckCircle2, ChevronLeft, Image as ImageIcon,
-  Heart, Menu, ChevronRight, User, Phone, MapPin, UserCheck, ArrowLeft
+  Heart, Menu, ChevronRight, User, Phone, MapPin, ArrowLeft, Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -69,14 +69,14 @@ export default function SwarnaSamriddhi() {
   const [isMobile, setIsMobile]       = useState(false);
   const [isScrolled, setIsScrolled]   = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Form State for Swarna Samriddhi Yojana Registration
+  // Form State for Swarna Samriddhi Yojana Registration (Nominee removed)
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     city: '',
-    nominee: '',
   });
 
   useEffect(() => {
@@ -101,17 +101,58 @@ export default function SwarnaSamriddhi() {
   const genericUpi   = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${installment}&cu=INR&tn=${encodeURIComponent(note)}`;
   const qrUrl        = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(genericUpi)}&margin=10&bgcolor=FFFFFF`;
 
-  // WhatsApp verification message pre-formatted with user scheme registration details
-  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* में पंजीकरण एवं किस्त भुगतान करना चाहता/चाहती हूँ।\n\n📌 *ग्राहक विवरण (Customer Details):*\n• नाम: *${formData.fullName}*\n• मोबाइल नंबर: *${formData.phone}*\n• शहर/पता: *${formData.city || 'N/A'}*\n• नॉमिनी: *${formData.nominee || 'N/A'}*\n• मासिक किस्त राशि: *${formatINR(installment)}*\n\nपेमेंट स्क्रीनशॉट संलग्न है।`;
+  // WhatsApp verification message (Nominee removed)
+  const whatsappMsg  = `नमस्ते! 🙏\nमैं *स्वर्ण समृद्धि योजना* में पंजीकरण एवं किस्त भुगतान करना चाहता/चाहती हूँ।\n\n📌 *ग्राहक विवरण (Customer Details):*\n• नाम: *${formData.fullName}*\n• मोबाइल नंबर: *${formData.phone}*\n• शहर/पता: *${formData.city || 'N/A'}*\n• मासिक किस्त राशि: *${formatINR(installment)}*\n\nपेमेंट स्क्रीनशॉट संलग्न है।`;
   const waLink       = `https://wa.me/918377911745?text=${encodeURIComponent(whatsappMsg)}`;
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // REPLACE THIS URL with your actual SheetDB, Sheet.best, or Google Apps Script Web App URL
+  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; 
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.phone) {
       alert('कृपया अपना नाम और मोबाइल नंबर दर्ज करें।');
       return;
     }
-    setModalStep(2); // Proceed to Payment Page
+
+    setIsSubmitting(true);
+
+    // Payload to send to Google Sheets
+    const payload = {
+      fullName: formData.fullName,
+      phone: formData.phone,
+      city: formData.city,
+      emiChosen: installment,
+      amountUserPays: userTotal,
+      amountSrjPays: srjBonus,
+      totalJewelryValue: grandTotal,
+      date: new Date().toISOString(),
+    };
+
+    try {
+      /* 
+       * Uncomment the below block once you have replaced GOOGLE_SHEETS_WEBHOOK_URL
+       * with your actual endpoint. 
+       */
+      
+      // await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(payload),
+      // });
+      
+      // Simulating a network delay for the loading state (Remove this when actual fetch is active)
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      setModalStep(2); // Proceed to Payment Page on success
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("पंजीकरण में समस्या आई। कृपया पुनः प्रयास करें। (There was an issue saving your details.)");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleOpenModal = () => {
@@ -613,30 +654,21 @@ export default function SwarnaSamriddhi() {
                       </div>
                     </div>
 
-                    {/* Nominee Name */}
-                    <div>
-                      <label className="block font-cinzel text-xs font-bold tracking-wider uppercase mb-1.5" style={{ color: C.text }}>
-                        Nominee Name (नामांकित व्यक्ति)
-                      </label>
-                      <div className="relative">
-                        <UserCheck size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input
-                          type="text"
-                          placeholder="e.g. Sunita Sharma (Wife)"
-                          value={formData.nominee}
-                          onChange={e => setFormData({ ...formData, nominee: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border text-sm rounded-sm outline-none transition-colors"
-                          style={{ borderColor: C.border, color: C.text }}
-                        />
-                      </div>
-                    </div>
-
                     <button
                       type="submit"
-                      className="w-full mt-2 py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-widest uppercase shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95"
+                      disabled={isSubmitting}
+                      className="w-full mt-2 py-4 rounded-sm font-raleway font-bold text-white text-sm tracking-widest uppercase shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                       style={{ background: C.maroon }}
                     >
-                      Proceed to Payment <ArrowRight size={16} />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" /> Saving Details...
+                        </>
+                      ) : (
+                        <>
+                          Proceed to Payment <ArrowRight size={16} />
+                        </>
+                      )}
                     </button>
                   </form>
                 )}
