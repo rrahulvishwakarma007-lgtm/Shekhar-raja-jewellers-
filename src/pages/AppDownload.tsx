@@ -33,7 +33,7 @@ const installSteps = [
   { step: 4, title: 'Start Shopping', desc: 'Open the app and explore our collection!' }
 ];
 
-const APK_URL = 'https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/theshekharrajajewellersapp.apk';
+const APK_URL = 'https://github.com/rrahulvishwakarma007-lgtm/srj-app/releases/download/SRJ/shekharrajajewellerstheapp.apk';
 
 export default function AppDownload() {
   return (
