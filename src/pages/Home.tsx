@@ -67,14 +67,14 @@ const collections = [
 
 // ── Products ──────────────────────────────────────────────────────────────────
 const products = [
-{ id:1, name:'Bridal Chain', category:'Bridal', description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.', image:'/bridal.png', tag:'Bestseller' },
-{ id:2, name:'Diamond Eternity Ring', category:'Diamond', description:'A stunning circle of brilliant diamonds symbolizing eternal love.', image:'/ring6.png', tag:'Premium' },
-{ id:3, name:'Antique Gold Jhumkas', category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.', image:'/earrings13.png', tag:'Heritage' },
-{ id:4, name:'22KT Gold Bangles Set', category:'Bangles', description:'Set of 4 intricately designed bangles with traditional patterns.', image:'/bangle5.png', tag:'Classic' },
-{ id:5, name:'Polki Diamond Ring', category:'Rings', description:'Uncut polki diamonds set in 22KT gold with a classic design.', image:'/ring7.png', tag:'Exclusive' },
-{ id:6, name:'Temple Gold Haar', category:'Necklaces',description:'Traditional temple necklace with goddess motifs and Lakshmi coins.', image:'/necklace88.png', tag:'Traditional'},
-{ id:7, name:'Antique Earrings Set', category:'Antique', description:'Exquisite antique finish jewellery with traditional craftsmanship.', image:'/earring5.jpg', tag:'Limited' },
-{ id:8, name:'Festive Gold Set', category:'Festive', description:'Elegant gold set perfect for festive occasions and celebrations.', image:'/chain4.png', tag:'Trending' },
+{ id:1, name:'Bridal Chain', category:'Bridal', description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.', image:'/chain1.jpg', tag:'Bestseller' },
+{ id:2, name:'Eternity Ring', category:'Diamond', description:'A stunning circle of brilliant diamonds symbolizing eternal love.', image:'/gents ring4.jpg', tag:'Premium' },
+{ id:3, name:'Antique Gold Jhumkas', category:'Earrings', description:'Traditional temple-style jhumkas with intricate peacock motifs.', image:'/earrings104.jpg', tag:'Heritage' },
+{ id:4, name:'22KT Gold Bangles Set', category:'Bangles', description:'Set of 4 intricately designed bangles with traditional patterns.', image:'/bangleF.jpg', tag:'Classic' },
+{ id:5, name:'Elegant Ring', category:'Rings', description:'Uncut polki diamonds set in 22KT gold with a classic design.', image:'/ladies ring16.jpg', tag:'Exclusive' },
+{ id:6, name:'Short Necklace', category:'Necklaces',description:'Traditional temple necklace.', image:'/short necklace1.jpg', tag:'Traditional'},
+{ id:7, name:'Antique Earrings Set', category:'Antique', description:'Exquisite antique finish jewellery with traditional craftsmanship.', image:'/earrings101.jpg', tag:'Limited' },
+{ id:8, name:'Festive Gold Set', category:'Festive', description:'Elegant gold set perfect for festive occasions and celebrations.', image:'/turkish necklace5.jpg', tag:'Trending' },
 ];
 
 // ── Trust items ───────────────────────────────────────────────────────────────
