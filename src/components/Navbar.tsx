@@ -67,7 +67,8 @@ export default function Navbar() {
 
                 {/* Logo Text */}
                 <div className="flex flex-col">
-                  <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none">
+                  {/* ADDED whitespace-nowrap HERE */}
+                  <span className="font-cormorant text-xl sm:text-2xl lg:text-3xl font-bold text-[#3a2e1e] tracking-wide leading-none whitespace-nowrap">
                     Shekhar Raja
                   </span>
                   <div className="flex items-center gap-2 mt-0.5">
