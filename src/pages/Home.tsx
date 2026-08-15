@@ -308,7 +308,7 @@ style={{ borderBottom:`1px solid ${C.border}` }}>
 </span>
 </div>
 <div className="flex items-center gap-6">
-<span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>EST. 1987</span>
+<span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}></span>
 <span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>BIS HALLMARK</span>
 <span className="font-cinzel text-[10px] tracking-[0.25em]" style={{ color: C.textLight }}>22K GOLD</span>
 </div>
