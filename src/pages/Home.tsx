@@ -304,7 +304,7 @@ style={{ borderBottom:`1px solid ${C.border}` }}>
 <div className="flex items-center gap-2">
 <MapPin size={14} style={{ color: C.gold }} />
 <span className="font-raleway text-sm" style={{ color: C.textMid }}>
-  <span style={{ color: C.gold }} className="font-semibold">Jabalpur · 482002</span>
+  <span style={{ color: C.gold }} className="font-semibold"></span>
 </span>
 </div>
 <div className="flex items-center gap-6">
