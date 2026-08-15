@@ -233,7 +233,7 @@ export default function Navbar() {
                   className="text-center pt-4 border-t border-[#b8862a]/20"
                 >
                   <p className="font-raleway text-xs text-white/40">
-                    Est. 1987 • Jabalpur, Madhya Pradesh
+                    • Jabalpur, Madhya Pradesh
                   </p>
                 </motion.div>
               </div>
