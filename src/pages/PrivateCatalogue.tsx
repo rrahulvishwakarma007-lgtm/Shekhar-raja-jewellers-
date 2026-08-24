@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 import { loadStockMap, moveToOrdered, type StockStatus } from '../lib/stockStore';
+import { loadGoldRates, loadProductMeta, calcPrice, formatPrice, DEFAULT_WEIGHTS, type GoldRates, type ProductMeta } from '../lib/priceStore';
 
 // ── Client item store (localStorage + IndexedDB fallback) ─────────────────────
 import {
@@ -1288,6 +1289,8 @@ export default function PrivateCatalogue() {
   const [selectedUploadedItem, setSelectedUploadedItem] = useState<ClientItem | null>(null);
   
   const [stockMap, setStockMap]               = useState<Record<string,StockStatus>>(() => loadStockMap());
+  const [goldRates, setGoldRates]             = useState<GoldRates>(() => loadGoldRates());
+  const [productMeta, setProductMeta]         = useState<Record<string,ProductMeta>>(() => loadProductMeta());
   const [orderedToast, setOrderedToast]       = useState<string|null>(null);
   const [searchQuery, setSearchQuery]         = useState('');
   const [activeFilter, setActiveFilter]       = useState<'all'|'ready'|'ordered'>('all');
@@ -1381,7 +1384,15 @@ export default function PrivateCatalogue() {
       setOrderedToast(product.name);
       setTimeout(() => setOrderedToast(null), 3500);
     }
-    const msg = `Hi! I'm interested in *${product.name}* (${product.category}) from the private catalogue. Please share details.`;
+    const pid    = String(product.id);
+    const catKey = Object.keys(DEFAULT_WEIGHTS).find(k =>
+      product.category?.toLowerCase().replace(/[''s ]/g,'').includes(k.replace('_',''))
+      || product.category?.toLowerCase() === k
+    ) ?? 'rings';
+    const meta   = productMeta[pid] ?? {};
+    const wt     = meta.weight ?? DEFAULT_WEIGHTS[catKey] ?? 10;
+    const price  = calcPrice(product.karat ?? '22K', wt, goldRates, meta.priceOverride);
+    const msg = `Hi! I'm interested in:\n\n💎 *${product.name}*\n📦 Category: ${product.category}\n🏅 Purity: ${product.karat ?? '22K'}\n⚖️ Weight: ${wt}g\n💰 Approx. Price: *${formatPrice(price)}*\n\nPlease share more details.`;
     window.open(`https://wa.me/918377911745?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -1808,6 +1819,30 @@ export default function PrivateCatalogue() {
                   <div className="p-3">
                     <p className="font-cormorant text-sm font-semibold leading-snug" style={{ color: C.text }}>{product.name}</p>
                     <p className="font-raleway text-[10px] mt-0.5" style={{ color: C.textLight }}>{product.category}</p>
+
+                    {/* Weight + Price row */}
+                    {(() => {
+                      const pid = String(product.id);
+                      const catKey = Object.keys(DEFAULT_WEIGHTS).find(k =>
+                        product.category?.toLowerCase().replace(/[''s ]/g,'').includes(k.replace('_',''))
+                        || product.category?.toLowerCase() === k
+                      ) ?? 'rings';
+                      const meta   = productMeta[pid] ?? {};
+                      const wt     = meta.weight ?? DEFAULT_WEIGHTS[catKey] ?? 10;
+                      const price  = calcPrice(product.karat ?? '22K', wt, goldRates, meta.priceOverride);
+                      return (
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="font-raleway text-[10px] px-1.5 py-0.5 rounded-md"
+                                style={{ background:'rgba(194,24,91,0.07)', color: C.textMid }}>
+                            ⚖️ {wt}g
+                          </span>
+                          <span className="font-cormorant text-sm font-bold" style={{ color: C.gold }}>
+                            {formatPrice(price)}
+                          </span>
+                        </div>
+                      );
+                    })()}
+
                     <motion.button
                       whileHover={{ scale:1.03 }} whileTap={{ scale:0.97 }}
                       onClick={e => { e.stopPropagation(); handleEnquire(product); }}
