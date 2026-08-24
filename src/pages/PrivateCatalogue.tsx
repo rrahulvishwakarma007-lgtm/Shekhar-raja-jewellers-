@@ -1774,15 +1774,109 @@ export default function PrivateCatalogue() {
 
         </motion.div>{/* end stock summary grid */}
 
-        {/* ── PRODUCT GRID ── */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFilter + searchQuery}
-            variants={gridVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+        {/* ── SEARCH + FILTER ROW ── */}
+        <motion.div
+          initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true }} transition={{ delay:0.2, duration:0.6 }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 relative z-10"
+        >
+          {/* Search */}
+          <div className="relative flex-1 group">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300" style={{ color: searchQuery ? C.gold : C.textLight }} />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by name, category or tag..."
+              className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-all duration-300"
+              style={{ background:'#fff', border:`1.5px solid ${C.border}`, color: C.text,
+                       boxShadow:'0 2px 10px rgba(194,24,91,0.05)' }}
+            />
+            <AnimatePresence>
+              {searchQuery && (
+                <motion.button
+                  initial={{ opacity:0, scale:0.8, rotate: -90 }}
+                  animate={{ opacity:1, scale:1, rotate: 0 }}
+                  exit={{ opacity:0, scale:0.8, rotate: 90 }}
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-rose-50 p-1 rounded-full"
+                >
+                  <X size={13} style={{ color: C.gold }} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Filter tabs - Refactored for fluid LayoutGroup sliding */}
+          <LayoutGroup>
+            <div className="flex rounded-xl overflow-hidden p-1 relative z-0"
+                 style={{ border:`1.5px solid ${C.border}`, background:'#fff', boxShadow: '0 2px 10px rgba(194,24,91,0.05)' }}>
+              {(['all','ready','ordered'] as const).map(f => (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(f)}
+                  className="relative flex-1 px-3 sm:px-4 py-2 font-cinzel text-[9px] tracking-[0.2em] whitespace-nowrap transition-colors duration-300 outline-none"
+                  style={{ color: activeFilter === f ? '#fff' : C.textLight }}
+                >
+                  {/* Active Background Indicator */}
+                  {activeFilter === f && (
+                    <motion.div
+                      layoutId="activeFilterBg"
+                      className="absolute inset-0 rounded-lg -z-10 shadow-sm"
+                      style={{ background: f === 'ready' ? C.green : f === 'ordered' ? C.gold : C.goldDk }}
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center justify-center gap-1.5 font-semibold">
+                     {f === 'ready' && <span className="w-1.5 h-1.5 rounded-full bg-white opacity-80" />}
+                     {f === 'ordered' && <Diamond size={8} className="text-white opacity-80" />}
+                     {f.toUpperCase()}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </LayoutGroup>
+
+          {/* WhatsApp */}
+          <motion.a
+            whileHover={{ scale:1.04, boxShadow: '0 8px 20px rgba(37,211,102,0.3)' }} whileTap={{ scale:0.97 }}
+            href="https://wa.me/918377911745?text=Hi!%20I%20am%20viewing%20the%20private%20catalogue."
+            target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
+            style={{ background:'#25D366' }}
           >
+            <MessageCircle size={16} /> Contact Us
+          </motion.a>
+        </motion.div>
+
+        {/* ── PRODUCT GRID ── */}
+        <motion.div
+          variants={gridVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10"
+        >
+          <AnimatePresence mode="popLayout">
+            {/* Render Client Items */}
+            {(activeFilter === 'all' || activeFilter === 'ordered') && clientItems.map(item => (
+              <ClientItemCard
+                key={item.id}
+                item={item}
+                onDelete={() => handleClientDelete(item.id)}
+                onEnquire={() => handleClientEnquire(item)}
+                onClick={() => setSelectedUploadedItem(item)}
+              />
+            ))}
+
+            {/* Render Owner Items */}
+            {(activeFilter === 'all' || activeFilter === 'ready') && ownerItems.map(item => (
+              <OwnerItemCard
+                key={item.id}
+                item={item}
+                onDelete={() => handleOwnerDelete(item.id)}
+                onClick={() => setSelectedUploadedItem(item)}
+              />
+            ))}
+
+            {/* Render Standard Products */}
             {visibleProducts.map(product => {
               const status = stockMap[product.id] ?? 'ready';
               return (
@@ -1859,11 +1953,11 @@ export default function PrivateCatalogue() {
                 </motion.div>
               );
             })}
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </motion.div>
 
-        {visibleProducts.length === 0 && (
-          <div className="text-center py-20">
+        {visibleProducts.length === 0 && clientItems.length === 0 && ownerItems.length === 0 && (
+          <div className="text-center py-20 relative z-10">
             <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No pieces found</p>
             <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>Try adjusting your search or filter</p>
           </div>
@@ -1871,10 +1965,65 @@ export default function PrivateCatalogue() {
 
       </div>{/* end max-w-7xl body */}
 
-      {/* ── PRODUCT MODAL ── */}
+      {/* Floating Action Buttons for Adding Custom Items */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowAddModal(true)}
+          title="Add Client Request"
+          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
+          style={{ background: C.gold, color: '#fff' }}
+        >
+          <Plus size={20} />
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowOwnerModal(true)}
+          title="Add Owner Stock"
+          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
+          style={{ background: '#2E7D32', color: '#fff' }}
+        >
+          <Package size={20} />
+        </motion.button>
+      </div>
+
+      {/* ── PRODUCT MODALS ── */}
       <AnimatePresence>
         {selectedProduct && (
           <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        )}
+        
+        {/* ── NEW: Custom Uploaded Item Modal ── */}
+        {selectedUploadedItem && (
+          <UploadedItemModal
+            item={selectedUploadedItem}
+            onClose={() => setSelectedUploadedItem(null)}
+            onEnquire={() => {
+              if ((selectedUploadedItem as any).addedBy === 'owner') {
+                handleOwnerEnquire(selectedUploadedItem);
+              } else {
+                handleClientEnquire(selectedUploadedItem);
+              }
+            }}
+            accentColor={(selectedUploadedItem as any).addedBy === 'owner' ? '#2E7D32' : '#1D4ED8'}
+            badgeLabel={(selectedUploadedItem as any).addedBy === 'owner' ? 'READY STOCK' : 'YOUR ITEM'}
+          />
+        )}
+
+        {showAddModal && (
+          <AddClientItemModal
+            onClose={() => setShowAddModal(false)}
+            onAdded={handleClientAdd}
+          />
+        )}
+        {showOwnerModal && (
+          <AddOwnerItemModal
+            onClose={() => setShowOwnerModal(false)}
+            onAdded={handleOwnerAdd}
+            catLabel={catLabel}
+          />
         )}
       </AnimatePresence>
 
