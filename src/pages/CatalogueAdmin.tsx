@@ -149,6 +149,7 @@ export default function CatalogueAdmin() {
   const [activeTab,     setActiveTab]     = useState<'links'|'stock'>('links');
   const [category,      setCategory]      = useState('bangles');
   const [duration,      setDuration]      = useState(DURATIONS[2].value);
+  const [karat,         setKarat]         = useState('all');
   const [generatedLink, setGeneratedLink] = useState('');
   const [copiedLink,    setCopiedLink]    = useState(false);
   const [showQR,        setShowQR]        = useState(false);
