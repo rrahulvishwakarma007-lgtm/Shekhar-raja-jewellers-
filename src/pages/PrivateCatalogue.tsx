@@ -1720,4 +1720,4 @@ export default function PrivateCatalogue() {
 
           {/* Ordered Stock */}
           <motion.button
-      
+     
