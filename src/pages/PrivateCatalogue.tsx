@@ -42,159 +42,159 @@ const C = {
 // ── Products ──────────────────────────────────────────────────────────────────
 export const ALL_PRODUCTS: Record<string, any[]> = {
   bangles: [
-    { id:'b1', name:'Classic Gold Bangles',  category:'Bangles',  description:'Set of 4 intricately designed 22K gold bangles.',  image:'/bangle1.png', tag:'Classic'    },
-    { id:'b2', name:'Designer Bangles',      category:'Bangles',  description:'Designer gold bangles with enamel work.',          image:'/bangle2.png', tag:'Designer'   },
-    { id:'b3', name:'Antique Finish Bangles',  category:'Bangles',  description:'Antique finish 22K bangles with stone work.',      image:'/bangle3.png', tag:'Heritage'   },
-    { id:'b4', name:'Bridal Bangles Set',      category:'Bangles',  description:'Heavy bridal bangle set for your special day.',    image:'/bangle4.png', tag:'Bridal'     },
-    { id:'b5', name:'Peacock Bangles',         category:'Bangles',  description:'Peacock motif 22K gold bangles.',                  image:'/bangle5.png', tag:'Exclusive'  },
-    { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                  image:'/bangle3.png',         tag:'Classic' },
-    { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                        image:'/bangle9.png',         tag:'Heritage' },
-    { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',            image:'/bangleA.jpg',         tag:'New Arrival' },
-    { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',         image:'/bangleB.jpg',         tag:'Trending' },
-    { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                    image:'/bangleC.jpg',         tag:'Heritage' },
-    { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                        image:'/bangleD.jpg',         tag:'Bridal Pick' },
-    { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                           image:'/bangleE.jpg',         tag:'Festive' },
-    { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                 image:'/bangleF.jpg',         tag:'Exclusive' },
-    { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',            image:'/bangleG.jpg',         tag:'Classic' },
-    { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                 image:'/bangleH.jpg',         tag:'Traditional' },
-    { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',               image:'/bangleI.jpg',         tag:'Premium' },
-    { id:34, name:'Gold Bangle ',              category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',       tag:'New Arrival' },
-    { id:35, name:'Gold Bangle ',              category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',       tag:'Classic' },
-    { id:36, name:'Gold Bangle ',              category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',       tag:'Heritage' },
-    { id:37, name:'Gold Bangle ',              category:'Bangles',      description:'Elegant 22KT gold bangle perfect for festive and bridal occasions.',            image:'/bangle103.jpg',       tag:'Festive' },
-    { id:38, name:'Gold Bangle ',              category:'Bangles',      description:'Traditional gold bangle with temple motifs and antique finish.',                image:'/bangle104.jpg',       tag:'Traditional' },
-    { id:39, name:'Gold Bangle ',              category:'Bangles',      description:'Premium 22KT gold bangle with polished finish and ornate borders.',             image:'/bangle106.jpg',       tag:'Premium' },
-    { id:40, name:'Gold Bangle ',              category:'Bangles',      description:'Trending designer bangle in 22KT gold with modern-meets-traditional design.', image:'/bangle107.jpg',       tag:'Trending' },
-    { id:41, name:'Gold Bangle ',              category:'Bangles',      description:'Bridal-pick 22KT gold bangle set for the perfect wedding look.',                image:'/bangle108.jpg',       tag:'Bridal Pick' },
+    { id:'b1', name:'Classic Gold Bangles',  category:'Bangles',  description:'Set of 4 intricately designed 22K gold bangles.',  image:'/bangle1.png', tag:'Classic'    , karat:'22K' },
+    { id:'b2', name:'Designer Bangles',      category:'Bangles',  description:'Designer gold bangles with enamel work.',          image:'/bangle2.png', tag:'Designer'   , karat:'22K' },
+    { id:'b3', name:'Antique Finish Bangles',  category:'Bangles',  description:'Antique finish 22K bangles with stone work.',      image:'/bangle3.png', tag:'Heritage'   , karat:'22K' },
+    { id:'b4', name:'Bridal Bangles Set',      category:'Bangles',  description:'Heavy bridal bangle set for your special day.',    image:'/bangle4.png', tag:'Bridal'     , karat:'22K' },
+    { id:'b5', name:'Peacock Bangles',         category:'Bangles',  description:'Peacock motif 22K gold bangles.',                  image:'/bangle5.png', tag:'Exclusive'  , karat:'22K' },
+    { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                  image:'/bangle3.png',         tag:'Classic' , karat:'22K' },
+    { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                        image:'/bangle9.png',         tag:'Heritage' , karat:'22K' },
+    { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',            image:'/bangleA.jpg',         tag:'New Arrival' , karat:'22K' },
+    { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',         image:'/bangleB.jpg',         tag:'Trending' , karat:'22K' },
+    { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                    image:'/bangleC.jpg',         tag:'Heritage' , karat:'22K' },
+    { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                        image:'/bangleD.jpg',         tag:'Bridal Pick' , karat:'22K' },
+    { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                           image:'/bangleE.jpg',         tag:'Festive' , karat:'22K' },
+    { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                 image:'/bangleF.jpg',         tag:'Exclusive' , karat:'22K' },
+    { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',            image:'/bangleG.jpg',         tag:'Classic' , karat:'22K' },
+    { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                 image:'/bangleH.jpg',         tag:'Traditional' , karat:'22K' },
+    { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',               image:'/bangleI.jpg',         tag:'Premium' , karat:'22K' },
+    { id:34, name:'Gold Bangle ',              category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',       tag:'New Arrival' , karat:'22K' },
+    { id:35, name:'Gold Bangle ',              category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',       tag:'Classic' , karat:'22K' },
+    { id:36, name:'Gold Bangle ',              category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',       tag:'Heritage' , karat:'22K' },
+    { id:37, name:'Gold Bangle ',              category:'Bangles',      description:'Elegant 22KT gold bangle perfect for festive and bridal occasions.',            image:'/bangle103.jpg',       tag:'Festive' , karat:'22K' },
+    { id:38, name:'Gold Bangle ',              category:'Bangles',      description:'Traditional gold bangle with temple motifs and antique finish.',                image:'/bangle104.jpg',       tag:'Traditional' , karat:'22K' },
+    { id:39, name:'Gold Bangle ',              category:'Bangles',      description:'Premium 22KT gold bangle with polished finish and ornate borders.',             image:'/bangle106.jpg',       tag:'Premium' , karat:'22K' },
+    { id:40, name:'Gold Bangle ',              category:'Bangles',      description:'Trending designer bangle in 22KT gold with modern-meets-traditional design.', image:'/bangle107.jpg',       tag:'Trending' , karat:'22K' },
+    { id:41, name:'Gold Bangle ',              category:'Bangles',      description:'Bridal-pick 22KT gold bangle set for the perfect wedding look.',                image:'/bangle108.jpg',       tag:'Bridal Pick' , karat:'22K' },
   ],
   rings: [
-    { id:'r1', name:'Solitaire Ring',          category:'Rings',      description:'Brilliant solitaire diamond in 18K gold.',         image:'/ring1.png',      tag:'Premium'   },
-    { id:'r2', name:'Polki Diamond Ring',       category:'Rings',      description:'Uncut polki diamonds set in 22K gold.',             image:'/ring2.png',      tag:'Exclusive' },
-    { id:'r3', name:'Classic Gold Ring',        category:'Rings',      description:'Classic 22K gold ring with intricate design.',     image:'/ring3.png',      tag:'Classic'   },
-    { id:'r4', name:'Floral Ring',             category:'Rings',      description:'Beautiful floral motif 22K gold ring.',             image:'/ring6.png',      tag:'Trending'  },
-    { id:'r5', name:'Gents Statement Ring',     category:'Rings',      description:'Bold statement ring for men in 22K gold.',         image:'/ring7.png',      tag:'Men'       },
+    { id:'r1', name:'Solitaire Ring',          category:'Rings',      description:'Brilliant solitaire diamond in 18K gold.',         image:'/ring1.png',      tag:'Premium'   , karat:'18K' },
+    { id:'r2', name:'Polki Diamond Ring',       category:'Rings',      description:'Uncut polki diamonds set in 22K gold.',             image:'/ring2.png',      tag:'Exclusive' , karat:'22K' },
+    { id:'r3', name:'Classic Gold Ring',        category:'Rings',      description:'Classic 22K gold ring with intricate design.',     image:'/ring3.png',      tag:'Classic'   , karat:'22K' },
+    { id:'r4', name:'Floral Ring',             category:'Rings',      description:'Beautiful floral motif 22K gold ring.',             image:'/ring6.png',      tag:'Trending'  , karat:'22K' },
+    { id:'r5', name:'Gents Statement Ring',     category:'Rings',      description:'Bold statement ring for men in 22K gold.',         image:'/ring7.png',      tag:'Men'       , karat:'22K' },
   ],
   womens_ring: [
-    { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',            tag:'Limited' },
-    { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                             image:'/ring6.png',            tag:'Premium' },
-    { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',            tag:'Classic' },
-    { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',            tag:'Vintage' },
-    { id:96,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Delicate 22KT gold ring for women with floral motif and fine craftsmanship.", image:'/ladies ring1.jpg',    tag:'Classic' },
-    { id:97,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Heritage ladies gold ring with traditional design and antique finish.",       image:'/ladies ring2.jpg',    tag:'Heritage' },
-    { id:98,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Exclusive ladies 22KT gold ring with kundan stone setting.",                  image:'/ladies ring3.jpg',    tag:'Exclusive' },
-    { id:99,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium' },
-    { id:100, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",         image:'/ladies ring5.jpg',    tag:'Trending' },
-    { id:101, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival' },
-    { id:102, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Luxury ladies gold ring - a statement piece for weddings and events.",        image:'/ladies ring7.jpg',    tag:'Luxury' },
-    { id:103, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller' },
-    { id:104, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",              image:'/ladies ring9.jpg',    tag:'Traditional' },
-    { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",               image:'/ladies ring10.jpg',   tag:'Bridal Pick' },
-    { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",             image:'/ladies ring11.jpg',   tag:'Festive' },
-    { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",        image:'/ladies ring12.jpg',   tag:'Vintage' },
-    { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",        image:'/ladies ring13.jpg',   tag:'Classic' },
-    { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage' },
-    { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive' },
-    { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium' },
+    { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',            tag:'Limited' , karat:'22K' },
+    { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                             image:'/ring6.png',            tag:'Premium' , karat:'22K' },
+    { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',            tag:'Classic' , karat:'22K' },
+    { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',            tag:'Vintage' , karat:'22K' },
+    { id:96,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Delicate 22KT gold ring for women with floral motif and fine craftsmanship.", image:'/ladies ring1.jpg',    tag:'Classic' , karat:'22K' },
+    { id:97,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Heritage ladies gold ring with traditional design and antique finish.",       image:'/ladies ring2.jpg',    tag:'Heritage' , karat:'22K' },
+    { id:98,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Exclusive ladies 22KT gold ring with kundan stone setting.",                  image:'/ladies ring3.jpg',    tag:'Exclusive' , karat:'22K' },
+    { id:99,  name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium' , karat:'22K' },
+    { id:100, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",         image:'/ladies ring5.jpg',    tag:'Trending' , karat:'22K' },
+    { id:101, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival' , karat:'22K' },
+    { id:102, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Luxury ladies gold ring - a statement piece for weddings and events.",        image:'/ladies ring7.jpg',    tag:'Luxury' , karat:'22K' },
+    { id:103, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller' , karat:'22K' },
+    { id:104, name:"Ladies Gold Ring ",        category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",              image:'/ladies ring9.jpg',    tag:'Traditional' , karat:'22K' },
+    { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",               image:'/ladies ring10.jpg',   tag:'Bridal Pick' , karat:'22K' },
+    { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",             image:'/ladies ring11.jpg',   tag:'Festive' , karat:'22K' },
+    { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",        image:'/ladies ring12.jpg',   tag:'Vintage' , karat:'22K' },
+    { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",        image:'/ladies ring13.jpg',   tag:'Classic' , karat:'22K' },
+    { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage' , karat:'22K' },
+    { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive' , karat:'22K' },
+    { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium' , karat:'22K' },
   ],
   mens_ring: [
-    { id:86, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bold 22KT gold ring for men with classic band and fine engraving.",          image:'/gents ring1.jpg',     tag:'Classic' },
-    { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",        image:'/gents ring2.jpg',     tag:'Heritage' },
-    { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                     image:'/gents ring3.jpg',     tag:'Exclusive' },
-    { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium' },
-    { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",       image:'/gents ring5.jpg',     tag:'Trending' },
-    { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",               image:'/gents ring6.jpg',     tag:'New Arrival' },
-    { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring - a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' },
-    { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",       image:'/gents ring8.jpg',     tag:'Bestseller' },
-    { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                    image:'/gents ring9.jpg',     tag:'Traditional' },
-    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring - perfect for grooms seeking bold elegance.",         image:'/gents ring10.jpg',    tag:'Bridal Pick' },
+    { id:86, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bold 22KT gold ring for men with classic band and fine engraving.",          image:'/gents ring1.jpg',     tag:'Classic' , karat:'22K' },
+    { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",        image:'/gents ring2.jpg',     tag:'Heritage' , karat:'22K' },
+    { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                     image:'/gents ring3.jpg',     tag:'Exclusive' , karat:'22K' },
+    { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium' , karat:'22K' },
+    { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",       image:'/gents ring5.jpg',     tag:'Trending' , karat:'22K' },
+    { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",               image:'/gents ring6.jpg',     tag:'New Arrival' , karat:'22K' },
+    { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring - a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury' , karat:'22K' },
+    { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",       image:'/gents ring8.jpg',     tag:'Bestseller' , karat:'22K' },
+    { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                    image:'/gents ring9.jpg',     tag:'Traditional' , karat:'22K' },
+    { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring - perfect for grooms seeking bold elegance.",         image:'/gents ring10.jpg',    tag:'Bridal Pick' , karat:'22K' },
   ],
   necklaces: [
-    { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',                image:'/necklace88.png', tag:'Bridal'    },
-    { id:'n2', name:'Temple Gold Haar',        category:'Necklaces', description:'Traditional temple necklace with Lakshmi coins.', image:'/temple.png',     tag:'Heritage'  },
-    { id:'n3', name:'Kundan Choker',            category:'Necklaces', description:'Royal Kundan choker with meenakari work.',        image:'/necklace1.jpg',  tag:'Royal'     },
-    { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller' },
-    { id:6,  name:'Temple Gold Haar',          category:'Necklaces',   description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',      tag:'Traditional' },
-    { id:8,  name:'Antique Necklace Set',      category:'Necklaces',   description:'Complete antique temple set with traditional craftsmanship.',                     image:'/necklace22.png',      tag:'Trending' },
-    { id:9,  name:'Meenakari Bridal Set',      category:'Necklaces',   description:'Colorful meenakari work bridal set with traditional motifs.',                     image:'/necklace3.jpg',       tag:'Bridal Pick' },
-    { id:13, name:'Heritage Necklace',         category:'Necklaces',   description:'Elegant heritage necklace with traditional design.',                              image:'/bridal-necklace.jpg', tag:'New Arrival' },
-    { id:29, name:'Bridal Necklace ',          category:'Necklaces',   description:'Stunning 22KT bridal necklace with kundan and polki work.',                     image:'/necklaceA.jpg',       tag:'Bridal Pick' },
-    { id:30, name:'Heritage Necklace ',        category:'Necklaces',   description:'Traditional heritage necklace in 22KT gold with antique finish.',               image:'/necklaceB.jpg',       tag:'Heritage' },
-    { id:31, name:'Temple Necklace ',          category:'Necklaces',   description:'Handcrafted temple necklace with goddess motifs and ruby accents.',             image:'/necklaceC.jpg',       tag:'Traditional' },
-    { id:32, name:'Kundan Necklace ',          category:'Necklaces',   description:'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',              image:'/necklaceD.jpg',       tag:'Exclusive' },
-    { id:33, name:'Gold Haar ',                category:'Necklaces',   description:'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',            image:'/necklaceE.jpg',       tag:'New Arrival' },
-    { id:42, name:'Short Necklace ',           category:'Necklaces',   description:'Delicate short necklace in 22KT gold, ideal for everyday and festive wear.',   image:'/short necklace1.jpg', tag:'Everyday' },
-    { id:43, name:'Short Necklace ',           category:'Necklaces',   description:'Elegant short gold necklace with fine craftsmanship and classic design.',       image:'/short necklace2.jpg', tag:'Classic' },
-    { id:44, name:'Short Necklace ',           category:'Necklaces',   description:'Trendy short necklace in 22KT gold with contemporary styling.',                 image:'/short necklace3.jpg', tag:'Trending' },
-    { id:45, name:'Short Necklace ',           category:'Necklaces',   description:'New arrival short necklace in 22KT gold with intricate link design.',         image:'/short necklace4.jpg', tag:'New Arrival' },
-    { id:46, name:'Turkish Necklace ',         category:'Necklaces',   description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',         image:'/turkish necklace1.jpg', tag:'Exclusive' },
-    { id:47, name:'Turkish Necklace ',         category:'Necklaces',   description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',         image:'/turkish necklace2.jpg', tag:'Heritage' },
-    { id:48, name:'Turkish Necklace ',         category:'Necklaces',   description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',             image:'/turkish necklace3.jpg', tag:'Traditional' },
-    { id:49, name:'Turkish Necklace ',         category:'Necklaces',   description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium' },
-    { id:50, name:'Turkish Necklace ',         category:'Necklaces',   description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick' },
-    { id:51, name:'Turkish Necklace ',         category:'Necklaces',   description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive' },
-    { id:52, name:'Turkish Necklace ',         category:'Necklaces',   description:'Luxury Turkish-style gold necklace with bold statement design.',                image:'/turkish necklace7.jpg', tag:'Luxury' },
-    { id:53, name:'Turkish Necklace ',         category:'Necklaces',   description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',         image:'/turkish necklace8.jpg', tag:'Trending' },
-    { id:60, name:'Jadau Necklace ',           category:'Necklaces',   description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg', tag:'Luxury' },
-    { id:61, name:'Jadau Necklace ',           category:'Necklaces',   description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg', tag:'Traditional' },
-    { id:62, name:'Jadau Necklace ',           category:'Necklaces',   description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg', tag:'Bridal Pick' },
-    { id:63, name:'Jadau Necklace ',           category:'Necklaces',   description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg', tag:'Heritage' },
-    { id:64, name:'Jadau Necklace ',           category:'Necklaces',   description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg', tag:'Premium' },
-    { id:65, name:'Jadau Necklace ',           category:'Necklaces',   description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg', tag:'Exclusive' },
-    { id:66, name:'Jadau Necklace ',           category:'Necklaces',   description:'Bestselling Jadau necklace - a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller' },
-    { id:73, name:'Long Haar ',                category:'Necklaces',   description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',      tag:'Traditional' },
-    { id:74, name:'Long Haar ',                category:'Necklaces',   description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',      tag:'Heritage' },
-    { id:75, name:'Long Haar ',                category:'Necklaces',   description:'Bridal long haar in 22KT gold - a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick' },
-    { id:76, name:'Long Haar ',                category:'Necklaces',   description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',      tag:'Premium' },
-    { id:77, name:'Long Haar ',                category:'Necklaces',   description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',      tag:'Luxury' },
+    { id:'n1', name:'Maharani Bridal Necklace',category:'Necklaces', description:'Grand bridal necklace in 22K gold.',                image:'/necklace88.png', tag:'Bridal'    , karat:'22K' },
+    { id:'n2', name:'Temple Gold Haar',        category:'Necklaces', description:'Traditional temple necklace with Lakshmi coins.', image:'/temple.png',     tag:'Heritage'  , karat:'22K' },
+    { id:'n3', name:'Kundan Choker',            category:'Necklaces', description:'Royal Kundan choker with meenakari work.',        image:'/necklace1.jpg',  tag:'Royal'     , karat:'22K' },
+    { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',   description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller' , karat:'22K' },
+    { id:6,  name:'Temple Gold Haar',          category:'Necklaces',   description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',      tag:'Traditional' , karat:'22K' },
+    { id:8,  name:'Antique Necklace Set',      category:'Necklaces',   description:'Complete antique temple set with traditional craftsmanship.',                     image:'/necklace22.png',      tag:'Trending' , karat:'22K' },
+    { id:9,  name:'Meenakari Bridal Set',      category:'Necklaces',   description:'Colorful meenakari work bridal set with traditional motifs.',                     image:'/necklace3.jpg',       tag:'Bridal Pick' , karat:'22K' },
+    { id:13, name:'Heritage Necklace',         category:'Necklaces',   description:'Elegant heritage necklace with traditional design.',                              image:'/bridal-necklace.jpg', tag:'New Arrival' , karat:'22K' },
+    { id:29, name:'Bridal Necklace ',          category:'Necklaces',   description:'Stunning 22KT bridal necklace with kundan and polki work.',                     image:'/necklaceA.jpg',       tag:'Bridal Pick' , karat:'22K' },
+    { id:30, name:'Heritage Necklace ',        category:'Necklaces',   description:'Traditional heritage necklace in 22KT gold with antique finish.',               image:'/necklaceB.jpg',       tag:'Heritage' , karat:'22K' },
+    { id:31, name:'Temple Necklace ',          category:'Necklaces',   description:'Handcrafted temple necklace with goddess motifs and ruby accents.',             image:'/necklaceC.jpg',       tag:'Traditional' , karat:'22K' },
+    { id:32, name:'Kundan Necklace ',          category:'Necklaces',   description:'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',              image:'/necklaceD.jpg',       tag:'Exclusive' , karat:'22K' },
+    { id:33, name:'Gold Haar ',                category:'Necklaces',   description:'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',            image:'/necklaceE.jpg',       tag:'New Arrival' , karat:'22K' },
+    { id:42, name:'Short Necklace ',           category:'Necklaces',   description:'Delicate short necklace in 22KT gold, ideal for everyday and festive wear.',   image:'/short necklace1.jpg', tag:'Everyday' , karat:'22K' },
+    { id:43, name:'Short Necklace ',           category:'Necklaces',   description:'Elegant short gold necklace with fine craftsmanship and classic design.',       image:'/short necklace2.jpg', tag:'Classic' , karat:'22K' },
+    { id:44, name:'Short Necklace ',           category:'Necklaces',   description:'Trendy short necklace in 22KT gold with contemporary styling.',                 image:'/short necklace3.jpg', tag:'Trending' , karat:'22K' },
+    { id:45, name:'Short Necklace ',           category:'Necklaces',   description:'New arrival short necklace in 22KT gold with intricate link design.',         image:'/short necklace4.jpg', tag:'New Arrival' , karat:'22K' },
+    { id:46, name:'Turkish Necklace ',         category:'Necklaces',   description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',         image:'/turkish necklace1.jpg', tag:'Exclusive' , karat:'22K' },
+    { id:47, name:'Turkish Necklace ',         category:'Necklaces',   description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',         image:'/turkish necklace2.jpg', tag:'Heritage' , karat:'22K' },
+    { id:48, name:'Turkish Necklace ',         category:'Necklaces',   description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',             image:'/turkish necklace3.jpg', tag:'Traditional' , karat:'22K' },
+    { id:49, name:'Turkish Necklace ',         category:'Necklaces',   description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium' , karat:'22K' },
+    { id:50, name:'Turkish Necklace ',         category:'Necklaces',   description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick' , karat:'22K' },
+    { id:51, name:'Turkish Necklace ',         category:'Necklaces',   description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive' , karat:'22K' },
+    { id:52, name:'Turkish Necklace ',         category:'Necklaces',   description:'Luxury Turkish-style gold necklace with bold statement design.',                image:'/turkish necklace7.jpg', tag:'Luxury' , karat:'22K' },
+    { id:53, name:'Turkish Necklace ',         category:'Necklaces',   description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',         image:'/turkish necklace8.jpg', tag:'Trending' , karat:'22K' },
+    { id:60, name:'Jadau Necklace ',           category:'Necklaces',   description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg', tag:'Luxury' , karat:'22K' },
+    { id:61, name:'Jadau Necklace ',           category:'Necklaces',   description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg', tag:'Traditional' , karat:'22K' },
+    { id:62, name:'Jadau Necklace ',           category:'Necklaces',   description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg', tag:'Bridal Pick' , karat:'22K' },
+    { id:63, name:'Jadau Necklace ',           category:'Necklaces',   description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg', tag:'Heritage' , karat:'22K' },
+    { id:64, name:'Jadau Necklace ',           category:'Necklaces',   description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg', tag:'Premium' , karat:'22K' },
+    { id:65, name:'Jadau Necklace ',           category:'Necklaces',   description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg', tag:'Exclusive' , karat:'22K' },
+    { id:66, name:'Jadau Necklace ',           category:'Necklaces',   description:'Bestselling Jadau necklace - a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller' , karat:'22K' },
+    { id:73, name:'Long Haar ',                category:'Necklaces',   description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',      tag:'Traditional' , karat:'22K' },
+    { id:74, name:'Long Haar ',                category:'Necklaces',   description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',      tag:'Heritage' , karat:'22K' },
+    { id:75, name:'Long Haar ',                category:'Necklaces',   description:'Bridal long haar in 22KT gold - a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick' , karat:'22K' },
+    { id:76, name:'Long Haar ',                category:'Necklaces',   description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',      tag:'Premium' , karat:'22K' },
+    { id:77, name:'Long Haar ',                category:'Necklaces',   description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',      tag:'Luxury' , karat:'22K' },
   ],
   chokers: [
-    { id:67, name:'Gold Choker ',            category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',       tag:'Classic' },
-    { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',            image:'/Choker102.jpg',       tag:'Heritage' },
-    { id:69, name:'Gold Choker ',            category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',       tag:'Bridal Pick' },
-    { id:70, name:'Gold Choker ',            category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',       tag:'Exclusive' },
-    { id:71, name:'Gold Choker ',            category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',       tag:'Trending' },
-    { id:72, name:'Gold Choker ',            category:'Chokers',      description:'New arrival gold choker with delicate beaded and filigree detailing.',       image:'/choker107.jpg',       tag:'New Arrival' },
+    { id:67, name:'Gold Choker ',            category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',       tag:'Classic' , karat:'22K' },
+    { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',            image:'/Choker102.jpg',       tag:'Heritage' , karat:'22K' },
+    { id:69, name:'Gold Choker ',            category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',       tag:'Bridal Pick' , karat:'22K' },
+    { id:70, name:'Gold Choker ',            category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',       tag:'Exclusive' , karat:'22K' },
+    { id:71, name:'Gold Choker ',            category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',       tag:'Trending' , karat:'22K' },
+    { id:72, name:'Gold Choker ',            category:'Chokers',      description:'New arrival gold choker with delicate beaded and filigree detailing.',       image:'/choker107.jpg',       tag:'New Arrival' , karat:'22K' },
   ],
   earrings: [
-    { id:'e1', name:'Antique Gold Jhumkas',     category:'Earrings',  description:'Traditional temple-style jhumkas.',               image:'/earring1.jpg',   tag:'Heritage'  },
-    { id:'e2', name:'Chandbali Earrings',       category:'Earrings',  description:'Royal chandbali with stone work.',                 image:'/earring5.jpg',   tag:'Exclusive' },
-    { id:'e3', name:'Antique Earrings Set',     category:'Earrings',  description:'Exquisite antique finish earring set.',             image:'/earrings13.png', tag:'Limited'   },
-    { id:3,  name:'Antique Gold Jhumkas',      category:'Earrings',     description:'Traditional temple-style jhumkas with intricate peacock motifs.',                 image:'/earrings13.png',      tag:'Heritage' },
-    { id:11, name:'Diamond Studs',             category:'Earrings',     description:'Classic diamond studs for everyday elegance.',                                    image:'/ring4.png',           tag:'Everyday' },
-    { id:16, name:'Diamond Hoop Earrings',     category:'Earrings',     description:'Contemporary diamond hoops for modern elegance.',                                 image:'/earrings14.png',      tag:'Trending' },
-    { id:54, name:'Gold Earrings ',          category:'Earrings',     description:'Classic gold earrings with intricate detailing, perfect for every occasion.',  image:'/earrings101.jpg',     tag:'Classic' },
-    { id:55, name:'Gold Earrings ',          category:'Earrings',     description:'Heritage jhumka-style earrings in 22KT gold with traditional motifs.',        image:'/earrings102.jpg',     tag:'Heritage' },
-    { id:56, name:'Gold Earrings ',          category:'Earrings',     description:'Exclusive 22KT gold earrings with premium finish and ornate design.',         image:'/earrings104.jpg',     tag:'Exclusive' },
-    { id:57, name:'Gold Earrings ',          category:'Earrings',     description:'Trending 22KT gold earrings with contemporary meets traditional design.',     image:'/earrings105.jpg',     tag:'Trending' },
-    { id:58, name:'Gold Earrings ',          category:'Earrings',     description:'New arrival earrings in 22KT gold with delicate filigree work.',              image:'/earrings106.jpg',     tag:'New Arrival' },
-    { id:59, name:'Gold Earrings ',          category:'Earrings',     description:'Bridal earrings in 22KT gold with kundan stones and pearl drops.',            image:'/earrings107.jpg',     tag:'Bridal Pick' },
+    { id:'e1', name:'Antique Gold Jhumkas',     category:'Earrings',  description:'Traditional temple-style jhumkas.',               image:'/earring1.jpg',   tag:'Heritage'  , karat:'22K' },
+    { id:'e2', name:'Chandbali Earrings',       category:'Earrings',  description:'Royal chandbali with stone work.',                 image:'/earring5.jpg',   tag:'Exclusive' , karat:'22K' },
+    { id:'e3', name:'Antique Earrings Set',     category:'Earrings',  description:'Exquisite antique finish earring set.',             image:'/earrings13.png', tag:'Limited'   , karat:'22K' },
+    { id:3,  name:'Antique Gold Jhumkas',      category:'Earrings',     description:'Traditional temple-style jhumkas with intricate peacock motifs.',                 image:'/earrings13.png',      tag:'Heritage' , karat:'22K' },
+    { id:11, name:'Diamond Studs',             category:'Earrings',     description:'Classic diamond studs for everyday elegance.',                                    image:'/ring4.png',           tag:'Everyday' , karat:'22K' },
+    { id:16, name:'Diamond Hoop Earrings',     category:'Earrings',     description:'Contemporary diamond hoops for modern elegance.',                                 image:'/earrings14.png',      tag:'Trending' , karat:'22K' },
+    { id:54, name:'Gold Earrings ',          category:'Earrings',     description:'Classic gold earrings with intricate detailing, perfect for every occasion.',  image:'/earrings101.jpg',     tag:'Classic' , karat:'22K' },
+    { id:55, name:'Gold Earrings ',          category:'Earrings',     description:'Heritage jhumka-style earrings in 22KT gold with traditional motifs.',        image:'/earrings102.jpg',     tag:'Heritage' , karat:'22K' },
+    { id:56, name:'Gold Earrings ',          category:'Earrings',     description:'Exclusive 22KT gold earrings with premium finish and ornate design.',         image:'/earrings104.jpg',     tag:'Exclusive' , karat:'22K' },
+    { id:57, name:'Gold Earrings ',          category:'Earrings',     description:'Trending 22KT gold earrings with contemporary meets traditional design.',     image:'/earrings105.jpg',     tag:'Trending' , karat:'22K' },
+    { id:58, name:'Gold Earrings ',          category:'Earrings',     description:'New arrival earrings in 22KT gold with delicate filigree work.',              image:'/earrings106.jpg',     tag:'New Arrival' , karat:'22K' },
+    { id:59, name:'Gold Earrings ',          category:'Earrings',     description:'Bridal earrings in 22KT gold with kundan stones and pearl drops.',            image:'/earrings107.jpg',     tag:'Bridal Pick' , karat:'22K' },
   ],
   pendants: [
-    { id:78, name:'Pendant ',             category:'Pendants',     description:'Elegant 22KT gold pendant with matching earrings and delicate design.',  image:'/pandent set1.jpg',    tag:'Classic' },
-    { id:79, name:'Pendant ',             category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',      image:'/pandent set2.jpg',    tag:'Heritage' },
-    { id:80, name:'Pendant ',             category:'Pendants',     description:'Bridal pendant  in 22KT gold with kundan stones and pearl drops.',       image:'/pandent set3.jpg',    tag:'Bridal Pick' },
-    { id:81, name:'Pendant ',             category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',              image:'/pandent set4.jpg',    tag:'Exclusive' },
-    { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant - contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending' },
-    { id:83, name:'Pendant ',             category:'Pendants',     description:'New arrival pendant  in 22KT gold with modern heritage styling.',        image:'/pandent set6.jpg',    tag:'New Arrival' },
-    { id:84, name:'Pendant ',             category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',      image:'/pandent set7.jpg',    tag:'Premium' },
-    { id:85, name:'Pendant ',             category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',    image:'/pandent set8.jpg',    tag:'Festive' },
+    { id:78, name:'Pendant ',             category:'Pendants',     description:'Elegant 22KT gold pendant with matching earrings and delicate design.',  image:'/pandent set1.jpg',    tag:'Classic' , karat:'22K' },
+    { id:79, name:'Pendant ',             category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',      image:'/pandent set2.jpg',    tag:'Heritage' , karat:'22K' },
+    { id:80, name:'Pendant ',             category:'Pendants',     description:'Bridal pendant  in 22KT gold with kundan stones and pearl drops.',       image:'/pandent set3.jpg',    tag:'Bridal Pick' , karat:'22K' },
+    { id:81, name:'Pendant ',             category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',              image:'/pandent set4.jpg',    tag:'Exclusive' , karat:'22K' },
+    { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant - contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending' , karat:'22K' },
+    { id:83, name:'Pendant ',             category:'Pendants',     description:'New arrival pendant  in 22KT gold with modern heritage styling.',        image:'/pandent set6.jpg',    tag:'New Arrival' , karat:'22K' },
+    { id:84, name:'Pendant ',             category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',      image:'/pandent set7.jpg',    tag:'Premium' , karat:'22K' },
+    { id:85, name:'Pendant ',             category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',    image:'/pandent set8.jpg',    tag:'Festive' , karat:'22K' },
   ],
   bridal: [
-    { id:'br1', name:'Bridal Set - Maharani',  category:'Bridal',   description:'Complete necklace, earrings & maang tikka.',       image:'/bridal.png',     tag:'Bestseller'},
-    { id:'br2', name:'Kundan Bridal Choker',   category:'Bridal',   description:'Exquisite kundan bridal choker.',                  image:'/necklace88.png', tag:'Premium'   },
+    { id:'br1', name:'Bridal Set - Maharani',  category:'Bridal',   description:'Complete necklace, earrings & maang tikka.',       image:'/bridal.png',     tag:'Bestseller', karat:'22K' },
+    { id:'br2', name:'Kundan Bridal Choker',   category:'Bridal',   description:'Exquisite kundan bridal choker.',                  image:'/necklace88.png', tag:'Premium'   , karat:'22K' },
   ],
   chains: [
-    { id:'c1', name:'Figaro Gold Chain',        category:'Chains',   description:'Italian figaro chain in 22K gold.',                image:'/chain2.png',     tag:'Classic'   },
-    { id:'c2', name:'Rope Gold Chain',          category:'Chains',   description:'Elegant rope chain in 22K gold.',                  image:'/chain4.png',     tag:'Trending'  },
+    { id:'c1', name:'Figaro Gold Chain',        category:'Chains',   description:'Italian figaro chain in 22K gold.',                image:'/chain2.png',     tag:'Classic'   , karat:'22K' },
+    { id:'c2', name:'Rope Gold Chain',          category:'Chains',   description:'Elegant rope chain in 22K gold.',                  image:'/chain4.png',     tag:'Trending'  , karat:'22K' },
   ],
   antique: [
-    { id:'a1', name:'Antique Temple Set',       category:'Antique',  description:'Full antique temple jewellery set.',               image:'/antique2.jpg',   tag:'Heritage'  },
-    { id:'a2', name:'Antique Choker Necklace',  category:'Antique',  description:'Traditional antique choker necklace.',             image:'/antique3.jpg',   tag:'Limited'   },
-    { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                 image:'/ring2.png',           tag:'Premium' },
-    { id:5,  name:'Polki Diamond Ring',        category:'Antique',      description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring6.png',           tag:'Exclusive' },
-    { id:10, name:'Festive Gold Set',          category:'Antique',      description:'Elegant gold set perfect for festive occasions.',                                 image:'/bangle5.png',         tag:'Festive' },
-    { id:15, name:'Antique Choker Set',        category:'Antique',      description:'Beautiful antique choker set for festive celebrations.',                          image:'/necklace15.png',      tag:'Traditional' },
-    { id:18, name:'Diamond Cluster Ring',      category:'Antique',      description:'Beautiful cluster of diamonds in an elegant setting.',                            image:'/ring3.png',           tag:'Luxury' },
+    { id:'a1', name:'Antique Temple Set',       category:'Antique',  description:'Full antique temple jewellery set.',               image:'/antique2.jpg',   tag:'Heritage'  , karat:'22K' },
+    { id:'a2', name:'Antique Choker Necklace',  category:'Antique',  description:'Traditional antique choker necklace.',             image:'/antique3.jpg',   tag:'Limited'   , karat:'22K' },
+    { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                 image:'/ring2.png',           tag:'Premium' , karat:'22K' },
+    { id:5,  name:'Polki Diamond Ring',        category:'Antique',      description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring6.png',           tag:'Exclusive' , karat:'22K' },
+    { id:10, name:'Festive Gold Set',          category:'Antique',      description:'Elegant gold set perfect for festive occasions.',                                 image:'/bangle5.png',         tag:'Festive' , karat:'22K' },
+    { id:15, name:'Antique Choker Set',        category:'Antique',      description:'Beautiful antique choker set for festive celebrations.',                          image:'/necklace15.png',      tag:'Traditional' , karat:'22K' },
+    { id:18, name:'Diamond Cluster Ring',      category:'Antique',      description:'Beautiful cluster of diamonds in an elegant setting.',                            image:'/ring3.png',           tag:'Luxury' , karat:'22K' },
   ],
 };
 
@@ -1084,9 +1084,12 @@ function OwnerItemCard({
   );
 }
 
-function decodeToken(t: string): { category: string; expiry: number } | null {
-  try { const d = atob(t); const [cat,exp] = d.split('|'); return { category:cat, expiry:parseInt(exp) }; }
-  catch { return null; }
+function decodeToken(t: string): { category: string; expiry: number; karat: string } | null {
+  try {
+    const d = atob(t);
+    const [cat, exp, karat] = d.split('|');
+    return { category: cat, expiry: parseInt(exp), karat: karat ?? 'all' };
+  } catch { return null; }
 }
 
 function formatTime(ms: number) {
@@ -1302,7 +1305,11 @@ export default function PrivateCatalogue() {
 
   const token      = searchParams.get('token');
   const decoded    = token ? decodeToken(token) : null;
-  const allProducts = decoded ? (ALL_PRODUCTS[decoded.category] ?? []) : [];
+  const allProducts = decoded
+    ? (ALL_PRODUCTS[decoded.category] ?? []).filter((p: any) =>
+        decoded.karat === 'all' || (p as any).karat === decoded.karat
+      )
+    : [];
   const catLabel   = decoded?.category
     ? decoded.category.charAt(0).toUpperCase() + decoded.category.slice(1)
     : '';
@@ -1713,262 +1720,4 @@ export default function PrivateCatalogue() {
 
           {/* Ordered Stock */}
           <motion.button
-            whileHover={{ y:-4, scale: 1.01, boxShadow:`0 12px 30px rgba(194,24,91,0.25)` }}
-            whileTap={{ scale:0.97 }}
-            onClick={() => setActiveFilter(f => f === 'ordered' ? 'all' : 'ordered')}
-            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
-            style={{
-              background: activeFilter === 'ordered' ? C.gold : `rgba(194,24,91,0.06)`,
-              border:`2px solid ${activeFilter === 'ordered' ? C.gold : C.border}`,
-            }}
-          >
-            {/* Glass Sheen */}
-            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
-
-            <motion.div
-              animate={activeFilter === 'ordered' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
-              style={{ background: activeFilter === 'ordered' ? 'rgba(255,255,255,0.2)' : `rgba(194,24,91,0.10)` }}
-            >
-              <ShoppingBag size={20} style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }} />
-            </motion.div>
-            <div className="relative z-10">
-              <p className="font-cinzel text-[9px] tracking-[0.25em]"
-                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.8)' : C.textMid }}>
-                ORDERED STOCK
-              </p>
-              <motion.p
-                key={orderedCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
-                className="font-cormorant text-3xl font-bold leading-none mt-0.5"
-                style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }}
-              >
-                {orderedCount}
-              </motion.p>
-              <p className="font-raleway text-xs mt-0.5"
-                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.6)' : C.textLight }}>
-                pieces ordered
-              </p>
-            </div>
-          </motion.button>
-        </motion.div>
-
-        {/* ── SEARCH + FILTER ROW ── */}
-        <motion.div
-          initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once: true }} transition={{ delay:0.2, duration:0.6 }}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 relative z-10"
-        >
-          {/* Search */}
-          <div className="relative flex-1 group">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300" style={{ color: searchQuery ? C.gold : C.textLight }} />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name, category or tag..."
-              className="w-full pl-10 pr-9 py-3 rounded-xl font-raleway text-sm outline-none transition-all duration-300"
-              style={{ background:'#fff', border:`1.5px solid ${C.border}`, color: C.text,
-                       boxShadow:'0 2px 10px rgba(194,24,91,0.05)' }}
-            />
-            <AnimatePresence>
-              {searchQuery && (
-                <motion.button
-                  initial={{ opacity:0, scale:0.8, rotate: -90 }}
-                  animate={{ opacity:1, scale:1, rotate: 0 }}
-                  exit={{ opacity:0, scale:0.8, rotate: 90 }}
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-rose-50 p-1 rounded-full"
-                >
-                  <X size={13} style={{ color: C.gold }} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Filter tabs - Refactored for fluid LayoutGroup sliding */}
-          <LayoutGroup>
-            <div className="flex rounded-xl overflow-hidden p-1 relative z-0"
-                 style={{ border:`1.5px solid ${C.border}`, background:'#fff', boxShadow: '0 2px 10px rgba(194,24,91,0.05)' }}>
-              {(['all','ready','ordered'] as const).map(f => (
-                <button
-                  key={f}
-                  onClick={() => setActiveFilter(f)}
-                  className="relative flex-1 px-3 sm:px-4 py-2 font-cinzel text-[9px] tracking-[0.2em] whitespace-nowrap transition-colors duration-300 outline-none"
-                  style={{ color: activeFilter === f ? '#fff' : C.textLight }}
-                >
-                  {/* Active Background Indicator */}
-                  {activeFilter === f && (
-                    <motion.div
-                      layoutId="activeFilterBg"
-                      className="absolute inset-0 rounded-lg -z-10 shadow-sm"
-                      style={{ background: f === 'ready' ? C.green : f === 'ordered' ? C.gold : C.goldDk }}
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center justify-center gap-1.5 font-semibold">
-                     {f === 'ready' && <span className="w-1.5 h-1.5 rounded-full bg-white opacity-80" />}
-                     {f === 'ordered' && <Diamond size={8} className="text-white opacity-80" />}
-                     {f.toUpperCase()}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </LayoutGroup>
-
-          {/* WhatsApp */}
-          <motion.a
-            whileHover={{ scale:1.04, boxShadow: '0 8px 20px rgba(37,211,102,0.3)' }} whileTap={{ scale:0.97 }}
-            href="https://wa.me/918377911745?text=Hi!%20I%20am%20viewing%20the%20private%20catalogue."
-            target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 text-white text-sm px-5 py-3 rounded-xl font-raleway flex-shrink-0 shadow-md transition-shadow"
-            style={{ background:'#25D366' }}
-          >
-            <MessageCircle size={16} /> Contact Us
-          </motion.a>
-        </motion.div>
-
-        {/* ── ITEMS GRID ── */}
-        <motion.div
-          variants={gridVariants}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10"
-        >
-          <AnimatePresence mode="popLayout">
-            {/* Render Client Items */}
-            {(activeFilter === 'all' || activeFilter === 'ordered') && clientItems.map(item => (
-              <ClientItemCard
-                key={item.id}
-                item={item}
-                onDelete={() => handleClientDelete(item.id)}
-                onEnquire={() => handleClientEnquire(item)}
-                onClick={() => setSelectedUploadedItem(item)}
-              />
-            ))}
-
-            {/* Render Owner Items */}
-            {(activeFilter === 'all' || activeFilter === 'ready') && ownerItems.map(item => (
-              <OwnerItemCard
-                key={item.id}
-                item={item}
-                onDelete={() => handleOwnerDelete(item.id)}
-                onClick={() => setSelectedUploadedItem(item)}
-              />
-            ))}
-
-            {/* Render Standard Products */}
-            {visibleProducts.map(product => (
-              <motion.div
-                layout
-                variants={itemVariants}
-                key={product.id}
-                className="bg-white rounded-2xl overflow-hidden cursor-pointer flex flex-col"
-                style={{ border: `1px solid ${C.border}`, boxShadow: '0 4px 15px rgba(194,24,91,0.03)' }}
-                onClick={() => setSelectedProduct(product)}
-              >
-                <div className="relative overflow-hidden" style={{ aspectRatio: '1/1' }}>
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
-                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {product.tag && (
-                      <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-1 rounded shadow-sm ${TAG_COLORS[product.tag] || 'bg-gray-100 text-gray-800'}`}>
-                        {product.tag}
-                      </span>
-                    )}
-                    <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-1 rounded shadow-sm bg-white/90 text-gray-800 backdrop-blur">
-                      {(stockMap[product.id] ?? 'ready') === 'ready' ? 'READY STOCK' : 'ORDERED'}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4 flex flex-col gap-2 flex-1">
-                  <h3 className="font-cormorant text-lg font-semibold leading-tight" style={{ color: C.text }}>{product.name}</h3>
-                  <p className="font-raleway text-xs line-clamp-2" style={{ color: C.textLight }}>{product.description}</p>
-                  <div className="mt-auto pt-3 flex items-center justify-between">
-                    <span className="font-cinzel text-[10px] font-bold" style={{ color: C.goldDk }}>{product.category}</span>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleEnquire(product); }}
-                      className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-[#C2185B] hover:text-white"
-                      style={{ background: 'rgba(194,24,91,0.08)', color: C.gold }}
-                    >
-                      <ArrowRight size={14} />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-        
-        {/* Empty State */}
-        {visibleProducts.length === 0 && clientItems.length === 0 && ownerItems.length === 0 && (
-          <div className="py-20 text-center relative z-10">
-            <p className="font-raleway text-lg" style={{ color: C.textLight }}>No items found in this category.</p>
-          </div>
-        )}
-
-      </div>
-
-      {/* Floating Action Buttons for Adding Custom Items */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setShowAddModal(true)}
-          title="Add Client Request"
-          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
-          style={{ background: C.gold, color: '#fff' }}
-        >
-          <Plus size={20} />
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setShowOwnerModal(true)}
-          title="Add Owner Stock"
-          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
-          style={{ background: '#2E7D32', color: '#fff' }}
-        >
-          <Package size={20} />
-        </motion.button>
-      </div>
-
-      <AnimatePresence>
-        {selectedProduct && (
-          <ProductModal
-            product={selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-          />
-        )}
-        
-        {/* ── NEW: Custom Uploaded Item Modal ── */}
-        {selectedUploadedItem && (
-          <UploadedItemModal
-            item={selectedUploadedItem}
-            onClose={() => setSelectedUploadedItem(null)}
-            onEnquire={() => {
-              if ((selectedUploadedItem as any).addedBy === 'owner') {
-                handleOwnerEnquire(selectedUploadedItem);
-              } else {
-                handleClientEnquire(selectedUploadedItem);
-              }
-            }}
-            accentColor={(selectedUploadedItem as any).addedBy === 'owner' ? '#2E7D32' : '#1D4ED8'}
-            badgeLabel={(selectedUploadedItem as any).addedBy === 'owner' ? 'READY STOCK' : 'YOUR ITEM'}
-          />
-        )}
-
-        {showAddModal && (
-          <AddClientItemModal
-            onClose={() => setShowAddModal(false)}
-            onAdded={handleClientAdd}
-          />
-        )}
-        {showOwnerModal && (
-          <AddOwnerItemModal
-            onClose={() => setShowOwnerModal(false)}
-            onAdded={handleOwnerAdd}
-            catLabel={catLabel}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+      
