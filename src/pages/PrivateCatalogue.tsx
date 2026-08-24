@@ -1720,3 +1720,29 @@ export default function PrivateCatalogue() {
 
           {/* Ordered Stock */}
           <motion.button
+</div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
+
+      {visibleProducts.length === 0 && (
+        <div className="text-center py-20">
+          <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No pieces found</p>
+          <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>Try adjusting your search or filter</p>
+        </div>
+      )}
+
+      </div>{/* end max-w-7xl body */}
+
+      {/* ── PRODUCT MODAL ── */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onEnquire={handleEnquire} />
+        )}
+      </AnimatePresence>
+
+    </motion.div>
+  );
+}
