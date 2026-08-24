@@ -182,12 +182,13 @@ export default function CatalogueAdmin() {
   const handleGenerate = () => {
     const token    = generateToken(category, duration, karat);
     const link     = buildLink(token);
-    const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
-    const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
-    const expTime  = new Date(Date.now() + duration).toLocaleTimeString();
+    const catLabel   = CATEGORIES.find(c => c.key === category)?.label ?? category;
+    const durLabel   = DURATIONS.find(d => d.value === duration)?.label ?? '';
+    const karatLabel = karat === 'all' ? 'All Karats' : karat + ' Gold';
+    const expTime    = new Date(Date.now() + duration).toLocaleTimeString();
     setGeneratedLink(link);
     setShowQR(false);
-    setHistory(prev => [{ link, cat: catLabel, exp: expTime, label: durLabel }, ...prev.slice(0, 9)]);
+    setHistory(prev => [{ link, cat: catLabel, exp: expTime, label: `${karatLabel} · ${durLabel}` }, ...prev.slice(0, 9)]);
   };
 
   const handleCopyLink = async () => {
@@ -199,7 +200,8 @@ export default function CatalogueAdmin() {
   const handleWhatsApp = () => {
     const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
     const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
-    const msg = `✨ *Shekhar Raja Jewellers*\n\nHere is your private *${catLabel} Collection* catalogue:\n\n🔗 ${generatedLink}\n\n⏱️ *This link expires in ${durLabel}*\n\n_For personal viewing only. Do not share._`;
+    const karatLabel = karat === 'all' ? 'All Karats' : karat + ' Gold';
+    const msg = `✨ *Shekhar Raja Jewellers*\n\nHere is your private *${catLabel} Collection* catalogue:\n💎 Purity: *${karatLabel}*\n\n🔗 ${generatedLink}\n\n⏱️ *This link expires in ${durLabel}*\n\n_For personal viewing only. Do not share._`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -218,7 +220,8 @@ export default function CatalogueAdmin() {
     // Extracted HTML structure and properly escaped script tag for React compilers
     const htmlStart = '<html><head><title>SRJ Catalogue QR</title>';
     const htmlStyles = '<style>body{font-family:Georgia,serif;text-align:center;padding:40px;background:#fff;}.logo{font-size:28px;font-weight:bold;color:#880E4F;letter-spacing:4px;}.sub{font-size:12px;letter-spacing:8px;color:#AD6888;margin-top:4px;}svg{width:280px;height:280px;margin:30px auto;display:block;}.cat{font-size:22px;font-weight:bold;color:#1A0010;margin:16px 0 6px;}.info{font-size:13px;color:#6D1B4E;}.scan{font-size:14px;color:#AD6888;margin-top:20px;}.box{border:2px solid #F8BBD9;border-radius:20px;padding:30px;max-width:360px;margin:0 auto;}</style></head>';
-    const htmlBody = '<body><div class="box"><div class="logo">SHEKHAR RAJA</div><div class="sub">JEWELLERS</div>' + svgData + '<div class="cat">' + catLabel + ' Collection</div><div class="info">Private Catalogue · Expires in ' + durLabel + '</div><div class="scan">📱 Scan QR code to view the collection</div></div><script>window.onload=()=>window.print();</' + 'script></body></html>';
+    const karatLabel = karat === 'all' ? 'All Karats' : karat + ' Gold';
+    const htmlBody = '<body><div class="box"><div class="logo">SHEKHAR RAJA</div><div class="sub">JEWELLERS</div>' + svgData + '<div class="cat">' + catLabel + ' Collection</div><div class="info">Private Catalogue · ' + karatLabel + ' · Expires in ' + durLabel + '</div><div class="scan">📱 Scan QR code to view the collection</div></div><script>window.onload=()=>window.print();</' + 'script></body></html>';
 
     win.document.write(htmlStart + htmlStyles + htmlBody);
     win.document.close();
@@ -481,6 +484,24 @@ export default function CatalogueAdmin() {
                 ))}
               </div>
 
+              <label className="font-cinzel text-xs tracking-[0.2em] block mb-3" style={{ color: C.textLight }}>
+                KARAT / PURITY
+              </label>
+              <div className="grid grid-cols-4 gap-2 mb-8">
+                {KARATS.map(k => (
+                  <motion.button key={k.value} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setKarat(k.value)}
+                          className="py-2.5 px-2 rounded-xl text-sm font-raleway transition-colors flex flex-col items-center gap-0.5"
+                          style={{
+                            border: '1.5px solid ' + (karat === k.value ? C.gold : C.border),
+                            background: karat === k.value ? C.gold : '#FFF5F7',
+                            color: karat === k.value ? '#fff' : C.textMid,
+                          }}>
+                    <span className="font-cinzel text-xs font-bold">{k.value === 'all' ? '✦ All' : k.value}</span>
+                    {k.value !== 'all' && <span className="text-[9px] opacity-70">Gold</span>}
+                  </motion.button>
+                ))}
+              </div>
+
               <motion.button 
                       whileHover={{ scale: 1.02, boxShadow: '0 8px 20px rgba(194,24,91,0.3)' }}
                       whileTap={{ scale: 0.97 }}
@@ -502,7 +523,7 @@ export default function CatalogueAdmin() {
                        style={{ background:'rgba(194,24,91,0.06)', borderBottom: '1px solid ' + C.border }}>
                     <Clock size={14} style={{ color: C.gold }} />
                     <span className="font-cinzel text-xs tracking-[0.12em]" style={{ color: C.gold }}>
-                      {CATEGORIES.find(c => c.key === category)?.label?.toUpperCase()} · {DURATIONS.find(d => d.value === duration)?.label?.toUpperCase()}
+                      {CATEGORIES.find(c => c.key === category)?.label?.toUpperCase()} · {karat === 'all' ? 'ALL KARATS' : karat + ' GOLD'} · {DURATIONS.find(d => d.value === duration)?.label?.toUpperCase()}
                     </span>
                   </div>
 
@@ -578,6 +599,9 @@ export default function CatalogueAdmin() {
                         <div className="text-center mb-5">
                           <p className="font-cormorant text-lg font-semibold" style={{ color: C.text }}>
                             {CATEGORIES.find(c => c.key === category)?.label} Collection
+                          </p>
+                          <p className="font-raleway text-xs mt-0.5 font-semibold" style={{ color: C.gold }}>
+                            {karat === 'all' ? 'All Karats' : karat + ' Gold'}
                           </p>
                           <p className="font-raleway text-xs mt-1" style={{ color: C.textLight }}>
                             Scan to view · Expires in {DURATIONS.find(d => d.value === duration)?.label}
