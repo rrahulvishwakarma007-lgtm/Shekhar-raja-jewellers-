@@ -1718,21 +1718,121 @@ export default function PrivateCatalogue() {
             </div>
           </motion.button>
 
+
           {/* Ordered Stock */}
           <motion.button
-</div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </AnimatePresence>
+            whileHover={{ y:-4, scale: 1.01, boxShadow:'0 12px 30px rgba(194,24,91,0.25)' }}
+            whileTap={{ scale:0.97 }}
+            onClick={() => setActiveFilter(f => f === 'ordered' ? 'all' : 'ordered')}
+            className="relative overflow-hidden flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 group"
+            style={{
+              background: activeFilter === 'ordered' ? C.gold : 'rgba(194,24,91,0.06)',
+              border:`2px solid ${activeFilter === 'ordered' ? C.gold : C.border}`,
+            }}
+          >
+            {/* Glass Sheen */}
+            <motion.div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.7, ease: "easeInOut" }} />
 
-      {visibleProducts.length === 0 && (
-        <div className="text-center py-20">
-          <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No pieces found</p>
-          <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>Try adjusting your search or filter</p>
-        </div>
-      )}
+            <motion.div
+              animate={activeFilter === 'ordered' ? { scale:[1,1.1,1] } : {}} transition={{ duration:1.5, repeat:Infinity }}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10"
+              style={{ background: activeFilter === 'ordered' ? 'rgba(255,255,255,0.2)' : 'rgba(194,24,91,0.1)' }}
+            >
+              <ShoppingBag size={20} style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }} />
+            </motion.div>
+
+            <div className="relative z-10">
+              <p className="font-cinzel text-[9px] tracking-[0.25em]"
+                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.8)' : C.textLight }}>
+                ORDERED
+              </p>
+              <motion.p
+                key={orderedCount} initial={{ scale:1.2, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type: "spring", stiffness: 200 }}
+                className="font-cormorant text-3xl font-bold leading-none mt-0.5"
+                style={{ color: activeFilter === 'ordered' ? '#fff' : C.gold }}
+              >
+                {orderedCount}
+              </motion.p>
+              <p className="font-raleway text-xs mt-0.5"
+                 style={{ color: activeFilter === 'ordered' ? 'rgba(255,255,255,0.6)' : C.textLight }}>
+                pieces ordered
+              </p>
+            </div>
+          </motion.button>
+
+        </motion.div>{/* end stock summary grid */}
+
+        {/* ── PRODUCT GRID ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter + searchQuery}
+            variants={gridVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+          >
+            {visibleProducts.map(product => {
+              const status = stockMap[product.id] ?? 'ready';
+              return (
+                <motion.div
+                  key={product.id}
+                  variants={itemVariants}
+                  layout
+                  className="relative rounded-2xl overflow-hidden cursor-pointer group"
+                  style={{ background: C.bgCard, border:`1px solid ${C.border}`, boxShadow:'0 2px 12px rgba(194,24,91,0.06)' }}
+                  onClick={() => setSelectedProduct(product)}
+                  whileHover={{ y:-4, boxShadow:'0 12px 30px rgba(194,24,91,0.15)' }}
+                  whileTap={{ scale:0.98 }}
+                >
+                  <div className="relative overflow-hidden" style={{ paddingBottom:'100%' }}>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {status === 'ordered' && (
+                      <div className="absolute inset-0 flex items-center justify-center"
+                           style={{ background:'rgba(0,0,0,0.45)' }}>
+                        <span className="font-cinzel text-white text-xs tracking-widest px-3 py-1 rounded-full"
+                              style={{ background: C.gold }}>ORDERED</span>
+                      </div>
+                    )}
+                    <div className="absolute top-2 left-2">
+                      <span className="font-cinzel text-[9px] tracking-widest px-2 py-0.5 rounded-full"
+                            style={{ background:'rgba(255,245,247,0.92)', color: C.gold, border:`1px solid ${C.border}` }}>
+                        {product.tag}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <p className="font-cormorant text-sm font-semibold leading-snug" style={{ color: C.text }}>{product.name}</p>
+                    <p className="font-raleway text-[10px] mt-0.5" style={{ color: C.textLight }}>{product.category}</p>
+                    <motion.button
+                      whileHover={{ scale:1.03 }} whileTap={{ scale:0.97 }}
+                      onClick={e => { e.stopPropagation(); handleEnquire(product); }}
+                      className="mt-2 w-full py-1.5 rounded-xl font-raleway text-xs font-medium transition-colors"
+                      style={{
+                        background: status === 'ordered' ? 'rgba(194,24,91,0.06)' : `linear-gradient(135deg, ${C.gold}, ${C.goldDk})`,
+                        color: status === 'ordered' ? C.textLight : '#fff',
+                        border: status === 'ordered' ? `1px solid ${C.border}` : 'none',
+                      }}
+                    >
+                      {status === 'ordered' ? 'Already Ordered' : 'Enquire via WhatsApp'}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+
+        {visibleProducts.length === 0 && (
+          <div className="text-center py-20">
+            <p className="font-cormorant text-2xl" style={{ color: C.textLight }}>No pieces found</p>
+            <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>Try adjusting your search or filter</p>
+          </div>
+        )}
 
       </div>{/* end max-w-7xl body */}
 
