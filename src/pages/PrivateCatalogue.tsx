@@ -1839,7 +1839,7 @@ export default function PrivateCatalogue() {
       {/* ── PRODUCT MODAL ── */}
       <AnimatePresence>
         {selectedProduct && (
-          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onEnquire={handleEnquire} />
+          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
         )}
       </AnimatePresence>
 
