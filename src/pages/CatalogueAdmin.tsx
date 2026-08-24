@@ -48,8 +48,16 @@ const DURATIONS = [
   { label:'24 hours',   value: 24 * 60 * 60 * 1000 },
 ];
 
-function generateToken(category: string, durationMs: number) {
-  return btoa(category + '|' + (Date.now() + durationMs));
+
+const KARATS = [
+  { label: 'All Karats', value: 'all' },
+  { label: '18K Gold',   value: '18K' },
+  { label: '20K Gold',   value: '20K' },
+  { label: '22K Gold',   value: '22K' },
+];
+
+function generateToken(category: string, durationMs: number, karat: string = 'all') {
+  return btoa(category + '|' + (Date.now() + durationMs) + '|' + karat);
 }
 
 function buildLink(token: string) {
@@ -171,7 +179,7 @@ export default function CatalogueAdmin() {
   };
 
   const handleGenerate = () => {
-    const token    = generateToken(category, duration);
+    const token    = generateToken(category, duration, karat);
     const link     = buildLink(token);
     const catLabel = CATEGORIES.find(c => c.key === category)?.label ?? category;
     const durLabel = DURATIONS.find(d => d.value === duration)?.label ?? '';
