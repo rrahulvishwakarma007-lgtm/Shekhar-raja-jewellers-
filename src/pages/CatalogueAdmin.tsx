@@ -9,6 +9,11 @@ import {
   QrCode, Share2, Printer, Package, ShoppingBag, RotateCcw, CheckCircle2
 } from 'lucide-react';
 import { loadStockMap, saveStockMap, type StockStatus } from '../lib/stockStore';
+import {
+  loadGoldRates, saveGoldRates, loadProductMeta, saveProductMeta,
+  calcPrice, formatPrice, DEFAULT_WEIGHTS,
+  type GoldRates, type ProductMeta
+} from '../lib/priceStore';
 import { ALL_PRODUCTS } from './PrivateCatalogue';
 
 const ADMIN_PASSWORD = 'srj123';
@@ -146,7 +151,13 @@ export default function CatalogueAdmin() {
   const [showPass,      setShowPass]      = useState(false);
   const [authed,        setAuthed]        = useState(false);
   const [wrongPass,     setWrongPass]     = useState(false);
-  const [activeTab,     setActiveTab]     = useState<'links'|'stock'>('links');
+  const [activeTab,     setActiveTab]     = useState<'links'|'stock'|'pricing'>('links');
+  const [goldRates,     setGoldRates]     = useState<GoldRates>(() => loadGoldRates());
+  const [productMeta,   setProductMeta]   = useState<Record<string,ProductMeta>>(() => loadProductMeta());
+  const [editingMeta,   setEditingMeta]   = useState<string|null>(null);
+  const [metaDraft,     setMetaDraft]     = useState<ProductMeta>({});
+  const [ratesSaved,    setRatesSaved]    = useState(false);
+  const [pricingCat,    setPricingCat]    = useState('bangles');
   const [category,      setCategory]      = useState('bangles');
   const [duration,      setDuration]      = useState(DURATIONS[2].value);
   const [karat,         setKarat]         = useState('all');
@@ -315,10 +326,11 @@ export default function CatalogueAdmin() {
         <LayoutGroup>
           <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }} className="flex gap-2 p-1 rounded-2xl mb-5 bg-white/80 backdrop-blur-md shadow-sm relative z-0" style={{ border: '1px solid ' + C.border }}>
             {[
-              { key:'links', label:'Link Generator', icon:<QrCode size={15}/> },
-              { key:'stock', label:'Stock Manager',  icon:<Package size={15}/> },
+              { key:'links',   label:'Link Generator', icon:<QrCode size={15}/> },
+              { key:'stock',   label:'Stock Manager',  icon:<Package size={15}/> },
+              { key:'pricing', label:'Gold & Pricing', icon:<Diamond size={15}/> },
             ].map(tab => (
-              <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock')}
+              <button key={tab.key} onClick={() => setActiveTab(tab.key as 'links'|'stock'|'pricing')}
                       className="relative flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-raleway text-sm transition-colors outline-none"
                       style={{ color: activeTab === tab.key ? '#fff' : C.textLight, fontWeight: activeTab === tab.key ? 600 : 400 }}>
                 {activeTab === tab.key ? (
@@ -667,6 +679,253 @@ export default function CatalogueAdmin() {
                 <li>5. After expiry → link &amp; QR both stop working automatically</li>
               </ol>
             </div>
+          </motion.div>
+        ) : null}
+
+        {activeTab === 'pricing' ? (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }} className="w-full space-y-6">
+
+            {/* ── GOLD RATE EDITOR ── */}
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg" style={{ border: '1px solid ' + C.border }}>
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="font-cinzel text-sm font-bold tracking-widest" style={{ color: C.text }}>TODAY'S GOLD RATE</h3>
+                  <p className="font-raleway text-xs mt-0.5" style={{ color: C.textLight }}>
+                    Jabalpur, MP · Last updated: {new Date(goldRates.updatedAt).toLocaleString('en-IN', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}
+                  </p>
+                </div>
+                {ratesSaved && (
+                  <motion.span initial={{ scale:0 }} animate={{ scale:1 }} className="font-raleway text-xs font-semibold px-3 py-1 rounded-full"
+                    style={{ background:'rgba(46,125,50,0.12)', color:'#2E7D32' }}>
+                    ✓ Saved
+                  </motion.span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {([
+                  { label: '18K Gold', key: 'rate18K' },
+                  { label: '20K Gold', key: 'rate20K' },
+                  { label: '22K Gold', key: 'rate22K' },
+                  { label: '24K Gold', key: 'rate24K' },
+                ] as { label: string; key: keyof GoldRates }[]).map(({ label, key }) => (
+                  <div key={key} className="rounded-2xl p-3" style={{ background:'#FFF5F7', border:'1.5px solid ' + C.border }}>
+                    <label className="font-cinzel text-[9px] tracking-[0.2em] block mb-1.5" style={{ color: C.textLight }}>{label} / GRAM</label>
+                    <div className="flex items-center gap-1">
+                      <span className="font-raleway text-sm font-bold" style={{ color: C.gold }}>₹</span>
+                      <input
+                        type="number"
+                        value={goldRates[key] as number}
+                        onChange={e => setGoldRates(prev => ({ ...prev, [key]: Number(e.target.value) }))}
+                        className="w-full bg-transparent font-cormorant text-lg font-bold outline-none"
+                        style={{ color: C.text }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                <div className="rounded-2xl p-3" style={{ background:'#FFF5F7', border:'1.5px solid ' + C.border }}>
+                  <label className="font-cinzel text-[9px] tracking-[0.2em] block mb-1.5" style={{ color: C.textLight }}>MAKING CHARGES %</label>
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number" min={0} max={50} step={0.5}
+                      value={goldRates.makingPct}
+                      onChange={e => setGoldRates(prev => ({ ...prev, makingPct: Number(e.target.value) }))}
+                      className="w-full bg-transparent font-cormorant text-lg font-bold outline-none"
+                      style={{ color: C.text }}
+                    />
+                    <span className="font-raleway text-sm font-bold" style={{ color: C.gold }}>%</span>
+                  </div>
+                  <p className="font-raleway text-[9px] mt-1" style={{ color: C.textLight }}>of gold value</p>
+                </div>
+                <div className="rounded-2xl p-3" style={{ background:'#FFF5F7', border:'1.5px solid ' + C.border }}>
+                  <label className="font-cinzel text-[9px] tracking-[0.2em] block mb-1.5" style={{ color: C.textLight }}>WASTAGE %</label>
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number" min={0} max={20} step={0.5}
+                      value={goldRates.wastagePct}
+                      onChange={e => setGoldRates(prev => ({ ...prev, wastagePct: Number(e.target.value) }))}
+                      className="w-full bg-transparent font-cormorant text-lg font-bold outline-none"
+                      style={{ color: C.text }}
+                    />
+                    <span className="font-raleway text-sm font-bold" style={{ color: C.gold }}>%</span>
+                  </div>
+                  <p className="font-raleway text-[9px] mt-1" style={{ color: C.textLight }}>added to weight</p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl p-3 mb-5" style={{ background:'rgba(194,24,91,0.04)', border:'1px solid ' + C.border }}>
+                <p className="font-cinzel text-[9px] tracking-widest mb-2" style={{ color: C.textLight }}>PRICE FORMULA</p>
+                <p className="font-raleway text-xs" style={{ color: C.textMid }}>
+                  (Weight × (1 + Wastage%) × Gold Rate/g) × (1 + Making%) + GST 3% on gold + GST 5% on making
+                </p>
+              </div>
+
+              <motion.button
+                whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
+                onClick={() => {
+                  saveGoldRates(goldRates);
+                  setRatesSaved(true);
+                  setTimeout(() => setRatesSaved(false), 2000);
+                }}
+                className="w-full py-3.5 rounded-2xl text-white font-cormorant text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
+                style={{ background: 'linear-gradient(135deg, ' + C.gold + ', ' + C.goldDk + ')' }}
+              >
+                <CheckCircle2 size={18} /> Save Gold Rates & Charges
+              </motion.button>
+            </div>
+
+            {/* ── PRODUCT WEIGHT & PRICE EDITOR ── */}
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 shadow-lg" style={{ border: '1px solid ' + C.border }}>
+              <h3 className="font-cinzel text-sm font-bold tracking-widest mb-1" style={{ color: C.text }}>PRODUCT WEIGHT & PRICE</h3>
+              <p className="font-raleway text-xs mb-4" style={{ color: C.textLight }}>
+                Set actual weight per piece. Set a manual price to override the auto-calculation.
+              </p>
+
+              {/* Category picker */}
+              <div className="flex gap-2 flex-wrap mb-4">
+                {CATEGORIES.map(cat => (
+                  <motion.button key={cat.key} whileTap={{ scale:0.95 }}
+                    onClick={() => setPricingCat(cat.key)}
+                    className="px-3 py-1.5 rounded-xl font-raleway text-xs transition-colors"
+                    style={{
+                      background: pricingCat === cat.key ? C.gold : '#FFF5F7',
+                      color: pricingCat === cat.key ? '#fff' : C.textMid,
+                      border: '1.5px solid ' + (pricingCat === cat.key ? C.gold : C.border),
+                    }}>
+                    {cat.icon} {cat.label}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Product list for selected category */}
+              <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1">
+                {(ALL_PRODUCTS[pricingCat] ?? []).map((product: any) => {
+                  const pid      = String(product.id);
+                  const meta     = productMeta[pid] ?? {};
+                  const defWt    = DEFAULT_WEIGHTS[pricingCat] ?? 10;
+                  const wt       = meta.weight ?? defWt;
+                  const autoPrice = calcPrice(product.karat ?? '22K', wt, goldRates);
+                  const isEditing = editingMeta === pid;
+
+                  return (
+                    <motion.div key={pid} layout
+                      className="rounded-2xl overflow-hidden"
+                      style={{ border: '1px solid ' + (isEditing ? C.gold : C.border), background: isEditing ? 'rgba(194,24,91,0.03)' : '#FFF5F7' }}>
+
+                      {/* Row */}
+                      <div className="flex items-center gap-3 p-3">
+                        <img src={product.image} alt={product.name}
+                          className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
+                          style={{ border:'1px solid ' + C.border }} />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-cormorant text-sm font-semibold truncate" style={{ color: C.text }}>{product.name}</p>
+                          <p className="font-raleway text-[10px]" style={{ color: C.textLight }}>{product.karat} · {wt}g</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="font-cormorant text-base font-bold" style={{ color: meta.priceOverride ? C.goldDk : C.gold }}>
+                            {formatPrice(meta.priceOverride ?? autoPrice)}
+                          </p>
+                          {meta.priceOverride && (
+                            <p className="font-raleway text-[9px]" style={{ color: C.textLight }}>manual</p>
+                          )}
+                        </div>
+                        <motion.button
+                          whileTap={{ scale:0.9 }}
+                          onClick={() => {
+                            if (isEditing) {
+                              setEditingMeta(null);
+                            } else {
+                              setEditingMeta(pid);
+                              setMetaDraft({ weight: meta.weight, priceOverride: meta.priceOverride });
+                            }
+                          }}
+                          className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center transition-colors"
+                          style={{ background: isEditing ? C.gold : 'rgba(194,24,91,0.08)', color: isEditing ? '#fff' : C.gold }}>
+                          {isEditing ? <Check size={15}/> : <span style={{fontSize:13}}>✏️</span>}
+                        </motion.button>
+                      </div>
+
+                      {/* Edit panel */}
+                      <AnimatePresence>
+                        {isEditing && (
+                          <motion.div
+                            initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
+                            transition={{ duration:0.2 }}
+                            className="overflow-hidden border-t"
+                            style={{ borderColor: C.border }}>
+                            <div className="p-3 grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="font-cinzel text-[9px] tracking-widest block mb-1" style={{ color: C.textLight }}>
+                                  WEIGHT (grams)
+                                </label>
+                                <input
+                                  type="number" min={0.1} step={0.1}
+                                  placeholder={String(defWt)}
+                                  value={metaDraft.weight ?? ''}
+                                  onChange={e => setMetaDraft(p => ({ ...p, weight: e.target.value ? Number(e.target.value) : undefined }))}
+                                  className="w-full px-3 py-2 rounded-xl font-raleway text-sm outline-none"
+                                  style={{ background:'#fff', border:'1.5px solid ' + C.border, color: C.text }}
+                                />
+                                <p className="font-raleway text-[9px] mt-1" style={{ color: C.textLight }}>
+                                  Default: {defWt}g
+                                </p>
+                              </div>
+                              <div>
+                                <label className="font-cinzel text-[9px] tracking-widest block mb-1" style={{ color: C.textLight }}>
+                                  PRICE OVERRIDE (₹)
+                                </label>
+                                <input
+                                  type="number" min={0}
+                                  placeholder={'Auto: ' + formatPrice(autoPrice)}
+                                  value={metaDraft.priceOverride ?? ''}
+                                  onChange={e => setMetaDraft(p => ({ ...p, priceOverride: e.target.value ? Number(e.target.value) : undefined }))}
+                                  className="w-full px-3 py-2 rounded-xl font-raleway text-sm outline-none"
+                                  style={{ background:'#fff', border:'1.5px solid ' + C.border, color: C.text }}
+                                />
+                                <p className="font-raleway text-[9px] mt-1" style={{ color: C.textLight }}>
+                                  Leave blank = auto
+                                </p>
+                              </div>
+                            </div>
+                            <div className="px-3 pb-3 flex gap-2">
+                              <motion.button whileTap={{ scale:0.97 }}
+                                onClick={() => {
+                                  const next = { ...productMeta, [pid]: metaDraft };
+                                  setProductMeta(next);
+                                  saveProductMeta(next);
+                                  setEditingMeta(null);
+                                }}
+                                className="flex-1 py-2 rounded-xl font-raleway text-sm font-semibold text-white"
+                                style={{ background: C.gold }}>
+                                Save
+                              </motion.button>
+                              {(meta.weight || meta.priceOverride) && (
+                                <motion.button whileTap={{ scale:0.97 }}
+                                  onClick={() => {
+                                    const next = { ...productMeta };
+                                    delete next[pid];
+                                    setProductMeta(next);
+                                    saveProductMeta(next);
+                                    setEditingMeta(null);
+                                  }}
+                                  className="px-4 py-2 rounded-xl font-raleway text-sm"
+                                  style={{ background:'rgba(194,24,91,0.08)', color: C.gold, border:'1px solid ' + C.border }}>
+                                  Reset
+                                </motion.button>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
           </motion.div>
         ) : null}
       </div>
