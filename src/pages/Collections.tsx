@@ -205,7 +205,7 @@ function waLink(productName: string) {
 function Skeleton() {
   return (
     <div style={{ background: C.bg, minHeight: '100vh' }}>
-      <div className="h-48 animate-pulse" style={{ background: `linear-gradient(165deg, ${C.bgDeep}, ${C.bgHeroPink ?? '#FFF5F7'})` }} />
+      <div className="h-48 animate-pulse" style={{ background: `linear-gradient(165deg, ${C.bgDeep}, #FFF5F7)` }} />
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex gap-3 overflow-hidden mb-8">
           {[...Array(6)].map((_, i) => (
