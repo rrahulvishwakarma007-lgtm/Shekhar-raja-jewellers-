@@ -334,7 +334,7 @@ export default function Collections() {
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}>
-              SHEKHAR RAJA JEWELLERS · EST. 1987
+              
             </p>
             <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
               Jewellery Collection
