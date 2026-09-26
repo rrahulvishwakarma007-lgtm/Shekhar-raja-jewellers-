@@ -444,7 +444,213 @@ export default function Collections() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} style={{ background: C.bg, minHeight: '100vh' }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
+                style={{ background: '#F7F7F7', minHeight: '100vh' }}>
+
+      {/* ── TOP BAR ── */}
+      <div className="pt-20" style={{ background: '#fff', borderBottom: '1px solid #eee' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+          {/* Page title */}
+          <div className="py-5">
+            <h1 className="font-cormorant text-2xl sm:text-3xl font-semibold" style={{ color: C.text }}>
+              Our Jewellery Collection
+            </h1>
+            <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
+              {filteredProducts.length} designs • Tap any piece to enquire on WhatsApp 💬
+            </p>
+          </div>
+
+          {/* ── CATEGORY CHIPS — horizontal scroll ── */}
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-3"
+               style={{ scrollbarWidth: 'none' }}>
+            {categories.map(cat => {
+              const isActive = activeTab === cat.name;
+              const count    = cat.name === 'All'
+                ? allProducts.length
+                : allProducts.filter(p => p.category === cat.name).length;
+              return (
+                <button key={cat.name} onClick={() => setActiveTab(cat.name)}
+                        className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-raleway text-sm font-medium transition-all duration-200"
+                        style={{
+                          background: isActive ? C.gold : '#fff',
+                          color:      isActive ? '#fff' : C.textMid,
+                          border:     isActive ? `1.5px solid ${C.gold}` : '1.5px solid #e0e0e0',
+                          boxShadow:  isActive ? '0 2px 12px rgba(194,24,91,0.18)' : 'none',
+                        }}>
+                  {cat.image && (
+                    <img src={cat.image} alt={cat.name}
+                         className="w-5 h-5 rounded-full object-cover"
+                         style={{ opacity: isActive ? 1 : 0.65 }} />
+                  )}
+                  {cat.name}
+                  <span className="text-xs opacity-60">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ── SEARCH BAR ── */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #eee' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="relative max-w-sm">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#aaa' }} />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by name or category..."
+              className="w-full pl-10 pr-9 py-2.5 rounded-full font-raleway text-sm outline-none"
+              style={{ background: '#f5f5f5', border: '1.5px solid #e8e8e8', color: C.text }}
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                <X size={14} style={{ color: '#aaa' }} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── PRODUCT GRID ── */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6">
+        <AnimatePresence mode="wait">
+          {filteredProducts.length === 0 ? (
+            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="text-center py-28">
+              <div className="text-5xl mb-4">🔍</div>
+              <p className="font-cormorant text-2xl font-semibold mb-2" style={{ color: C.text }}>
+                No items found
+              </p>
+              <p className="font-raleway text-sm mb-6" style={{ color: C.textLight }}>
+                Try a different category or clear your search
+              </p>
+              <button onClick={() => { setSearchQuery(''); setActiveTab('All'); }}
+                      className="px-6 py-2.5 rounded-full font-raleway text-sm font-semibold text-white"
+                      style={{ background: C.gold }}>
+                Show All Items
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div key={activeTab + searchQuery}
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              {filteredProducts.map((product, i) => {
+                const tagStyle = TAG[product.tag] || TAG['Classic'];
+                const waMsg    = encodeURIComponent(
+                  `Hello Shekhar Raja Jewellers! 🙏\nI am interested in *${product.name}* (${product.category}).\nPlease share more details and pricing.`
+                );
+                return (
+                  <motion.div key={product.id}
+                              initial={{ opacity: 0, y: 16 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: Math.min(i * 0.03, 0.3), duration: 0.35 }}
+                              className="rounded-2xl overflow-hidden cursor-pointer group"
+                              style={{
+                                background: '#fff',
+                                border: '1px solid #efefef',
+                                boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
+                              }}
+                              whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(194,24,91,0.12)' }}
+                              onClick={() => setSelectedProduct(product)}>
+
+                    {/* ── PHOTO ── */}
+                    <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
+                      <img src={product.image} alt={product.name}
+                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+
+                      {/* Tag badge */}
+                      <div className="absolute top-2.5 left-2.5">
+                        <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
+                              style={{ background: tagStyle.bg, color: tagStyle.text,
+                                       fontFamily: 'Raleway, sans-serif' }}>
+                          {product.tag}
+                        </span>
+                      </div>
+
+                      {/* Featured star */}
+                      {product.featured && (
+                        <div className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md"
+                             style={{ background: C.gold, color: '#fff' }}>
+                          ★
+                        </div>
+                      )}
+
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                           style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.32) 0%, transparent 55%)' }}>
+                        <span className="font-raleway text-xs text-white font-medium px-3 py-1 rounded-full"
+                              style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(6px)',
+                                       border: '1px solid rgba(255,255,255,0.25)' }}>
+                          Tap to view details
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* ── CARD BODY ── */}
+                    <div className="p-3 sm:p-4">
+
+                      {/* Category label */}
+                      <p className="font-raleway text-[10px] font-bold uppercase tracking-widest mb-1"
+                         style={{ color: C.gold }}>
+                        {product.category}
+                      </p>
+
+                      {/* Product name */}
+                      <h3 className="font-cormorant text-base sm:text-[17px] font-semibold leading-tight mb-1"
+                          style={{ color: C.text }}>
+                        {product.name}
+                      </h3>
+
+                      {/* One-line description */}
+                      <p className="font-raleway text-[11px] line-clamp-1 mb-3"
+                         style={{ color: C.textLight }}>
+                        {product.description}
+                      </p>
+
+                      {/* ── WhatsApp enquire button — prominent green, like "Check Delivery Date" in reference ── */}
+                      <a href={`https://wa.me/918377911745?text=${waMsg}`}
+                         target="_blank" rel="noopener noreferrer"
+                         onClick={e => e.stopPropagation()}
+                         className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-raleway text-[13px] font-semibold transition-all duration-200"
+                         style={{ background: '#25D366', color: '#fff',
+                                  boxShadow: '0 2px 10px rgba(37,211,102,0.2)' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.83L.057 23.5a.5.5 0 0 0 .61.61l5.758-1.508A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.68-.503-5.21-1.382l-.373-.22-3.87 1.014 1.025-3.777-.243-.386A9.938 9.938 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                        </svg>
+                        Enquire on WhatsApp
+                      </a>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bottom count */}
+        {filteredProducts.length > 0 && (
+          <div className="mt-12 pb-6 text-center">
+            <span className="font-raleway text-sm" style={{ color: C.textLight }}>
+              Showing {filteredProducts.length} of {allProducts.length} designs
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Product detail modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        )}
+      </AnimatePresence>
+
+    </motion.div>
+  );
+}
 
       {/* ══════════════════════════════════════════════
           HERO — cinematic split: copy + rotating spotlight
