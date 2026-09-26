@@ -4,30 +4,32 @@ import { Search, X, Heart, MessageCircle } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
 const C = {
-  bg:        '#FAFAFA',
-  bgCard:    '#FFFFFF',
-  text:      '#1A0010',
-  textLight: '#999999',
-  textMid:   '#6D1B4E',
-  gold:      '#C2185B',
-  border:    '#E8E8E8',
+  bg:        '#FBF9F4',
+  bgCard:    '#FFFEFB',
+  text:      '#241B17',
+  textLight: '#9A8F84',
+  textMid:   '#6B3B4D',
+  gold:      '#B38A45',
+  goldSoft:  '#D7C39A',
+  deep:      '#3A1B27',
+  border:    '#E8DFD1',
 };
 
 const TAG: Record<string, { bg: string; color: string }> = {
-  'New Arrival': { bg: '#111',    color: '#fff' },
-  'Bestseller':  { bg: '#166534', color: '#fff' },
-  'Bridal Pick': { bg: '#9d174d', color: '#fff' },
-  'Trending':    { bg: '#1e40af', color: '#fff' },
-  'Exclusive':   { bg: '#7c3aed', color: '#fff' },
-  'Luxury':      { bg: '#854d0e', color: '#fff' },
-  'Limited':     { bg: '#991b1b', color: '#fff' },
-  'Premium':     { bg: '#6b21a8', color: '#fff' },
-  'Heritage':    { bg: '#44403c', color: '#fff' },
-  'Classic':     { bg: '#92400e', color: '#fff' },
-  'Traditional': { bg: '#9a3412', color: '#fff' },
-  'Festive':     { bg: '#3f6212', color: '#fff' },
-  'Everyday':    { bg: '#374151', color: '#fff' },
-  'Vintage':     { bg: '#292524', color: '#fff' },
+  'New Arrival': { bg: '#2B231E', color: '#F9EEDB' },
+  'Bestseller':  { bg: '#5B1730', color: '#FBEEDC' },
+  'Bridal Pick': { bg: '#6A213D', color: '#FBEEDC' },
+  'Trending':    { bg: '#4D4A44', color: '#F9EEDB' },
+  'Exclusive':   { bg: '#7E5D2F', color: '#FFF7E6' },
+  'Luxury':      { bg: '#8B672F', color: '#FFF7E6' },
+  'Limited':     { bg: '#6A1F2D', color: '#FDEFE1' },
+  'Premium':     { bg: '#684552', color: '#FFF7EE' },
+  'Heritage':    { bg: '#4F463E', color: '#F6ECDD' },
+  'Classic':     { bg: '#6B5635', color: '#FFF6E7' },
+  'Traditional': { bg: '#7B4B2F', color: '#FFF2E4' },
+  'Festive':     { bg: '#4E5B3A', color: '#F8F5E9' },
+  'Everyday':    { bg: '#514B46', color: '#F7F0E6' },
+  'Vintage':     { bg: '#3E3935', color: '#F5E8D2' },
 };
 
 const categories = [
@@ -160,8 +162,18 @@ function Card({ p, wished, onOpen, onWish }: {
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
-    <div
-      style={{ background: C.bgCard, position: 'relative', cursor: 'default' }}
+    <motion.div
+      layout
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        background: C.bgCard,
+        position: 'relative',
+        cursor: 'default',
+        border: `1px solid ${C.border}`,
+        boxShadow: '0 1px 0 rgba(92, 65, 36, 0.03)',
+        overflow: 'hidden',
+      }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
@@ -177,50 +189,68 @@ function Card({ p, wished, onOpen, onWish }: {
           src={p.image} alt={p.name.trim()}
           style={{
             width: '100%', height: '100%', objectFit: 'cover',
-            transform: hov ? 'scale(1.05)' : 'scale(1)',
-            transition: 'transform 0.45s ease',
+            transform: hov ? 'scale(1.075)' : 'scale(1)',
+            transition: 'transform 0.75s cubic-bezier(0.22, 1, 0.36, 1)',
             display: 'block',
+            filter: hov ? 'saturate(1.04) contrast(1.02)' : 'saturate(0.98)',
           }}
         />
 
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: hov
+            ? 'linear-gradient(180deg, rgba(179,138,69,0.02), rgba(36,27,23,0.10))'
+            : 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(36,27,23,0))',
+          transition: 'background 0.45s ease',
+        }} />
+
         {/* Badge */}
-        <span style={{
+        <motion.span
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.08 }}
+          style={{
           position: 'absolute', top: 10, left: 10,
-          padding: '3px 8px', borderRadius: 2,
+          padding: '4px 9px', borderRadius: 999,
           fontSize: 10, fontWeight: 700, letterSpacing: '0.05em',
           background: ts.bg, color: ts.color,
           fontFamily: 'Raleway, sans-serif',
         }}>
           {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
-        </span>
+        </motion.span>
 
         {/* Heart */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.88 }}
           onClick={e => onWish(p.id, e)}
           style={{
             position: 'absolute', top: 9, right: 9,
             width: 30, height: 30, borderRadius: '50%',
             background: 'rgba(255,255,255,0.92)',
-            border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.1)'}`,
+            border: `1px solid ${wished ? C.deep : 'rgba(36,27,23,0.10)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', transition: 'border-color 0.2s',
           }}>
-          <Heart size={12} fill={wished ? '#C2185B' : 'none'} color={wished ? '#C2185B' : '#aaa'} />
-        </button>
+          <Heart size={12} fill={wished ? C.deep : 'none'} color={wished ? C.deep : '#9A8F84'} />
+        </motion.button>
 
         {/* Quick view hover pill */}
-        <div style={{
+        <motion.div
+          initial={false}
+          animate={{ opacity: hov ? 1 : 0, y: hov ? 0 : 6 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          style={{
           position: 'absolute', bottom: 10, left: '50%',
-          transform: hov ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(6px)',
-          opacity: hov ? 1 : 0, transition: 'all 0.25s',
+          transform: 'translateX(-50%)',
           background: 'rgba(255,255,255,0.96)', padding: '6px 16px',
           fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
           fontFamily: 'Raleway, sans-serif', color: C.text,
-          borderRadius: 2, whiteSpace: 'nowrap',
+          borderRadius: 999, whiteSpace: 'nowrap',
           boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
         }}>
           QUICK VIEW
-        </div>
+        </motion.div>
       </div>
 
       {/* Info */}
@@ -241,28 +271,31 @@ function Card({ p, wished, onOpen, onWish }: {
         </p>
 
         {/* WhatsApp button */}
-        <a
+        <motion.a
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.985 }}
           href={waLink(p.name)}
           target="_blank" rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             width: '100%', padding: '8px 0',
-            background: '#25D366',
-            color: '#fff', borderRadius: 2,
+            background: C.deep,
+            color: '#FBF7EF', borderRadius: 999,
             fontSize: 11, fontWeight: 700, letterSpacing: '0.05em',
             fontFamily: 'Raleway, sans-serif',
             textDecoration: 'none',
-            transition: 'background 0.18s',
+            transition: 'background 0.18s, box-shadow 0.25s',
+            boxShadow: '0 6px 16px rgba(58,27,39,0.10)',
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#1ebe5b')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#25D366')}
+          onMouseEnter={e => { e.currentTarget.style.background = '#4A2332'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(58,27,39,0.16)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = C.deep; e.currentTarget.style.boxShadow = '0 6px 16px rgba(58,27,39,0.10)'; }}
         >
           <MessageCircle size={12} />
           Enquire on WhatsApp
-        </a>
+        </motion.a>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -290,15 +323,21 @@ export default function Collections() {
 
   if (!ready) return (
     <div style={{ minHeight: '100vh', background: C.bg }} className="pt-20">
+      <style>{`
+        @keyframes luxuryShimmer {
+          0% { background-position: 120% 0; }
+          100% { background-position: -20% 0; }
+        }
+      `}</style>
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 1, background: C.border }}>
           {[...Array(8)].map((_, i) => (
             <div key={i} style={{ background: C.bgCard }}>
-              <div className="animate-pulse" style={{ aspectRatio: '1/1', background: '#F2F2F2' }} />
+              <div className="animate-pulse" style={{ aspectRatio: '1/1', background: 'linear-gradient(90deg, #F2EEE7 20%, #FAF7F0 35%, #F2EEE7 50%)', backgroundSize: '220% 100%', animation: 'luxuryShimmer 1.6s ease-in-out infinite' }} />
               <div style={{ padding: 12 }}>
-                <div className="animate-pulse" style={{ height: 10, width: '40%', background: '#EEE', borderRadius: 2, marginBottom: 8 }} />
-                <div className="animate-pulse" style={{ height: 14, width: '75%', background: '#E8E8E8', borderRadius: 2, marginBottom: 12 }} />
-                <div className="animate-pulse" style={{ height: 32, background: '#E0E0E0', borderRadius: 2 }} />
+                <div className="animate-pulse" style={{ height: 10, width: '40%', background: 'linear-gradient(90deg, #EEE7DC 20%, #F8F3EB 35%, #EEE7DC 50%)', backgroundSize: '220% 100%', animation: 'luxuryShimmer 1.6s ease-in-out infinite', borderRadius: 2, marginBottom: 8 }} />
+                <div className="animate-pulse" style={{ height: 14, width: '75%', background: 'linear-gradient(90deg, #E7E0D5 20%, #F5F0E8 35%, #E7E0D5 50%)', backgroundSize: '220% 100%', animation: 'luxuryShimmer 1.6s ease-in-out infinite', borderRadius: 2, marginBottom: 12 }} />
+                <div className="animate-pulse" style={{ height: 32, background: 'linear-gradient(90deg, #DDD5C8 20%, #EFE9DE 35%, #DDD5C8 50%)', backgroundSize: '220% 100%', animation: 'luxuryShimmer 1.6s ease-in-out infinite', borderRadius: 2 }} />
               </div>
             </div>
           ))}
@@ -308,19 +347,36 @@ export default function Collections() {
   );
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
-                style={{ minHeight: '100vh', background: C.bg }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.55, ease: 'easeOut' }}
+                style={{ minHeight: '100vh', background: `radial-gradient(circle at top, rgba(179,138,69,0.06), transparent 24%), ${C.bg}` }}>
+      <style>{`
+        .royal-collection-scroll::-webkit-scrollbar { display: none; }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+      `}</style>
 
       {/* ── Header ── */}
-      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}>
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        style={{ background: 'rgba(255,254,251,0.92)', borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 22, backdropFilter: 'blur(12px)' }}
+      >
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}>
-              
-            </p>
-            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <span style={{ width: 42, height: 1, background: C.gold, display: 'block' }} />
+              <p style={{ fontSize: 9, letterSpacing: '0.28em', color: C.gold, fontFamily: 'Cinzel, serif', margin: 0, textTransform: 'uppercase' }}>
+                The Royal Edit
+              </p>
+            </div>
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: C.text, lineHeight: 1.03, margin: 0, letterSpacing: '-0.02em' }}>
               Jewellery Collection
             </h1>
+            <p style={{ margin: '8px 0 0', color: C.textLight, fontFamily: 'Raleway, sans-serif', fontSize: 11, letterSpacing: '0.06em' }}>
+              Timeless craftsmanship, refined for the modern heirloom.
+            </p>
           </div>
           {/* Search */}
           <div style={{ position: 'relative', width: 260 }}>
@@ -332,7 +388,7 @@ export default function Collections() {
                 width: '100%', paddingLeft: 34, paddingRight: q ? 30 : 12,
                 paddingTop: 9, paddingBottom: 9,
                 border: `1px solid ${q ? C.gold : C.border}`,
-                borderRadius: 2, fontSize: 13, color: C.text,
+                borderRadius: 999, fontSize: 13, color: C.text,
                 background: '#fff', outline: 'none',
                 fontFamily: 'Raleway, sans-serif',
                 transition: 'border-color 0.2s', boxSizing: 'border-box',
@@ -345,17 +401,19 @@ export default function Collections() {
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Category tabs ── */}
-      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
+      <div style={{ background: 'rgba(255,254,251,0.95)', borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40, backdropFilter: 'blur(14px)', boxShadow: '0 8px 24px rgba(86,62,35,0.04)' }}>
+        <div className="royal-collection-scroll" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
           {categories.map(cat => {
             const isActive = tab === cat;
             const count = cat === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat).length;
             return (
-              <button
+              <motion.button
                 key={cat}
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setTab(cat)}
                 style={{
                   flexShrink: 0,
@@ -366,15 +424,23 @@ export default function Collections() {
                   color: isActive ? C.text : C.textLight,
                   background: 'transparent',
                   border: 'none',
-                  borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
+                  borderBottom: '2px solid transparent',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s',
+                  transition: 'all 0.2s',
                   marginBottom: -1,
+                  position: 'relative',
                 }}
               >
                 {cat} <span style={{ fontSize: 11, color: C.textLight }}>({count})</span>
-              </button>
+                {isActive && (
+                  <motion.span
+                    layoutId="category-underline"
+                    style={{ position: 'absolute', left: 14, right: 14, bottom: -1, height: 2, background: C.gold, borderRadius: 999 }}
+                    transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                  />
+                )}
+              </motion.button>
             );
           })}
         </div>
@@ -389,7 +455,7 @@ export default function Collections() {
               <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: C.textLight, marginBottom: 16 }}>Nothing found</p>
               <button
                 onClick={() => { setTab('All'); setQ(''); }}
-                style={{ padding: '10px 24px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif' }}>
+                style={{ padding: '11px 26px', background: C.deep, color: '#FBF7EF', border: 'none', borderRadius: 999, fontSize: 12, cursor: 'pointer', fontFamily: 'Raleway, sans-serif', letterSpacing: '0.04em', boxShadow: '0 8px 18px rgba(58,27,39,0.10)' }}>
                 Show all
               </button>
             </motion.div>
@@ -399,18 +465,17 @@ export default function Collections() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                gap: 1,
-                background: C.border,
-                borderTop: `1px solid ${C.border}`,
+                gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                gap: 14,
+                padding: '14px 14px 0',
               }}
             >
               {list.map((p, i) => (
                 <motion.div
                   key={p.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: Math.min(i * 0.015, 0.3), duration: 0.28 }}
+                  initial={{ opacity: 0, y: 18, scale: 0.985 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: Math.min(i * 0.025, 0.45), duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <Card
                     p={p}
@@ -425,7 +490,8 @@ export default function Collections() {
         </AnimatePresence>
 
         {list.length > 0 && (
-          <div style={{ padding: '32px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}>
+          <div style={{ padding: '42px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}`, position: 'relative' }}>
+            <div style={{ width: 70, height: 1, background: C.gold, margin: '0 auto 14px', opacity: 0.65 }} />
             <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0 }}>
               Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
             </p>
