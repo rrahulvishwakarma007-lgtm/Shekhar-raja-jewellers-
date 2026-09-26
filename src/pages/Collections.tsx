@@ -156,38 +156,21 @@ function Card({ p, wished, onOpen, onWish }: {
   onOpen: () => void;
   onWish: (id: number, e: React.MouseEvent) => void;
 }) {
-  const [hov, setHov] = useState(false);
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
-    <div
-      style={{ 
-        background: C.bgCard, 
-        position: 'relative', 
-        cursor: 'default',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-    >
-      {/* Image */}
-      <div
+    <div className="product-card" style={{ background: C.bgCard, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* Image with Mobile-Friendly Tactile Feedback */}
+      <motion.div
         onClick={onOpen}
-        style={{
-          position: 'relative', aspectRatio: '1/1',
-          overflow: 'hidden', background: '#F5F5F5', cursor: 'pointer',
-        }}
+        whileTap={{ scale: 0.97 }}
+        style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', background: '#F5F5F5', cursor: 'pointer' }}
       >
         <img
           src={p.image} alt={p.name.trim()}
-          style={{
-            width: '100%', height: '100%', objectFit: 'cover',
-            transform: hov ? 'scale(1.08)' : 'scale(1)',
-            transition: 'transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            display: 'block',
-          }}
+          className="product-img"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
         {/* Badge */}
@@ -203,35 +186,33 @@ function Card({ p, wished, onOpen, onWish }: {
         </span>
 
         {/* Heart */}
-        <button
+        <motion.button
           onClick={e => onWish(p.id, e)}
+          whileTap={{ scale: 0.85 }}
+          className="heart-btn"
           style={{
             position: 'absolute', top: 9, right: 9,
             width: 30, height: 30, borderRadius: '50%',
             background: 'rgba(255,255,255,0.95)',
             border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.08)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            boxShadow: hov ? '0 4px 12px rgba(0,0,0,0.08)' : 'none'
+            cursor: 'pointer', zIndex: 10
           }}>
           <Heart size={12} fill={wished ? '#C2185B' : 'none'} color={wished ? '#C2185B' : '#aaa'} />
-        </button>
+        </motion.button>
 
-        {/* Quick view hover pill */}
-        <div style={{
+        {/* Quick view hover pill (Hidden gracefully on mobile by CSS) */}
+        <div className="quick-view" style={{
           position: 'absolute', bottom: 12, left: '50%',
-          transform: hov ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(8px)',
-          opacity: hov ? 1 : 0, transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
           background: 'rgba(255,255,255,0.98)', padding: '7px 18px',
           fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
           fontFamily: 'Raleway, sans-serif', color: C.gold,
-          border: `1px solid ${C.gold}`,
-          borderRadius: 2, whiteSpace: 'nowrap',
-          boxShadow: '0 4px 16px rgba(194, 24, 91, 0.15)',
+          border: `1px solid ${C.gold}`, borderRadius: 2, whiteSpace: 'nowrap',
+          boxShadow: '0 4px 16px rgba(194, 24, 91, 0.15)', pointerEvents: 'none'
         }}>
           QUICK VIEW
         </div>
-      </div>
+      </motion.div>
 
       {/* Info */}
       <div style={{ padding: '14px 12px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -240,6 +221,7 @@ function Card({ p, wished, onOpen, onWish }: {
         </p>
         <p
           onClick={onOpen}
+          className="product-title"
           style={{
             fontSize: 15, fontFamily: 'Cormorant Garamond, serif',
             fontWeight: 500, color: C.text, lineHeight: 1.3,
@@ -251,25 +233,23 @@ function Card({ p, wished, onOpen, onWish }: {
         </p>
 
         {/* WhatsApp button */}
-        <a
+        <motion.a
           href={waLink(p.name)}
           target="_blank" rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
+          whileTap={{ scale: 0.95 }}
+          className="wa-btn"
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             width: '100%', padding: '9px 0',
-            background: hov ? '#1ebe5b' : '#25D366',
-            color: '#fff', borderRadius: 2,
+            background: '#25D366', color: '#fff', borderRadius: 2,
             fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
-            fontFamily: 'Raleway, sans-serif',
-            textDecoration: 'none',
-            transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            boxShadow: hov ? '0 4px 12px rgba(37, 211, 102, 0.3)' : 'none',
+            fontFamily: 'Raleway, sans-serif', textDecoration: 'none',
           }}
         >
           <MessageCircle size={13} />
-          Enquire on WhatsApp
-        </a>
+          Enquire
+        </motion.a>
       </div>
     </div>
   );
@@ -300,7 +280,7 @@ export default function Collections() {
   if (!ready) return (
     <div style={{ minHeight: '100vh', background: C.bg }} className="pt-20">
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 1, background: C.border }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 1, background: C.border }}>
           {[...Array(8)].map((_, i) => (
             <div key={i} style={{ background: C.bgCard }}>
               <div className="animate-pulse" style={{ aspectRatio: '1/1', background: '#F2F2F2' }} />
@@ -317,165 +297,157 @@ export default function Collections() {
   );
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                style={{ minHeight: '100vh', background: C.bg }}>
+    <>
+      {/* CSS Injected for pristine Hover Handling across Touch and Desktop Devices */}
+      <style>{`
+        .product-img { transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .quick-view { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(8px); }
+        .wa-btn { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .heart-btn { transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .tab-btn { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        
+        /* True Hover for non-touch devices */
+        @media (hover: hover) and (pointer: fine) {
+          .product-card:hover .product-img { transform: scale(1.08); }
+          .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
+          .product-card:hover .wa-btn { background: #1ebe5b !important; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
+          .product-card:hover .heart-btn { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+          .tab-btn:hover { color: #1A0010 !important; }
+        }
 
-      {/* ── Header ── */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-        style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}
-      >
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-          <div>
-            <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}>
-              
-            </p>
-            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
-              Jewellery Collection
-            </h1>
-          </div>
-          {/* Search */}
-          <div style={{ position: 'relative', width: 260 }}>
-            <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
-            <input
-              value={q} onChange={e => setQ(e.target.value)}
-              placeholder="Search pieces..."
-              style={{
-                width: '100%', paddingLeft: 34, paddingRight: q ? 30 : 12,
-                paddingTop: 9, paddingBottom: 9,
-                border: `1px solid ${q ? C.gold : C.border}`,
-                borderRadius: 2, fontSize: 13, color: C.text,
-                background: '#fff', outline: 'none',
-                fontFamily: 'Raleway, sans-serif',
-                transition: 'border-color 0.4s ease', boxSizing: 'border-box',
-              }}
-            />
-            {q && (
-              <button onClick={() => setQ('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                <X size={12} style={{ color: C.textLight }} />
-              </button>
-            )}
-          </div>
-        </div>
-      </motion.div>
+        /* Mobile specific adjustments */
+        @media (max-width: 640px) {
+          .quick-view { display: none !important; } /* Hidden on touch to avoid stickiness */
+          .product-title { font-size: 14px !important; }
+          .header-title { font-size: 1.8rem !important; }
+        }
+      `}</style>
 
-      {/* ── Category tabs ── */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}
-      >
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
-          {categories.map(cat => {
-            const isActive = tab === cat;
-            const count = cat === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat).length;
-            return (
-              <button
-                key={cat}
-                onClick={() => setTab(cat)}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  style={{ minHeight: '100vh', background: C.bg }}>
+
+        {/* ── Header ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}
+        >
+          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}></p>
+              <h1 className="header-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.4rem', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
+                Jewellery Collection
+              </h1>
+            </div>
+            {/* Search */}
+            <div style={{ position: 'relative', width: 260, maxWidth: '100%' }}>
+              <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
+              <input
+                value={q} onChange={e => setQ(e.target.value)}
+                placeholder="Search pieces..."
                 style={{
-                  flexShrink: 0,
-                  padding: '13px 16px',
-                  fontSize: 13,
-                  fontFamily: 'Raleway, sans-serif',
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? C.text : C.textLight,
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  marginBottom: -1,
+                  width: '100%', paddingLeft: 34, paddingRight: q ? 30 : 12, paddingTop: 9, paddingBottom: 9,
+                  border: `1px solid ${q ? C.gold : C.border}`, borderRadius: 2, fontSize: 13, color: C.text,
+                  background: '#fff', outline: 'none', fontFamily: 'Raleway, sans-serif',
+                  transition: 'border-color 0.4s ease', boxSizing: 'border-box',
+                }}
+              />
+              {q && (
+                <button onClick={() => setQ('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <X size={12} style={{ color: C.textLight }} />
+                </button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── Category tabs ── */}
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}
+        >
+          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
+            {categories.map(cat => {
+              const isActive = tab === cat;
+              const count = cat === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat).length;
+              return (
+                <button
+                  key={cat} onClick={() => setTab(cat)} className="tab-btn"
+                  style={{
+                    flexShrink: 0, padding: '13px 16px', fontSize: 13, fontFamily: 'Raleway, sans-serif',
+                    fontWeight: isActive ? 600 : 400, color: isActive ? C.text : C.textLight,
+                    background: 'transparent', border: 'none',
+                    borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
+                    cursor: 'pointer', whiteSpace: 'nowrap', marginBottom: -1,
+                  }}
+                >
+                  {cat} <span style={{ fontSize: 11, color: isActive ? C.text : C.textLight, transition: 'color 0.4s ease' }}>({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* ── Grid ── */}
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <AnimatePresence mode="wait">
+            {list.length === 0 ? (
+              <motion.div key="empty" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                          style={{ padding: '80px 20px', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', color: C.textLight, marginBottom: 20 }}>Nothing found</p>
+                <button
+                  onClick={() => { setTab('All'); setQ(''); }}
+                  style={{ padding: '10px 28px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif' }}
+                >
+                  Show all
+                </button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={tab + q}
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                  gap: 1, background: C.border, borderTop: `1px solid ${C.border}`,
                 }}
               >
-                {cat} <span style={{ fontSize: 11, color: isActive ? C.text : C.textLight, transition: 'color 0.4s ease' }}>({count})</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.div>
+                {list.map((p, i) => (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "20px" }}
+                    transition={{ delay: (i % 6) * 0.05, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <Card p={p} wished={wish.includes(p.id)} onOpen={() => setSel(p)} onWish={toggleWish} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      {/* ── Grid ── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <AnimatePresence mode="wait">
-          {list.length === 0 ? (
-            <motion.div key="empty" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        style={{ padding: '80px 20px', textAlign: 'center' }}>
-              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', color: C.textLight, marginBottom: 20 }}>Nothing found</p>
-              <button
-                onClick={() => { setTab('All'); setQ(''); }}
-                style={{ padding: '10px 28px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif', transition: 'background 0.3s ease' }}
-                onMouseEnter={e => e.currentTarget.style.background = C.textMid}
-                onMouseLeave={e => e.currentTarget.style.background = C.text}
-              >
-                Show all
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div
-              key={tab + q}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                gap: 1,
-                background: C.border,
-                borderTop: `1px solid ${C.border}`,
-              }}
+          {list.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{ padding: '36px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}
             >
-              {list.map((p, i) => (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: Math.min(i * 0.02, 0.5), duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <Card
-                    p={p}
-                    wished={wish.includes(p.id)}
-                    onOpen={() => setSel(p)}
-                    onWish={toggleWish}
-                  />
-                </motion.div>
-              ))}
+              <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.04em' }}>
+                Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
+              </p>
+              <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 6, letterSpacing: '0.02em' }}>
+                Looking for something specific?{' '}
+                <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I'm looking for a specific piece. Can you help?")}`} target="_blank" rel="noopener noreferrer" style={{ color: C.gold, textDecoration: 'none', borderBottom: `1px solid ${C.gold}` }}>
+                  Ask us on WhatsApp
+                </a>
+              </p>
             </motion.div>
           )}
+        </div>
+
+        <AnimatePresence>
+          {sel && <ProductModal product={sel} onClose={() => setSel(null)} />}
         </AnimatePresence>
-
-        {list.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{ padding: '36px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}
-          >
-            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.04em' }}>
-              Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
-            </p>
-            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 6, letterSpacing: '0.02em' }}>
-              Looking for something specific?{' '}
-              <a
-                href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I'm looking for a specific piece. Can you help?")}`}
-                target="_blank" rel="noopener noreferrer"
-                style={{ color: C.gold, textDecoration: 'none', borderBottom: `1px solid ${C.gold}`, transition: 'opacity 0.3s' }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-              >
-                Ask us on WhatsApp
-              </a>
-            </p>
-          </motion.div>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {sel && <ProductModal product={sel} onClose={() => setSel(null)} />}
-      </AnimatePresence>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }
