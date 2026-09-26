@@ -1,977 +1,468 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Sparkles, X, Search, Crown, ShieldCheck } from 'lucide-react';
+import { Search, X, Heart, MessageCircle } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// ── Palette (Matches Home & PrivateCatalogue) ─────────────────────────────────
 const C = {
-  bg:         '#FFF5F7',
-  bgDeep:     '#FFE4EC',
-  bgCard:     '#FFFFFF',
-  bgDark:     '#880E4F',
-  bgDarkMid:  '#6D1B4E',
-  bgHeroPink: '#FFF5F7',
-  bgHeroPinkDeep: '#F8BBD9',
-  gold:       '#C2185B',
-  goldLight:  '#E91E8C',
-  goldPale:   '#F8BBD9',
-  goldBorder: 'rgba(194,24,91,0.25)',
-  goldBg:     'rgba(194,24,91,0.08)',
-  text:       '#1A0010',
-  textMid:    '#6D1B4E',
-  textLight:  '#AD6888',
-  border:     'rgba(194,24,91,0.18)',
-  shadow:     'rgba(194,24,91,0.08)',
-  shadowMd:   'rgba(194,24,91,0.15)',
+  bg:        '#FAFAFA',
+  bgCard:    '#FFFFFF',
+  text:      '#1A0010',
+  textLight: '#999999',
+  textMid:   '#6D1B4E',
+  gold:      '#C2185B',
+  border:    '#E8E8E8',
 };
 
-// ── Tag styles (Soft pastels matching PrivateCatalogue) ───────────────────────
-const TAG: Record<string, { bg: string; text: string }> = {
-  'Bestseller':  { bg: '#dcfce7', text: '#166534' }, // green
-  'Premium':     { bg: '#f3e8ff', text: '#6b21a8' }, // purple
-  'Heritage':    { bg: '#f5f5f4', text: '#44403c' }, // stone
-  'Classic':     { bg: '#fef3c7', text: '#92400e' }, // amber
-  'Exclusive':   { bg: '#ffe4e6', text: '#9f1239' }, // rose
-  'Traditional': { bg: '#ffedd5', text: '#9a3412' }, // orange
-  'Limited':     { bg: '#fee2e2', text: '#991b1b' }, // red
-  'Trending':    { bg: '#dbeafe', text: '#1e40af' }, // blue
-  'Bridal Pick': { bg: '#fce7f3', text: '#9d174d' }, // pink
-  'Festive':     { bg: '#ecfccb', text: '#3f6212' }, // lime
-  'Everyday':    { bg: '#f3f4f6', text: '#1f2937' }, // gray
-  'New Arrival': { bg: '#ccfbf1', text: '#115e59' }, // teal
-  'Luxury':      { bg: '#fef08a', text: '#854d0e' }, // yellow
-  'Vintage':     { bg: '#e7e5e4', text: '#292524' }, // stone-200
+const TAG: Record<string, { bg: string; color: string }> = {
+  'New Arrival': { bg: '#111',    color: '#fff' },
+  'Bestseller':  { bg: '#166534', color: '#fff' },
+  'Bridal Pick': { bg: '#9d174d', color: '#fff' },
+  'Trending':    { bg: '#1e40af', color: '#fff' },
+  'Exclusive':   { bg: '#7c3aed', color: '#fff' },
+  'Luxury':      { bg: '#854d0e', color: '#fff' },
+  'Limited':     { bg: '#991b1b', color: '#fff' },
+  'Premium':     { bg: '#6b21a8', color: '#fff' },
+  'Heritage':    { bg: '#44403c', color: '#fff' },
+  'Classic':     { bg: '#92400e', color: '#fff' },
+  'Traditional': { bg: '#9a3412', color: '#fff' },
+  'Festive':     { bg: '#3f6212', color: '#fff' },
+  'Everyday':    { bg: '#374151', color: '#fff' },
+  'Vintage':     { bg: '#292524', color: '#fff' },
 };
 
-// ── Categories ────────────────────────────────────────────────────────────────
 const categories = [
-  { name: 'All',            image: null },
-  { name: 'Antique',        image: '/antique2.jpg'      },
-  { name: 'Necklaces',      image: '/necklace1.jpg'     },
-  { name: 'Chokers',        image: '/antique3.jpg'      },
-  { name: 'Earrings',       image: '/earring1.jpg'      },
-  { name: 'Bangles',        image: '/bangle1.png'       },
-  { name: "Men's Ring",     image: '/ring7.png'         },
-  { name: 'Pendants',       image: '/pendant.png'       },
-  { name: "Women's Ring",   image: '/ring2.png'         },
-  { name: 'Chains',         image: '/chain2.png'        },
+  'All','Necklaces','Chokers','Earrings',
+  'Bangles',"Women's Ring","Men's Ring",
+  'Pendants','Chains','Antique',
 ];
 
-// ── Products ──────────────────────────────────────────────────────────────────
 const allProducts = [
-  // ── EXISTING (1–33) ──────────────────────────────────────────────────────
-  { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',    description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',        tag:'Bestseller',  featured:true  },
-  { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring2.png',           tag:'Premium',     featured:false },
-  { id:3,  name:'Antique Gold Jhumkas',      category:'Earrings',     description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png',      tag:'Heritage',    featured:false },
-  { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle3.png',         tag:'Classic',     featured:false },
-  { id:5,  name:'Polki Diamond Ring',        category:'Antique',      description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring6.png',           tag:'Exclusive',   featured:true  },
-  { id:6,  name:'Temple Gold Haar',          category:'Necklaces',    description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',      tag:'Traditional', featured:false },
-  { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',           tag:'Limited',     featured:false },
-  { id:8,  name:'Antique Necklace Set',      category:'Necklaces',    description:'Complete antique temple set with traditional craftsmanship.',                     image:'/necklace22.png',      tag:'Trending',    featured:false },
-  { id:9,  name:'Meenakari Bridal Set',      category:'Necklaces',    description:'Colorful meenakari work bridal set with traditional motifs.',                     image:'/necklace3.jpg',       tag:'Bridal Pick', featured:true  },
-  { id:10, name:'Festive Gold Set',          category:'Antique',      description:'Elegant gold set perfect for festive occasions.',                                  image:'/bangle5.png',         tag:'Festive',     featured:false },
-  { id:11, name:'Diamond Studs',             category:'Earrings',     description:'Classic diamond studs for everyday elegance.',                                    image:'/ring4.png',           tag:'Everyday',    featured:false },
-  { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                      image:'/bangle9.png',         tag:'Heritage',    featured:false },
-  { id:13, name:'Heritage Necklace',         category:'Necklaces',    description:'Elegant heritage necklace with traditional design.',                              image:'/bridal-necklace.jpg', tag:'New Arrival', featured:false },
-  { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                            image:'/ring6.png',           tag:'Premium',     featured:true  },
-  { id:15, name:'Antique Choker Set',        category:'Antique',      description:'Beautiful antique choker set for festive celebrations.',                          image:'/necklace15.png',      tag:'Traditional', featured:false },
-  { id:16, name:'Diamond Hoop Earrings',     category:'Earrings',     description:'Contemporary diamond hoops for modern elegance.',                                 image:'/earrings14.png',      tag:'Trending',    featured:false },
-  { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',           tag:'Classic',     featured:false },
-  { id:18, name:'Diamond Cluster Ring',      category:'Antique',      description:'Beautiful cluster of diamonds in an elegant setting.',                            image:'/ring3.png',           tag:'Luxury',      featured:false },
-  { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',           tag:'Vintage',     featured:false },
-  { id:20, name:'Gold Bangle Set ',          category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',         tag:'New Arrival', featured:false },
-  { id:21, name:'Designer Bangle ',          category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',         tag:'Trending',    featured:false },
-  { id:22, name:'Antique Bangle ',           category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',         tag:'Heritage',    featured:false },
-  { id:23, name:'Bridal Bangle ',            category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                       image:'/bangleD.jpg',         tag:'Bridal Pick', featured:false },
-  { id:24, name:'Festive Bangle ',           category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                          image:'/bangleE.jpg',         tag:'Festive',     featured:false },
-  { id:25, name:'Kundan Bangle ',            category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                  image:'/bangleF.jpg',         tag:'Exclusive',   featured:false },
-  { id:26, name:'Classic Bangle ',           category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',           image:'/bangleG.jpg',         tag:'Classic',     featured:false },
-  { id:27, name:'Temple Bangle ',            category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                  image:'/bangleH.jpg',         tag:'Traditional', featured:false },
-  { id:28, name:'Royal Bangle ',             category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',              image:'/bangleI.jpg',         tag:'Premium',     featured:false },
-  { id:29, name:'Bridal Necklace ',          category:'Necklaces',    description:'Stunning 22KT bridal necklace with kundan and polki work.',                     image:'/necklaceA.jpg',       tag:'Bridal Pick', featured:true  },
-  { id:30, name:'Heritage Necklace ',        category:'Necklaces',    description:'Traditional heritage necklace in 22KT gold with antique finish.',               image:'/necklaceB.jpg',       tag:'Heritage',    featured:false },
-  { id:31, name:'Temple Necklace ',          category:'Necklaces',    description:'Handcrafted temple necklace with goddess motifs and ruby accents.',              image:'/necklaceC.jpg',       tag:'Traditional', featured:false },
-  { id:32, name:'Kundan Necklace ',          category:'Necklaces',    description:'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',              image:'/necklaceD.jpg',       tag:'Exclusive',   featured:false },
-  { id:33, name:'Gold Haar ',                category:'Necklaces',    description:'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',            image:'/necklaceE.jpg',       tag:'New Arrival', featured:false },
-
-  // ── NEW BANGLES (bangle100–108) ───────────────────────────────────────────
-  { id:34, name:'Gold Bangle ',              category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',       tag:'New Arrival', featured:false },
-  { id:35, name:'Gold Bangle ',              category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',       tag:'Classic',     featured:false },
-  { id:36, name:'Gold Bangle ',              category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',       tag:'Heritage',    featured:false },
-  { id:37, name:'Gold Bangle ',              category:'Bangles',      description:'Elegant 22KT gold bangle perfect for festive and bridal occasions.',            image:'/bangle103.jpg',       tag:'Festive',     featured:false },
-  { id:38, name:'Gold Bangle ',              category:'Bangles',      description:'Traditional gold bangle with temple motifs and antique finish.',                image:'/bangle104.jpg',       tag:'Traditional', featured:false },
-  { id:39, name:'Gold Bangle ',              category:'Bangles',      description:'Premium 22KT gold bangle with polished finish and ornate borders.',             image:'/bangle106.jpg',       tag:'Premium',     featured:false },
-  { id:40, name:'Gold Bangle ',              category:'Bangles',      description:'Trending designer bangle in 22KT gold with modern-meets-traditional design.',  image:'/bangle107.jpg',       tag:'Trending',    featured:false },
-  { id:41, name:'Gold Bangle ',              category:'Bangles',      description:'Bridal-pick 22KT gold bangle set for the perfect wedding look.',               image:'/bangle108.jpg',       tag:'Bridal Pick', featured:false },
-
-  // ── NEW SHORT NECKLACES ───────────────────────────────────────────────────
-  { id:42, name:'Short Necklace ',           category:'Necklaces',    description:'Delicate short necklace in 22KT gold, ideal for everyday and festive wear.',   image:'/short necklace1.jpg', tag:'Everyday',    featured:false },
-  { id:43, name:'Short Necklace ',           category:'Necklaces',    description:'Elegant short gold necklace with fine craftsmanship and classic design.',       image:'/short necklace2.jpg', tag:'Classic',     featured:false },
-  { id:44, name:'Short Necklace ',           category:'Necklaces',    description:'Trendy short necklace in 22KT gold with contemporary styling.',                image:'/short necklace3.jpg', tag:'Trending',    featured:false },
-  { id:45, name:'Short Necklace ',           category:'Necklaces',    description:'New arrival short necklace in 22KT gold with intricate link design.',          image:'/short necklace4.jpg', tag:'New Arrival', featured:false },
-
-  // ── NEW TURKISH NECKLACES ─────────────────────────────────────────────────
-  { id:46, name:'Turkish Necklace ',         category:'Necklaces',    description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',          image:'/turkish necklace1.jpg', tag:'Exclusive',   featured:true  },
-  { id:47, name:'Turkish Necklace ',         category:'Necklaces',    description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',        image:'/turkish necklace2.jpg', tag:'Heritage',    featured:false },
-  { id:48, name:'Turkish Necklace ',         category:'Necklaces',    description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',           image:'/turkish necklace3.jpg', tag:'Traditional', featured:false },
-  { id:49, name:'Turkish Necklace ',         category:'Necklaces',    description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium',     featured:false },
-  { id:50, name:'Turkish Necklace ',         category:'Necklaces',    description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick', featured:false },
-  { id:51, name:'Turkish Necklace ',         category:'Necklaces',    description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive',     featured:false },
-  { id:52, name:'Turkish Necklace ',         category:'Necklaces',    description:'Luxury Turkish-style gold necklace with bold statement design.',               image:'/turkish necklace7.jpg', tag:'Luxury',      featured:false },
-  { id:53, name:'Turkish Necklace ',         category:'Necklaces',    description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',        image:'/turkish necklace8.jpg', tag:'Trending',    featured:false },
-
-  // ── NEW EARRINGS (101–107, no 103) ───────────────────────────────────────
-  { id:54, name:'Gold Earrings ',          category:'Earrings',     description:'Classic gold earrings with intricate detailing, perfect for every occasion.',  image:'/earrings101.jpg',     tag:'Classic',     featured:false },
-  { id:55, name:'Gold Earrings ',          category:'Earrings',     description:'Heritage jhumka-style earrings in 22KT gold with traditional motifs.',        image:'/earrings102.jpg',     tag:'Heritage',    featured:false },
-  { id:56, name:'Gold Earrings ',          category:'Earrings',     description:'Exclusive 22KT gold earrings with premium finish and ornate design.',         image:'/earrings104.jpg',     tag:'Exclusive',   featured:false },
-  { id:57, name:'Gold Earrings ',          category:'Earrings',     description:'Trending 22KT gold earrings with contemporary meets traditional design.',     image:'/earrings105.jpg',     tag:'Trending',    featured:false },
-  { id:58, name:'Gold Earrings ',          category:'Earrings',     description:'New arrival earrings in 22KT gold with delicate filigree work.',              image:'/earrings106.jpg',     tag:'New Arrival', featured:false },
-  { id:59, name:'Gold Earrings ',          category:'Earrings',     description:'Bridal earrings in 22KT gold with kundan stones and pearl drops.',            image:'/earrings107.jpg',     tag:'Bridal Pick', featured:false },
-
-  // ── NEW JADAU NECKLACES ───────────────────────────────────────────────────
-  { id:60, name:'Jadau Necklace ',           category:'Necklaces',    description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg', tag:'Luxury',      featured:true  },
-  { id:61, name:'Jadau Necklace ',           category:'Necklaces',    description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg', tag:'Traditional', featured:false },
-  { id:62, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg', tag:'Bridal Pick', featured:false },
-  { id:63, name:'Jadau Necklace ',           category:'Necklaces',    description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg', tag:'Heritage',    featured:false },
-  { id:64, name:'Jadau Necklace ',           category:'Necklaces',    description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg', tag:'Premium',     featured:false },
-  { id:65, name:'Jadau Necklace ',           category:'Necklaces',    description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg', tag:'Exclusive',   featured:false },
-  { id:66, name:'Jadau Necklace ',           category:'Necklaces',    description:'Bestselling Jadau necklace — a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg', tag:'Bestseller',  featured:false },
-
-  // ── NEW CHOKERS ───────────────────────────────────────────────────────────
-  { id:67, name:'Gold Choker ',            category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',       tag:'Classic',     featured:false },
-  { id:68, name:'Gold Choker ',            category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',           image:'/Choker102.jpg',       tag:'Heritage',    featured:false },
-  { id:69, name:'Gold Choker ',            category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',       tag:'Bridal Pick', featured:true  },
-  { id:70, name:'Gold Choker ',            category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',       tag:'Exclusive',   featured:false },
-  { id:71, name:'Gold Choker ',            category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',       tag:'Trending',    featured:false },
-  { id:72, name:'Gold Choker ',            category:'Chokers',      description:'New arrival gold choker with delicate beaded and filigree detailing.',       image:'/choker107.jpg',       tag:'New Arrival', featured:false },
-
-  // ── NEW LONG HAAR ─────────────────────────────────────────────────────────
-  { id:73, name:'Long Haar ',                category:'Necklaces',    description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',      tag:'Traditional', featured:false },
-  { id:74, name:'Long Haar ',                category:'Necklaces',    description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',      tag:'Heritage',    featured:false },
-  { id:75, name:'Long Haar ',                category:'Necklaces',    description:'Bridal long haar in 22KT gold — a timeless statement for the wedding day.', image:'/long haar3.jpg',      tag:'Bridal Pick', featured:false },
-  { id:76, name:'Long Haar ',                category:'Necklaces',    description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',      tag:'Premium',     featured:false },
-  { id:77, name:'Long Haar ',                category:'Necklaces',    description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',      tag:'Luxury',      featured:false },
-
-  // ── NEW PENDANT SETS ──────────────────────────────────────────────────────
-  { id:78, name:'Pendant ',             category:'Pendants',     description:'Elegant 22KT gold pendant with matching earrings and delicate design.',  image:'/pandent set1.jpg',    tag:'Classic',     featured:false },
-  { id:79, name:'Pendant ',             category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',      image:'/pandent set2.jpg',    tag:'Heritage',    featured:false },
-  { id:80, name:'Pendant ',             category:'Pendants',     description:'Bridal pendant  in 22KT gold with kundan stones and pearl drops.',       image:'/pandent set3.jpg',    tag:'Bridal Pick', featured:false },
-  { id:81, name:'Pendant ',             category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',              image:'/pandent set4.jpg',    tag:'Exclusive',   featured:false },
-  { id:82, name:'Pendant ',             category:'Pendants',     description:'Trending pendant — contemporary gold design meets traditional art.',    image:'/pandent set5.jpg',    tag:'Trending',    featured:false },
-  { id:83, name:'Pendant ',             category:'Pendants',     description:'New arrival pendant  in 22KT gold with modern heritage styling.',        image:'/pandent set6.jpg',    tag:'New Arrival', featured:false },
-  { id:84, name:'Pendant ',             category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',      image:'/pandent set7.jpg',    tag:'Premium',     featured:false },
-  { id:85, name:'Pendant ',             category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',    image:'/pandent set8.jpg',    tag:'Festive',     featured:false },
-
-  // ── NEW GENTS RINGS (1–10) ────────────────────────────────────────────────
-  { id:86, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bold 22KT gold ring for men with classic band and fine engraving.",          image:'/gents ring1.jpg',     tag:'Classic',     featured:false },
-  { id:87, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",       image:'/gents ring2.jpg',     tag:'Heritage',    featured:false },
-  { id:88, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                    image:'/gents ring3.jpg',     tag:'Exclusive',   featured:false },
-  { id:89, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',     tag:'Premium',     featured:false },
-  { id:90, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',     tag:'Trending',    featured:false },
-  { id:91, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",              image:'/gents ring6.jpg',     tag:'New Arrival', featured:false },
-  { id:92, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',     tag:'Luxury',      featured:false },
-  { id:93, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',     tag:'Bestseller',  featured:false },
-  { id:94, name:"Gents Gold Ring ",         category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',     tag:'Traditional', featured:false },
-  { id:95, name:"Gents Gold Ring ",        category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',    tag:'Bridal Pick', featured:false },
-
-  // ── NEW LADIES RINGS (1–16) ───────────────────────────────────────────────
-  { id:96,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Delicate 22KT gold ring for women with floral motif and fine craftsmanship.", image:'/ladies ring1.jpg',    tag:'Classic',     featured:false },
-  { id:97,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Heritage ladies gold ring with traditional design and antique finish.",       image:'/ladies ring2.jpg',    tag:'Heritage',    featured:false },
-  { id:98,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Exclusive ladies 22KT gold ring with kundan stone setting.",                  image:'/ladies ring3.jpg',    tag:'Exclusive',   featured:false },
-  { id:99,  name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Premium ladies gold ring with elegant diamond-cut band design.",              image:'/ladies ring4.jpg',    tag:'Premium',     featured:false },
-  { id:100, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Trending ladies gold ring with contemporary floral pattern in 22KT.",        image:'/ladies ring5.jpg',    tag:'Trending',    featured:false },
-  { id:101, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"New arrival ladies ring in 22KT gold with intricate meenakari detailing.",   image:'/ladies ring6.jpg',    tag:'New Arrival', featured:false },
-  { id:102, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Luxury ladies gold ring — a statement piece for weddings and events.",       image:'/ladies ring7.jpg',    tag:'Luxury',      featured:false },
-  { id:103, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Bestselling ladies 22KT gold ring with classic solitaire-style setting.",    image:'/ladies ring8.jpg',    tag:'Bestseller',  featured:true  },
-  { id:104, name:"Ladies Gold Ring ",       category:"Women's Ring", description:"Traditional ladies gold ring with temple-inspired floral motifs.",            image:'/ladies ring9.jpg',    tag:'Traditional', featured:false },
-  { id:105, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Bridal ladies ring in 22KT gold with kundan and pearl accent.",              image:'/ladies ring10.jpg',   tag:'Bridal Pick', featured:false },
-  { id:106, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Festive ladies ring in 22KT gold with vibrant stone inlay work.",            image:'/ladies ring11.jpg',   tag:'Festive',     featured:false },
-  { id:107, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Vintage-style ladies gold ring with intricate hand-carved detailing.",       image:'/ladies ring12.jpg',   tag:'Vintage',     featured:false },
-  { id:108, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Classic ladies gold ring with bold stone setting and polished finish.",       image:'/ladies ring13.jpg',   tag:'Classic',     featured:false },
-  { id:109, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Heritage ladies ring in 22KT gold with antique finish and ornate border.",   image:'/ladies ring14.jpg',   tag:'Heritage',    featured:false },
-  { id:110, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.", image:'/ladies ring15.jpg',   tag:'Exclusive',   featured:false },
-  { id:111, name:"Ladies Gold Ring ",      category:"Women's Ring", description:"Premium bridal ladies ring with diamond-cut band and floral crown setting.",  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
-
-  // ── CHAINS (chain.jpg – chain11.jpg) ─────────────────────────────────────
-  { id:112, name:'Gold Chain',             category:'Chains',       description:'Elegant 22KT gold chain with classic link design, perfect for everyday wear.',        image:'/chain.jpg',     tag:'Classic',     featured:true  },
-  { id:113, name:'Gold Chain',             category:'Chains',       description:'Lightweight 22KT gold chain ideal for pendants and daily use.',                       image:'/chain1.jpg',    tag:'Everyday',    featured:false },
-  { id:114, name:'Figaro Gold Chain',      category:'Chains',       description:'Italian figaro link chain in 22KT gold — timeless and versatile.',                    image:'/chain2.jpg',    tag:'Trending',    featured:false },
-  { id:115, name:'Rope Gold Chain',        category:'Chains',       description:'Twisted rope design in 22KT gold, a bold statement piece.',                          image:'/chain3.jpg',    tag:'Bestseller',  featured:true  },
-  { id:116, name:'Box Link Chain',         category:'Chains',       description:'Square box link chain in 22KT gold — sleek and modern.',                             image:'/chain4.jpg',    tag:'New Arrival', featured:false },
-  { id:117, name:'Heritage Gold Chain',    category:'Chains',       description:'Traditional heritage link chain in 22KT gold with antique finish.',                  image:'/chain5.jpg',    tag:'Heritage',    featured:false },
-  { id:118, name:'Designer Gold Chain',    category:'Chains',       description:'Designer pattern chain in 22KT gold, crafted for special occasions.',                image:'/chain6.jpg',    tag:'Exclusive',   featured:false },
-  { id:119, name:'Curb Link Chain',        category:'Chains',       description:'Heavy curb link chain in 22KT gold — ideal for men and women alike.',                image:'/chain7.jpg',    tag:'Premium',     featured:false },
-  { id:120, name:'Temple Gold Chain',      category:'Chains',       description:'Temple-art inspired chain in 22KT gold with traditional motifs.',                    image:'/chain8.jpg',    tag:'Traditional', featured:false },
-  { id:121, name:'Fancy Gold Chain',       category:'Chains',       description:'Fancy pattern gold chain in 22KT, perfect for gifting.',                            image:'/chain9.jpg',    tag:'Festive',     featured:false },
-  { id:122, name:'Bridal Gold Chain',      category:'Chains',       description:'Heavy bridal chain in 22KT gold with intricate detailing.',                          image:'/chain10.jpg',   tag:'Bridal Pick', featured:false },
-  { id:123, name:'Long Gold Chain',        category:'Chains',       description:'Long layering chain in 22KT gold, versatile for all looks.',                         image:'/chain11.jpg',   tag:'Classic',     featured:false },
+  { id:1,  name:'Kundan Bridal Necklace',    category:'Necklaces',    description:'Exquisite kundan work with meenakari detailing, perfect for the modern bride.',   image:'/antique1.jpg',          tag:'Bestseller',  featured:true  },
+  { id:2,  name:'Diamond Eternity Ring',     category:'Antique',      description:'A stunning circle of brilliant diamonds symbolizing eternal love.',                image:'/ring2.png',             tag:'Premium',     featured:false },
+  { id:3,  name:'Antique Gold Jhumkas',      category:'Earrings',     description:'Traditional temple-style jhumkas with intricate peacock motifs.',                  image:'/earrings13.png',        tag:'Heritage',    featured:false },
+  { id:4,  name:'22KT Gold Bangles Set',     category:'Bangles',      description:'Set of 4 intricately designed bangles with traditional patterns.',                 image:'/bangle3.png',           tag:'Classic',     featured:false },
+  { id:5,  name:'Polki Diamond Ring',        category:'Antique',      description:'Uncut polki diamonds set in 22KT gold with a classic design.',                    image:'/ring6.png',             tag:'Exclusive',   featured:true  },
+  { id:6,  name:'Temple Gold Haar',          category:'Necklaces',    description:'Traditional temple necklace with goddess motifs and Lakshmi coins.',              image:'/necklace88.png',        tag:'Traditional', featured:false },
+  { id:7,  name:'Ruby & Emerald Ring',       category:"Women's Ring", description:'Stunning cocktail ring with precious gemstones in kundan setting.',               image:'/ring7.png',             tag:'Limited',     featured:false },
+  { id:8,  name:'Antique Necklace Set',      category:'Necklaces',    description:'Complete antique temple set with traditional craftsmanship.',                     image:'/necklace22.png',        tag:'Trending',    featured:false },
+  { id:9,  name:'Meenakari Bridal Set',      category:'Necklaces',    description:'Colorful meenakari work bridal set with traditional motifs.',                     image:'/necklace3.jpg',         tag:'Bridal Pick', featured:true  },
+  { id:10, name:'Festive Gold Set',          category:'Antique',      description:'Elegant gold set perfect for festive occasions.',                                  image:'/bangle5.png',           tag:'Festive',     featured:false },
+  { id:11, name:'Diamond Studs',             category:'Earrings',     description:'Classic diamond studs for everyday elegance.',                                    image:'/ring4.png',             tag:'Everyday',    featured:false },
+  { id:12, name:'Gold Bangles',              category:'Bangles',      description:'Heavy gold kada with traditional carvings.',                                      image:'/bangle9.png',           tag:'Heritage',    featured:false },
+  { id:13, name:'Heritage Necklace',         category:'Necklaces',    description:'Elegant heritage necklace with traditional design.',                              image:'/bridal-necklace.jpg',   tag:'New Arrival', featured:false },
+  { id:14, name:'Solitaire Engagement Ring', category:"Women's Ring", description:'Brilliant solitaire in a classic six-prong setting.',                            image:'/ring6.png',             tag:'Premium',     featured:true  },
+  { id:15, name:'Antique Choker Set',        category:'Antique',      description:'Beautiful antique choker set for festive celebrations.',                          image:'/necklace15.png',        tag:'Traditional', featured:false },
+  { id:16, name:'Diamond Hoop Earrings',     category:'Earrings',     description:'Contemporary diamond hoops for modern elegance.',                                 image:'/earrings14.png',        tag:'Trending',    featured:false },
+  { id:17, name:'Gold Band Ring',            category:"Women's Ring", description:'Classic gold band with elegant minimal design.',                                  image:'/ring5.png',             tag:'Classic',     featured:false },
+  { id:18, name:'Diamond Cluster Ring',      category:'Antique',      description:'Beautiful cluster of diamonds in an elegant setting.',                            image:'/ring3.png',             tag:'Luxury',      featured:false },
+  { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',             tag:'Vintage',     featured:false },
+  { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
+  { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
+  { id:22, name:'Antique Bangle',            category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',           tag:'Heritage',    featured:false },
+  { id:23, name:'Bridal Bangle',             category:'Bangles',      description:'Heavy bridal bangles in 22KT gold with ornate detailing.',                       image:'/bangleD.jpg',           tag:'Bridal Pick', featured:false },
+  { id:24, name:'Festive Bangle',            category:'Bangles',      description:'Beautifully crafted gold bangles ideal for festivals.',                          image:'/bangleE.jpg',           tag:'Festive',     featured:false },
+  { id:25, name:'Kundan Bangle',             category:'Bangles',      description:'Kundan-studded 22KT gold bangles with vibrant meenakari work.',                  image:'/bangleF.jpg',           tag:'Exclusive',   featured:false },
+  { id:26, name:'Classic Bangle',            category:'Bangles',      description:'Timeless classic gold bangles with smooth finish and fine engraving.',           image:'/bangleG.jpg',           tag:'Classic',     featured:false },
+  { id:27, name:'Temple Bangle',             category:'Bangles',      description:'Temple-art inspired bangles in 22KT gold with goddess motifs.',                  image:'/bangleH.jpg',           tag:'Traditional', featured:false },
+  { id:28, name:'Royal Bangle',              category:'Bangles',      description:'Royal-style heavy gold bangles, a showstopper for every occasion.',              image:'/bangleI.jpg',           tag:'Premium',     featured:false },
+  { id:29, name:'Bridal Necklace',           category:'Necklaces',    description:'Stunning 22KT bridal necklace with kundan and polki work.',                     image:'/necklaceA.jpg',         tag:'Bridal Pick', featured:true  },
+  { id:30, name:'Heritage Necklace',         category:'Necklaces',    description:'Traditional heritage necklace in 22KT gold with antique finish.',               image:'/necklaceB.jpg',         tag:'Heritage',    featured:false },
+  { id:31, name:'Temple Necklace',           category:'Necklaces',    description:'Handcrafted temple necklace with goddess motifs and ruby accents.',              image:'/necklaceC.jpg',         tag:'Traditional', featured:false },
+  { id:32, name:'Kundan Necklace',           category:'Necklaces',    description:'Grand Kundan necklace with emerald and pearl drops in 22KT gold.',              image:'/necklaceD.jpg',         tag:'Exclusive',   featured:false },
+  { id:33, name:'Gold Haar',                 category:'Necklaces',    description:'Elegant long haar in 22KT gold, ideal for festive and bridal wear.',            image:'/necklaceE.jpg',         tag:'New Arrival', featured:false },
+  { id:34, name:'Gold Bangle',               category:'Bangles',      description:'Intricately crafted 22KT gold bangle with traditional Indian motifs.',          image:'/bangle100.jpg',         tag:'New Arrival', featured:false },
+  { id:35, name:'Gold Bangle',               category:'Bangles',      description:'Classic 22KT gold bangle with fine hand-engraved patterns.',                    image:'/bangle101.jpg',         tag:'Classic',     featured:false },
+  { id:36, name:'Gold Bangle',               category:'Bangles',      description:'Heritage-inspired gold bangle with intricate filigree detailing.',              image:'/bangle102.jpg',         tag:'Heritage',    featured:false },
+  { id:37, name:'Gold Bangle',               category:'Bangles',      description:'Elegant 22KT gold bangle perfect for festive and bridal occasions.',            image:'/bangle103.jpg',         tag:'Festive',     featured:false },
+  { id:38, name:'Gold Bangle',               category:'Bangles',      description:'Traditional gold bangle with temple motifs and antique finish.',                image:'/bangle104.jpg',         tag:'Traditional', featured:false },
+  { id:39, name:'Gold Bangle',               category:'Bangles',      description:'Premium 22KT gold bangle with polished finish and ornate borders.',             image:'/bangle106.jpg',         tag:'Premium',     featured:false },
+  { id:40, name:'Gold Bangle',               category:'Bangles',      description:'Trending designer bangle in 22KT gold with modern-meets-traditional design.',  image:'/bangle107.jpg',         tag:'Trending',    featured:false },
+  { id:41, name:'Gold Bangle',               category:'Bangles',      description:'Bridal-pick 22KT gold bangle set for the perfect wedding look.',               image:'/bangle108.jpg',         tag:'Bridal Pick', featured:false },
+  { id:42, name:'Short Necklace',            category:'Necklaces',    description:'Delicate short necklace in 22KT gold, ideal for everyday and festive wear.',   image:'/short necklace1.jpg',   tag:'Everyday',    featured:false },
+  { id:43, name:'Short Necklace',            category:'Necklaces',    description:'Elegant short gold necklace with fine craftsmanship and classic design.',       image:'/short necklace2.jpg',   tag:'Classic',     featured:false },
+  { id:44, name:'Short Necklace',            category:'Necklaces',    description:'Trendy short necklace in 22KT gold with contemporary styling.',                image:'/short necklace3.jpg',   tag:'Trending',    featured:false },
+  { id:45, name:'Short Necklace',            category:'Necklaces',    description:'New arrival short necklace in 22KT gold with intricate link design.',          image:'/short necklace4.jpg',   tag:'New Arrival', featured:false },
+  { id:46, name:'Turkish Necklace',          category:'Necklaces',    description:'Grand Turkish-style necklace in 22KT gold with bold layered design.',          image:'/turkish necklace1.jpg', tag:'Exclusive',   featured:true  },
+  { id:47, name:'Turkish Necklace',          category:'Necklaces',    description:'Ornate Turkish necklace with antique gold finish and heritage motifs.',        image:'/turkish necklace2.jpg', tag:'Heritage',    featured:false },
+  { id:48, name:'Turkish Necklace',          category:'Necklaces',    description:'Stunning Turkish-inspired necklace with traditional craftsmanship.',           image:'/turkish necklace3.jpg', tag:'Traditional', featured:false },
+  { id:49, name:'Turkish Necklace',          category:'Necklaces',    description:'Premium Turkish necklace in 22KT gold with intricate detailing.',              image:'/turkish necklace4.jpg', tag:'Premium',     featured:false },
+  { id:50, name:'Turkish Necklace',          category:'Necklaces',    description:'Bridal Turkish necklace with kundan accents and rich gold work.',              image:'/turkish necklace5.jpg', tag:'Bridal Pick', featured:false },
+  { id:51, name:'Turkish Necklace',          category:'Necklaces',    description:'Festive Turkish necklace perfect for celebrations and special occasions.',     image:'/turkish necklace6.jpg', tag:'Festive',     featured:false },
+  { id:52, name:'Turkish Necklace',          category:'Necklaces',    description:'Luxury Turkish-style gold necklace with bold statement design.',               image:'/turkish necklace7.jpg', tag:'Luxury',      featured:false },
+  { id:53, name:'Turkish Necklace',          category:'Necklaces',    description:'Trending Turkish necklace in 22KT gold with modern heritage styling.',        image:'/turkish necklace8.jpg', tag:'Trending',    featured:false },
+  { id:54, name:'Gold Earrings',             category:'Earrings',     description:'Classic gold earrings with intricate detailing, perfect for every occasion.',  image:'/earrings101.jpg',       tag:'Classic',     featured:false },
+  { id:55, name:'Gold Earrings',             category:'Earrings',     description:'Heritage jhumka-style earrings in 22KT gold with traditional motifs.',        image:'/earrings102.jpg',       tag:'Heritage',    featured:false },
+  { id:56, name:'Gold Earrings',             category:'Earrings',     description:'Exclusive 22KT gold earrings with premium finish and ornate design.',         image:'/earrings104.jpg',       tag:'Exclusive',   featured:false },
+  { id:57, name:'Gold Earrings',             category:'Earrings',     description:'Trending 22KT gold earrings with contemporary meets traditional design.',     image:'/earrings105.jpg',       tag:'Trending',    featured:false },
+  { id:58, name:'Gold Earrings',             category:'Earrings',     description:'New arrival earrings in 22KT gold with delicate filigree work.',              image:'/earrings106.jpg',       tag:'New Arrival', featured:false },
+  { id:59, name:'Gold Earrings',             category:'Earrings',     description:'Bridal earrings in 22KT gold with kundan stones and pearl drops.',            image:'/earrings107.jpg',       tag:'Bridal Pick', featured:false },
+  { id:60, name:'Jadau Necklace',            category:'Necklaces',    description:'Exquisite Jadau necklace with uncut diamonds and precious stone settings.',   image:'/Jadau Necklace1.jpg',   tag:'Luxury',      featured:true  },
+  { id:61, name:'Jadau Necklace',            category:'Necklaces',    description:'Traditional Jadau necklace with Polki diamonds in 22KT gold setting.',       image:'/Jadau Necklace3.jpg',   tag:'Traditional', featured:false },
+  { id:62, name:'Jadau Necklace',            category:'Necklaces',    description:'Bridal Jadau necklace with emerald drops and kundan work in 22KT gold.',     image:'/Jadau Necklace4.jpg',   tag:'Bridal Pick', featured:false },
+  { id:63, name:'Jadau Necklace',            category:'Necklaces',    description:'Heritage Jadau necklace with ruby and emerald accents, fit for royalty.',    image:'/Jadau Necklace5.jpg',   tag:'Heritage',    featured:false },
+  { id:64, name:'Jadau Necklace',            category:'Necklaces',    description:'Premium Jadau necklace with handcrafted motifs and precious stone inlay.',   image:'/Jadau Necklace6.jpg',   tag:'Premium',     featured:false },
+  { id:65, name:'Jadau Necklace',            category:'Necklaces',    description:'Exclusive Jadau necklace with Polki diamonds and meenakari detailing.',      image:'/Jadau Necklace7.jpg',   tag:'Exclusive',   featured:false },
+  { id:66, name:'Jadau Necklace',            category:'Necklaces',    description:'Bestselling Jadau necklace — a statement piece for weddings and events.',    image:'/Jadau Necklace8.jpg',   tag:'Bestseller',  featured:false },
+  { id:67, name:'Gold Choker',               category:'Chokers',      description:'Elegant 22KT gold choker with intricate hand-engraved traditional patterns.', image:'/Choker101.jpg',         tag:'Classic',     featured:false },
+  { id:68, name:'Gold Choker',               category:'Chokers',      description:'Heritage-style gold choker with antique finish and temple motifs.',           image:'/Choker102.jpg',         tag:'Heritage',    featured:false },
+  { id:69, name:'Gold Choker',               category:'Chokers',      description:'Bridal choker in 22KT gold with kundan stones and floral patterns.',         image:'/Choker103.jpg',         tag:'Bridal Pick', featured:true  },
+  { id:70, name:'Gold Choker',               category:'Chokers',      description:'Exclusive choker necklace with bold design and premium gold craftsmanship.',  image:'/choker104.jpg',         tag:'Exclusive',   featured:false },
+  { id:71, name:'Gold Choker',               category:'Chokers',      description:'Trending 22KT gold choker with contemporary traditional fusion design.',     image:'/choker105.jpg',         tag:'Trending',    featured:false },
+  { id:72, name:'Gold Choker',               category:'Chokers',      description:'New arrival gold choker with delicate beaded and filigree detailing.',       image:'/choker107.jpg',         tag:'New Arrival', featured:false },
+  { id:73, name:'Long Haar',                 category:'Necklaces',    description:'Majestic long haar in 22KT gold with traditional coin and temple motifs.',   image:'/long haar1.jpg',        tag:'Traditional', featured:false },
+  { id:74, name:'Long Haar',                 category:'Necklaces',    description:'Elegant long gold haar with intricate link design and antique gold finish.', image:'/long haar2.jpg',        tag:'Heritage',    featured:false },
+  { id:75, name:'Long Haar',                 category:'Necklaces',    description:'Bridal long haar in 22KT gold — a timeless statement for the wedding day.', image:'/long haar3.jpg',        tag:'Bridal Pick', featured:false },
+  { id:76, name:'Long Haar',                 category:'Necklaces',    description:'Premium long haar with layered design and fine 22KT gold craftsmanship.',   image:'/long haar4.jpg',        tag:'Premium',     featured:false },
+  { id:77, name:'Long Haar',                 category:'Necklaces',    description:'Luxury long haar necklace in 22KT gold with bold statement design.',        image:'/long haar6.jpg',        tag:'Luxury',      featured:false },
+  { id:78, name:'Pendant Set',               category:'Pendants',     description:'Elegant 22KT gold pendant with matching earrings and delicate design.',      image:'/pandent set1.jpg',      tag:'Classic',     featured:false },
+  { id:79, name:'Pendant Set',               category:'Pendants',     description:'Heritage gold pendant with traditional motifs and antique finish.',          image:'/pandent set2.jpg',      tag:'Heritage',    featured:false },
+  { id:80, name:'Pendant Set',               category:'Pendants',     description:'Bridal pendant in 22KT gold with kundan stones and pearl drops.',           image:'/pandent set3.jpg',      tag:'Bridal Pick', featured:false },
+  { id:81, name:'Pendant Set',               category:'Pendants',     description:'Exclusive pendant with intricate handcrafted gold motifs.',                 image:'/pandent set4.jpg',      tag:'Exclusive',   featured:false },
+  { id:82, name:'Pendant Set',               category:'Pendants',     description:'Trending pendant — contemporary gold design meets traditional art.',       image:'/pandent set5.jpg',      tag:'Trending',    featured:false },
+  { id:83, name:'Pendant Set',               category:'Pendants',     description:'New arrival pendant in 22KT gold with modern heritage styling.',           image:'/pandent set6.jpg',      tag:'New Arrival', featured:false },
+  { id:84, name:'Pendant Set',               category:'Pendants',     description:'Premium gold pendant with fine filigree work and elegant design.',         image:'/pandent set7.jpg',      tag:'Premium',     featured:false },
+  { id:85, name:'Pendant Set',               category:'Pendants',     description:'Festive pendant in 22KT gold, perfect for celebrations and events.',       image:'/pandent set8.jpg',      tag:'Festive',     featured:false },
+  { id:86, name:'Gents Gold Ring',           category:"Men's Ring",   description:'Bold 22KT gold ring for men with classic band and fine engraving.',          image:'/gents ring1.jpg',       tag:'Classic',     featured:false },
+  { id:87, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Heritage men's gold ring with traditional design and antique finish.",       image:'/gents ring2.jpg',       tag:'Heritage',    featured:false },
+  { id:88, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Exclusive men's 22KT gold ring with bold stone setting.",                    image:'/gents ring3.jpg',       tag:'Exclusive',   featured:false },
+  { id:89, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',       tag:'Premium',     featured:false },
+  { id:90, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',       tag:'Trending',    featured:false },
+  { id:91, name:'Gents Gold Ring',           category:"Men's Ring",   description:"New arrival men's ring in 22KT gold with intricate detailing.",              image:'/gents ring6.jpg',       tag:'New Arrival', featured:false },
+  { id:92, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',       tag:'Luxury',      featured:false },
+  { id:93, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bestselling men's 22KT gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',       tag:'Bestseller',  featured:false },
+  { id:94, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',       tag:'Traditional', featured:false },
+  { id:95, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',      tag:'Bridal Pick', featured:false },
+  { id:96,  name:'Ladies Gold Ring',         category:"Women's Ring", description:'Delicate 22KT gold ring for women with floral motif and fine craftsmanship.', image:'/ladies ring1.jpg',    tag:'Classic',     featured:false },
+  { id:97,  name:'Ladies Gold Ring',         category:"Women's Ring", description:'Heritage ladies gold ring with traditional design and antique finish.',       image:'/ladies ring2.jpg',    tag:'Heritage',    featured:false },
+  { id:98,  name:'Ladies Gold Ring',         category:"Women's Ring", description:'Exclusive ladies 22KT gold ring with kundan stone setting.',                  image:'/ladies ring3.jpg',    tag:'Exclusive',   featured:false },
+  { id:99,  name:'Ladies Gold Ring',         category:"Women's Ring", description:'Premium ladies gold ring with elegant diamond-cut band design.',              image:'/ladies ring4.jpg',    tag:'Premium',     featured:false },
+  { id:100, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Trending ladies gold ring with contemporary floral pattern in 22KT.',        image:'/ladies ring5.jpg',    tag:'Trending',    featured:false },
+  { id:101, name:'Ladies Gold Ring',         category:"Women's Ring", description:'New arrival ladies ring in 22KT gold with intricate meenakari detailing.',   image:'/ladies ring6.jpg',    tag:'New Arrival', featured:false },
+  { id:102, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Luxury ladies gold ring — a statement piece for weddings and events.',       image:'/ladies ring7.jpg',    tag:'Luxury',      featured:false },
+  { id:103, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Bestselling ladies 22KT gold ring with classic solitaire-style setting.',    image:'/ladies ring8.jpg',    tag:'Bestseller',  featured:true  },
+  { id:104, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Traditional ladies gold ring with temple-inspired floral motifs.',            image:'/ladies ring9.jpg',    tag:'Traditional', featured:false },
+  { id:105, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Bridal ladies ring in 22KT gold with kundan and pearl accent.',              image:'/ladies ring10.jpg',   tag:'Bridal Pick', featured:false },
+  { id:106, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Festive ladies ring in 22KT gold with vibrant stone inlay work.',            image:'/ladies ring11.jpg',   tag:'Festive',     featured:false },
+  { id:107, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Vintage-style ladies gold ring with intricate hand-carved detailing.',       image:'/ladies ring12.jpg',   tag:'Vintage',     featured:false },
+  { id:108, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Classic ladies gold ring with bold stone setting and polished finish.',       image:'/ladies ring13.jpg',   tag:'Classic',     featured:false },
+  { id:109, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Heritage ladies ring in 22KT gold with antique finish and ornate border.',   image:'/ladies ring14.jpg',   tag:'Heritage',    featured:false },
+  { id:110, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Exclusive ladies ring with Polki stone and 22KT gold temple-style setting.', image:'/ladies ring15.jpg',   tag:'Exclusive',   featured:false },
+  { id:111, name:'Ladies Gold Ring',         category:"Women's Ring", description:'Premium bridal ladies ring with diamond-cut band and floral crown setting.',  image:'/ladies ring16.jpg',   tag:'Premium',     featured:false },
+  { id:112, name:'Gold Chain',               category:'Chains',       description:'Elegant 22KT gold chain with classic link design, perfect for everyday wear.',   image:'/chain.jpg',    tag:'Classic',     featured:true  },
+  { id:113, name:'Gold Chain',               category:'Chains',       description:'Lightweight 22KT gold chain ideal for pendants and daily use.',                   image:'/chain1.jpg',   tag:'Everyday',    featured:false },
+  { id:114, name:'Figaro Gold Chain',        category:'Chains',       description:'Italian figaro link chain in 22KT gold — timeless and versatile.',               image:'/chain2.jpg',   tag:'Trending',    featured:false },
+  { id:115, name:'Rope Gold Chain',          category:'Chains',       description:'Twisted rope design in 22KT gold, a bold statement piece.',                      image:'/chain3.jpg',   tag:'Bestseller',  featured:true  },
+  { id:116, name:'Box Link Chain',           category:'Chains',       description:'Square box link chain in 22KT gold — sleek and modern.',                         image:'/chain4.jpg',   tag:'New Arrival', featured:false },
+  { id:117, name:'Heritage Gold Chain',      category:'Chains',       description:'Traditional heritage link chain in 22KT gold with antique finish.',              image:'/chain5.jpg',   tag:'Heritage',    featured:false },
+  { id:118, name:'Designer Gold Chain',      category:'Chains',       description:'Designer pattern chain in 22KT gold, crafted for special occasions.',            image:'/chain6.jpg',   tag:'Exclusive',   featured:false },
+  { id:119, name:'Curb Link Chain',          category:'Chains',       description:'Heavy curb link chain in 22KT gold — ideal for men and women alike.',            image:'/chain7.jpg',   tag:'Premium',     featured:false },
+  { id:120, name:'Temple Gold Chain',        category:'Chains',       description:'Temple-art inspired chain in 22KT gold with traditional motifs.',                image:'/chain8.jpg',   tag:'Traditional', featured:false },
+  { id:121, name:'Fancy Gold Chain',         category:'Chains',       description:'Fancy pattern gold chain in 22KT, perfect for gifting.',                        image:'/chain9.jpg',   tag:'Festive',     featured:false },
+  { id:122, name:'Bridal Gold Chain',        category:'Chains',       description:'Heavy bridal chain in 22KT gold with intricate detailing.',                      image:'/chain10.jpg',  tag:'Bridal Pick', featured:false },
+  { id:123, name:'Long Gold Chain',          category:'Chains',       description:'Long layering chain in 22KT gold, versatile for all looks.',                     image:'/chain11.jpg',  tag:'Classic',     featured:false },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ── 3D Tilt Card — cursor-driven perspective rotation + glare sweep ────────────
-function TiltCard({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50 });
-  const [active, setActive] = useState(false);
+const WA = '918377911745';
+function waLink(name: string) {
+  return `https://wa.me/${WA}?text=${encodeURIComponent(`Hi! I'm interested in the *${name.trim()}*. Could you share details? 🙏`)}`;
+}
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width;   // 0 → 1
-    const py = (e.clientY - rect.top) / rect.height;    // 0 → 1
-    const ry = (px - 0.5) * 16;   // rotateY range
-    const rx = (0.5 - py) * 16;   // rotateX range
-    setTilt({ rx, ry, gx: px * 100, gy: py * 100 });
-  };
-
-  const handleLeave = () => {
-    setActive(false);
-    setTilt({ rx: 0, ry: 0, gx: 50, gy: 50 });
-  };
+// ── Card ──────────────────────────────────────────────────────────────────────
+function Card({ p, wished, onOpen, onWish }: {
+  p: typeof allProducts[0];
+  wished: boolean;
+  onOpen: () => void;
+  onWish: (id: number, e: React.MouseEvent) => void;
+}) {
+  const [hov, setHov] = useState(false);
+  const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
     <div
-      style={{ perspective: '900px' }}
-      onClick={onClick}
-      className="cursor-pointer"
+      style={{ background: C.bgCard, position: 'relative', cursor: 'default' }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
     >
+      {/* Image */}
       <div
-        ref={ref}
-        onMouseEnter={() => setActive(true)}
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
+        onClick={onOpen}
         style={{
-          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${active ? 1.035 : 1})`,
-          transformStyle: 'preserve-3d',
-          transition: active ? 'transform 0.08s linear' : 'transform 0.5s cubic-bezier(0.22,1,0.36,1)',
-          willChange: 'transform',
+          position: 'relative', aspectRatio: '1/1',
+          overflow: 'hidden', background: '#F5F5F5', cursor: 'pointer',
         }}
-        className="relative"
       >
-        {children}
-        {/* Moving glare sheen */}
-        <div
-          className="absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300"
+        <img
+          src={p.image} alt={p.name.trim()}
           style={{
-            opacity: active ? 0.55 : 0,
-            background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.35) 0%, transparent 55%)`,
-            mixBlendMode: 'screen',
+            width: '100%', height: '100%', objectFit: 'cover',
+            transform: hov ? 'scale(1.05)' : 'scale(1)',
+            transition: 'transform 0.45s ease',
+            display: 'block',
           }}
         />
+
+        {/* Badge */}
+        <span style={{
+          position: 'absolute', top: 10, left: 10,
+          padding: '3px 8px', borderRadius: 2,
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.05em',
+          background: ts.bg, color: ts.color,
+          fontFamily: 'Raleway, sans-serif',
+        }}>
+          {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
+        </span>
+
+        {/* Heart */}
+        <button
+          onClick={e => onWish(p.id, e)}
+          style={{
+            position: 'absolute', top: 9, right: 9,
+            width: 30, height: 30, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.92)',
+            border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.1)'}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', transition: 'border-color 0.2s',
+          }}>
+          <Heart size={12} fill={wished ? '#C2185B' : 'none'} color={wished ? '#C2185B' : '#aaa'} />
+        </button>
+
+        {/* Quick view hover pill */}
+        <div style={{
+          position: 'absolute', bottom: 10, left: '50%',
+          transform: hov ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(6px)',
+          opacity: hov ? 1 : 0, transition: 'all 0.25s',
+          background: 'rgba(255,255,255,0.96)', padding: '6px 16px',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+          fontFamily: 'Raleway, sans-serif', color: C.text,
+          borderRadius: 2, whiteSpace: 'nowrap',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+        }}>
+          QUICK VIEW
+        </div>
+      </div>
+
+      {/* Info */}
+      <div style={{ padding: '10px 12px 13px' }}>
+        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 3, fontFamily: 'Raleway, sans-serif', fontWeight: 500, letterSpacing: '0.04em' }}>
+          {p.category}
+        </p>
+        <p
+          onClick={onOpen}
+          style={{
+            fontSize: 14, fontFamily: 'Cormorant Garamond, serif',
+            fontWeight: 500, color: C.text, lineHeight: 1.3,
+            marginBottom: 11, cursor: 'pointer',
+            display: '-webkit-box', WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>
+          {p.name.trim()}
+        </p>
+
+        {/* WhatsApp button */}
+        <a
+          href={waLink(p.name)}
+          target="_blank" rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            width: '100%', padding: '8px 0',
+            background: '#25D366',
+            color: '#fff', borderRadius: 2,
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.05em',
+            fontFamily: 'Raleway, sans-serif',
+            textDecoration: 'none',
+            transition: 'background 0.18s',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#1ebe5b')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#25D366')}
+        >
+          <MessageCircle size={12} />
+          Enquire on WhatsApp
+        </a>
       </div>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ── Hero Tilt Card — bolder cursor-driven tilt for the spotlight ──────────────
-function HeroTiltWrapper({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50 });
-  const [active, setActive] = useState(false);
-
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width;
-    const py = (e.clientY - rect.top) / rect.height;
-    const ry = (px - 0.5) * 26;   
-    const rx = (0.5 - py) * 22;
-    setTilt({ rx, ry, gx: px * 100, gy: py * 100 });
-  };
-
-  const handleLeave = () => {
-    setActive(false);
-    setTilt({ rx: 0, ry: 0, gx: 50, gy: 50 });
-  };
-
-  return (
-    <div style={{ perspective: '1100px' }} className="absolute inset-0">
-      <div
-        ref={ref}
-        onClick={onClick}
-        onMouseEnter={() => setActive(true)}
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        style={{
-          width: '100%', height: '100%',
-          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${active ? 1.02 : 1})`,
-          transformStyle: 'preserve-3d',
-          transition: active ? 'transform 0.09s linear' : 'transform 0.6s cubic-bezier(0.22,1,0.36,1)',
-          willChange: 'transform',
-        }}
-        className="relative cursor-pointer"
-      >
-        {children}
-        <div
-          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
-          style={{
-            opacity: active ? 0.45 : 0,
-            background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.4) 0%, transparent 55%)`,
-            mixBlendMode: 'screen',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-// ── SKELETON PRELOADER ────────────────────────────────────────────────────────
-function CollectionsSkeleton() {
-  return (
-    <div style={{ background: C.bg, minHeight: '100vh' }}>
-      <section className="relative overflow-hidden pt-28 pb-16" style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #FFF0F5 50%, ${C.bgDeep} 100%)` }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
-            {/* Left Skeleton */}
-            <div>
-              <div className="h-8 w-40 rounded-full animate-pulse mb-7" style={{ background: 'rgba(248,187,217,0.4)' }} />
-              <div className="h-16 w-3/4 rounded-md animate-pulse mb-4" style={{ background: 'rgba(248,187,217,0.6)' }} />
-              <div className="h-16 w-1/2 rounded-md animate-pulse mb-8" style={{ background: 'rgba(248,187,217,0.6)' }} />
-              <div className="h-4 w-full rounded-md animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.3)' }} />
-              <div className="h-4 w-5/6 rounded-md animate-pulse mb-10" style={{ background: 'rgba(248,187,217,0.3)' }} />
-              <div className="h-6 w-56 rounded-md animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
-            </div>
-            {/* Right Skeleton */}
-            <div className="hidden sm:block">
-              <div className="w-full rounded-2xl animate-pulse shadow-xl" style={{ aspectRatio: '4/5', background: 'rgba(248,187,217,0.25)' }} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Category Rail Skeleton */}
-      <section style={{ background: C.bgDeep, borderBottom: `1px solid ${C.border}` }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
-          <div className="flex items-center gap-5 sm:gap-7 overflow-hidden">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
-                <div className="w-[68px] h-[68px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.4)' }} />
-                <div className="w-12 h-2 rounded-md animate-pulse" style={{ background: 'rgba(248,187,217,0.5)' }} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Search Bar Skeleton */}
-      <section className="py-6" style={{ background: C.bgDeep }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-md mx-auto h-[46px] rounded-full animate-pulse" style={{ background: 'rgba(248,187,217,0.3)' }} />
-        </div>
-      </section>
-
-      {/* Product Grid Skeleton */}
-      <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="rounded-xl overflow-hidden shadow-sm" style={{ background: C.bgCard, border: `1px solid ${C.border}` }}>
-                <div className="w-full animate-pulse" style={{ aspectRatio: '1/1', background: 'rgba(248,187,217,0.2)' }} />
-                <div className="p-4">
-                  <div className="h-2 w-1/3 rounded animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.5)' }} />
-                  <div className="h-5 w-3/4 rounded animate-pulse mb-3" style={{ background: 'rgba(248,187,217,0.4)' }} />
-                  <div className="h-2 w-full rounded animate-pulse mb-1" style={{ background: 'rgba(248,187,217,0.2)' }} />
-                  <div className="h-2 w-5/6 rounded animate-pulse mt-4" style={{ background: 'rgba(248,187,217,0.2)' }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Main ──────────────────────────────────────────────────────────────────────
 export default function Collections() {
-  const [isLoading, setIsLoading]             = useState(true);
-  const [activeTab, setActiveTab]             = useState('All');
-  const [selectedProduct, setSelectedProduct] = useState<typeof allProducts[0] | null>(null);
-  const [searchQuery, setSearchQuery]         = useState('');
-  const [hoveredId, setHoveredId]             = useState<number | null>(null);
-  const [heroIndex, setHeroIndex]             = useState(0);
+  const [tab, setTab]           = useState('All');
+  const [q, setQ]               = useState('');
+  const [wish, setWish]         = useState<number[]>([]);
+  const [sel, setSel]           = useState<typeof allProducts[0] | null>(null);
+  const [ready, setReady]       = useState(false);
 
-  const featuredPool = allProducts.filter(p => p.featured);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 250); return () => clearTimeout(t); }, []);
 
-  // Background Preloader Logic
-  useEffect(() => {
-    const imagesToLoad = [
-      ...featuredPool.map(p => p.image),
-      ...categories.map(c => c.image).filter(Boolean)
-    ];
+  const toggleWish = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setWish(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+  };
 
-    const imagePromises = imagesToLoad.map(src => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.src = src as string;
-        img.onload = resolve;
-        img.onerror = resolve; // Ensure it resolves even on failure
-      });
-    });
-
-    // Ensure the elegant skeleton shows for at least 800ms
-    Promise.all([
-      ...imagePromises,
-      new Promise(resolve => setTimeout(resolve, 800))
-    ]).then(() => {
-      setIsLoading(false);
-    });
-  }, [featuredPool]);
-
-  // Rotate hero spotlight every 4.2s (ONLY after loading completes)
-  useEffect(() => {
-    if (isLoading) return;
-    const t = setInterval(() => {
-      setHeroIndex(i => (i + 1) % featuredPool.length);
-    }, 4200);
-    return () => clearInterval(t);
-  }, [featuredPool.length, isLoading]);
-
-  const heroProduct = featuredPool[heroIndex] || allProducts[0];
-
-  const filteredProducts = allProducts.filter(p => {
-    const matchCat = activeTab === 'All' || p.category === activeTab;
-    const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        p.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCat && matchSearch;
+  const list = allProducts.filter(p => {
+    const catOk = tab === 'All' || p.category === tab;
+    const sq = q.toLowerCase();
+    const searchOk = !sq || p.name.toLowerCase().includes(sq) || p.category.toLowerCase().includes(sq) || p.tag.toLowerCase().includes(sq);
+    return catOk && searchOk;
   });
 
-  if (isLoading) {
-    return <CollectionsSkeleton />;
-  }
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
-                style={{ background: '#F7F7F7', minHeight: '100vh' }}>
-
-      {/* ── TOP BAR ── */}
-      <div className="pt-20" style={{ background: '#fff', borderBottom: '1px solid #eee' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-          {/* Page title */}
-          <div className="py-5">
-            <h1 className="font-cormorant text-2xl sm:text-3xl font-semibold" style={{ color: C.text }}>
-              Our Jewellery Collection
-            </h1>
-            <p className="font-raleway text-sm mt-1" style={{ color: C.textLight }}>
-              {filteredProducts.length} designs • Tap any piece to enquire on WhatsApp 💬
-            </p>
-          </div>
-
-          {/* ── CATEGORY CHIPS — horizontal scroll ── */}
-          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-3"
-               style={{ scrollbarWidth: 'none' }}>
-            {categories.map(cat => {
-              const isActive = activeTab === cat.name;
-              const count    = cat.name === 'All'
-                ? allProducts.length
-                : allProducts.filter(p => p.category === cat.name).length;
-              return (
-                <button key={cat.name} onClick={() => setActiveTab(cat.name)}
-                        className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-raleway text-sm font-medium transition-all duration-200"
-                        style={{
-                          background: isActive ? C.gold : '#fff',
-                          color:      isActive ? '#fff' : C.textMid,
-                          border:     isActive ? `1.5px solid ${C.gold}` : '1.5px solid #e0e0e0',
-                          boxShadow:  isActive ? '0 2px 12px rgba(194,24,91,0.18)' : 'none',
-                        }}>
-                  {cat.image && (
-                    <img src={cat.image} alt={cat.name}
-                         className="w-5 h-5 rounded-full object-cover"
-                         style={{ opacity: isActive ? 1 : 0.65 }} />
-                  )}
-                  {cat.name}
-                  <span className="text-xs opacity-60">({count})</span>
-                </button>
-              );
-            })}
-          </div>
+  if (!ready) return (
+    <div style={{ minHeight: '100vh', background: C.bg }} className="pt-20">
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))', gap: 1, background: C.border }}>
+          {[...Array(8)].map((_, i) => (
+            <div key={i} style={{ background: C.bgCard }}>
+              <div className="animate-pulse" style={{ aspectRatio: '1/1', background: '#F2F2F2' }} />
+              <div style={{ padding: 12 }}>
+                <div className="animate-pulse" style={{ height: 10, width: '40%', background: '#EEE', borderRadius: 2, marginBottom: 8 }} />
+                <div className="animate-pulse" style={{ height: 14, width: '75%', background: '#E8E8E8', borderRadius: 2, marginBottom: 12 }} />
+                <div className="animate-pulse" style={{ height: 32, background: '#E0E0E0', borderRadius: 2 }} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+    </div>
+  );
 
-      {/* ── SEARCH BAR ── */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #eee' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-          <div className="relative max-w-sm">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#aaa' }} />
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
+                style={{ minHeight: '100vh', background: C.bg }}>
+
+      {/* ── Header ── */}
+      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}>
+              SHEKHAR RAJA JEWELLERS · EST. 1987
+            </p>
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
+              Jewellery Collection
+            </h1>
+          </div>
+          {/* Search */}
+          <div style={{ position: 'relative', width: 260 }}>
+            <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
             <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name or category..."
-              className="w-full pl-10 pr-9 py-2.5 rounded-full font-raleway text-sm outline-none"
-              style={{ background: '#f5f5f5', border: '1.5px solid #e8e8e8', color: C.text }}
+              value={q} onChange={e => setQ(e.target.value)}
+              placeholder="Search pieces..."
+              style={{
+                width: '100%', paddingLeft: 34, paddingRight: q ? 30 : 12,
+                paddingTop: 9, paddingBottom: 9,
+                border: `1px solid ${q ? C.gold : C.border}`,
+                borderRadius: 2, fontSize: 13, color: C.text,
+                background: '#fff', outline: 'none',
+                fontFamily: 'Raleway, sans-serif',
+                transition: 'border-color 0.2s', boxSizing: 'border-box',
+              }}
             />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2">
-                <X size={14} style={{ color: '#aaa' }} />
+            {q && (
+              <button onClick={() => setQ('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={12} style={{ color: C.textLight }} />
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── PRODUCT GRID ── */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6">
+      {/* ── Category tabs ── */}
+      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
+          {categories.map(cat => {
+            const isActive = tab === cat;
+            const count = cat === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat).length;
+            return (
+              <button
+                key={cat}
+                onClick={() => setTab(cat)}
+                style={{
+                  flexShrink: 0,
+                  padding: '13px 16px',
+                  fontSize: 13,
+                  fontFamily: 'Raleway, sans-serif',
+                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? C.text : C.textLight,
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s',
+                  marginBottom: -1,
+                }}
+              >
+                {cat} <span style={{ fontSize: 11, color: C.textLight }}>({count})</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Grid ── */}
+      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <AnimatePresence mode="wait">
-          {filteredProducts.length === 0 ? (
-            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="text-center py-28">
-              <div className="text-5xl mb-4">🔍</div>
-              <p className="font-cormorant text-2xl font-semibold mb-2" style={{ color: C.text }}>
-                No items found
-              </p>
-              <p className="font-raleway text-sm mb-6" style={{ color: C.textLight }}>
-                Try a different category or clear your search
-              </p>
-              <button onClick={() => { setSearchQuery(''); setActiveTab('All'); }}
-                      className="px-6 py-2.5 rounded-full font-raleway text-sm font-semibold text-white"
-                      style={{ background: C.gold }}>
-                Show All Items
+          {list.length === 0 ? (
+            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        style={{ padding: '80px 20px', textAlign: 'center' }}>
+              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: C.textLight, marginBottom: 16 }}>Nothing found</p>
+              <button
+                onClick={() => { setTab('All'); setQ(''); }}
+                style={{ padding: '10px 24px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif' }}>
+                Show all
               </button>
             </motion.div>
           ) : (
-            <motion.div key={activeTab + searchQuery}
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {filteredProducts.map((product, i) => {
-                const tagStyle = TAG[product.tag] || TAG['Classic'];
-                const waMsg    = encodeURIComponent(
-                  `Hello Shekhar Raja Jewellers! 🙏\nI am interested in *${product.name}* (${product.category}).\nPlease share more details and pricing.`
-                );
-                return (
-                  <motion.div key={product.id}
-                              initial={{ opacity: 0, y: 16 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: Math.min(i * 0.03, 0.3), duration: 0.35 }}
-                              className="rounded-2xl overflow-hidden cursor-pointer group"
-                              style={{
-                                background: '#fff',
-                                border: '1px solid #efefef',
-                                boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
-                              }}
-                              whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(194,24,91,0.12)' }}
-                              onClick={() => setSelectedProduct(product)}>
-
-                    {/* ── PHOTO ── */}
-                    <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
-                      <img src={product.image} alt={product.name}
-                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-
-                      {/* Tag badge */}
-                      <div className="absolute top-2.5 left-2.5">
-                        <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
-                              style={{ background: tagStyle.bg, color: tagStyle.text,
-                                       fontFamily: 'Raleway, sans-serif' }}>
-                          {product.tag}
-                        </span>
-                      </div>
-
-                      {/* Featured star */}
-                      {product.featured && (
-                        <div className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md"
-                             style={{ background: C.gold, color: '#fff' }}>
-                          ★
-                        </div>
-                      )}
-
-                      {/* Hover overlay */}
-                      <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                           style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.32) 0%, transparent 55%)' }}>
-                        <span className="font-raleway text-xs text-white font-medium px-3 py-1 rounded-full"
-                              style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(6px)',
-                                       border: '1px solid rgba(255,255,255,0.25)' }}>
-                          Tap to view details
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* ── CARD BODY ── */}
-                    <div className="p-3 sm:p-4">
-
-                      {/* Category label */}
-                      <p className="font-raleway text-[10px] font-bold uppercase tracking-widest mb-1"
-                         style={{ color: C.gold }}>
-                        {product.category}
-                      </p>
-
-                      {/* Product name */}
-                      <h3 className="font-cormorant text-base sm:text-[17px] font-semibold leading-tight mb-1"
-                          style={{ color: C.text }}>
-                        {product.name}
-                      </h3>
-
-                      {/* One-line description */}
-                      <p className="font-raleway text-[11px] line-clamp-1 mb-3"
-                         style={{ color: C.textLight }}>
-                        {product.description}
-                      </p>
-
-                      {/* ── WhatsApp enquire button — prominent green, like "Check Delivery Date" in reference ── */}
-                      <a href={`https://wa.me/918377911745?text=${waMsg}`}
-                         target="_blank" rel="noopener noreferrer"
-                         onClick={e => e.stopPropagation()}
-                         className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-raleway text-[13px] font-semibold transition-all duration-200"
-                         style={{ background: '#25D366', color: '#fff',
-                                  boxShadow: '0 2px 10px rgba(37,211,102,0.2)' }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.83L.057 23.5a.5.5 0 0 0 .61.61l5.758-1.508A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.68-.503-5.21-1.382l-.373-.22-3.87 1.014 1.025-3.777-.243-.386A9.938 9.938 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                        </svg>
-                        Enquire on WhatsApp
-                      </a>
-                    </div>
-                  </motion.div>
-                );
-              })}
+            <motion.div
+              key={tab + q}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+                gap: 1,
+                background: C.border,
+                borderTop: `1px solid ${C.border}`,
+              }}
+            >
+              {list.map((p, i) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: Math.min(i * 0.015, 0.3), duration: 0.28 }}
+                >
+                  <Card
+                    p={p}
+                    wished={wish.includes(p.id)}
+                    onOpen={() => setSel(p)}
+                    onWish={toggleWish}
+                  />
+                </motion.div>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Bottom count */}
-        {filteredProducts.length > 0 && (
-          <div className="mt-12 pb-6 text-center">
-            <span className="font-raleway text-sm" style={{ color: C.textLight }}>
-              Showing {filteredProducts.length} of {allProducts.length} designs
-            </span>
+        {list.length > 0 && (
+          <div style={{ padding: '32px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}>
+            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0 }}>
+              Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
+            </p>
+            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 4 }}>
+              Looking for something specific?{' '}
+              <a
+                href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I'm looking for a specific piece. Can you help?")}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ color: C.gold, textDecoration: 'underline' }}>
+                Ask us on WhatsApp
+              </a>
+            </p>
           </div>
         )}
       </div>
 
-      {/* Product detail modal */}
       <AnimatePresence>
-        {selectedProduct && (
-          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-        )}
+        {sel && <ProductModal product={sel} onClose={() => setSel(null)} />}
       </AnimatePresence>
-
-    </motion.div>
-  );
-}
-
-      {/* ══════════════════════════════════════════════
-          HERO — cinematic split: copy + rotating spotlight
-      ══════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden"
-               style={{ background: `linear-gradient(165deg, ${C.bgHeroPink} 0%, #FFF0F5 50%, ${C.bgDeep} 100%)` }}>
-        {/* Ambient gold wash */}
-        <div className="absolute inset-0 opacity-[0.18] pointer-events-none"
-             style={{ backgroundImage: `radial-gradient(ellipse 70% 50% at 15% 8%, ${C.gold} 0%, transparent 65%)` }} />
-        <div className="absolute inset-0 opacity-[0.14] pointer-events-none"
-             style={{ backgroundImage: `radial-gradient(ellipse 55% 55% at 95% 90%, ${C.bgHeroPinkDeep} 0%, transparent 60%)` }} />
-        {/* Soft bottom fade to blend seamlessly into the category band */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-             style={{ background: `linear-gradient(to top, ${C.bgDeep} 0%, transparent 100%)` }} />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10"
-             style={{ paddingTop: '6.5rem', paddingBottom: '4rem' }}>
-
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
-
-            {/* ── Left: copy + stats ── */}
-            <div>
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                          className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full"
-                          style={{ background: 'rgba(255,253,250,0.65)', border: `1px solid ${C.goldBorder}`, backdropFilter: 'blur(6px)' }}>
-                <Crown size={11} style={{ color: C.gold }} />
-                <span className="font-cinzel text-[10px] tracking-[0.4em]" style={{ color: C.textMid }}>
-                  EST. 1987 · JABALPUR
-                </span>
-              </motion.div>
-
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-                         className="font-cormorant font-light leading-[1.05] sm:leading-[0.95] mb-5 break-words"
-                         style={{ fontSize: 'clamp(2.1rem, 8vw, 5.2rem)', color: C.text }}>
-                Exquisite <em className="italic" style={{ color: C.gold }}>Jewellery</em>,{' '}
-                Crafted for <em className="italic" style={{ color: C.gold }}>Eternity</em>.
-              </motion.h1>
-
-              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
-                        className="font-raleway text-[15px] font-light max-w-md mb-10 leading-relaxed"
-                        style={{ color: C.textMid }}>
-                A curated vault of 22K BIS Hallmark certified gold — each piece hand-finished by
-                third-generation artisans of Shekhar Raja Jewellers.
-              </motion.p>
-
-              {/* Trust badge */}
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
-                          className="flex items-center gap-3">
-                <ShieldCheck size={24} className="flex-shrink-0" style={{ color: C.gold }} />
-                <p className="font-raleway text-[12px] leading-tight" style={{ color: C.textMid }}>
-                  22K BIS Hallmark Certified Gold
-                </p>
-              </motion.div>
-            </div>
-
-            {/* ── Right: rotating spotlight card ── */}
-            <div className="relative hidden sm:block" style={{ aspectRatio: '4/5' }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={heroProduct.id}
-                  initial={{ opacity: 0, scale: 1.04 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0"
-                >
-                  <HeroTiltWrapper onClick={() => setSelectedProduct(heroProduct)}>
-                    <div className="absolute inset-0 rounded-2xl overflow-hidden"
-                         style={{ boxShadow: '0 30px 70px rgba(194,24,91,0.2)' }}>
-                      <div style={{ transform: 'translateZ(0px)' }} className="absolute inset-0">
-                        <img src={heroProduct.image} alt={heroProduct.name}
-                             className="w-full h-full object-cover" />
-                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(26,0,16,0.9) 100%)' }} />
-                      </div>
-
-                      <div className="absolute top-5 left-5" style={{ transform: 'translateZ(34px)' }}>
-                        <span className="font-cinzel text-[9px] tracking-[0.15em] px-3 py-1.5 rounded-full"
-                              style={{ background: 'rgba(255,255,255,0.92)', color: C.bgDark }}>
-                          ★ FEATURED
-                        </span>
-                      </div>
-
-                      <div className="absolute bottom-0 left-0 right-0 p-6" style={{ transform: 'translateZ(40px)' }}>
-                        <p className="font-cinzel text-[10px] tracking-[0.2em] mb-1.5" style={{ color: C.goldPale }}>
-                          {heroProduct.category.toUpperCase()}
-                        </p>
-                        <h3 className="font-cormorant text-2xl font-semibold text-white mb-3">{heroProduct.name}</h3>
-                        <div className="flex items-center gap-1.5 font-raleway text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                          View piece <ArrowRight size={12} />
-                        </div>
-                      </div>
-                    </div>
-                  </HeroTiltWrapper>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Carousel dots */}
-              <div className="absolute -bottom-8 left-0 right-0 flex items-center justify-center gap-2">
-                {featuredPool.map((_, i) => (
-                  <button key={i} onClick={() => setHeroIndex(i)}
-                          className="h-1 rounded-full transition-all duration-300"
-                          style={{
-                            width: i === heroIndex ? 24 : 8,
-                            background: i === heroIndex ? C.gold : 'rgba(194,24,91,0.18)',
-                          }} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════
-          CATEGORY RAIL — circular portraits, horizontal scroll
-      ══════════════════════════════════════════════ */}
-      <section className="relative" style={{ background: C.bgDeep, borderBottom: `1px solid ${C.border}` }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
-          <div className="flex items-center gap-5 sm:gap-7 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-            {categories.map(cat => {
-              const isActive = activeTab === cat.name;
-              const count = cat.name === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat.name).length;
-              return (
-                <button key={cat.name} onClick={() => setActiveTab(cat.name)}
-                        className="flex-shrink-0 flex flex-col items-center gap-2 group">
-                  <div className="relative rounded-full p-[2px] transition-all duration-300"
-                       style={{
-                         background: isActive
-                           ? `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`
-                           : 'transparent',
-                       }}>
-                    <div className="rounded-full overflow-hidden transition-all duration-300"
-                         style={{
-                           width: 64, height: 64,
-                           border: `2px solid ${isActive ? C.bgCard : C.goldBorder}`,
-                           opacity: isActive ? 1 : 0.75,
-                           transform: isActive ? 'scale(1)' : 'scale(0.94)',
-                         }}>
-                      {cat.image ? (
-                        <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center" style={{ background: C.bgDark }}>
-                          <Sparkles size={18} style={{ color: C.goldPale }} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <span className="font-cinzel text-[8.5px] tracking-[0.12em] whitespace-nowrap transition-colors"
-                        style={{ color: isActive ? C.gold : C.textLight, fontWeight: isActive ? 700 : 400 }}>
-                    {cat.name.toUpperCase()}
-                  </span>
-                  <span className="font-raleway text-[8px] -mt-1.5" style={{ color: C.textLight, opacity: 0.6 }}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SEARCH ── */}
-      <section className="py-6" style={{ background: C.bgDeep }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="relative max-w-md mx-auto">
-            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: C.textLight }} />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search jewellery..."
-              className="w-full pl-10 pr-4 py-3 rounded-full font-raleway text-sm outline-none"
-              style={{
-                background: C.bgCard,
-                border: `1px solid ${C.goldBorder}`,
-                color: C.text,
-              }}
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')}
-                      className="absolute right-4 top-1/2 -translate-y-1/2">
-                <X size={13} style={{ color: C.textLight }} />
-              </button>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════
-          GRID — magnetic-tilt cards
-      ══════════════════════════════════════════════ */}
-      <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <AnimatePresence mode="wait">
-            {filteredProducts.length === 0 ? (
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                          className="text-center py-24">
-                <p className="font-cormorant text-3xl" style={{ color: C.textLight }}>No pieces found</p>
-                <p className="font-raleway text-sm mt-2" style={{ color: C.textLight }}>Try a different category or search</p>
-              </motion.div>
-            ) : (
-              <motion.div key={activeTab + searchQuery}
-                          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {filteredProducts.map((product, i) => {
-                  const isHov = hoveredId === product.id;
-                  const tagStyle = TAG[product.tag] || TAG['Classic'];
-                  return (
-                    <motion.div key={product.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: Math.min(i * 0.03, 0.4), duration: 0.4 }}>
-                    <TiltCard onClick={() => setSelectedProduct(product)}>
-                      <div onMouseEnter={() => setHoveredId(product.id)}
-                           onMouseLeave={() => setHoveredId(null)}
-                           className="rounded-xl overflow-hidden"
-                           style={{
-                             background: C.bgCard,
-                             border: `1px solid ${isHov ? C.gold : C.border}`,
-                             boxShadow: isHov ? `0 24px 50px ${C.shadowMd}` : `0 4px 16px ${C.shadow}`,
-                             transition: 'border-color 0.35s, box-shadow 0.35s',
-                           }}>
-
-                      {/* Image — lifted onto its own 3D layer so it pops forward on tilt */}
-                      <div className="relative overflow-hidden" style={{ aspectRatio: '1/1', transform: 'translateZ(24px)', transformStyle: 'preserve-3d' }}>
-                        <img src={product.image} alt={product.name}
-                             className="w-full h-full object-cover transition-transform duration-500"
-                             style={{ transform: isHov ? 'scale(1.08)' : 'scale(1)' }} />
-
-                        {/* Overlay */}
-                        <div className="absolute inset-0 transition-opacity duration-400"
-                             style={{ background: 'linear-gradient(to top, rgba(136,14,79,0.85) 0%, rgba(136,14,79,0.1) 50%, transparent 100%)',
-                                      opacity: isHov ? 1 : 0 }} />
-                        <div className="absolute top-0 left-0 right-0 h-px transition-opacity duration-400"
-                             style={{ background: `linear-gradient(to right, transparent, ${C.gold}, transparent)`,
-                                      opacity: isHov ? 1 : 0 }} />
-
-                        {/* Tag */}
-                        <div className="absolute top-3 left-3" style={{ transform: 'translateZ(12px)' }}>
-                          <span className="font-cinzel text-[9px] tracking-[0.1em] px-2.5 py-1 rounded-full"
-                                style={{ background: tagStyle.bg, color: tagStyle.text }}>
-                            {product.tag}
-                          </span>
-                        </div>
-
-                        {/* Featured star */}
-                        {product.featured && (
-                          <div className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center"
-                               style={{ background: `linear-gradient(135deg,${C.gold},${C.goldPale})`, transform: 'translateZ(16px)' }}>
-                            <span className="text-[10px] font-bold" style={{ color: C.text }}>★</span>
-                          </div>
-                        )}
-
-                        {/* View CTA */}
-                        <div className="absolute bottom-4 left-4 right-4 transition-all duration-400"
-                             style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0) translateZ(20px)' : 'translateY(8px) translateZ(20px)' }}>
-                          <div className="flex items-center justify-between backdrop-blur-md rounded-xl px-4 py-2.5"
-                               style={{ background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.25)' }}>
-                            <span className="font-raleway text-xs text-white">View Details</span>
-                            <ArrowRight size={13} style={{ color: C.goldPale }} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Card body */}
-                      <div className="px-4 py-4">
-                        <p className="font-cinzel text-[9px] tracking-[0.2em] mb-1.5" style={{ color: C.gold }}>
-                          {product.category.toUpperCase()}
-                        </p>
-                        <h3 className="font-cormorant text-[17px] font-semibold leading-tight transition-colors duration-200"
-                            style={{ color: isHov ? C.gold : C.text }}>
-                          {product.name}
-                        </h3>
-                        <p className="font-raleway text-[11px] leading-relaxed mt-1.5 line-clamp-2"
-                           style={{ color: C.textLight }}>
-                          {product.description}
-                        </p>
-                        <div className="flex items-center justify-between mt-4 pt-3"
-                             style={{ borderTop: `1px solid ${C.border}` }}>
-                          <span className="font-cinzel text-[9px] tracking-[0.12em]" style={{ color: C.textLight }}>
-                            ENQUIRE ON WHATSAPP
-                          </span>
-                          <div className="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
-                               style={{ background: isHov ? `linear-gradient(135deg,${C.gold},${C.goldLight})` : C.goldBg,
-                                        border: `1px solid ${C.goldBorder}` }}>
-                            <ArrowRight size={10} style={{ color: isHov ? '#fff' : C.gold }} />
-                          </div>
-                        </div>
-                      </div>
-                      </div>
-                    </TiltCard>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Footer count */}
-          {filteredProducts.length > 0 && (
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-                        className="mt-16 text-center">
-              <div className="inline-flex items-center gap-4">
-                <div className="h-px w-14" style={{ background: `linear-gradient(to right, transparent, ${C.goldBorder})` }} />
-                <Sparkles size={13} style={{ color: C.gold }} />
-                <span className="font-cinzel text-[10px] tracking-[0.28em]" style={{ color: C.textLight }}>
-                  {filteredProducts.length} PIECES SHOWN
-                </span>
-                <Sparkles size={13} style={{ color: C.gold }} />
-                <div className="h-px w-14" style={{ background: `linear-gradient(to left, transparent, ${C.goldBorder})` }} />
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </section>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-        )}
-      </AnimatePresence>
-
     </motion.div>
   );
 }
