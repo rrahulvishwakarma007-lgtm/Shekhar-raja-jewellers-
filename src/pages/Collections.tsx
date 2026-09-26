@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Heart, MessageCircle } from 'lucide-react';
+import { Search, X, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
 const C = {
-  bg:        '#FAFAFA',
+  bg:        '#FFFFFF',     // Pure white for high-end gallery feel
   bgCard:    '#FFFFFF',
-  text:      '#1A0010',
+  text:      '#1A1A1A',     // Softer than pure black
   textLight: '#999999',
   textMid:   '#6D1B4E',
-  gold:      '#C2185B',
-  border:    '#E8E8E8',
+  brand:     '#C2185B',     // Original brand magenta (for wishlist)
+  royalGold: '#D4AF37',     // Champagne Gold for luxury accents
+  pearl:     '#FDFBF7',     // Warm ivory for image backgrounds
+  border:    '#F0F0F0',
 };
 
 const TAG: Record<string, { bg: string; color: string }> = {
@@ -37,6 +39,7 @@ const categories = [
 ];
 
 const allProducts = [
+  { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',             tag:'Vintage',     featured:false },
   { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
   { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
   { id:22, name:'Antique Bangle',            category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',           tag:'Heritage',    featured:false },
@@ -145,7 +148,7 @@ const allProducts = [
 
 const WA = '918377911745';
 function waLink(name: string) {
-  return `https://wa.me/${WA}?text=${encodeURIComponent(`Hi! I'm interested in the *${name.trim()}*. Could you share details? 🙏`)}`;
+  return `https://wa.me/${WA}?text=${encodeURIComponent(`Greetings. I would like to consult with an expert regarding the *${name.trim()}*.`)}`;
 }
 
 // ── Card ──────────────────────────────────────────────────────────────────────
@@ -158,13 +161,13 @@ function Card({ p, wished, onOpen, onWish }: {
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
-    <div className="product-card" style={{ background: C.bgCard, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="product-card" style={{ background: 'transparent', position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
       
-      {/* Image with Mobile-Friendly Tactile Feedback */}
+      {/* Image with "Slow Reveal" Hover Filter */}
       <motion.div
         onClick={onOpen}
-        whileTap={{ scale: 0.97 }}
-        style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', background: '#F5F5F5', cursor: 'pointer' }}
+        whileTap={{ scale: 0.98 }}
+        style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden', background: C.pearl, cursor: 'pointer' }}
       >
         <img
           src={p.image} alt={p.name.trim()}
@@ -172,83 +175,76 @@ function Card({ p, wished, onOpen, onWish }: {
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
-        {/* Badge */}
+        {/* Delicate Tag */}
         <span style={{
-          position: 'absolute', top: 10, left: 10,
-          padding: '3px 8px', borderRadius: 2,
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.05em',
+          position: 'absolute', top: 12, left: 12,
+          padding: '4px 10px', borderRadius: 0,
+          fontSize: 9, fontWeight: 600, letterSpacing: '0.08em',
           background: ts.bg, color: ts.color,
-          fontFamily: 'Raleway, sans-serif',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+          fontFamily: 'Raleway, sans-serif', textTransform: 'uppercase',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
         }}>
           {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
         </span>
 
-        {/* Heart */}
+        {/* Refined Heart Button */}
         <motion.button
           onClick={e => onWish(p.id, e)}
           whileTap={{ scale: 0.85 }}
           className="heart-btn"
           style={{
-            position: 'absolute', top: 9, right: 9,
-            width: 30, height: 30, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.95)',
-            border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.08)'}`,
+            position: 'absolute', top: 10, right: 10,
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)',
+            border: `1px solid ${wished ? C.brand : 'rgba(0,0,0,0.05)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', zIndex: 10
           }}>
-          <Heart size={12} fill={wished ? '#C2185B' : 'none'} color={wished ? '#C2185B' : '#aaa'} />
+          <Heart size={14} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#666'} />
         </motion.button>
 
-        {/* Quick view hover pill (Hidden gracefully on mobile by CSS) */}
+        {/* Quick view hover pill */}
         <div className="quick-view" style={{
-          position: 'absolute', bottom: 12, left: '50%',
-          background: 'rgba(255,255,255,0.98)', padding: '7px 18px',
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
-          fontFamily: 'Raleway, sans-serif', color: C.gold,
-          border: `1px solid ${C.gold}`, borderRadius: 2, whiteSpace: 'nowrap',
-          boxShadow: '0 4px 16px rgba(194, 24, 91, 0.15)', pointerEvents: 'none'
+          position: 'absolute', bottom: 16, left: '50%',
+          background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(4px)', padding: '8px 20px',
+          fontSize: 9, fontWeight: 700, letterSpacing: '0.15em',
+          fontFamily: 'Raleway, sans-serif', color: C.royalGold,
+          border: `1px solid ${C.royalGold}`, borderRadius: 0, whiteSpace: 'nowrap',
+          pointerEvents: 'none'
         }}>
           QUICK VIEW
         </div>
       </motion.div>
 
-      {/* Info */}
-      <div style={{ padding: '14px 12px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 4, fontFamily: 'Raleway, sans-serif', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      {/* Info - Cleaned up to feel more editorial */}
+      <div style={{ padding: '16px 4px 8px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center' }}>
+        <p style={{ fontSize: 9, color: C.textLight, marginBottom: 6, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           {p.category}
         </p>
         <p
           onClick={onOpen}
           className="product-title"
           style={{
-            fontSize: 15, fontFamily: 'Cormorant Garamond, serif',
-            fontWeight: 500, color: C.text, lineHeight: 1.3,
-            marginBottom: 14, cursor: 'pointer', flexGrow: 1,
-            display: '-webkit-box', WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical', overflow: 'hidden',
+            fontSize: '1.1rem', fontFamily: 'Cormorant Garamond, serif',
+            fontWeight: 400, color: C.text, lineHeight: 1.3,
+            marginBottom: 12, cursor: 'pointer', flexGrow: 1,
           }}>
           {p.name.trim()}
         </p>
 
-        {/* WhatsApp button */}
-        <motion.a
-          href={waLink(p.name)}
-          target="_blank" rel="noopener noreferrer"
-          onClick={e => e.stopPropagation()}
-          whileTap={{ scale: 0.95 }}
-          className="wa-btn"
+        {/* Subtle hover link instead of a heavy block button */}
+        <a
+          href={waLink(p.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+          className="enquire-link"
           style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            width: '100%', padding: '9px 0',
-            background: '#25D366', color: '#fff', borderRadius: 2,
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
-            fontFamily: 'Raleway, sans-serif', textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
+            fontFamily: 'Raleway, sans-serif', color: C.royalGold, textDecoration: 'none',
+            textTransform: 'uppercase', margin: '0 auto'
           }}
         >
-          <MessageCircle size={13} />
-          Enquire
-        </motion.a>
+          Enquire <ArrowRight size={10} />
+        </a>
       </div>
     </div>
   );
@@ -279,14 +275,13 @@ export default function Collections() {
   if (!ready) return (
     <div style={{ minHeight: '100vh', background: C.bg }} className="pt-20">
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 1, background: C.border }}>
+        <div className="product-grid">
           {[...Array(8)].map((_, i) => (
-            <div key={i} style={{ background: C.bgCard }}>
-              <div className="animate-pulse" style={{ aspectRatio: '1/1', background: '#F2F2F2' }} />
-              <div style={{ padding: 12 }}>
-                <div className="animate-pulse" style={{ height: 10, width: '40%', background: '#EEE', borderRadius: 2, marginBottom: 8 }} />
-                <div className="animate-pulse" style={{ height: 14, width: '75%', background: '#E8E8E8', borderRadius: 2, marginBottom: 12 }} />
-                <div className="animate-pulse" style={{ height: 32, background: '#E0E0E0', borderRadius: 2 }} />
+            <div key={i} style={{ background: 'transparent' }}>
+              <div className="animate-pulse" style={{ aspectRatio: '4/5', background: C.border }} />
+              <div style={{ padding: '16px 4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div className="animate-pulse" style={{ height: 8, width: '40%', background: C.border, marginBottom: 12 }} />
+                <div className="animate-pulse" style={{ height: 16, width: '75%', background: C.border }} />
               </div>
             </div>
           ))}
@@ -297,150 +292,212 @@ export default function Collections() {
 
   return (
     <>
-      {/* CSS Injected for pristine Hover Handling across Touch and Desktop Devices */}
       <style>{`
-        .product-img { transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .quick-view { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(8px); }
-        .wa-btn { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .heart-btn { transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .tab-btn { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        
-        /* True Hover for non-touch devices */
-        @media (hover: hover) and (pointer: fine) {
-          .product-card:hover .product-img { transform: scale(1.08); }
-          .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
-          .product-card:hover .wa-btn { background: #1ebe5b !important; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
-          .product-card:hover .heart-btn { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-          .tab-btn:hover { color: #1A0010 !important; }
+        /* Royal / Editorial Grid Setup */
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 48px 32px;
         }
 
-        /* Mobile specific adjustments */
-        @media (max-width: 640px) {
-          .quick-view { display: none !important; } /* Hidden on touch to avoid stickiness */
-          .product-title { font-size: 14px !important; }
-          .header-title { font-size: 1.8rem !important; }
+        /* Subtle Slow-Reveal Hover Effect for Luxury Feel */
+        .product-img { 
+          transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+          filter: grayscale(20%) sepia(5%) contrast(0.95);
+        }
+        .quick-view { transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(12px); }
+        .heart-btn { transition: all 0.4s ease; }
+        .tab-btn { transition: all 0.4s ease; position: relative; }
+        .enquire-link { transition: all 0.3s ease; opacity: 0.7; }
+        .concierge-btn { transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
+
+        /* True Hover for non-touch devices */
+        @media (hover: hover) and (pointer: fine) {
+          .product-card:hover .product-img { 
+            transform: scale(1.06); 
+            filter: grayscale(0%) sepia(0%) contrast(1.02);
+          }
+          .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
+          .product-card:hover .heart-btn { box-shadow: 0 4px 16px rgba(0,0,0,0.06); background: #fff !important; }
+          .product-card:hover .enquire-link { opacity: 1; }
+          .tab-btn:hover { color: #1A1A1A !important; }
+          .concierge-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.2) !important; background: #000 !important; }
+        }
+
+        /* Mobile specific spacing */
+        @media (max-width: 768px) {
+          .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 32px 16px;
+          }
+          .quick-view { display: none !important; }
+          .product-title { font-size: 1rem !important; }
+          .header-title { font-size: 2.2rem !important; }
+          .concierge-btn { bottom: 20px !important; right: 20px !important; padding: 12px 18px !important; }
+          .concierge-text { display: none; } /* Show only icon on small screens to keep it elegant */
         }
       `}</style>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  style={{ minHeight: '100vh', background: C.bg }}>
+      {/* Floating Private Concierge Button */}
+      <motion.a
+        href={waLink("a Custom Piece")} target="_blank" rel="noopener noreferrer"
+        initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="concierge-btn"
+        style={{
+          position: 'fixed', bottom: 30, right: 30, zIndex: 100,
+          background: C.text, color: '#fff', padding: '14px 28px',
+          borderRadius: '40px', display: 'flex', alignItems: 'center', gap: 10,
+          textDecoration: 'none', fontFamily: 'Raleway, sans-serif', fontSize: 11,
+          fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase',
+          boxShadow: '0 10px 24px rgba(0,0,0,0.15)', border: `1px solid ${C.text}`
+        }}
+      >
+        <MessageCircle size={16} color={C.royalGold} />
+        <span className="concierge-text">Private Concierge</span>
+      </motion.a>
 
-        {/* ── Header ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}
-        >
-          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}></p>
-              <h1 className="header-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.4rem', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
-                Jewellery Collection
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}
+                  style={{ minHeight: '100vh', background: C.bg, position: 'relative', overflow: 'hidden' }}>
+
+        {/* Faint Background Monogram Watermark */}
+        <div style={{
+          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          fontSize: '35vw', fontFamily: 'Cormorant Garamond, serif',
+          color: C.textLight, opacity: 0.02, pointerEvents: 'none', zIndex: 0,
+          fontWeight: 300, whiteSpace: 'nowrap'
+        }}>
+          SR
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          {/* ── Editorial Header ── */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ background: 'transparent', paddingTop: 90, paddingBottom: 40 }}
+          >
+            <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 20px', textAlign: 'center' }}>
+              
+              <p style={{ fontSize: 9, letterSpacing: '0.2em', color: C.royalGold, fontFamily: 'Raleway, sans-serif', marginBottom: 12, textTransform: 'uppercase', fontWeight: 600 }}>
+                Heritage Jewels
+              </p>
+              
+              <h1 className="header-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '3rem', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
+                The Royal Collection
               </h1>
-            </div>
-            {/* Search */}
-            <div style={{ position: 'relative', width: 260, maxWidth: '100%' }}>
-              <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
-              <input
-                value={q} onChange={e => setQ(e.target.value)}
-                placeholder="Search pieces..."
-                style={{
-                  width: '100%', paddingLeft: 34, paddingRight: q ? 30 : 12, paddingTop: 9, paddingBottom: 9,
-                  border: `1px solid ${q ? C.gold : C.border}`, borderRadius: 2, fontSize: 13, color: C.text,
-                  background: '#fff', outline: 'none', fontFamily: 'Raleway, sans-serif',
-                  transition: 'border-color 0.4s ease', boxSizing: 'border-box',
-                }}
-              />
-              {q && (
-                <button onClick={() => setQ('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                  <X size={12} style={{ color: C.textLight }} />
-                </button>
-              )}
-            </div>
-          </div>
-        </motion.div>
+              
+              {/* Elegant Divider */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, margin: '24px 0 20px' }}>
+                <div style={{ height: 1, width: 60, background: `linear-gradient(to right, transparent, ${C.royalGold})` }} />
+                <span style={{ color: C.royalGold, fontSize: 12 }}>✦</span>
+                <div style={{ height: 1, width: 60, background: `linear-gradient(to left, transparent, ${C.royalGold})` }} />
+              </div>
+              
+              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.2rem', color: C.textLight, margin: 0 }}>
+                Timeless heritage pieces, expertly handcrafted in 22KT gold.
+              </p>
 
-        {/* ── Category tabs ── */}
-        <motion.div 
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}
-        >
-          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
-            {categories.map(cat => {
-              const isActive = tab === cat;
-              const count = cat === 'All' ? allProducts.length : allProducts.filter(p => p.category === cat).length;
-              return (
-                <button
-                  key={cat} onClick={() => setTab(cat)} className="tab-btn"
+              {/* Minimal Search */}
+              <div style={{ position: 'relative', width: 280, maxWidth: '100%', margin: '32px auto 0' }}>
+                <Search size={13} style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
+                <input
+                  value={q} onChange={e => setQ(e.target.value)}
+                  placeholder="Search the collection..."
                   style={{
-                    flexShrink: 0, padding: '13px 16px', fontSize: 13, fontFamily: 'Raleway, sans-serif',
-                    fontWeight: isActive ? 600 : 400, color: isActive ? C.text : C.textLight,
-                    background: 'transparent', border: 'none',
-                    borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
-                    cursor: 'pointer', whiteSpace: 'nowrap', marginBottom: -1,
+                    width: '100%', padding: '10px 30px',
+                    border: 'none', borderBottom: `1px solid ${q ? C.royalGold : C.border}`,
+                    fontSize: 12, color: C.text, background: 'transparent', outline: 'none', 
+                    fontFamily: 'Raleway, sans-serif', transition: 'border-color 0.5s ease',
+                    textAlign: 'center', letterSpacing: '0.05em'
                   }}
-                >
-                  {cat} <span style={{ fontSize: 11, color: isActive ? C.text : C.textLight, transition: 'color 0.4s ease' }}>({count})</span>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
+                />
+                {q && (
+                  <button onClick={() => setQ('')} style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                    <X size={12} style={{ color: C.textLight }} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
 
-        {/* ── Grid ── */}
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-          <AnimatePresence mode="wait">
-            {list.length === 0 ? (
-              <motion.div key="empty" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                          style={{ padding: '80px 20px', textAlign: 'center' }}>
-                <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', color: C.textLight, marginBottom: 20 }}>Nothing found</p>
-                <button
-                  onClick={() => { setTab('All'); setQ(''); }}
-                  style={{ padding: '10px 28px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif' }}
-                >
-                  Show all
-                </button>
-              </motion.div>
-            ) : (
-              <motion.div
-                key={tab + q}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                  gap: 1, background: C.border, borderTop: `1px solid ${C.border}`,
-                }}
-              >
-                {list.map((p, i) => (
-                  <motion.div
-                    key={p.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "20px" }}
-                    transition={{ delay: (i % 6) * 0.05, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          {/* ── Delicate Category Tabs ── */}
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 40, borderBottom: `1px solid ${C.border}` }}
+          >
+            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none', justifyContent: 'center' }}>
+              {categories.map(cat => {
+                const isActive = tab === cat;
+                return (
+                  <button
+                    key={cat} onClick={() => setTab(cat)} className="tab-btn"
+                    style={{
+                      flexShrink: 0, padding: '16px 20px', fontSize: 11, fontFamily: 'Raleway, sans-serif',
+                      fontWeight: isActive ? 600 : 400, color: isActive ? C.text : C.textLight,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      background: 'transparent', border: 'none',
+                      borderBottom: isActive ? `1px solid ${C.text}` : '1px solid transparent',
+                      cursor: 'pointer', whiteSpace: 'nowrap', marginBottom: -1,
+                    }}
                   >
-                    <Card p={p} wished={wish.includes(p.id)} onOpen={() => setSel(p)} onWish={toggleWish} />
-                  </motion.div>
-                ))}
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* ── Grid ── */}
+          <div style={{ maxWidth: 1400, margin: '40px auto 80px', padding: '0 20px' }}>
+            <AnimatePresence mode="wait">
+              {list.length === 0 ? (
+                <motion.div key="empty" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            style={{ padding: '80px 20px', textAlign: 'center' }}>
+                  <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.8rem', fontStyle: 'italic', color: C.textLight, marginBottom: 24 }}>No pieces found matching your criteria.</p>
+                  <button
+                    onClick={() => { setTab('All'); setQ(''); }}
+                    style={{ padding: '12px 32px', background: 'transparent', color: C.text, border: `1px solid ${C.text}`, borderRadius: 0, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Raleway, sans-serif', transition: 'all 0.3s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = C.text; e.currentTarget.style.color = '#fff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text; }}
+                  >
+                    View Entire Collection
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={tab + q}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
+                  className="product-grid"
+                >
+                  {list.map((p, i) => (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+                      transition={{ delay: (i % 6) * 0.08, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    >
+                      <Card p={p} wished={wish.includes(p.id)} onOpen={() => setSel(p)} onWish={toggleWish} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {list.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{ padding: '60px 20px 20px', textAlign: 'center', marginTop: 40 }}
+              >
+                <div style={{ width: 40, height: 1, background: C.border, margin: '0 auto 24px' }} />
+                <p style={{ fontSize: 10, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                  Showing {list.length} of {allProducts.length} pieces
+                </p>
+                <p style={{ fontSize: 11, color: C.textLight, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', marginTop: 12, letterSpacing: '0.05em' }}>
+                  Exclusively 22KT BIS Hallmark Certified.
+                </p>
               </motion.div>
             )}
-          </AnimatePresence>
-
-          {list.length > 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              style={{ padding: '36px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}
-            >
-              <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.04em' }}>
-                Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
-              </p>
-              <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 6, letterSpacing: '0.02em' }}>
-                Looking for something specific?{' '}
-                <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I'm looking for a specific piece. Can you help?")}`} target="_blank" rel="noopener noreferrer" style={{ color: C.gold, textDecoration: 'none', borderBottom: `1px solid ${C.gold}` }}>
-                  Ask us on WhatsApp
-                </a>
-              </p>
-            </motion.div>
-          )}
+          </div>
         </div>
 
         <AnimatePresence>
