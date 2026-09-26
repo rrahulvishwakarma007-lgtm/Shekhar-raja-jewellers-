@@ -393,7 +393,7 @@ export default function Collections() {
               </div>
               
               <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.2rem', color: C.textLight, margin: 0 }}>
-                Timeless heritage pieces, expertly handcrafted in 22KT gold.
+                Timeless heritage pieces, expertly handcrafted in gold.
               </p>
 
               {/* Minimal Search */}
