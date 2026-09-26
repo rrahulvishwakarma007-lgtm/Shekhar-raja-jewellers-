@@ -309,7 +309,7 @@ export default function Collections() {
   if (!ready) return (
     <div style={{ minHeight: '100vh', background: C.bg }} className="pt-20">
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))', gap: 1, background: C.border }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 1, background: C.border }}>
           {[...Array(8)].map((_, i) => (
             <div key={i} style={{ background: C.bgCard }}>
               <div className="animate-pulse" style={{ aspectRatio: '1/1', background: '#F2F2F2' }} />
@@ -417,7 +417,7 @@ export default function Collections() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
                 gap: 1,
                 background: C.border,
                 borderTop: `1px solid ${C.border}`,
