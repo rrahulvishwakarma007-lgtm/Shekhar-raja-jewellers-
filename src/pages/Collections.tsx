@@ -37,7 +37,6 @@ const categories = [
 ];
 
 const allProducts = [
-  { id:19, name:'Vintage Diamond Ring',      category:"Women's Ring", description:'Vintage-inspired design with intricate detailing.',                               image:'/ring1.png',             tag:'Vintage',     featured:false },
   { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant 22KT gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
   { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in 22KT gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
   { id:22, name:'Antique Bangle',            category:'Bangles',      description:'Antique-finish 22KT gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',           tag:'Heritage',    featured:false },
