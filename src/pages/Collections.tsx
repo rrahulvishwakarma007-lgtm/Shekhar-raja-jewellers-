@@ -161,7 +161,14 @@ function Card({ p, wished, onOpen, onWish }: {
 
   return (
     <div
-      style={{ background: C.bgCard, position: 'relative', cursor: 'default' }}
+      style={{ 
+        background: C.bgCard, 
+        position: 'relative', 
+        cursor: 'default',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
@@ -177,8 +184,8 @@ function Card({ p, wished, onOpen, onWish }: {
           src={p.image} alt={p.name.trim()}
           style={{
             width: '100%', height: '100%', objectFit: 'cover',
-            transform: hov ? 'scale(1.05)' : 'scale(1)',
-            transition: 'transform 0.45s ease',
+            transform: hov ? 'scale(1.08)' : 'scale(1)',
+            transition: 'transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             display: 'block',
           }}
         />
@@ -190,6 +197,7 @@ function Card({ p, wished, onOpen, onWish }: {
           fontSize: 10, fontWeight: 700, letterSpacing: '0.05em',
           background: ts.bg, color: ts.color,
           fontFamily: 'Raleway, sans-serif',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
         }}>
           {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
         </span>
@@ -200,40 +208,42 @@ function Card({ p, wished, onOpen, onWish }: {
           style={{
             position: 'absolute', top: 9, right: 9,
             width: 30, height: 30, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.92)',
-            border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.1)'}`,
+            background: 'rgba(255,255,255,0.95)',
+            border: `1px solid ${wished ? '#C2185B' : 'rgba(0,0,0,0.08)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', transition: 'border-color 0.2s',
+            cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            boxShadow: hov ? '0 4px 12px rgba(0,0,0,0.08)' : 'none'
           }}>
           <Heart size={12} fill={wished ? '#C2185B' : 'none'} color={wished ? '#C2185B' : '#aaa'} />
         </button>
 
         {/* Quick view hover pill */}
         <div style={{
-          position: 'absolute', bottom: 10, left: '50%',
-          transform: hov ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(6px)',
-          opacity: hov ? 1 : 0, transition: 'all 0.25s',
-          background: 'rgba(255,255,255,0.96)', padding: '6px 16px',
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-          fontFamily: 'Raleway, sans-serif', color: C.text,
+          position: 'absolute', bottom: 12, left: '50%',
+          transform: hov ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(8px)',
+          opacity: hov ? 1 : 0, transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          background: 'rgba(255,255,255,0.98)', padding: '7px 18px',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
+          fontFamily: 'Raleway, sans-serif', color: C.gold,
+          border: `1px solid ${C.gold}`,
           borderRadius: 2, whiteSpace: 'nowrap',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          boxShadow: '0 4px 16px rgba(194, 24, 91, 0.15)',
         }}>
           QUICK VIEW
         </div>
       </div>
 
       {/* Info */}
-      <div style={{ padding: '10px 12px 13px' }}>
-        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 3, fontFamily: 'Raleway, sans-serif', fontWeight: 500, letterSpacing: '0.04em' }}>
+      <div style={{ padding: '14px 12px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 4, fontFamily: 'Raleway, sans-serif', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
           {p.category}
         </p>
         <p
           onClick={onOpen}
           style={{
-            fontSize: 14, fontFamily: 'Cormorant Garamond, serif',
+            fontSize: 15, fontFamily: 'Cormorant Garamond, serif',
             fontWeight: 500, color: C.text, lineHeight: 1.3,
-            marginBottom: 11, cursor: 'pointer',
+            marginBottom: 14, cursor: 'pointer', flexGrow: 1,
             display: '-webkit-box', WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical', overflow: 'hidden',
           }}>
@@ -247,18 +257,17 @@ function Card({ p, wished, onOpen, onWish }: {
           onClick={e => e.stopPropagation()}
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            width: '100%', padding: '8px 0',
-            background: '#25D366',
+            width: '100%', padding: '9px 0',
+            background: hov ? '#1ebe5b' : '#25D366',
             color: '#fff', borderRadius: 2,
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.05em',
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
             fontFamily: 'Raleway, sans-serif',
             textDecoration: 'none',
-            transition: 'background 0.18s',
+            transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            boxShadow: hov ? '0 4px 12px rgba(37, 211, 102, 0.3)' : 'none',
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#1ebe5b')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#25D366')}
         >
-          <MessageCircle size={12} />
+          <MessageCircle size={13} />
           Enquire on WhatsApp
         </a>
       </div>
@@ -274,7 +283,7 @@ export default function Collections() {
   const [sel, setSel]           = useState<typeof allProducts[0] | null>(null);
   const [ready, setReady]       = useState(false);
 
-  useEffect(() => { const t = setTimeout(() => setReady(true), 250); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 350); return () => clearTimeout(t); }, []);
 
   const toggleWish = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -308,11 +317,16 @@ export default function Collections() {
   );
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{ minHeight: '100vh', background: C.bg }}>
 
       {/* ── Header ── */}
-      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}>
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, paddingTop: 80, paddingBottom: 20 }}
+      >
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.textLight, fontFamily: 'Cinzel, serif', marginBottom: 6 }}>
@@ -335,7 +349,7 @@ export default function Collections() {
                 borderRadius: 2, fontSize: 13, color: C.text,
                 background: '#fff', outline: 'none',
                 fontFamily: 'Raleway, sans-serif',
-                transition: 'border-color 0.2s', boxSizing: 'border-box',
+                transition: 'border-color 0.4s ease', boxSizing: 'border-box',
               }}
             />
             {q && (
@@ -345,10 +359,15 @@ export default function Collections() {
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Category tabs ── */}
-      <div style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{ background: C.bgCard, borderBottom: `1px solid ${C.border}`, position: 'sticky', top: 0, zIndex: 40 }}
+      >
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none' }}>
           {categories.map(cat => {
             const isActive = tab === cat;
@@ -369,34 +388,37 @@ export default function Collections() {
                   borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s',
+                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   marginBottom: -1,
                 }}
               >
-                {cat} <span style={{ fontSize: 11, color: C.textLight }}>({count})</span>
+                {cat} <span style={{ fontSize: 11, color: isActive ? C.text : C.textLight, transition: 'color 0.4s ease' }}>({count})</span>
               </button>
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Grid ── */}
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <AnimatePresence mode="wait">
           {list.length === 0 ? (
-            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            <motion.div key="empty" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                         style={{ padding: '80px 20px', textAlign: 'center' }}>
-              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: C.textLight, marginBottom: 16 }}>Nothing found</p>
+              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', color: C.textLight, marginBottom: 20 }}>Nothing found</p>
               <button
                 onClick={() => { setTab('All'); setQ(''); }}
-                style={{ padding: '10px 24px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif' }}>
+                style={{ padding: '10px 28px', background: C.text, color: '#fff', border: 'none', borderRadius: 2, fontSize: 13, cursor: 'pointer', fontFamily: 'Raleway, sans-serif', transition: 'background 0.3s ease' }}
+                onMouseEnter={e => e.currentTarget.style.background = C.textMid}
+                onMouseLeave={e => e.currentTarget.style.background = C.text}
+              >
                 Show all
               </button>
             </motion.div>
           ) : (
             <motion.div
               key={tab + q}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
@@ -408,9 +430,9 @@ export default function Collections() {
               {list.map((p, i) => (
                 <motion.div
                   key={p.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: Math.min(i * 0.015, 0.3), duration: 0.28 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: Math.min(i * 0.02, 0.5), duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   <Card
                     p={p}
@@ -425,20 +447,29 @@ export default function Collections() {
         </AnimatePresence>
 
         {list.length > 0 && (
-          <div style={{ padding: '32px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}>
-            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0 }}>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ padding: '36px 20px', textAlign: 'center', borderTop: `1px solid ${C.border}` }}
+          >
+            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.04em' }}>
               Showing {list.length} of {allProducts.length} pieces · 22KT BIS Hallmark Certified
             </p>
-            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Raleway, sans-serif', marginTop: 6, letterSpacing: '0.02em' }}>
               Looking for something specific?{' '}
               <a
                 href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I'm looking for a specific piece. Can you help?")}`}
                 target="_blank" rel="noopener noreferrer"
-                style={{ color: C.gold, textDecoration: 'underline' }}>
+                style={{ color: C.gold, textDecoration: 'none', borderBottom: `1px solid ${C.gold}`, transition: 'opacity 0.3s' }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
                 Ask us on WhatsApp
               </a>
             </p>
-          </div>
+          </motion.div>
         )}
       </div>
 
