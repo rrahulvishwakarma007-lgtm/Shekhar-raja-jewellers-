@@ -7,15 +7,15 @@ const C = {
   bg:        '#FFFFFF',     
   bgCard:    '#FFFFFF',
   text:      '#1A1A1A',     
-  textLight: '#999999',
+  textLight: '#888888',
   brand:     '#C2185B',     
   royalGold: '#D4AF37',     
-  imageBg:   '#F8F9FA',     // Tanishq-style ultra-light grey for seamless blending
-  border:    '#F0F0F0',
+  imageBg:   '#050505',     // Matches dark photography backgrounds
+  border:    '#EAEAEA',     // Crisp, elegant card border
 };
 
 const TAG: Record<string, { bg: string; color: string }> = {
-  'New Arrival': { bg: '#111',    color: '#fff' },
+  'New Arrival': { bg: '#FFFFFF', color: '#000000' },
   'Bestseller':  { bg: '#166534', color: '#fff' },
   'Bridal Pick': { bg: '#9d174d', color: '#fff' },
   'Trending':    { bg: '#1e40af', color: '#fff' },
@@ -24,7 +24,7 @@ const TAG: Record<string, { bg: string; color: string }> = {
   'Limited':     { bg: '#991b1b', color: '#fff' },
   'Premium':     { bg: '#6b21a8', color: '#fff' },
   'Heritage':    { bg: '#44403c', color: '#fff' },
-  'Classic':     { bg: '#92400e', color: '#fff' },
+  'Classic':     { bg: '#FFFFFF', color: '#000000' },
   'Traditional': { bg: '#9a3412', color: '#fff' },
   'Festive':     { bg: '#3f6212', color: '#fff' },
   'Everyday':    { bg: '#374151', color: '#fff' },
@@ -37,7 +37,6 @@ const categories = [
   'Pendants','Chains','Antique',
 ];
 
-// Product data remains untouched
 const allProducts = [
   { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant Certified gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
   { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in Certified gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
@@ -160,78 +159,79 @@ function Card({ p, wished, onOpen, onWish }: {
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
-    <div className="product-card" style={{ background: 'transparent', position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="product-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s ease' }}>
       
-      {/* Tanishq-style blended image container */}
+      {/* Editorial Image Container for Dark Photography */}
       <motion.div
         onClick={onOpen}
         whileTap={{ scale: 0.98 }}
         style={{ 
           position: 'relative', 
-          aspectRatio: '4/5', 
+          aspectRatio: '1/1', // Squares frame dark photos beautifully
           overflow: 'hidden', 
-          background: C.imageBg, // Faint luxury grey 
-          borderRadius: '6px',   // Soft, modern edges
+          background: C.imageBg, 
           cursor: 'pointer' 
         }}
       >
+        {/* NO mix-blend-mode. Let the dark photo fill the square. */}
         <img
           src={p.image} alt={p.name.trim()}
           className="product-img"
-          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
-        {/* Delicate Tag */}
+        {/* Tag Overlapping Image */}
         <span style={{
           position: 'absolute', top: 12, left: 12,
-          padding: '4px 10px', borderRadius: 0,
-          fontSize: 9, fontWeight: 600, letterSpacing: '0.08em',
+          padding: '4px 10px',
+          fontSize: 9, fontWeight: 700, letterSpacing: '0.12em',
           background: ts.bg, color: ts.color,
           fontFamily: 'Raleway, sans-serif', textTransform: 'uppercase',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+          boxShadow: '0 4px 16px rgba(0,0,0,0.4)'
         }}>
           {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
         </span>
 
-        {/* Minimalist Heart Button (Tanishq Style: Just the icon, no background) */}
+        {/* Heart Overlapping Image */}
         <motion.button
           onClick={e => onWish(p.id, e)}
           whileTap={{ scale: 0.85 }}
           className="heart-btn"
           style={{
-            position: 'absolute', top: 12, right: 12,
-            background: 'transparent', border: 'none',
+            position: 'absolute', top: 10, right: 10,
+            background: 'none', border: 'none',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', zIndex: 10
           }}>
-          <Heart size={18} strokeWidth={1.5} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#999'} />
+          <Heart size={20} strokeWidth={1.5} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#FFFFFF'} style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }} />
         </motion.button>
 
         {/* Quick view hover pill */}
         <div className="quick-view" style={{
           position: 'absolute', bottom: 16, left: '50%',
-          background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(4px)', padding: '8px 20px',
-          fontSize: 9, fontWeight: 700, letterSpacing: '0.15em',
-          fontFamily: 'Raleway, sans-serif', color: C.royalGold,
-          border: `1px solid ${C.royalGold}`, borderRadius: 0, whiteSpace: 'nowrap',
+          background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(4px)', padding: '8px 24px',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.15em',
+          fontFamily: 'Raleway, sans-serif', color: C.text,
+          border: 'none', whiteSpace: 'nowrap',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
           pointerEvents: 'none'
         }}>
           QUICK VIEW
         </div>
       </motion.div>
 
-      {/* Info */}
-      <div style={{ padding: '16px 4px 8px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center' }}>
-        <p style={{ fontSize: 9, color: C.textLight, marginBottom: 6, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+      {/* Info Panel */}
+      <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center', background: C.bgCard }}>
+        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 8, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
           {p.category}
         </p>
         <p
           onClick={onOpen}
           className="product-title"
           style={{
-            fontSize: '1.1rem', fontFamily: 'Cormorant Garamond, serif',
-            fontWeight: 400, color: C.text, lineHeight: 1.3,
-            marginBottom: 12, cursor: 'pointer', flexGrow: 1,
+            fontSize: '1.25rem', fontFamily: 'Cormorant Garamond, serif',
+            fontWeight: 500, color: C.text, lineHeight: 1.3,
+            marginBottom: 16, cursor: 'pointer', flexGrow: 1,
           }}>
           {p.name.trim()}
         </p>
@@ -241,12 +241,12 @@ function Card({ p, wished, onOpen, onWish }: {
           className="enquire-link"
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.15em',
             fontFamily: 'Raleway, sans-serif', color: C.royalGold, textDecoration: 'none',
             textTransform: 'uppercase', margin: '0 auto'
           }}
         >
-          Enquire <ArrowRight size={10} />
+          Enquire <ArrowRight size={12} strokeWidth={2} />
         </a>
       </div>
     </div>
@@ -280,10 +280,10 @@ export default function Collections() {
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 16px' }}>
         <div className="product-grid">
           {[...Array(8)].map((_, i) => (
-            <div key={i} style={{ background: 'transparent' }}>
-              <div className="animate-pulse" style={{ aspectRatio: '4/5', background: C.border }} />
-              <div style={{ padding: '16px 4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div className="animate-pulse" style={{ height: 8, width: '40%', background: C.border, marginBottom: 12 }} />
+            <div key={i} style={{ border: `1px solid ${C.border}` }}>
+              <div className="animate-pulse" style={{ aspectRatio: '1/1', background: C.border }} />
+              <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div className="animate-pulse" style={{ height: 8, width: '40%', background: C.border, marginBottom: 16 }} />
                 <div className="animate-pulse" style={{ height: 16, width: '75%', background: C.border }} />
               </div>
             </div>
@@ -299,8 +299,8 @@ export default function Collections() {
         /* Royal / Editorial Grid Setup */
         .product-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-          gap: 48px 32px;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 40px 24px;
         }
 
         /* Responsive Category Scrolling Container */
@@ -318,23 +318,21 @@ export default function Collections() {
           display: none; 
         }
 
-        /* The Tanishq Image Blending Secret */
+        /* Clean Image Zoom (No mix-blend-mode for black backgrounds) */
         .product-img { 
-          transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-          mix-blend-mode: multiply; /* Blends your white/cream photo backgrounds directly into the #F8F9FA container */
+          transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
         
         .quick-view { transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(12px); }
         .heart-btn { transition: transform 0.2s ease; }
         .tab-btn { transition: all 0.4s ease; position: relative; }
-        .enquire-link { transition: all 0.3s ease; opacity: 0.7; }
+        .enquire-link { transition: all 0.3s ease; opacity: 0.8; }
         .concierge-btn { transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
 
         /* True Hover for non-touch devices */
         @media (hover: hover) and (pointer: fine) {
-          .product-card:hover .product-img { 
-            transform: scale(1.06); 
-          }
+          .product-card:hover { border-color: #D4AF37 !important; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+          .product-card:hover .product-img { transform: scale(1.08); }
           .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
           .product-card:hover .heart-btn { transform: scale(1.1); }
           .product-card:hover .enquire-link { opacity: 1; }
@@ -348,11 +346,11 @@ export default function Collections() {
              justify-content: flex-start;
           }
           .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 32px 16px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 24px 16px;
           }
           .quick-view { display: none !important; }
-          .product-title { font-size: 1rem !important; }
+          .product-title { font-size: 1.1rem !important; }
           .header-title { font-size: 2.2rem !important; }
           .concierge-btn { bottom: 20px !important; right: 20px !important; padding: 12px 18px !important; }
           .concierge-text { display: none; } 
@@ -380,16 +378,6 @@ export default function Collections() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}
                   style={{ minHeight: '100vh', background: C.bg, position: 'relative', overflow: 'hidden' }}>
 
-        {/* Faint Background Monogram Watermark */}
-        <div style={{
-          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          fontSize: '35vw', fontFamily: 'Cormorant Garamond, serif',
-          color: C.textLight, opacity: 0.02, pointerEvents: 'none', zIndex: 0,
-          fontWeight: 300, whiteSpace: 'nowrap'
-        }}>
-          SR
-        </div>
-
         <div style={{ position: 'relative', zIndex: 10 }}>
           {/* ── Editorial Header ── */}
           <motion.div 
@@ -398,11 +386,11 @@ export default function Collections() {
           >
             <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 20px', textAlign: 'center' }}>
               
-              <p style={{ fontSize: 9, letterSpacing: '0.2em', color: C.royalGold, fontFamily: 'Raleway, sans-serif', marginBottom: 12, textTransform: 'uppercase', fontWeight: 600 }}>
+              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.royalGold, fontFamily: 'Raleway, sans-serif', marginBottom: 12, textTransform: 'uppercase', fontWeight: 600 }}>
                 Heritage Jewels
               </p>
               
-              <h1 className="header-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '3rem', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
+              <h1 className="header-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '3.5rem', fontWeight: 300, color: C.text, lineHeight: 1.1, margin: 0 }}>
                 The Royal Collection
               </h1>
               
@@ -413,18 +401,18 @@ export default function Collections() {
                 <div style={{ height: 1, width: 60, background: `linear-gradient(to left, transparent, ${C.royalGold})` }} />
               </div>
               
-              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.2rem', color: C.textLight, margin: 0 }}>
+              <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.25rem', color: C.textLight, margin: 0 }}>
                 Timeless heritage pieces, expertly handcrafted in gold.
               </p>
 
               {/* Minimal Search */}
               <div style={{ position: 'relative', width: 280, maxWidth: '100%', margin: '32px auto 0' }}>
-                <Search size={13} style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
+                <Search size={14} style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', color: C.textLight }} />
                 <input
                   value={q} onChange={e => setQ(e.target.value)}
                   placeholder="Search the collection..."
                   style={{
-                    width: '100%', padding: '10px 30px',
+                    width: '100%', padding: '12px 30px',
                     border: 'none', borderBottom: `1px solid ${q ? C.royalGold : C.border}`,
                     fontSize: 12, color: C.text, background: 'transparent', outline: 'none', 
                     fontFamily: 'Raleway, sans-serif', transition: 'border-color 0.5s ease',
@@ -433,7 +421,7 @@ export default function Collections() {
                 />
                 {q && (
                   <button onClick={() => setQ('')} style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                    <X size={12} style={{ color: C.textLight }} />
+                    <X size={14} style={{ color: C.textLight }} />
                   </button>
                 )}
               </div>
@@ -452,11 +440,11 @@ export default function Collections() {
                   <button
                     key={cat} onClick={() => setTab(cat)} className="tab-btn"
                     style={{
-                      flexShrink: 0, padding: '16px 20px', fontSize: 11, fontFamily: 'Raleway, sans-serif',
-                      fontWeight: isActive ? 600 : 400, color: isActive ? C.text : C.textLight,
-                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      flexShrink: 0, padding: '18px 24px', fontSize: 11, fontFamily: 'Raleway, sans-serif',
+                      fontWeight: isActive ? 700 : 500, color: isActive ? C.text : C.textLight,
+                      letterSpacing: '0.12em', textTransform: 'uppercase',
                       background: 'transparent', border: 'none',
-                      borderBottom: isActive ? `1px solid ${C.text}` : '1px solid transparent',
+                      borderBottom: isActive ? `2px solid ${C.text}` : '2px solid transparent',
                       cursor: 'pointer', whiteSpace: 'nowrap', marginBottom: -1,
                     }}
                   >
@@ -510,10 +498,10 @@ export default function Collections() {
                 style={{ padding: '60px 20px 20px', textAlign: 'center', marginTop: 40 }}
               >
                 <div style={{ width: 40, height: 1, background: C.border, margin: '0 auto 24px' }} />
-                <p style={{ fontSize: 10, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                <p style={{ fontSize: 10, color: C.textLight, fontFamily: 'Raleway, sans-serif', margin: 0, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                   Showing {list.length} of {allProducts.length} pieces
                 </p>
-                <p style={{ fontSize: 11, color: C.textLight, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', marginTop: 12, letterSpacing: '0.05em' }}>
+                <p style={{ fontSize: 12, color: C.textLight, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', marginTop: 12, letterSpacing: '0.05em' }}>
                   Exclusively Certified BIS Hallmark Certified.
                 </p>
               </motion.div>
