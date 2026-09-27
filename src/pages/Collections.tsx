@@ -3,21 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
-// ── New Royal Pink / Blush Palette ────────────────────────────────────────────
+// ── Royal Pink / Blush Palette ────────────────────────────────────────────
 const C = {
-  bg:        '#FFF5F7', // soft blush white
+  bg:        '#FFF5F7', 
   bgCard:    '#FFFFFF',
-  bgDeep:    '#FFE4EC', // light rose
-  gold:      '#C2185B', // royal pink (deep rose) - used for primary accents
-  goldDk:    '#880E4F', // dark magenta - used for wishlist/hover states
-  goldLt:    '#E91E8C', // bright pink
-  goldPale:  '#F8BBD9', // pale pink
+  bgDeep:    '#FFE4EC', 
+  gold:      '#C2185B', 
+  goldDk:    '#880E4F', 
+  goldLt:    '#E91E8C', 
+  goldPale:  '#F8BBD9', 
   goldBg:    'rgba(194,24,91,0.08)',
-  text:      '#1A0010', // near black with pink tint
-  textMid:   '#6D1B4E', // deep rose text
-  textLight: '#AD6888', // muted rose
-  imageBg:   '#050505', // Maintains the dark photo framing
-  border:    '#FFE4EC', // Using the light rose for borders
+  text:      '#1A0010', 
+  textMid:   '#6D1B4E', 
+  textLight: '#AD6888', 
+  imageBg:   '#050505', 
+  border:    '#FFE4EC', 
 };
 
 const TAG: Record<string, { bg: string; color: string }> = {
@@ -165,12 +165,15 @@ function Card({ p, wished, onOpen, onWish }: {
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
 
   return (
-    <div className="product-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s ease' }}>
+    <motion.div 
+      className="product-card" 
+      whileTap={{ scale: 0.96 }} // Tactile feedback on mobile tap
+      style={{ background: C.bgCard, border: `1px solid ${C.border}`, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s ease' }}
+    >
       
       {/* Editorial Image Container for Dark Photography */}
-      <motion.div
+      <div
         onClick={onOpen}
-        whileTap={{ scale: 0.98 }}
         style={{ 
           position: 'relative', 
           aspectRatio: '1/1', // Squares frame dark photos beautifully
@@ -179,7 +182,12 @@ function Card({ p, wished, onOpen, onWish }: {
           cursor: 'pointer' 
         }}
       >
-        <img
+        {/* Mobile Viewport "Settle" Animation */}
+        <motion.img
+          initial={{ scale: 1.15, filter: 'blur(3px)' }}
+          whileInView={{ scale: 1, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: "100px" }}
+          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           src={p.image} alt={p.name.trim()}
           className="product-img"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -223,7 +231,7 @@ function Card({ p, wished, onOpen, onWish }: {
         }}>
           QUICK VIEW
         </div>
-      </motion.div>
+      </div>
 
       {/* Info Panel */}
       <div className="card-info" style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center', background: C.bgCard }}>
@@ -254,7 +262,7 @@ function Card({ p, wished, onOpen, onWish }: {
           Enquire <ArrowRight size={12} strokeWidth={2} />
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -337,7 +345,7 @@ export default function Collections() {
         /* True Hover for non-touch devices */
         @media (hover: hover) and (pointer: fine) {
           .product-card:hover { border-color: ${C.gold} !important; box-shadow: 0 10px 30px ${C.goldBg}; }
-          .product-card:hover .product-img { transform: scale(1.08); }
+          .product-card:hover .product-img { transform: scale(1.08) !important; }
           .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
           .product-card:hover .heart-btn { transform: scale(1.1); }
           .product-card:hover .enquire-link { opacity: 1; }
@@ -373,7 +381,7 @@ export default function Collections() {
       {/* Floating Private Concierge Button */}
       <motion.a
         href={waLink("a Custom Piece")} target="_blank" rel="noopener noreferrer"
-        initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        initial={{ opacity: 0, y: 50, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="concierge-btn"
         style={{
           position: 'fixed', bottom: 30, right: 30, zIndex: 100,
@@ -441,16 +449,22 @@ export default function Collections() {
             </div>
           </motion.div>
 
-          {/* ── Delicate Category Tabs ── */}
+          {/* ── Staggered Category Tabs ── */}
           <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            initial="hidden" animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.05, delayChildren: 0.3 } }
+            }}
             style={{ background: 'rgba(255,245,247,0.85)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 40, borderBottom: `1px solid ${C.border}` }}
           >
             <div className="category-scroll-container">
               {categories.map(cat => {
                 const isActive = tab === cat;
                 return (
-                  <button
+                  <motion.button
+                    variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
+                    transition={{ ease: [0.25, 0.46, 0.45, 0.94], duration: 0.6 }}
                     key={cat} onClick={() => setTab(cat)} className="tab-btn"
                     style={{
                       flexShrink: 0, padding: '18px 24px', fontSize: 11, fontFamily: 'Raleway, sans-serif',
@@ -462,7 +476,7 @@ export default function Collections() {
                     }}
                   >
                     {cat}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -493,10 +507,11 @@ export default function Collections() {
                   {list.map((p, i) => (
                     <motion.div
                       key={p.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
-                      transition={{ delay: (i % 6) * 0.08, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      initial={{ opacity: 0, y: 40, filter: 'blur(5px)' }}
+                      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+                      // Stagger columns: Left items load slightly before right items
+                      transition={{ delay: (i % 2) * 0.15, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                     >
                       <Card p={p} wished={wish.includes(p.id)} onOpen={() => setSel(p)} onWish={toggleWish} />
                     </motion.div>
