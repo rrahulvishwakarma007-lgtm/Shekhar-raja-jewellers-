@@ -39,7 +39,6 @@ const categories = [
 ];
 
 const allProducts = [
-
   { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant Certified gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
   { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in Certified gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
   { id:22, name:'Antique Bangle',            category:'Bangles',      description:'Antique-finish Certified gold bangles with classic Indian motifs.',                   image:'/bangleC.jpg',           tag:'Heritage',    featured:false },
@@ -300,6 +299,21 @@ export default function Collections() {
           gap: 48px 32px;
         }
 
+        /* Responsive Category Scrolling Container */
+        .category-scroll-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 20px;
+          overflow-x: auto;
+          display: flex;
+          justify-content: center; /* Center on desktop */
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE/Edge */
+        }
+        .category-scroll-container::-webkit-scrollbar { 
+          display: none; /* Chrome/Safari */
+        }
+
         /* Subtle Slow-Reveal Hover Effect for Luxury Feel */
         .product-img { 
           transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
@@ -326,6 +340,9 @@ export default function Collections() {
 
         /* Mobile specific spacing */
         @media (max-width: 768px) {
+          .category-scroll-container {
+             justify-content: flex-start; /* Fixes left-side cutoff on mobile */
+          }
           .product-grid {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 32px 16px;
@@ -424,7 +441,7 @@ export default function Collections() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 40, borderBottom: `1px solid ${C.border}` }}
           >
-            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px', overflowX: 'auto', display: 'flex', scrollbarWidth: 'none', justifyContent: 'center' }}>
+            <div className="category-scroll-container">
               {categories.map(cat => {
                 const isActive = tab === cat;
                 return (
