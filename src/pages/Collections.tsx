@@ -110,7 +110,7 @@ const allProducts = [
   { id:89, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',       tag:'Premium',     featured:false },
   { id:90, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',       tag:'Trending',    featured:false },
   { id:91, name:'Gents Gold Ring',           category:"Men's Ring",   description:"New arrival men's ring in Certified gold with intricate detailing.",              image:'/gents ring6.jpg',       tag:'New Arrival', featured:false },
-  { id:92, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',       tag:'Luxury',      featured:false },
+
   { id:93, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bestselling men's Certified gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',       tag:'Bestseller',  featured:false },
   { id:94, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',       tag:'Traditional', featured:false },
   { id:95, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',      tag:'Bridal Pick', featured:false },
