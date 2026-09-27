@@ -3,28 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
+// ── New Royal Pink / Blush Palette ────────────────────────────────────────────
 const C = {
-  bg:        '#FFFFFF',     
+  bg:        '#FFF5F7', // soft blush white
   bgCard:    '#FFFFFF',
-  text:      '#1A1A1A',     
-  textLight: '#888888',
-  brand:     '#C2185B',     
-  royalGold: '#D4AF37',     
-  imageBg:   '#050505',     // Matches dark photography backgrounds
-  border:    '#EAEAEA',     // Crisp, elegant card border
+  bgDeep:    '#FFE4EC', // light rose
+  gold:      '#C2185B', // royal pink (deep rose) - used for primary accents
+  goldDk:    '#880E4F', // dark magenta - used for wishlist/hover states
+  goldLt:    '#E91E8C', // bright pink
+  goldPale:  '#F8BBD9', // pale pink
+  goldBg:    'rgba(194,24,91,0.08)',
+  text:      '#1A0010', // near black with pink tint
+  textMid:   '#6D1B4E', // deep rose text
+  textLight: '#AD6888', // muted rose
+  imageBg:   '#050505', // Maintains the dark photo framing
+  border:    '#FFE4EC', // Using the light rose for borders
 };
 
 const TAG: Record<string, { bg: string; color: string }> = {
-  'New Arrival': { bg: '#FFFFFF', color: '#000000' },
+  'New Arrival': { bg: '#FFFFFF', color: '#1A0010' },
   'Bestseller':  { bg: '#166534', color: '#fff' },
-  'Bridal Pick': { bg: '#9d174d', color: '#fff' },
+  'Bridal Pick': { bg: C.goldDk,  color: '#fff' },
   'Trending':    { bg: '#1e40af', color: '#fff' },
   'Exclusive':   { bg: '#7c3aed', color: '#fff' },
   'Luxury':      { bg: '#854d0e', color: '#fff' },
   'Limited':     { bg: '#991b1b', color: '#fff' },
   'Premium':     { bg: '#6b21a8', color: '#fff' },
   'Heritage':    { bg: '#44403c', color: '#fff' },
-  'Classic':     { bg: '#FFFFFF', color: '#000000' },
+  'Classic':     { bg: '#FFFFFF', color: '#1A0010' },
   'Traditional': { bg: '#9a3412', color: '#fff' },
   'Festive':     { bg: '#3f6212', color: '#fff' },
   'Everyday':    { bg: '#374151', color: '#fff' },
@@ -110,7 +116,7 @@ const allProducts = [
   { id:89, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Premium men's gold signet ring with elegant design and polished finish.",    image:'/gents ring4.jpg',       tag:'Premium',     featured:false },
   { id:90, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Trending men's gold ring with contemporary meets traditional styling.",      image:'/gents ring5.jpg',       tag:'Trending',    featured:false },
   { id:91, name:'Gents Gold Ring',           category:"Men's Ring",   description:"New arrival men's ring in Certified gold with intricate detailing.",              image:'/gents ring6.jpg',       tag:'New Arrival', featured:false },
-
+  { id:92, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Luxury men's gold ring — a bold statement piece for special occasions.",    image:'/gents ring7.jpg',       tag:'Luxury',      featured:false },
   { id:93, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bestselling men's Certified gold ring with classic band and stone accent.",      image:'/gents ring8.jpg',       tag:'Bestseller',  featured:false },
   { id:94, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Traditional men's gold ring with temple-inspired motifs.",                   image:'/gents ring9.jpg',       tag:'Traditional', featured:false },
   { id:95, name:'Gents Gold Ring',           category:"Men's Ring",   description:"Bridal men's gold ring — perfect for grooms seeking bold elegance.",        image:'/gents ring10.jpg',      tag:'Bridal Pick', featured:false },
@@ -173,7 +179,6 @@ function Card({ p, wished, onOpen, onWish }: {
           cursor: 'pointer' 
         }}
       >
-        {/* NO mix-blend-mode. Let the dark photo fill the square. */}
         <img
           src={p.image} alt={p.name.trim()}
           className="product-img"
@@ -203,7 +208,7 @@ function Card({ p, wished, onOpen, onWish }: {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', zIndex: 10
           }}>
-          <Heart size={20} strokeWidth={1.5} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#FFFFFF'} style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }} />
+          <Heart size={20} strokeWidth={1.5} fill={wished ? C.gold : 'none'} color={wished ? C.gold : '#FFFFFF'} style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }} />
         </motion.button>
 
         {/* Quick view hover pill */}
@@ -242,7 +247,7 @@ function Card({ p, wished, onOpen, onWish }: {
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             fontSize: 10, fontWeight: 700, letterSpacing: '0.15em',
-            fontFamily: 'Raleway, sans-serif', color: C.royalGold, textDecoration: 'none',
+            fontFamily: 'Raleway, sans-serif', color: C.gold, textDecoration: 'none',
             textTransform: 'uppercase', margin: '0 auto'
           }}
         >
@@ -318,7 +323,7 @@ export default function Collections() {
           display: none; 
         }
 
-        /* Clean Image Zoom (No mix-blend-mode for black backgrounds) */
+        /* Clean Image Zoom */
         .product-img { 
           transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
@@ -331,13 +336,13 @@ export default function Collections() {
 
         /* True Hover for non-touch devices */
         @media (hover: hover) and (pointer: fine) {
-          .product-card:hover { border-color: #D4AF37 !important; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+          .product-card:hover { border-color: ${C.gold} !important; box-shadow: 0 10px 30px ${C.goldBg}; }
           .product-card:hover .product-img { transform: scale(1.08); }
           .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
           .product-card:hover .heart-btn { transform: scale(1.1); }
           .product-card:hover .enquire-link { opacity: 1; }
-          .tab-btn:hover { color: #1A1A1A !important; }
-          .concierge-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.2) !important; background: #000 !important; }
+          .tab-btn:hover { color: ${C.text} !important; }
+          .concierge-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(136, 14, 79, 0.2) !important; background: ${C.text} !important; }
         }
 
         /* Mobile specific spacing */
@@ -364,14 +369,14 @@ export default function Collections() {
         className="concierge-btn"
         style={{
           position: 'fixed', bottom: 30, right: 30, zIndex: 100,
-          background: C.text, color: '#fff', padding: '14px 28px',
+          background: C.goldDk, color: '#fff', padding: '14px 28px',
           borderRadius: '40px', display: 'flex', alignItems: 'center', gap: 10,
           textDecoration: 'none', fontFamily: 'Raleway, sans-serif', fontSize: 11,
           fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase',
-          boxShadow: '0 10px 24px rgba(0,0,0,0.15)', border: `1px solid ${C.text}`
+          boxShadow: '0 10px 24px rgba(136, 14, 79, 0.15)', border: `1px solid ${C.goldDk}`
         }}
       >
-        <MessageCircle size={16} color={C.royalGold} />
+        <MessageCircle size={16} color={C.goldPale} />
         <span className="concierge-text">Private Concierge</span>
       </motion.a>
 
@@ -386,7 +391,7 @@ export default function Collections() {
           >
             <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 20px', textAlign: 'center' }}>
               
-              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.royalGold, fontFamily: 'Raleway, sans-serif', marginBottom: 12, textTransform: 'uppercase', fontWeight: 600 }}>
+              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: C.gold, fontFamily: 'Raleway, sans-serif', marginBottom: 12, textTransform: 'uppercase', fontWeight: 600 }}>
                 Heritage Jewels
               </p>
               
@@ -396,9 +401,9 @@ export default function Collections() {
               
               {/* Elegant Divider */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, margin: '24px 0 20px' }}>
-                <div style={{ height: 1, width: 60, background: `linear-gradient(to right, transparent, ${C.royalGold})` }} />
-                <span style={{ color: C.royalGold, fontSize: 12 }}>✦</span>
-                <div style={{ height: 1, width: 60, background: `linear-gradient(to left, transparent, ${C.royalGold})` }} />
+                <div style={{ height: 1, width: 60, background: `linear-gradient(to right, transparent, ${C.gold})` }} />
+                <span style={{ color: C.gold, fontSize: 12 }}>✦</span>
+                <div style={{ height: 1, width: 60, background: `linear-gradient(to left, transparent, ${C.gold})` }} />
               </div>
               
               <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.25rem', color: C.textLight, margin: 0 }}>
@@ -413,7 +418,7 @@ export default function Collections() {
                   placeholder="Search the collection..."
                   style={{
                     width: '100%', padding: '12px 30px',
-                    border: 'none', borderBottom: `1px solid ${q ? C.royalGold : C.border}`,
+                    border: 'none', borderBottom: `1px solid ${q ? C.gold : C.border}`,
                     fontSize: 12, color: C.text, background: 'transparent', outline: 'none', 
                     fontFamily: 'Raleway, sans-serif', transition: 'border-color 0.5s ease',
                     textAlign: 'center', letterSpacing: '0.05em'
@@ -431,7 +436,7 @@ export default function Collections() {
           {/* ── Delicate Category Tabs ── */}
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 40, borderBottom: `1px solid ${C.border}` }}
+            style={{ background: 'rgba(255,245,247,0.85)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 40, borderBottom: `1px solid ${C.border}` }}
           >
             <div className="category-scroll-container">
               {categories.map(cat => {
