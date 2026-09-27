@@ -186,7 +186,7 @@ function Card({ p, wished, onOpen, onWish }: {
         />
 
         {/* Tag Overlapping Image */}
-        <span style={{
+        <span className="product-tag" style={{
           position: 'absolute', top: 12, left: 12,
           padding: '4px 10px',
           fontSize: 9, fontWeight: 700, letterSpacing: '0.12em',
@@ -226,8 +226,8 @@ function Card({ p, wished, onOpen, onWish }: {
       </motion.div>
 
       {/* Info Panel */}
-      <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center', background: C.bgCard }}>
-        <p style={{ fontSize: 10, color: C.textLight, marginBottom: 8, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+      <div className="card-info" style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center', background: C.bgCard }}>
+        <p className="product-category" style={{ fontSize: 10, color: C.textLight, marginBottom: 8, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
           {p.category}
         </p>
         <p
@@ -351,11 +351,19 @@ export default function Collections() {
              justify-content: flex-start;
           }
           .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 24px 16px;
+            grid-template-columns: repeat(2, 1fr); /* FORCES exactly 2 items per row on mobile */
+            gap: 20px 12px; /* Slightly tighter gap to allow cards to breathe */
           }
+          
+          /* Scale down card elements so they fit beautifully in 2 columns */
+          .card-info { padding: 16px 8px !important; }
+          .product-tag { font-size: 8px !important; padding: 4px 6px !important; top: 8px !important; left: 8px !important; letter-spacing: 0.08em !important; }
+          .heart-btn { top: 6px !important; right: 6px !important; transform: scale(0.9); }
+          .product-category { font-size: 9px !important; margin-bottom: 6px !important; }
+          .product-title { font-size: 1.05rem !important; margin-bottom: 12px !important; line-height: 1.2 !important; }
+          .enquire-link { font-size: 9px !important; }
+          
           .quick-view { display: none !important; }
-          .product-title { font-size: 1.1rem !important; }
           .header-title { font-size: 2.2rem !important; }
           .concierge-btn { bottom: 20px !important; right: 20px !important; padding: 12px 18px !important; }
           .concierge-text { display: none; } 
