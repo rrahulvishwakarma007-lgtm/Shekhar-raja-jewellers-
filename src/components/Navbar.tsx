@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Collections', path: '/collections' },
-  { name: 'Bridal', path: '/bridal' },
   { name: 'Swarna Samriddhi', path: '/offer' }, // ← ADDED OFFERS LINK HERE
   { name: 'Gold Rates', path: '/gold-rates' },
   { name: 'About', path: '/about' },
