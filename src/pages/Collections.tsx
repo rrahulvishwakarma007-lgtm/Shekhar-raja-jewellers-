@@ -4,14 +4,13 @@ import { Search, X, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
 const C = {
-  bg:        '#FFFFFF',     // Pure white for high-end gallery feel
+  bg:        '#FFFFFF',     
   bgCard:    '#FFFFFF',
-  text:      '#1A1A1A',     // Softer than pure black
+  text:      '#1A1A1A',     
   textLight: '#999999',
-  textMid:   '#6D1B4E',
-  brand:     '#C2185B',     // Original brand magenta (for wishlist)
-  royalGold: '#D4AF37',     // Champagne Gold for luxury accents
-  pearl:     '#FDFBF7',     // Warm ivory for image backgrounds
+  brand:     '#C2185B',     
+  royalGold: '#D4AF37',     
+  imageBg:   '#F8F9FA',     // Tanishq-style ultra-light grey for seamless blending
   border:    '#F0F0F0',
 };
 
@@ -38,6 +37,7 @@ const categories = [
   'Pendants','Chains','Antique',
 ];
 
+// Product data remains untouched
 const allProducts = [
   { id:20, name:'Gold Bangle Set',           category:'Bangles',      description:'Elegant Certified gold bangles with traditional carvings and fine finish.',           image:'/bangleA.jpg',           tag:'New Arrival', featured:false },
   { id:21, name:'Designer Bangle',           category:'Bangles',      description:'Intricate designer bangles in Certified gold, perfect for festive occasions.',        image:'/bangleB.jpg',           tag:'Trending',    featured:false },
@@ -162,16 +162,23 @@ function Card({ p, wished, onOpen, onWish }: {
   return (
     <div className="product-card" style={{ background: 'transparent', position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
       
-      {/* Image with "Slow Reveal" Hover Filter */}
+      {/* Tanishq-style blended image container */}
       <motion.div
         onClick={onOpen}
         whileTap={{ scale: 0.98 }}
-        style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden', background: C.pearl, cursor: 'pointer' }}
+        style={{ 
+          position: 'relative', 
+          aspectRatio: '4/5', 
+          overflow: 'hidden', 
+          background: C.imageBg, // Faint luxury grey 
+          borderRadius: '6px',   // Soft, modern edges
+          cursor: 'pointer' 
+        }}
       >
         <img
           src={p.image} alt={p.name.trim()}
           className="product-img"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
 
         {/* Delicate Tag */}
@@ -186,20 +193,18 @@ function Card({ p, wished, onOpen, onWish }: {
           {p.tag === 'New Arrival' ? 'LATEST' : p.tag.toUpperCase()}
         </span>
 
-        {/* Refined Heart Button */}
+        {/* Minimalist Heart Button (Tanishq Style: Just the icon, no background) */}
         <motion.button
           onClick={e => onWish(p.id, e)}
           whileTap={{ scale: 0.85 }}
           className="heart-btn"
           style={{
-            position: 'absolute', top: 10, right: 10,
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)',
-            border: `1px solid ${wished ? C.brand : 'rgba(0,0,0,0.05)'}`,
+            position: 'absolute', top: 12, right: 12,
+            background: 'transparent', border: 'none',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', zIndex: 10
           }}>
-          <Heart size={14} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#666'} />
+          <Heart size={18} strokeWidth={1.5} fill={wished ? C.brand : 'none'} color={wished ? C.brand : '#999'} />
         </motion.button>
 
         {/* Quick view hover pill */}
@@ -215,7 +220,7 @@ function Card({ p, wished, onOpen, onWish }: {
         </div>
       </motion.div>
 
-      {/* Info - Cleaned up to feel more editorial */}
+      {/* Info */}
       <div style={{ padding: '16px 4px 8px', display: 'flex', flexDirection: 'column', flexGrow: 1, textAlign: 'center' }}>
         <p style={{ fontSize: 9, color: C.textLight, marginBottom: 6, fontFamily: 'Raleway, sans-serif', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           {p.category}
@@ -231,7 +236,6 @@ function Card({ p, wished, onOpen, onWish }: {
           {p.name.trim()}
         </p>
 
-        {/* Subtle hover link instead of a heavy block button */}
         <a
           href={waLink(p.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
           className="enquire-link"
@@ -306,21 +310,22 @@ export default function Collections() {
           padding: 0 20px;
           overflow-x: auto;
           display: flex;
-          justify-content: center; /* Center on desktop */
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE/Edge */
+          justify-content: center;
+          scrollbar-width: none; 
+          -ms-overflow-style: none; 
         }
         .category-scroll-container::-webkit-scrollbar { 
-          display: none; /* Chrome/Safari */
+          display: none; 
         }
 
-        /* Subtle Slow-Reveal Hover Effect for Luxury Feel */
+        /* The Tanishq Image Blending Secret */
         .product-img { 
           transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-          filter: grayscale(20%) sepia(5%) contrast(0.95);
+          mix-blend-mode: multiply; /* Blends your white/cream photo backgrounds directly into the #F8F9FA container */
         }
+        
         .quick-view { transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(12px); }
-        .heart-btn { transition: all 0.4s ease; }
+        .heart-btn { transition: transform 0.2s ease; }
         .tab-btn { transition: all 0.4s ease; position: relative; }
         .enquire-link { transition: all 0.3s ease; opacity: 0.7; }
         .concierge-btn { transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
@@ -329,10 +334,9 @@ export default function Collections() {
         @media (hover: hover) and (pointer: fine) {
           .product-card:hover .product-img { 
             transform: scale(1.06); 
-            filter: grayscale(0%) sepia(0%) contrast(1.02);
           }
           .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
-          .product-card:hover .heart-btn { box-shadow: 0 4px 16px rgba(0,0,0,0.06); background: #fff !important; }
+          .product-card:hover .heart-btn { transform: scale(1.1); }
           .product-card:hover .enquire-link { opacity: 1; }
           .tab-btn:hover { color: #1A1A1A !important; }
           .concierge-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.2) !important; background: #000 !important; }
@@ -341,7 +345,7 @@ export default function Collections() {
         /* Mobile specific spacing */
         @media (max-width: 768px) {
           .category-scroll-container {
-             justify-content: flex-start; /* Fixes left-side cutoff on mobile */
+             justify-content: flex-start;
           }
           .product-grid {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -351,7 +355,7 @@ export default function Collections() {
           .product-title { font-size: 1rem !important; }
           .header-title { font-size: 2.2rem !important; }
           .concierge-btn { bottom: 20px !important; right: 20px !important; padding: 12px 18px !important; }
-          .concierge-text { display: none; } /* Show only icon on small screens to keep it elegant */
+          .concierge-text { display: none; } 
         }
       `}</style>
 
