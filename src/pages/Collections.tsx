@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Search, X, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 import ProductModal from '../components/ProductModal';
 
@@ -163,35 +163,54 @@ function Card({ p, wished, onOpen, onWish }: {
   onWish: (id: number, e: React.MouseEvent) => void;
 }) {
   const ts = TAG[p.tag] || { bg: '#111', color: '#fff' };
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Parallax scroll setup: tracks the card's position relative to the viewport
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Maps the scroll progress (0 to 1) into a vertical pixel shift (-5% to 5%)
+  const y = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
 
   return (
     <motion.div 
+      ref={cardRef}
       className="product-card" 
-      whileTap={{ scale: 0.96 }} // Tactile feedback on mobile tap
+      whileTap={{ scale: 0.96 }}
       style={{ background: C.bgCard, border: `1px solid ${C.border}`, position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s ease' }}
     >
       
-      {/* Editorial Image Container for Dark Photography */}
+      {/* Editorial Image Container */}
       <div
         onClick={onOpen}
         style={{ 
           position: 'relative', 
-          aspectRatio: '1/1', // Squares frame dark photos beautifully
+          aspectRatio: '1/1', 
           overflow: 'hidden', 
           background: C.imageBg, 
           cursor: 'pointer' 
         }}
       >
-        {/* Mobile Viewport "Settle" Animation */}
-        <motion.img
-          initial={{ scale: 1.15, filter: 'blur(3px)' }}
-          whileInView={{ scale: 1, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: "100px" }}
-          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-          src={p.image} alt={p.name.trim()}
-          className="product-img"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-        />
+        {/* The Parallax Wrapper: Separates the scroll movement (y) from the hover scaling (className) */}
+        <motion.div 
+          style={{ 
+            position: 'absolute', top: '-10%', left: 0, 
+            width: '100%', height: '120%', // 120% height ensures no edges show during the parallax shift
+            y: y 
+          }}
+        >
+          <motion.img
+            initial={{ filter: 'blur(3px)' }}
+            whileInView={{ filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: "100px" }}
+            transition={{ duration: 0.8 }}
+            src={p.image} alt={p.name.trim()}
+            className="product-img"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        </motion.div>
 
         {/* Tag Overlapping Image */}
         <span className="product-tag" style={{
@@ -331,9 +350,9 @@ export default function Collections() {
           display: none; 
         }
 
-        /* Clean Image Zoom */
+        /* Product Hover Scale (Isolated from Parallax scroll) */
         .product-img { 
-          transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+          transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
         
         .quick-view { transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); opacity: 0; transform: translateX(-50%) translateY(12px); }
@@ -345,7 +364,7 @@ export default function Collections() {
         /* True Hover for non-touch devices */
         @media (hover: hover) and (pointer: fine) {
           .product-card:hover { border-color: ${C.gold} !important; box-shadow: 0 10px 30px ${C.goldBg}; }
-          .product-card:hover .product-img { transform: scale(1.08) !important; }
+          .product-card:hover .product-img { transform: scale(1.08); }
           .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
           .product-card:hover .heart-btn { transform: scale(1.1); }
           .product-card:hover .enquire-link { opacity: 1; }
@@ -360,7 +379,7 @@ export default function Collections() {
           }
           .product-grid {
             grid-template-columns: repeat(2, 1fr); /* FORCES exactly 2 items per row on mobile */
-            gap: 20px 12px; /* Slightly tighter gap to allow cards to breathe */
+            gap: 20px 12px; 
           }
           
           /* Scale down card elements so they fit beautifully in 2 columns */
@@ -507,10 +526,9 @@ export default function Collections() {
                   {list.map((p, i) => (
                     <motion.div
                       key={p.id}
-                      initial={{ opacity: 0, y: 40, filter: 'blur(5px)' }}
-                      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-                      // Stagger columns: Left items load slightly before right items
                       transition={{ delay: (i % 2) * 0.15, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                     >
                       <Card p={p} wished={wish.includes(p.id)} onOpen={() => setSel(p)} onWish={toggleWish} />
