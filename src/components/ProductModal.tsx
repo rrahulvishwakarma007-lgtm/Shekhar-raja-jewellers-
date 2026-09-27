@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X, MessageCircle, Shield, Gem, ZoomIn, ZoomOut, ArrowRight } from 'lucide-react';
 
 interface Product {
@@ -31,7 +31,8 @@ const C = {
 const ZOOM_LEVELS = [1, 1.9, 2.8];
 
 // ── Animation Variants for Staggered Mobile Reveal ───────────────────────────
-const staggerContainer = {
+// Added the : Variants type definition here to fix the TypeScript build error
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -39,7 +40,7 @@ const staggerContainer = {
   }
 };
 
-const itemVariant = {
+const itemVariant: Variants = {
   hidden: { opacity: 0, y: 15 },
   show: { 
     opacity: 1, 
