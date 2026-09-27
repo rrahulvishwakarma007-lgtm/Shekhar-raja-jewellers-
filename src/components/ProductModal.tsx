@@ -254,7 +254,7 @@ export default function ProductModal({ product, onClose }: Props) {
                   <Gem size={16} style={{ color: C.royalGold }} strokeWidth={1.5} />
                   <div className="text-left">
                     <span className="font-raleway text-[9px] uppercase tracking-[0.1em] block" style={{ color: C.textLight }}>Guaranteed</span>
-                    <span className="font-cormorant text-[15px] italic text-gray-900">22KT Pure Gold</span>
+                    <span className="font-cormorant text-[15px] italic text-gray-900">Trusted & Certified </span>
                   </div>
                 </div>
               </motion.div>
