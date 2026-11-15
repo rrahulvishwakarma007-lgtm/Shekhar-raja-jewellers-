@@ -26,9 +26,9 @@ const GOLD_API_KEY = 'YOUR_GOLDAPI_IO_KEY_HERE';
 // ── Purity multipliers — all auto-calculated from 24K ────────────────────────
 const PURITY_RATIOS = {
   '22K': 0.92,
-  '20K': 0.83,
-  '18K': 0.75,
-  '14K': 0.58,
+  '20K': 0.86,
+  '18K': 0.78,
+  '14K': 0.60,
 };
 
 const purityGuide = [
