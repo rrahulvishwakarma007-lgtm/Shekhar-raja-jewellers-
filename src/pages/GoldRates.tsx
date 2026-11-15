@@ -384,9 +384,7 @@ export default function GoldRates() {
               >
                 ₹{rate.toLocaleString('en-IN')}
               </motion.p>
-              <p className="font-raleway text-xs mt-1" style={{ color: C.textLight }}>
-                {Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}% purity
-              </p>
+              <p className="font-raleway text-xs mt-1" style={{ color: C.textLight }} aria-hidden="true" data-purity={`${Math.round(PURITY_RATIOS[purity as keyof typeof PURITY_RATIOS] * 100)}%`} />
               <p className="font-raleway text-[10px] mt-1 font-semibold" style={{ color: C.gold }}>
                 Fetching live Rates ✓
               </p>
@@ -488,7 +486,7 @@ export default function GoldRates() {
               <thead>
                 <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                   <th className="font-cinzel text-sm text-left py-3" style={{ color: C.gold }}>Purity</th>
-                  <th className="font-raleway text-sm text-left py-3" style={{ color: C.textLight }}>Gold %</th>
+                  <th className="font-raleway text-sm text-left py-3 whitespace-nowrap" style={{ color: C.textLight }}>Gold %</th>
                   <th className="font-raleway text-sm text-left py-3 hidden sm:table-cell" style={{ color: C.textLight }}>Description</th>
                   <th className="font-raleway text-sm text-left py-3" style={{ color: C.textLight }}>Best For</th>
                 </tr>
