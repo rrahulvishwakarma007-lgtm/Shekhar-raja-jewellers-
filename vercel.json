@@ -8,9 +8,7 @@
       "source": "/((?!api|_next|static|public|favicon|uploads).*)",
       "destination": "/index.html"
     }
-  ]
-}
-{
+  ],
   "headers": [
     {
       "source": "/gold-rates.json",
